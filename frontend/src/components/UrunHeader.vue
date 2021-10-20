@@ -18,7 +18,7 @@
                         <v-icon>mdi-magnify</v-icon>
                     </div>
                     <div class="d-flex">
-                        <v-btn outlined="outlined" class="mr-1 pa-1">로그인</v-btn>
+                        <v-btn outlined="outlined" class="mr-1 pa-1" @click="clickLoginBtn">로그인</v-btn>
                         <v-btn class="primary pa-1" @click="goToMemberRegisterPage">회원가입</v-btn>
                     </div>
             </div>
@@ -52,6 +52,12 @@
 
 <script>
     export default {
+      props: {
+        isLogin: {
+          type: Boolean,
+          required: true
+        }
+      },
         data: () => ({
             drawer: false,
             items: [
@@ -60,11 +66,14 @@
                 }, {
                     title: '언어'
                 }
-            ]
+            ],
         }),
         methods: {
           goToMemberRegisterPage() {
             this.$router.push('/memberRegister')
+          },
+          clickLoginBtn() {
+            this.$emit('clickLoginBtn')
           }
         }
     }
