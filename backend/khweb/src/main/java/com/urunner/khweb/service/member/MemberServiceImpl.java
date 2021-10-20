@@ -1,6 +1,6 @@
 package com.urunner.khweb.service.member;
 
-import com.urunner.khweb.repository.MemberRepository;
+import com.urunner.khweb.repository.member.MemberRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
