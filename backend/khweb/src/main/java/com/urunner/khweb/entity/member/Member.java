@@ -15,19 +15,20 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_no")
     private Long memberNo;
+
     private String email;
     private String name;
     private String password;
 
-    public void setEmail() {
+    public void setEmail(String email) {
         this.email = email;
     }
 
-    public void setName() {
+    public void setName(String name) {
         this.name = name;
     }
 
-    public void setPassword() {
+    public void setPassword(String password) {
         this.password = password;
     }
 

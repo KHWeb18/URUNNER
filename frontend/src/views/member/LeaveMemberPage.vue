@@ -1,3 +1,4 @@
+
 <template>
     <v-container style="max-width: 500px;">
         <h2 style="padding:0px 0px 20px 0px;">회원탈퇴</h2>
@@ -71,10 +72,11 @@
         </div>
     </v-container>
 </template>
+-->
 
 <script>
 
-
+/*
 import { mapState, mapActions } from 'vuex'
 import axios from 'axios'
 
@@ -116,6 +118,7 @@ export default {
         }
     }
 }
+*/
 </script>
 
 <style scoped>

@@ -73,6 +73,8 @@
 <script>
   import { validationMixin } from 'vuelidate'
   import { required, maxLength, email, minLength, sameAs } from 'vuelidate/lib/validators'
+  import axios from 'axios'
+
 
   export default {
     mixins: [validationMixin],
@@ -139,6 +141,17 @@
       submit () {
         this.$v.$touch()
         alert('submit')
+        const{name,email,password} = this
+        axios.post('http://localhost:7777/memberManagement/register-member',{name, email,password})
+        .then(res =>{
+          if(res.data == true){
+            alert('가입성공!')
+          }
+          else{
+            alert('이미 가입된 이메일입니다!')
+          }
+
+        })
       },
     },
   }
