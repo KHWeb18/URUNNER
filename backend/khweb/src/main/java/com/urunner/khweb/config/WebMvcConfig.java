@@ -9,18 +9,14 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     private final long MAX_AGE_SECS = 3600;
 
-//    @Value("${app.cor.allowedOrigins}")
-//    private String[] allowedOrigins;
-
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOriginPatterns("*")
-//        최신시큐리티버전에서 패치됨 allowedOrigins와 allowCredentials 같이 못씀
-//        .allowedOrigins("*" )
-        .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
-        .allowedHeaders("*")
-        .allowCredentials(true)
-        .maxAge(MAX_AGE_SECS);
+                .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+                .allowedHeaders("*")
+                .allowCredentials(true)
+                .maxAge(MAX_AGE_SECS); // prefilght 캐쉬된시간
     }
+
 }
