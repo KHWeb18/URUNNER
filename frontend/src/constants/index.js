@@ -1,6 +1,6 @@
 export const API_BASE_URL = 'http://localhost:7777';
 
-export const API_URL_LOGIN = 'http://localhost:7777/memberManagement';
+export const API_URL_LOGIN = 'http://localhost:7777/api/login';
 
 export const SAVE_COOKIE_ACCESS = 1 * 60 * 10000
 
