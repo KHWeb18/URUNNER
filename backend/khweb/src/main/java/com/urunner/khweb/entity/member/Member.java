@@ -5,11 +5,15 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 @NoArgsConstructor
+@Getter
 @Entity
-@Table(name = "member") @Getter
+@Table(name = "member")
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,6 +23,23 @@ public class Member {
     private String email;
     private String name;
     private String password;
+
+    @CreationTimestamp
+    private Date regDate;
+
+    @UpdateTimestamp
+    private Date upDate;
+
+
+    public Member(String email, String password, String name) {
+        this.email = email;
+        this.password = password;
+        this.name = name;
+    }
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "member_no")
+    private Collection<Role> roles;
 
     public void setEmail(String email) {
         this.email = email;
@@ -32,15 +53,8 @@ public class Member {
         this.password = password;
     }
 
-    @CreationTimestamp
-    private Date regDate;
-
-    @UpdateTimestamp
-    private Date upDate;
-
-    public Member(String email, String password, String name) {
-        this.email = email;
-        this.password = password;
-        this.name = name;
+    public void setRoles(Role role) {
+        this.roles.add(role);
     }
+
 }
