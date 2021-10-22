@@ -11,11 +11,13 @@
         <v-text-field
           label="E-mail"
           required
+          v-model="email"
         ></v-text-field>
         <v-text-field
           label="Password"
           required
           type="password"
+          v-model="password"
         ></v-text-field>
          <v-btn
           class="mb-3 "
@@ -40,15 +42,29 @@
   </v-dialog>
 </template>
 
+
 <script>
+import { loginProcess } from '../util/APIUtil'
+
+
 export default {
   props: {
     isLogin: {
       type: Boolean,
       required: true
     }
+  },
+   data: () => ({
+      email: '',
+      password: '',
+    }),
+  methods: {
+      submit () {
+        alert('test')
+        loginProcess({ email: this.email, password:this.password})
+      }
   }
-
+       
 }
 </script>
 

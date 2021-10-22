@@ -5,6 +5,7 @@ spring:
   datasource:
 #    url: jdbc:mysql://localhost:3306/urunner_jpa_db?serverTimezone=UTC&useSSL=false
 #    url: jdbc:mysql://localhost:3306/urunner_non_jpa_db?serverTimezone=UTC&useSSL=false
+    url: jdbc:mysql://localhost:3306/urunner_db?serverTimezonee=UTC&useSSL=false
     username: khweb
     password: khWeb@123
     driver-class-name: com.mysql.cj.jdbc.Driver
