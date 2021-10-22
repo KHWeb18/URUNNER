@@ -17,7 +17,6 @@ function loginProcess(loginfo) {
 
     axios.post(API_URL_LOGIN, loginfo)
     .then(res => {
-        alert("값보내지는지")
         
         let token = res.data
         PasingInfor(token)
@@ -29,7 +28,6 @@ function loginProcess(loginfo) {
 
 // Jwt payload부분을 base64 디코딩한부분
 function PasingInfor(giveMeToken) {
-    alert("파싱이되는지")
 
     const accessToken = giveMeToken.access_token.split(".")
 
