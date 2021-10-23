@@ -1,5 +1,6 @@
 import axios from "axios";
 import Vue from "vue";
+import EventBus from "../event";
 import { 
     // API_BASE_URL,
     API_URL_LOGIN, 
@@ -19,6 +20,8 @@ function loginProcess(loginfo) {
     .then(res => {
         
         let token = res.data
+         
+        EventBus.$emit('isLogin', "isLogin");
         PasingInfor(token)
         
     }).catch(err => {
@@ -45,7 +48,19 @@ function PasingInfor(giveMeToken) {
 
      Vue.$cookies.set(ACCESS_TOKEN, BEARER + giveMeToken.access_token, SAVE_COOKIE_ACCESS)
      Vue.$cookies.set(REFRESH_TOKEN, BEARER + giveMeToken.refresh_token, SAVE_COOKIE_REFRESH)
+     
 }
+
+
+// 로그아웃
+function logout() {
+    Vue.$cookies.remove(ACCESS_TOKEN)
+    Vue.$cookies.remove(REFRESH_TOKEN)
+    Vue.$cookies.remove(ROLES)
+    Vue.$cookies.remove(USER_NAME)
+
+    EventBus.$emit('isLogin', null);
+  }
 
 // 토큰 재발급요청
 // function refreshToken() {
@@ -68,6 +83,7 @@ function PasingInfor(giveMeToken) {
 
 export {
     loginProcess,
-    PasingInfor
+    PasingInfor,
+    logout,
     // refreshToken
 }

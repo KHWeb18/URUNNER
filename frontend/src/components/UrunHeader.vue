@@ -1,4 +1,5 @@
 <template>
+
     <v-app-bar app="app" color="white" width="100%">
         <div class="d-flex justify-space-between align-center" style="width: 100%;">
             <v-app-bar-nav-icon class="hidden-lg-and-up" @click="drawer = !drawer"></v-app-bar-nav-icon>
@@ -11,6 +12,7 @@
                 <div class="mr-9 hidden-md-and-down">강의</div>
                 <div class="mr-9 hidden-md-and-down">커뮤니티</div>
                 <div class="hidden-md-and-down">유러너</div>
+                {{cookie}}
             </div>
             <div class="end d-flex">
                 <div class="search hidden-md-and-down mr-6">
@@ -18,7 +20,8 @@
                         <v-icon>mdi-magnify</v-icon>
                     </div>
                     <div class="d-flex">
-                        <v-btn outlined="outlined" class="mr-1 pa-1" @click="clickLoginBtn">로그인</v-btn>
+                        <v-btn outlined="outlined" class="mr-1 pa-1" @click="clickLoginBtn" v-if="isLogin ? false : true">로그인</v-btn>
+                        <v-btn outlined="outlined" class="mr-1 pa-1" @click="clickLogoutBtn" v-if="isLogin ? true : false">로그아웃</v-btn>
                         <v-btn class="primary pa-1" @click="goToMemberRegisterPage">회원가입</v-btn>
                     </div>
             </div>
@@ -37,7 +40,6 @@
                 </v-list-item-title>
               </v-list-item-content>
             </v-list-item>
-
             <v-divider></v-divider>
             <v-list dense="dense" nav="nav">
                 <v-list-item v-for="item in items" :key="item.title" link="link">
@@ -51,13 +53,8 @@
 </template>
 
 <script>
+import EventBus from "../event"
     export default {
-      props: {
-        isLogin: {
-          type: Boolean,
-          required: true
-        }
-      },
         data: () => ({
             drawer: false,
             items: [
@@ -67,14 +64,22 @@
                     title: '언어'
                 }
             ],
+            isLogin: null
         }),
+       created: function() {
+         EventBus.$on('isLogin', (isLogin) => this.isLogin = isLogin)
+       },
+
         methods: {
           goToMemberRegisterPage() {
             this.$router.push('/memberRegister')
           },
           clickLoginBtn() {
             this.$emit('clickLoginBtn')
-          }
+          },
+          clickLogoutBtn() {
+            this.$emit("clickLogoutBtn")
+          },
         }
     }
 </script>

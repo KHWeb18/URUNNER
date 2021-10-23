@@ -39,7 +39,7 @@ public class Member {
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "member_no")
-    private Collection<Role> roles;
+    private Collection<Role> roles = new ArrayList<>();
 
     public void setEmail(String email) {
         this.email = email;
