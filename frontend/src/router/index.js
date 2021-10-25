@@ -19,6 +19,10 @@ export default new VueRouter({
     },
     // 회원 탈퇴
     {
+      path: '/memberProfile',
+      component: () => import('../views/MemberProfilePage.vue')
+    },
+    {
       path: '/member/:memberNo',
       name: 'LeaveMemberPage',
       components: {

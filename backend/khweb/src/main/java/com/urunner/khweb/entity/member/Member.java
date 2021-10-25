@@ -23,6 +23,7 @@ public class Member {
     private String email;
     private String name;
     private String password;
+    private String introduce;
 
     @CreationTimestamp
     private Date regDate;
@@ -31,10 +32,11 @@ public class Member {
     private Date upDate;
 
 
-    public Member(String email, String password, String name) {
+    public Member(String email, String password, String name, String introduce) {
         this.email = email;
         this.password = password;
         this.name = name;
+        this.introduce = introduce;
     }
 
     @OneToMany(cascade = CascadeType.ALL)
@@ -56,5 +58,10 @@ public class Member {
     public void setRoles(Role role) {
         this.roles.add(role);
     }
+
+    public void setIntroduce(String introduce) {
+        this.introduce = introduce;
+    }
+
 
 }

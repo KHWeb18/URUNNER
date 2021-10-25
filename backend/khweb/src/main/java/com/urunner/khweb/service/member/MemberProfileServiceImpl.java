@@ -32,14 +32,14 @@ public class MemberProfileServiceImpl implements MemberProfileService {
 
         String name = memberRes.getName();
         String email = memberRes.getEmail();
-        String password = memberRes.getPassword();
+        String introduce = memberRes.getIntroduce();
 
         System.out.println("Repository STEP(no password)");
         System.out.println("memberEntity.email : " + email);
         System.out.println("memberEntity.name : " + name);
-        System.out.println("memberEntity.password : " + password);
+        System.out.println("memberEntity.introduce : " + introduce);
 
-        repository.update(name, email);
+        repository.update(name, email, introduce);
     }
 
     @Override
@@ -48,12 +48,14 @@ public class MemberProfileServiceImpl implements MemberProfileService {
         String name = memberRes.getName();
         String email = memberRes.getEmail();
         String password = passwordEncoder.encode(memberRes.getPassword());
+        String introduce = memberRes.getIntroduce();
 
         System.out.println("Repository STEP(with password)");
         System.out.println("memberEntity.email : " + email);
         System.out.println("memberEntity.name : " + name);
         System.out.println("memberEntity.password : " + password);
+        System.out.println("memberEntity.introduce : " + introduce);
 
-        repository.update2(name, email, password);
+        repository.update2(name, email, password, introduce);
     }
 }
