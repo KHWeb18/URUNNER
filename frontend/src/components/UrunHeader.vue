@@ -54,6 +54,8 @@
 
 <script>
 import EventBus from "../event"
+import Vue from 'vue'
+
     export default {
         data: () => ({
             drawer: false,
@@ -64,7 +66,7 @@ import EventBus from "../event"
                     title: '언어'
                 }
             ],
-            isLogin: null
+            isLogin: Vue.$cookies.get("ACCESS_TOKEN")
         }),
        created: function() {
          EventBus.$on('isLogin', (isLogin) => this.isLogin = isLogin)
