@@ -46,7 +46,7 @@
 
 <script>
 import { loginProcess } from '../util/APIUtil'
-
+// import Vue from "vue";
 
 export default {
   name:'LoginDialog',
@@ -60,10 +60,15 @@ export default {
       email: '',
       password: '',
     }),
+    computed: {
+      
+
+    },
   methods: {
       submit () {
-        alert('test')
+        this.$emit("dialogOff")
         loginProcess({ email: this.email, password:this.password})
+
       }
   }
        
