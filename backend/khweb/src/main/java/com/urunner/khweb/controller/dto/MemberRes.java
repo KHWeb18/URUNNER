@@ -16,5 +16,7 @@ public class MemberRes {
 
     private String password;
 
+    private String introduce;
+
 
 }

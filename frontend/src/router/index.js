@@ -21,6 +21,10 @@ export default new VueRouter({
       path: '/memberRegister',
       component: () => import('../views/MemberRegisterPage.vue')
     },
+    {
+      path: '/memberProfile',
+      component: () => import('../views/MemberProfilePage.vue')
+    },
     // 회원 탈퇴
     {
       path: '/member/:memberNo',
@@ -32,7 +36,6 @@ export default new VueRouter({
         default: true
       }
     },
-    
     //myPage
     {
       path: '/my-page-status',
@@ -43,7 +46,20 @@ export default new VueRouter({
       props: {
         default: true
       }
+    },
+    {
+      path: '/mypage',
+      component: () => import("../views/mypage/Mypage.vue"),
+      children: [
+    {
+      path: '/wishlist',
+      component: () => import("../components/enrolment/WishList.vue")
     }
+    },
+    {
+      path: '/cart',
+      component: () => import("../components/enrolment/Cart.vue")
+    },
   ]
 })
 

@@ -64,6 +64,10 @@
                             <div class="pass_message" style="top:170px">✔ 영문/숫자/특수문자만 허용하며, 특수문자를 포함하여 입력</div>
                         </div>
                     </span>
+
+                    <fieldset class="box3">
+                        <textarea style="height:140px;width:300px;border:1px solid;" cols="80" rows="20" maxlength="155" v-model="introduce" placeholder="자기소개(160자 이내)"></textarea>
+                    </fieldset>
                     
                     
                     <div class="button_box" style="margin-bottom: 15px">
@@ -95,19 +99,19 @@
 <script>
 import axios from 'axios'
 export default {
-    name: 'GameMemberLoginForm',
+    name: 'MemberLoginForm',
     data () {
         return {
             nickname: this.$store.state.yourNickname,
-            userId: this.$store.state.yourId,
+            userId: this.$store.state.yourEmail,
             password: '',
+            introduce: '',
             //파일전송용
             files: '',
             preview: '',
             //닉네임 길이 체크용
             toggle4: false,
             count_name: 0,
-
             toggle: false,            
             toggle2: false,            
             toggle_friend: false,
@@ -123,8 +127,8 @@ export default {
     },
     methods: {
         onSubmit () {
-                const { userId, nickname, password } = this
-                this.$emit('submit', { userId, nickname, password })
+                const { userId, nickname, password, introduce} = this
+                this.$emit('submit', { userId, nickname, password, introduce })
         },
         deleteContent4 () {
             this.toggle4 = false
@@ -148,12 +152,10 @@ export default {
             if (this.password == '') {
                 this.toggle2 = false;
             }
-
             var checkPassword = this.password,
             exp = /[~!@#$%^&*()_+|<>?:{}]/;
             var resultCheckPassword= exp.test(checkPassword);
             console.log(resultCheckPassword)
-
             if (checkPassword.length >= 8) {
                 this.toggle_friend2 = false
                 this.toggle_friend_check2 = true                
@@ -167,7 +169,6 @@ export default {
             }else {
                 this.toggle_friend_check2_1 = false
             }
-
             if (this.toggle_friend_check2 & this.toggle_friend_check2_1 == true) {
                 this.check02 = true
                 console.log('두번째 체크도 통과')
@@ -202,9 +203,9 @@ export default {
             for (var idx = 0; idx < this.files.length; idx++) {
                 formData.append('fileList', this.files[idx])                
             }
-            let ownerId = this.$store.state.yourId
+            let ownerId = this.$store.state.yourEmail
             formData.append('id', ownerId)
-            axios.post('http://localhost:7777/admin/uploadImg_Profile', formData, {
+            axios.post('http://localhost:7777/image/uploadImg_Profile', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -224,8 +225,9 @@ export default {
         },
         ImgRequest() {
             try {
-                return require(`../../../../Mini/Images/profile/${this.userId}.gif`                
-                )
+                var cutId = this.userId.substring(0, this.userId.length-4);
+                console.log(cutId)
+                return require(`../../../../backend/khweb/images/profiles/${cutId}.gif`)
             } catch (e) {
                 return require(`@/assets/logo.png`)
             }
@@ -234,15 +236,8 @@ export default {
             setTimeout(() => {
                 this.Filesubmit()
                 }, 1000)
-            this.onSubmit()
-        },
-        // Validationcheck() {
-        //     if (this.check1 == true && this.check2 == true && this.nickname !== '') {
-        //         return true
-        //     } else if (this.nickname !== '' && this.password == '') {
-        //         return true
-        //     } else if ()
-        // }
+            this.profileSubmit()
+        }
     }
 }
 </script> 
@@ -266,6 +261,7 @@ export default {
     top: -10px;
     padding: 10px 0 9px;
     margin-left: 50px;
+    margin-bottom: 50px;
     font-size: 12px;
     color: #666;
     line-height: 18px;
@@ -320,7 +316,6 @@ export default {
 }
 .box1 {
     border: 0px;
-
 }
 .box2 {
     height: 43px;
@@ -424,5 +419,8 @@ a {
 .profile_change {
     font-size: 9px;
     color: #757575;
+}
+.box3 {
+    border: 0px solid;
 }
 </style>
