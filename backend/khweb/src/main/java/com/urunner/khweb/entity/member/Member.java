@@ -23,6 +23,7 @@ public class Member {
     private String email;
     private String name;
     private String password;
+    private String introduce;
 
     @CreationTimestamp
     private Date regDate;
@@ -31,15 +32,16 @@ public class Member {
     private Date upDate;
 
 
-    public Member(String email, String password, String name) {
+    public Member(String email, String password, String name, String introduce) {
         this.email = email;
         this.password = password;
         this.name = name;
+        this.introduce = introduce;
     }
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "member_no")
-    private Collection<Role> roles;
+    private Collection<Role> roles = new ArrayList<>();
 
     public void setEmail(String email) {
         this.email = email;
@@ -56,5 +58,10 @@ public class Member {
     public void setRoles(Role role) {
         this.roles.add(role);
     }
+
+    public void setIntroduce(String introduce) {
+        this.introduce = introduce;
+    }
+
 
 }

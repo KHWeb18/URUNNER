@@ -76,7 +76,7 @@
 
 <script>
 
-/*
+
 import { mapState, mapActions } from 'vuex'
 import axios from 'axios'
 
@@ -118,7 +118,7 @@ export default {
         }
     }
 }
-*/
+
 </script>
 
 <style scoped>

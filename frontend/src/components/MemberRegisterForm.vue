@@ -146,9 +146,16 @@
         .then(res =>{
           if(res.data == true){
             alert('가입성공!')
+            this.$router.push({
+              name: 'MainPage'            
+              })
           }
           else{
             alert('이미 가입된 이메일입니다!')
+            this.name = '',
+            this.email = '',
+            this.password = '',
+            this. confirmPassword = ''
           }
 
         })
