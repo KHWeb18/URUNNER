@@ -31,7 +31,24 @@ export default new VueRouter({
       props: {
         default: true
       }
-    }
+    },
+    {
+      path: '/mypage',
+      component: () => import("../views/mypage/Mypage.vue"),
+      children: [
+        {
+          path: '/wishlist',
+          component: () => import("../components/enrolment/WishList.vue")
+        }
+
+      ]
+    },
+    {
+      path: '/cart',
+      component: () => import("../components/enrolment/Cart.vue")
+    },
+  
+
   ]
 })
 

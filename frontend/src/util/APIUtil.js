@@ -12,6 +12,7 @@ import {
     ACCESS_TOKEN,
     BEARER 
 } from '../constants/index'
+import state from '../store/states'
 
 // 로그인 프로세스
 function loginProcess(loginfo) {
@@ -31,6 +32,7 @@ function loginProcess(loginfo) {
 
 // Jwt payload부분을 base64 디코딩한부분
 function PasingInfor(giveMeToken) {
+    
 
     const accessToken = giveMeToken.access_token.split(".")
 
@@ -45,6 +47,7 @@ function PasingInfor(giveMeToken) {
 
      Vue.$cookies.set(USER_NAME, username, SAVE_COOKIE_ACCESS)
      Vue.$cookies.set(ROLES, roles, SAVE_COOKIE_ACCESS)
+     state.email = username
 
      Vue.$cookies.set(ACCESS_TOKEN, BEARER + giveMeToken.access_token, SAVE_COOKIE_ACCESS)
      Vue.$cookies.set(REFRESH_TOKEN, BEARER + giveMeToken.refresh_token, SAVE_COOKIE_REFRESH)

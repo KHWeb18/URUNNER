@@ -12,7 +12,6 @@
                 <div class="mr-9 hidden-md-and-down">강의</div>
                 <div class="mr-9 hidden-md-and-down">커뮤니티</div>
                 <div class="hidden-md-and-down">유러너</div>
-                {{cookie}}
             </div>
             <div class="end d-flex">
                 <div class="search hidden-md-and-down mr-6">
