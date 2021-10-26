@@ -4,6 +4,9 @@ import VueRouter from 'vue-router';
 // 회원 탈퇴
 import LeaveMemberPage from '@/views/member/LeaveMemberPage.vue'
 
+//마이 페이지
+import MyPage from '@/views/mypage/MyPage.vue'
+
 Vue.use(VueRouter)
 
 export default new VueRouter({
@@ -24,6 +27,18 @@ export default new VueRouter({
       name: 'LeaveMemberPage',
       components: {
         default: LeaveMemberPage
+      },
+      props: {
+        default: true
+      }
+    },
+    
+    //myPage
+    {
+      path: '/mypage',
+      name: 'MyPage',
+      components: {
+        default: MyPage
       },
       props: {
         default: true
