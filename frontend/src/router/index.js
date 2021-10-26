@@ -5,7 +5,7 @@ import VueRouter from 'vue-router';
 import LeaveMemberPage from '@/views/member/LeaveMemberPage.vue'
 
 //마이 페이지
-import MyPage from '@/views/mypage/MyPage.vue'
+import MyPageStatus from '@/views/mypage/MyPageStatus.vue'
 
 Vue.use(VueRouter)
 
@@ -35,10 +35,10 @@ export default new VueRouter({
     
     //myPage
     {
-      path: '/mypage',
-      name: 'MyPage',
+      path: '/my-page-status',
+      name: 'MyPageStatus',
       components: {
-        default: MyPage
+        default: MyPageStatus
       },
       props: {
         default: true

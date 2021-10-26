@@ -9,7 +9,7 @@
 import MyPageBox from '@/components/mypage/MyPageBox.vue'
 
 export default {
-    name:'MyPage',
+    name:'MyPageStatus',
     components:{
         MyPageBox
     }
