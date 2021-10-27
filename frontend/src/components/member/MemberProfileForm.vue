@@ -23,10 +23,10 @@
                         style="pointer:cursor">
                     </label>
                     </div>
-                <!-- 닉네임 -->
-                <fieldset class="box1">                    
+                <fieldset class="box1">
+                    <!-- 닉네임 -->
                     <div class="box2">
-                        <v-text-field class="int" v-model="nickname" 
+                        <v-text-field class="int" v-model="name" 
                         placeholder="닉네임" maxlength="10" @input="searchChangeFunc4($event)"></v-text-field>
                         <span class="validation2" style="left: 85%">
                             <div v-show='toggle4' class="validation_with_length">
@@ -40,8 +40,7 @@
                         </span>
                         <div class="profile_row_title">닉네임 변경</div>
                     </div>
-                    
-
+                    <!-- 비밀번호 -->
                     <div class="box2" style="margin-bottom:10px">
                         <v-text-field type="password" class="int" v-model="password" placeholder="변경하실 비밀번호를 입력해주세요" 
                             maxlength="32" @input="searchChangeFunc2($event)"
@@ -64,26 +63,25 @@
                             <div class="pass_message" style="top:170px">✔ 영문/숫자/특수문자만 허용하며, 특수문자를 포함하여 입력</div>
                         </div>
                     </span>
-
+                    <!-- 자기소개 -->
                     <fieldset class="box3">
                         <textarea style="height:140px;width:300px;border:1px solid;" cols="80" rows="20" maxlength="155" v-model="introduce" placeholder="자기소개(160자 이내)"></textarea>
-                    </fieldset>
-                    
+                    </fieldset>                    
                     
                     <div class="button_box" style="margin-bottom: 15px">
                         <v-btn v-show="onLoginBtn"
-                        color="light-blue lighten-1 text center" @click="fusion()" class="item" >
+                        color="light-blue lighten-1 text center" @click="profileSubmit()" class="item" >
                             변경
                         </v-btn>
                         <v-btn  v-show="!onLoginBtn"
                         disabled 
                         depressed
-                        color="light-blue lighten-1 text center" @click="fusion()" class="item" >
+                        color="light-blue lighten-1 text center" @click="profileSubmit()" class="item" >
                             변경
                         </v-btn>
                     </div>
                     <div class="button_box" style="margin-top: 0px;">
-                        <router-link to="/mainpage">
+                        <router-link to="/">
                         <v-btn color="transparent" class="item" style="color: #29B6F6;">
                             취소
                         </v-btn>
@@ -97,24 +95,24 @@
 </template>
 
 <script>
+
 import axios from 'axios'
+
 export default {
-    name: 'MemberLoginForm',
+    name: 'MemberProfileForm',
     data () {
         return {
-            nickname: this.$store.state.yourNickname,
-            userId: this.$store.state.yourEmail,
+            name: this.$store.state.name,
+            userId: this.$store.state.email,
             password: '',
-            introduce: '',
+            introduce: this.$store.state.introduce,
             //파일전송용
             files: '',
-            preview: '',
+            preview: '', 
             //닉네임 길이 체크용
             toggle4: false,
             count_name: 0,
-            toggle: false,            
-            toggle2: false,            
-            toggle_friend: false,
+            toggle2: false,
             toggle_friend2: false,
             toggle_friend_check2: false,
             toggle_friend2_1: false,
@@ -122,18 +120,18 @@ export default {
             check1: false,
             check2: false,
             check0: true, // 비밀번호를 한 번이라도 건드렸는지 확인
-            onLoginBtn: false
+            onLoginBtn: false // 제출 버튼 활성화용
         }
     },
     methods: {
-        onSubmit () {
-                const { userId, nickname, password, introduce} = this
-                this.$emit('submit', { userId, nickname, password, introduce })
+        profileSubmit () {
+                const { userId, name, password, introduce} = this
+                this.$emit('submit', { userId, name, password, introduce })
         },
         deleteContent4 () {
             this.toggle4 = false
             this.check1 = false
-            this.nickname = ''
+            this.name = ''
             this.onLoginBtn = false
         },
         deleteContent2 () {
@@ -178,20 +176,16 @@ export default {
                 this.onLoginBtn = false
             }
         },        
-        searchChangeFunc4(event){
+        searchChangeFunc4(){
             this.toggle4 = true
-            if (this.nickname == '') {
+            if (this.name == '') {
                 this.toggle4 = false;
                 this.onLoginBtn = false;
             } else {
                 this.onLoginBtn = true
             }
-            this.count_name = event.target.value.length
-        },
-        enterLogin () {
-            if (window.event.keycode == 13) {
-                onsubmit()
-            }
+            this.count_name = this.name.length
+            console.log(this.name)
         },
         handleFileUpload () {
                 this.files = this.$refs.files.files
@@ -203,7 +197,7 @@ export default {
             for (var idx = 0; idx < this.files.length; idx++) {
                 formData.append('fileList', this.files[idx])                
             }
-            let ownerId = this.$store.state.yourEmail
+            let ownerId = this.$store.state.email
             formData.append('id', ownerId)
             axios.post('http://localhost:7777/image/uploadImg_Profile', formData, {
                 headers: {
@@ -225,19 +219,19 @@ export default {
         },
         ImgRequest() {
             try {
-                var cutId = this.userId.substring(0, this.userId.length-4);
+                var cutId = this.userId.substring(0, this.userId.length-4); // email 뒤 .com 삭제
                 console.log(cutId)
                 return require(`../../../../backend/khweb/images/profiles/${cutId}.gif`)
             } catch (e) {
                 return require(`@/assets/logo.png`)
             }
         },
-        fusion () {
-            setTimeout(() => {
-                this.Filesubmit()
-                }, 1000)
-            this.profileSubmit()
-        }
+        // fusion () {
+        //     setTimeout(() => {
+        //         this.Filesubmit()
+        //         }, 1000)
+        //     this.profileSubmit()
+        // }
     }
 }
 </script> 
@@ -292,21 +286,6 @@ export default {
     flex-direction: column;
     padding: 20px;
     padding-top: 30px;
-}
-.register_title {
-    padding: 10.5px;
-    font-size: 24px;
-    line-height: 34px;
-    color: #252525;
-    font-weight: normal;
-}
-.box_title {
-    display: block;
-    font-size: 12px;
-    color: #000000;
-    font-weight: 700;
-    margin-top: 20px;
-    margin-left: 2px;
 }
 .box0 {
     text-align: center;
@@ -363,13 +342,6 @@ export default {
     color: white;
     font-weight: 800;
     width: 310px;
-}
-.item_list {
-    margin-top: 10px;
-    display: flex;
-}
-.button_box_for_line {
-    margin: 40px;
 }
 .button_box {
     display: flex;
