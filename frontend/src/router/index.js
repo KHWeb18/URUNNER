@@ -15,6 +15,7 @@ Vue.use(VueRouter)
 export default new VueRouter({
   mode: 'history',
   routes: [
+<<<<<<< HEAD
     {
       path: '/',
       name:'MainPage',
@@ -68,6 +69,55 @@ export default new VueRouter({
       name: 'ForgotPasswordPage',
       components: {
         default: ForgotPasswordPage
+=======
+      {
+          path: '/',
+          name: 'MainPage',
+          component: () => import ('../views/MainPage.vue')
+      }, {
+          path: '/memberRegister',
+          component: () => import ('../views/MemberRegisterPage.vue')
+      }, {
+          path: '/memberProfile',
+          component: () => import ('../views/MemberProfilePage.vue')
+      },
+      // 회원 탈퇴
+      {
+          path: '/member/:memberNo',
+          name: 'LeaveMemberPage',
+          components: {
+              default: LeaveMemberPage
+          },
+          props: {
+              default: true
+          }
+      },
+      //myPage
+      {
+          path: '/my-page-status',
+          name: 'MyPageStatus',
+          components: {
+              default: MyPageStatus
+          },
+          props: {
+              default: true
+          }
+      }, {
+          path: '/mypage',
+          component: () => import ("../views/mypage/Mypage.vue"),
+          children: [
+              {
+                  path: '/wishlist',
+                  component: () => import ("../components/enrolment/WishList.vue")
+              }, {
+                  path: '/cart',
+                  component: () => import ("../components/enrolment/Cart.vue")
+              }, {
+                path: '/forgot',
+                component: () => import ("../views/ForgotPasswordPage.vue")
+            }
+          ]
+>>>>>>> upstream/main
       }
   ]
 })
@@ -129,4 +179,8 @@ axios.interceptors.response.use(function (response) {
 
 
 
+<<<<<<< HEAD
 // //   https://www.npmjs.com/package/axios
+=======
+// //   https://www.npmjs.com/package/axios
+>>>>>>> upstream/main
