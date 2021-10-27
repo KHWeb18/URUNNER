@@ -52,14 +52,27 @@ export default new VueRouter({
                   path: '/wishlist',
                   component: () => import ("../components/enrolment/WishList.vue")
               }, {
-                  path: '/cart',
-                  component: () => import ("../components/enrolment/Cart.vue")
-              }, {
                 path: '/forgot',
                 component: () => import ("../views/ForgotPasswordPage.vue")
+            },
+            {
+              path: '/coupons',
+              component: () => import("../components/enrolment/Coupon.vue")
+            },
+            {
+              path: '/my-points',
+              component: () => import("../components/enrolment/Mypoints.vue")
             }
           ]
-      }
+      },
+      {
+        path: '/cart',
+        component: () => import ("../components/enrolment/Cart.vue")
+    },
+    {
+      path: '/orders',
+      component: () => import("../components/enrolment/Orders.vue")
+    }
   ]
 })
 

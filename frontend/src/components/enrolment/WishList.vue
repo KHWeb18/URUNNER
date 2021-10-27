@@ -27,9 +27,19 @@
     </v-menu>
   </v-row>
   <v-row>
-    <v-col>
+    <v-col cols="3">
     <MainLecture/>
     </v-col>
+    <v-col cols="3">
+    <MainLecture/>
+    </v-col>
+    <v-col cols="3">
+    <MainLecture/>
+    </v-col>
+    <v-col cols="3">
+    <MainLecture/>
+    </v-col>
+
   </v-row>
   </div>
 </template>
