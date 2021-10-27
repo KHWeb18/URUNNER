@@ -12,4 +12,6 @@ public interface MemberService {
 
     public void leaveMember (Long memberNo) throws Exception;
 
+    //public boolean sendEmail(MemberRes memberRes) throws Exception;
+
 }

@@ -12,54 +12,54 @@ Vue.use(VueRouter)
 export default new VueRouter({
   mode: 'history',
   routes: [
-    {
-      path: '/',
-      name:'MainPage',
-      component: () => import('../views/MainPage.vue'),
-    },
-    {
-      path: '/memberRegister',
-      component: () => import('../views/MemberRegisterPage.vue')
-    },
-    {
-      path: '/memberProfile',
-      component: () => import('../views/MemberProfilePage.vue')
-    },
-    // 회원 탈퇴
-    {
-      path: '/member/:memberNo',
-      name: 'LeaveMemberPage',
-      components: {
-        default: LeaveMemberPage
+      {
+          path: '/',
+          name: 'MainPage',
+          component: () => import ('../views/MainPage.vue')
+      }, {
+          path: '/memberRegister',
+          component: () => import ('../views/MemberRegisterPage.vue')
+      }, {
+          path: '/memberProfile',
+          component: () => import ('../views/MemberProfilePage.vue')
       },
-      props: {
-        default: true
-      }
-    },
-    //myPage
-    {
-      path: '/my-page-status',
-      name: 'MyPageStatus',
-      components: {
-        default: MyPageStatus
+      // 회원 탈퇴
+      {
+          path: '/member/:memberNo',
+          name: 'LeaveMemberPage',
+          components: {
+              default: LeaveMemberPage
+          },
+          props: {
+              default: true
+          }
       },
-      props: {
-        default: true
+      //myPage
+      {
+          path: '/my-page-status',
+          name: 'MyPageStatus',
+          components: {
+              default: MyPageStatus
+          },
+          props: {
+              default: true
+          }
+      }, {
+          path: '/mypage',
+          component: () => import ("../views/mypage/Mypage.vue"),
+          children: [
+              {
+                  path: '/wishlist',
+                  component: () => import ("../components/enrolment/WishList.vue")
+              }, {
+                  path: '/cart',
+                  component: () => import ("../components/enrolment/Cart.vue")
+              }, {
+                path: '/forgot',
+                component: () => import ("../views/ForgotPasswordPage.vue")
+            }
+          ]
       }
-    },
-    {
-      path: '/mypage',
-      component: () => import("../views/mypage/Mypage.vue"),
-      children: [
-    {
-      path: '/wishlist',
-      component: () => import("../components/enrolment/WishList.vue")
-    }
-    },
-    {
-      path: '/cart',
-      component: () => import("../components/enrolment/Cart.vue")
-    },
   ]
 })
 
