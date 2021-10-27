@@ -18,7 +18,8 @@
           required
           type="password"
           v-model="password"
-        ></v-text-field>
+        >
+        </v-text-field>
          <v-btn
           class="mb-3 "
           @click="submit"
@@ -48,6 +49,7 @@ import { loginProcess } from '../util/APIUtil'
 // import Vue from "vue";
 
 export default {
+  name:'LoginDialog',
   props: {
     isLogin: {
       type: Boolean,

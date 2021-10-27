@@ -1,9 +1,9 @@
 export default {
     members: [],
     member: null,
-    yourName : '최승현',
-    yourEmail : 'endras132@naver.com',
     email: null,
+    name: null,//name하고
+    introduce: null,//introduce도 로그인 순간 여기에 저장되도록 해주세요(10/26)
     items: [
         { title: 'Home', to: '/home', items:[
             { title: '대시보드', to: '/'},
