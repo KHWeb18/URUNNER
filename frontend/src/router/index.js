@@ -84,7 +84,6 @@ axios.interceptors.request.use(function (config) {
     }else{
       config.headers.Authorization = Vue.$cookies.get("ACCESS_TOKEN");
     }
-    alert("요청")
 
     return config;
   }, function (error) {
