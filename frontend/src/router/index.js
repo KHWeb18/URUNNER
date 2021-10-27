@@ -4,6 +4,9 @@ import VueRouter from 'vue-router';
 // 회원 탈퇴
 import LeaveMemberPage from '@/views/member/LeaveMemberPage.vue'
 
+//비밀번호 변경
+import ForgotPasswordPage from '@/views/ForgotPasswordPage.vue'
+
 Vue.use(VueRouter)
 
 export default new VueRouter({
@@ -30,6 +33,13 @@ export default new VueRouter({
       },
       props: {
         default: true
+      }
+    },
+    {
+      path: '/forgot',
+      name: 'ForgotPasswordPage',
+      components: {
+        default: ForgotPasswordPage
       }
     }
   ]

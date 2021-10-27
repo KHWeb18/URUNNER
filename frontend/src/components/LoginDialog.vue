@@ -25,6 +25,9 @@
         >
           로그인
         </v-btn>
+        <p class="forgot-password text-right">
+          <router-link to="forgot">Forgot password?</router-link>
+        </p>
         <v-divider class="my-3"></v-divider>
         <p class="text-center">간편 로그인</p>
     </v-card-text>
