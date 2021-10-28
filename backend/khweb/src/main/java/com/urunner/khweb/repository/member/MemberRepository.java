@@ -4,6 +4,7 @@ import com.urunner.khweb.entity.member.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
@@ -12,4 +13,5 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     public Member findByName(String username);
 
     public void deleteByEmail(String email);
+
 }

@@ -56,6 +56,11 @@ export default new VueRouter({
               }, {
                 path: '/forgot',
                 component: () => import ("../views/ForgotPasswordPage.vue")
+
+              }, {
+                path: '/changepw',
+                component: () => import ("../components/ChangePasswordForm.vue")
+
             },
             {
               path: '/coupons',
