@@ -28,5 +28,9 @@ export default {
           { title: '프로필', to: '/'},
           { title: '알림설정', to: '/'},
         ]},
-      ]
+      ],
+      pwRules: [
+        pw => !!pw || '비밀번호를 입력해주세요.',
+        pw => !(pw && pw.length <= 7) || '비밀번호는 8자 이상 입력해주세요.'
+    ]
 } 

@@ -2,6 +2,7 @@
   <v-container style="max-width: 500px;">
       <form style="margin-top: 3rem;">
         <h2>비밀번호 변경</h2>
+        <p>가입하신 이메일과 이름을 입력하세요.</p>
         <v-text-field
           v-model="email"
           label="E-mail"
@@ -36,8 +37,8 @@ export default {
   },
   methods: {
     handleSubmit() {
-      const{email} = this
-      this.$emit('submit', { email})
+      const{email, name} = this
+      this.$emit('submit', { email, name })
     }
   }
 }

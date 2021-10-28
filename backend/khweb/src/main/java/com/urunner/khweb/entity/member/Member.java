@@ -1,5 +1,8 @@
 package com.urunner.khweb.entity.member;
 
+import com.urunner.khweb.controller.dto.MemberRes;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -10,9 +13,11 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+@Builder
 @NoArgsConstructor
 @Getter
 @Entity
+@AllArgsConstructor
 @Table(name = "member")
 public class Member {
     @Id
@@ -63,5 +68,8 @@ public class Member {
         this.introduce = introduce;
     }
 
-
+    // 비밀번호 재설정
+    public void changePassword(MemberRes memberRes) {
+        this.password = memberRes.getPassword();
+    }
 }
