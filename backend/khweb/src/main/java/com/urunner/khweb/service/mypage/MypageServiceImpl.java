@@ -22,6 +22,7 @@ public class MypageServiceImpl implements MypageService{
 
     @Override
     public MyNote latestNote() throws Exception {
+
         //가장 저장된 MyNote객체를 리턴
         MyNote latestNote = myPageRepository.findAll(Sort.by(Sort.Direction.DESC,"regDate")).get(0);
         log.info(latestNote.getTitle());
@@ -35,7 +36,6 @@ public class MypageServiceImpl implements MypageService{
 
     @Override
     public TempLecture latestLec() throws Exception {
-
         //Entity 변경시 properties부분을 바꾸어 주면됨
         TempLecture latestLecture = tempLectureRepository.findAll(Sort.by(Sort.Direction.DESC,"clickDate")).get(0);
         log.info(latestLecture.getTitle());

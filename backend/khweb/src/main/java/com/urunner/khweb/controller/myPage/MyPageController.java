@@ -27,6 +27,7 @@ public class MyPageController {
         log.info("myPageGet");
 
         MyNote latestNote = mypageService.latestNote();
+
         //Lecture Entity변경시 데이터 타입 바뀌어야할 부분
         TempLecture latestLecture = mypageService.latestLec();
 

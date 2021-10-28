@@ -1,1 +1,2 @@
 export const FETCH_MEMBER = 'FETCH_MEMBER'
+export const FETCH_MY_INTRODUCE = 'FETCH_MY_INTRODUCE'

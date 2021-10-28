@@ -1,4 +1,4 @@
-package com.urunner.khweb.controller.member;
+package com.urunner.khweb.controller.myPage;
 
 import com.urunner.khweb.controller.dto.MemberRes;
 import com.urunner.khweb.service.member.MemberProfileService;
@@ -46,5 +46,19 @@ public class MemberProfileController {
         }
 
         return new ResponseEntity<>(memberRes, HttpStatus.OK);
+    }
+
+    @GetMapping("/introduce/{userId}")
+    public ResponseEntity<String> findMyIntroduce(@PathVariable("userId") String email) throws Exception {
+
+        MemberRes memberRes = new MemberRes();
+        log.info("받아온 정보 : " + email);
+
+        memberRes.setEmail(email);
+        String introduce = service.findMyIntroduce(memberRes);
+        memberRes.setIntroduce(introduce);
+        log.info("memberRes data : " + memberRes);
+
+        return new ResponseEntity<>(introduce, HttpStatus.OK);
     }
 }

@@ -77,36 +77,24 @@
 <script>
 
 
-import { mapState, mapActions } from 'vuex'
 import axios from 'axios'
 
 export default {
     name: 'LeaveMemberPage',
-    props: {
-        memberNo: {
-            type: String,
-            required: true
+    data(){
+        return{
+            user_email:''
         }
     },
-    components: {
-    },
-    computed: {
-        ...mapState(['member'])
-    },
-    created () {
-        this.fetchMember(this.memberNo)
-                .catch(err => {
-                    alert(err.response.data.message)
-                    this.$router.push()
-                })
+    mounted(){
+        this.user_email=this.$cookies.get('USER_NAME')
     },
     methods: {
-        ...mapActions(['fetchMember']),
         onDelete () {
             var result = confirm('탈퇴 하시겠습니까?')
             if(result) {
-                const { memberNo } = this.member
-                axios.delete(`http://localhost:7777/memberManagement/leaveMember/${memberNo}`)
+                const { user_email } = this
+                axios.delete('http://localhost:7777/memberManagement/leaveMember',{data: {email:user_email}}) 
                         .then(() => {
                             alert('탈퇴 되었습니다.')
                             this.$router.push({ name: 'MainPage' })

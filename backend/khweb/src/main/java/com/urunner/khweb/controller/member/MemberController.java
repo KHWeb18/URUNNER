@@ -1,6 +1,7 @@
 package com.urunner.khweb.controller.member;
 
 import com.urunner.khweb.controller.dto.MemberRes;
+import com.urunner.khweb.controller.dto.UserDto;
 import com.urunner.khweb.entity.member.Member;
 import com.urunner.khweb.repository.member.MemberRepository;
 import com.urunner.khweb.service.member.MemberService;
@@ -73,10 +74,12 @@ public class MemberController {
     }
 
     // 회원 탈퇴
-    @DeleteMapping("/leaveMember/{memberNo}")
-    public ResponseEntity<Void> leaveMember(@PathVariable("memberNo") Long memberNo) throws Exception {
-
-        memberService.leaveMember(memberNo);
+    @DeleteMapping("/leaveMember")
+    public ResponseEntity<Void> leaveMember(@RequestBody UserDto userDto) throws Exception {
+        log.info("leavemember()");
+        log.info("email입니다 "+userDto.getEmail());
+        String email = userDto.getEmail();
+        memberService.leaveMember(email);
 
         return new ResponseEntity<Void>(HttpStatus.OK);
     }

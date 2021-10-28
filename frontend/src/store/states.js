@@ -1,15 +1,15 @@
 export default {
-    members: [],
-    member: null,
-    email: null,
-    name: null,//name하고
-    introduce: null,//introduce도 로그인 순간 여기에 저장되도록 해주세요(10/26)
-    items: [
-        { title: 'Home', to: '/home', items:[
-            { title: '대시보드', to: '/'},
-            { title: '블로그', to: '/'},
-            { title: '알림', to: '/'},
-          ]},
+  members: [],
+  member: null,
+  email: null,
+  name: null,//name하고
+  introduce: null,//introduce도 로그인 순간 여기에 저장되도록 해주세요(10/26)
+  items: [
+      { title: 'Home', to: '/home', items:[
+          { title: '대시보드', to: '/'},
+          { title: '블로그', to: '/'},
+          { title: '알림', to: '/'},
+        ]},
         { title: '학습관리', items:[
           { title: '내 학습', to: '/'},
           { title: '강의노트', to: '/'},
@@ -33,4 +33,4 @@ export default {
         pw => !!pw || '비밀번호를 입력해주세요.',
         pw => !(pw && pw.length <= 7) || '비밀번호는 8자 이상 입력해주세요.'
     ]
-} 
+}
