@@ -25,7 +25,7 @@ export default new VueRouter({
       },
       // 회원 탈퇴
       {
-          path: '/member/:memberNo',
+          path: '/leave-member',
           name: 'LeaveMemberPage',
           components: {
               default: LeaveMemberPage
