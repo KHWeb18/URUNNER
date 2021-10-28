@@ -64,8 +64,8 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     }
 
     @Override
-    public void leaveMember(Long memberNo) throws Exception {
-        memberRepository.deleteById(memberNo);
+    public void leaveMember(String email) throws Exception {
+        memberRepository.deleteByEmail(email);
     }
 
 
