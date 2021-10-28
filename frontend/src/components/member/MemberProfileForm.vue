@@ -87,6 +87,11 @@
                         </v-btn>
                         </router-link>
                     </div>
+                    <!-- <div class="button_box" style="margin-top: 0px;">
+                        <v-btn color="transparent" class="item" @click="test()" style="color: #29B6F6;">
+                            test
+                        </v-btn>
+                    </div> -->
                 </fieldset>
             </div>
             </v-container>
@@ -97,6 +102,7 @@
 <script>
 
 import axios from 'axios'
+import { mapActions } from 'vuex'
 
 export default {
     name: 'MemberProfileForm',
@@ -120,10 +126,21 @@ export default {
             check1: false,
             check2: false,
             check0: true, // 비밀번호를 한 번이라도 건드렸는지 확인
-            onLoginBtn: false // 제출 버튼 활성화용
+            onLoginBtn: false, // 제출 버튼 활성화용,
+            
         }
     },
+    created () {
+        this.fetchMyIntroduce(this.userId) 
+        setTimeout(() => {
+            this.introduce = this.$store.state.introduce // data 갱신용 왜 fetch로 값 받아오면 갱신이 안 되네
+            }, 100)
+    },
     methods: {
+        // test() {
+        //     console.log(this.$store.state.introduce)
+        //     this.introduce = this.$store.state.introduce
+        // },
         profileSubmit () {
                 const { userId, name, password, introduce} = this
                 this.$emit('submit', { userId, name, password, introduce })
@@ -232,6 +249,7 @@ export default {
         //         }, 1000)
         //     this.profileSubmit()
         // }
+        ...mapActions(['fetchMyIntroduce'])
     }
 }
 </script> 

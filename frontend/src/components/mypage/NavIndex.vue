@@ -1,5 +1,5 @@
 <template>
-  <v-row >
+  <v-row>
     <v-col cols="auto">
     <v-navigation-drawer >
       <v-list
@@ -9,7 +9,7 @@
       </v-list>
     </v-navigation-drawer>
     </v-col>
-    <v-col cols="auto">
+    <v-col cols="9">
       <defaultView/>
     </v-col>
   </v-row>

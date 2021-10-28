@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 public interface MemberProfileRepository extends JpaRepository<Member, Long> {
 
 
@@ -24,4 +26,12 @@ public interface MemberProfileRepository extends JpaRepository<Member, Long> {
     @Modifying
     @Query("update Member u set u.password = ?3 where u.email = ?2")
     void updatePassword(String password);
+
+//    @Transactional
+//    @Modifying
+//    @Query("select u.introduce from Member u where u.email = ?1")
+//    List<Member> findbyintroduce(String email);
+
+    @Query(value = "select introduce from member where email = :email", nativeQuery = true)
+    String findMyIntroduce(String email);
 }

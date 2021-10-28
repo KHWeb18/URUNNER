@@ -58,4 +58,9 @@ public class MemberProfileServiceImpl implements MemberProfileService {
 
         repository.update2(name, email, password, introduce);
     }
+
+    @Override
+    public String findMyIntroduce(MemberRes memberRes) throws Exception {
+        return repository.findMyIntroduce(memberRes.getEmail());
+    }
 }
