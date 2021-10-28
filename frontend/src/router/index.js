@@ -60,7 +60,11 @@ export default new VueRouter({
                 component: () => import ("../views/ForgotPasswordPage.vue")
             }
           ]
+<<<<<<< HEAD
       },
+=======
+      }
+>>>>>>> 4726a1f1ac8144404ec2a8d197c2a467702d5559
   ]
 })
 
