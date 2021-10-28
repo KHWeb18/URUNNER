@@ -4,7 +4,10 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.urunner.khweb.controller.dto.UserDto;
+import com.urunner.khweb.entity.member.Member;
+import com.urunner.khweb.repository.member.MemberRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -32,8 +35,13 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
     private final AuthenticationManager authenticationManager;
 
-    public CustomAuthenticationFilter(AuthenticationManager authenticationManager) {
+    MemberRepository memberRepository;
+
+    private String userEmail;
+
+    public CustomAuthenticationFilter(AuthenticationManager authenticationManager, MemberRepository memberRepository) {
         this.authenticationManager = authenticationManager;
+        this.memberRepository = memberRepository;
     }
 
     //    인증하는 클래스
@@ -44,9 +52,12 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
             UserDto userDto = objectMapper.readValue(request.getReader(), UserDto.class);
 
+
             if (StringUtils.isEmpty(userDto.getEmail()) || StringUtils.isEmpty(userDto.getPassword())) {
                 throw new IllegalArgumentException("username or Password is Empty");
             }
+
+            this.userEmail = userDto.getEmail();
 
             String username = userDto.getEmail();
             String password = userDto.getPassword();
@@ -65,6 +76,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
 
+        Member memberInfo = memberRepository.findByEmail(userEmail);
 
         User user = (User) authentication.getPrincipal();
         Algorithm algorithm = Algorithm.HMAC256("urunner".getBytes());
@@ -73,6 +85,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
                 .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 10000)) // 10^-3 초
                 .withIssuer(request.getRequestURI().toString())
                 .withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+                .withClaim("name", memberInfo.getName())
                 .sign(algorithm);
 
         String refresh_token = JWT.create()
@@ -80,6 +93,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
                 .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 120 * 10000)) // 10^-3 초
                 .withIssuer(request.getRequestURI().toString())
                 .withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+                .withClaim("name", memberInfo.getName())
                 .sign(algorithm);
 
         Map<String, String> tokens = new HashMap<>();

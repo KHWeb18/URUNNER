@@ -21,6 +21,7 @@ export default new VueRouter({
           component: () => import ('../views/MemberRegisterPage.vue')
       }, {
           path: '/memberProfile',
+          name: 'memberProfile',
           component: () => import ('../views/MemberProfilePage.vue')
       },
       // 회원 탈퇴
@@ -52,14 +53,27 @@ export default new VueRouter({
                   path: '/wishlist',
                   component: () => import ("../components/enrolment/WishList.vue")
               }, {
-                  path: '/cart',
-                  component: () => import ("../components/enrolment/Cart.vue")
-              }, {
                 path: '/forgot',
                 component: () => import ("../views/ForgotPasswordPage.vue")
+            },
+            {
+              path: '/coupons',
+              component: () => import("../components/enrolment/Coupon.vue")
+            },
+            {
+              path: '/my-points',
+              component: () => import("../components/enrolment/Mypoints.vue")
             }
           ]
-      }
+      },
+      {
+        path: '/cart',
+        component: () => import ("../components/enrolment/Cart.vue")
+    },
+    {
+      path: '/orders',
+      component: () => import("../components/enrolment/Orders.vue")
+    }
   ]
 })
 
@@ -84,7 +98,6 @@ axios.interceptors.request.use(function (config) {
     }else{
       config.headers.Authorization = Vue.$cookies.get("ACCESS_TOKEN");
     }
-    alert("요청")
 
     return config;
   }, function (error) {
