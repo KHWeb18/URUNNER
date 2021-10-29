@@ -38,6 +38,24 @@
               </v-card-actions>
             </v-card>
           </v-col>
+          <v-col cols="3">
+            <v-card
+              color="#385F73"
+              dark
+            >
+              <v-card-title class="text-h5-bold">
+                이메일 인증하기
+              </v-card-title>
+
+              <v-card-text> {{email}} </v-card-text>
+
+              <v-card-actions>
+                <v-btn text @click="certfiEmail">
+                    인증하기
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-col>
         </v-row>
     </div>
 </template>
@@ -51,16 +69,25 @@ export default {
         return{
             latestNote:'',
             latestLecture:'',
+            email:''
         }
     },
     mounted(){
-      alert('email '+this.$cookies.get('USER_NAME'))
+        this.email = this.$cookies.get('USER_NAME')
         axios.get('http://localhost:7777/my-page')
         .then(res=>{
             this.latestLecture = res.data.latestLecture
             this.latestNote = res.data.latestNote
             
         })
+    },
+    methods:{
+      certfiEmail(){
+        const{ email } = this
+        axios.post('http://localhost:7777/my-page',{email})
+        .then()
+        alert('이메일 보내기완료!')
+      }
     }
     
 

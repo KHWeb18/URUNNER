@@ -3,7 +3,6 @@ import VueRouter from 'vue-router';
 
 // 회원 탈퇴
 import LeaveMemberPage from '@/views/member/LeaveMemberPage.vue'
-
 //마이 페이지
 import MyPageStatus from '@/views/mypage/MyPageStatus.vue'
 

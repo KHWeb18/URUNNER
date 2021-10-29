@@ -13,66 +13,73 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.mail.*;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import java.util.Properties;
+
 @Service
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class SendEmailServiceImpl implements SendEmailService{
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private MemberProfileRepository repository;
 
-    @Autowired
-    MemberRepository memberRepository;
-
-    private JavaMailSender mailSender;
-
-    private static final String FROM_ADDRESS = "wsk0307@gmail.com";
-
-    public MailDto createMailAndChangePassword(String email, String name){
-        String str = getTempPassword();
-        MailDto dto = new MailDto();
-        dto.setAddress(email);
-        dto.setTitle(name+"님의 URUNNER 임시비밀번호 안내 이메일 입니다.");
-        dto.setMessage("안녕하세요. URUNNER 임시비밀번호 안내 관련 이메일 입니다." + "[" + name + "]" +"님의 임시 비밀번호는 "
-                + str + " 입니다.");
-        return dto;
-    }
-
-    public void updatePassword(MemberRes memberRes) throws Exception{
-        String name = memberRes.getName();
-        String email = memberRes.getEmail();
-        String password = passwordEncoder.encode(memberRes.getPassword());
-
-        Member member = memberRepository.findByEmail(email);
-        repository.updatePassword(password);
-    }
+    @Override
+    public void sendMail(String email) throws Exception {
+        String host = "smtp.naver.com"; //구글계정으로 할시("smtp.gmail.com")
+        //관리자계정으로 변환부분
+        String user = "injun0607@naver.com"; // 네이버일 경우 네이버 계정, gmail경우 gmail 계정
+        String password = "password";   // 패스워드
 
 
-    public String getTempPassword(){
-        char[] charSet = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F',
-                'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
+        // SMTP 서버 정보를 설정
+        Properties prop = new Properties();
+        prop.put("mail.smtp.host", host);
+        prop.put("mail.smtp.port", 587); //구글계정포트(465)
+        prop.put("mail.smtp.auth", "true");
 
-        String str = "";
+        /*구글이메일 설정시 해제
+        prop.put("mail.smtp.ssl.enable", "true"); prop.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+        prop.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+        */
 
-        int idx = 0;
-        for (int i = 0; i < 10; i++) {
-            idx = (int) (charSet.length * Math.random());
-            str += charSet[idx];
+        Session session = Session.getDefaultInstance(prop, new javax.mail.Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(user, password);
+            }
+        });
+
+        try {
+            MimeMessage message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(user));
+
+            //수신자메일주소
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
+
+
+            message.setSubject("테스트메일입니당"); //메일 제목을 입력
+
+
+            message.setText("테스트내용이에요");    //메일 내용을 입력
+
+            // send the message
+            Transport.send(message); ////전송
+            System.out.println("message sent successfully...");
+        } catch (AddressException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (MessagingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
-        return str;
+
+
     }
 
-    public void mailSend(MailDto mailDto){
-        System.out.println("이멜 전송 완료!");
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(mailDto.getAddress());
-        message.setFrom(SendEmailServiceImpl.FROM_ADDRESS);
-        message.setSubject(mailDto.getTitle());
-        message.setText(mailDto.getMessage());
 
-        mailSender.send(message);
-    }
+
 }
