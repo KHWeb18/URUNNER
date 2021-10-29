@@ -69,7 +69,6 @@ export default {
         return{
             latestNote:'',
             latestLecture:'',
-            email:''
         }
     },
     mounted(){
@@ -83,8 +82,7 @@ export default {
     },
     methods:{
       certfiEmail(){
-        const{ email } = this
-        axios.post('http://localhost:7777/my-page',{email})
+        axios.get('http://localhost:7777/my-page/mailcert')
         .then()
         alert('이메일 보내기완료!')
       }

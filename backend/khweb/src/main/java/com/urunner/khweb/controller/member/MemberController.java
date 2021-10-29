@@ -15,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -98,12 +100,17 @@ public class MemberController {
 
     // 회원 탈퇴
     @DeleteMapping("/leaveMember")
-    public ResponseEntity<Void> leaveMember(@RequestBody UserDto userDto) throws Exception {
+    public ResponseEntity<Void> leaveMember() throws Exception {
+
         log.info("leavemember()");
-        log.info("email입니다 "+userDto.getEmail());
-        String email = userDto.getEmail();
-        memberService.leaveMember(email);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        log.info(authentication.getName());
+        //Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        //log.info(principal.toString());
+
+        memberService.leaveMember(authentication.getName());
 
         return new ResponseEntity<Void>(HttpStatus.OK);
+
     }
 }

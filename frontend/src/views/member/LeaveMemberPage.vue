@@ -78,7 +78,7 @@
 
 
 import axios from 'axios'
-import { logout } from '@/util/APIUtil'
+//import { logout } from '@/util/APIUtil'
 
 export default {
     name: 'LeaveMemberPage',
@@ -94,13 +94,12 @@ export default {
         onDelete () {
             var result = confirm('탈퇴 하시겠습니까?')
             if(result) {
-                const { user_email } = this
                 
-                axios.delete('http://localhost:7777/memberManagement/leaveMember',{data: {email:user_email}}) 
+                axios.delete('http://localhost:7777/memberManagement/leaveMember') 
                         .then(() => {
                             alert('탈퇴 되었습니다.')
-                            logout()
-                            this.$router.push({ name: 'MainPage' })
+                           // logout()
+                            //this.$router.push({ name: 'MainPage' })
                             
                         })
                         .catch(err => {
