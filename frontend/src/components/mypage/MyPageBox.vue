@@ -72,6 +72,7 @@ export default {
         }
     },
     mounted(){
+      alert('email '+this.$cookies.get('USER_NAME'))
         axios.get('http://localhost:7777/my-page')
         .then(res=>{
             this.latestLecture = res.data.latestLecture

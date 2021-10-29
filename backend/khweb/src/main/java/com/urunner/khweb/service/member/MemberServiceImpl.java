@@ -2,17 +2,14 @@ package com.urunner.khweb.service.member;
 
 import com.urunner.khweb.controller.dto.MemberRes;
 import com.urunner.khweb.entity.member.Member;
-import com.urunner.khweb.entity.member.Role;
 import com.urunner.khweb.repository.member.MemberRepository;
 import com.urunner.khweb.repository.member.RoleRepository;
+import com.urunner.khweb.utility.PythonRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.context.annotation.Lazy;
+//import org.springframework.mail.javamail.JavaMailSender;
+//import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,6 +17,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 
 import javax.mail.*;
 import javax.mail.internet.AddressException;
@@ -31,11 +29,10 @@ import java.util.List;
 import java.util.Properties;
 
 
-@Slf4j @Transactional @Service @RequiredArgsConstructor
+
+@Slf4j @Transactional @Service @RequiredArgsConstructor @Lazy
 public class MemberServiceImpl implements MemberService, UserDetailsService {
 
-    //@Autowired
-    //private JavaMailSender javaMailSender;
 
     private final MemberRepository memberRepository;
     private final RoleRepository roleRepository;
@@ -141,9 +138,56 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
             e.printStackTrace();
         }
     }
+  
+    // 비밀번호 변경 (유저 찾기)
+    @Override
+    public String findingUser(MemberRes memberRes) throws Exception {
+        String email = memberRes.getEmail();
 
+        Member member = memberRepository.findByEmail(email);
 
+        String name;
 
+        if (member == null) {
+            log.info("not find user");
+            return "NotFindUser";
+        } else {
+            name = member.getName();
+
+            if (!name.equals(memberRes.getName())) {
+                log.info("not match id");
+                return "NotMatchId";
+            }
+        }
+
+        String result = new PythonRequest().findUserPw(name, email);
+
+        log.info(result);
+        return result;
     }
+
+    // 비밀번호 재설정 메일이후 링크를 통해 아이디로 회원 검색 (없을 시 null 반환)
+    @Override
+    public Member findByName(String name) throws Exception {
+        Member member = memberRepository.findByName(name);
+
+        if (member == null) {
+            log.info("login(): 그런 사람 없다.");
+
+        }
+            return member;
+    }
+
+    // 비밀번호 재설정(patch) 수정
+    @Override
+    public void changePw(Member member, MemberRes memberRes) throws Exception {
+        String encodedPassword = passwordEncoder.encode(memberRes.getPassword());
+        memberRes.setPassword(encodedPassword);
+
+        member.changePassword(memberRes);
+
+        memberRepository.save(member);
+    }
+}
 
 

@@ -1,6 +1,7 @@
 package com.urunner.khweb.controller.member;
 
 import com.urunner.khweb.controller.dto.MemberRes;
+import com.urunner.khweb.controller.dto.UserDto;
 import com.urunner.khweb.entity.member.Member;
 import com.urunner.khweb.repository.member.MemberRepository;
 import com.urunner.khweb.service.member.MemberService;
@@ -8,10 +9,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpSession;
 
 import java.util.List;
 
@@ -29,6 +33,8 @@ public class MemberController {
 
     @Autowired
     MemberRepository memberRepository;
+
+    private HttpSession session;
 
     //회원가입
     @PostMapping("/register-member")
@@ -52,19 +58,6 @@ public class MemberController {
         return memberRepository.findAll();
     }
 
-
-
-
-
-
-
-
-
-
-    
-
-
-
     // 회원 탈퇴
     @DeleteMapping("/leaveMember")
     public ResponseEntity<Void> leaveMember() throws Exception {
@@ -77,7 +70,24 @@ public class MemberController {
 
         memberService.leaveMember(authentication.getName());
 
-        return new ResponseEntity<Void>(HttpStatus.OK);
 
+
+    // 비밀번호 찾기 및 이메일 보내기
+    @PostMapping("/findingpw")
+    public ResponseEntity<String> findUser(@RequestBody MemberRes memberRes) throws Exception {
+        String findUser = memberService.findingUser(memberRes);
+
+        return new ResponseEntity<>(findUser, HttpStatus.OK);
     }
+
+    // 비밀번호 재설정하기(이름과 매칭해 비밀번호 찾기)
+    @PatchMapping("/changePw/{name}")
+    public ResponseEntity<Void> changePw(@PathVariable("name") String name, @RequestBody MemberRes memberRes) throws Exception {
+        Member member = memberService.findByName(name);
+
+        memberService.changePw(member, memberRes);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }

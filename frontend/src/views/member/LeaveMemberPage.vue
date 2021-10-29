@@ -82,20 +82,14 @@ import axios from 'axios'
 
 export default {
     name: 'LeaveMemberPage',
-    data(){
-        return{
-            user_email:''
-        }
-    },
-    mounted(){
-        this.user_email=this.$cookies.get('USER_NAME')
-    },
     methods: {
         onDelete () {
             var result = confirm('탈퇴 하시겠습니까?')
             if(result) {
-                
                 axios.delete('http://localhost:7777/memberManagement/leaveMember') 
+
+
+
                         .then(() => {
                             alert('탈퇴 되었습니다.')
                             logout()
