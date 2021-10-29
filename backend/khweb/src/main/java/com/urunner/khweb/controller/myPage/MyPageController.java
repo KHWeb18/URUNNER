@@ -1,12 +1,10 @@
 package com.urunner.khweb.controller.myPage;
 
 
-import com.urunner.khweb.controller.dto.MemberRes;
-import com.urunner.khweb.controller.dto.UserDto;
 import com.urunner.khweb.controller.dto.mypage.MyPageRes;
 import com.urunner.khweb.entity.mypage.MyNote;
 import com.urunner.khweb.entity.mypage.TempLecture;
-import com.urunner.khweb.service.member.SendEmailService;
+import com.urunner.khweb.service.member.MemberService;
 import com.urunner.khweb.service.mypage.MypageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +14,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Slf4j
@@ -29,7 +25,7 @@ public class MyPageController {
     private MypageService mypageService;
 
     @Autowired
-    SendEmailService sendEmailService;
+    private MemberService memberService;
 
     @GetMapping("")
     public ResponseEntity<MyPageRes> myPageGet() throws Exception{
@@ -57,7 +53,7 @@ public class MyPageController {
         String email = authentication.getName();
 
         log.info(email);
-        sendEmailService.sendMail(email);
+        memberService.sendMail(email);
         log.info("mailsend Success!");
 
         return new ResponseEntity<Void>(HttpStatus.OK);

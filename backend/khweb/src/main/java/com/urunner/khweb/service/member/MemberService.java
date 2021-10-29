@@ -12,6 +12,8 @@ public interface MemberService {
 
     public void leaveMember (String email) throws Exception;
 
+    void sendMail(String email) throws Exception;
+
     //public boolean sendEmail(MemberRes memberRes) throws Exception;
 
 }

@@ -98,8 +98,8 @@ export default {
                 axios.delete('http://localhost:7777/memberManagement/leaveMember') 
                         .then(() => {
                             alert('탈퇴 되었습니다.')
-                           // logout()
-                            //this.$router.push({ name: 'MainPage' })
+                            logout()
+                            this.$router.push({ name: 'MainPage' })
                             
                         })
                         .catch(err => {
