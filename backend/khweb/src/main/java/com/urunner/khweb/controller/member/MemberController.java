@@ -9,10 +9,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+
 import java.util.List;
 
 @Slf4j
@@ -54,6 +58,19 @@ public class MemberController {
         return memberRepository.findAll();
     }
 
+    // 회원 탈퇴
+    @DeleteMapping("/leaveMember")
+    public ResponseEntity<Void> leaveMember() throws Exception {
+
+        log.info("leavemember()");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        log.info(authentication.getName());
+        //Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        //log.info(principal.toString());
+
+        memberService.leaveMember(authentication.getName());
+
+
 
     // 비밀번호 찾기 및 이메일 보내기
     @PostMapping("/findingpw")
@@ -73,14 +90,4 @@ public class MemberController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    // 회원 탈퇴
-    @DeleteMapping("/leaveMember")
-    public ResponseEntity<Void> leaveMember(@RequestBody UserDto userDto) throws Exception {
-        log.info("leavemember()");
-        log.info("email입니다 "+userDto.getEmail());
-        String email = userDto.getEmail();
-        memberService.leaveMember(email);
-
-        return new ResponseEntity<Void>(HttpStatus.OK);
-    }
 }

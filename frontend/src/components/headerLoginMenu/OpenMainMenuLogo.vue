@@ -6,9 +6,11 @@
             <v-img src="https://cdn.vuetifyjs.com/images/john.png"/>
           </v-list-item-avatar>
           <v-list-item-content>
-            <v-list-item-title class="text-h6">
-              User name
-            </v-list-item-title>
+            <router-link :to="{ name: 'memberProfile' }">
+              <v-list-item-title class="text-h6">
+                {{ this.$store.state.name }}
+              </v-list-item-title>
+            </router-link>
             <v-list-item-subtitle>Student</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item> 

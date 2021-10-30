@@ -7,6 +7,18 @@ import LeaveMemberPage from '@/views/member/LeaveMemberPage.vue'
 //마이 페이지
 import MyPageStatus from '@/views/mypage/MyPageStatus.vue'
 
+// 게시판
+import FreeBoardListPage from '@/views/board/free/BoardListPage.vue'
+import FreeBoardRegisterPage from '@/views/board/free/BoardRegisterPage.vue'
+import FreeBoardReadPage from '@/views/board/free/BoardReadPage.vue'
+import FreeBoardModifyPage from '@/views/board/free/BoardModifyPage.vue'
+
+// 공지 게시판
+import NoticeRegisterPage from '@/views/notice/NoticeRegisterPage.vue'
+import NoticeListPage from '@/views/notice/NoticeListPage.vue'
+import NoticeReadPage from '@/views/notice/NoticeReadPage.vue'
+import NoticeModifyPage from '@/views/notice/NoticeModifyPage.vue'
+
 Vue.use(VueRouter)
 
 export default new VueRouter({
@@ -79,7 +91,76 @@ export default new VueRouter({
       {
         path: '/orders',
         component: () => import("../components/enrolment/Orders.vue")
-      }
+      },
+      {
+        path: '/freeBoard',
+        name: 'FreeBoardListPage',
+        components: {
+          default: FreeBoardListPage
+        }
+      },
+      {
+        path: '/freeBoard/create',
+        name: 'FreeBoardRegisterPage',
+        components: {
+          default: FreeBoardRegisterPage
+        }
+      },
+      {
+        path: '/freeBoard/:boardNo',
+        name: 'FreeBoardReadPage',
+        components: {
+          default: FreeBoardReadPage
+        },
+        props: {
+          default: true
+        }
+      },
+      {
+        path: '/freeBoard/:boardNo/edit',
+        name: 'FreeBoardModifyPage',
+        components: {
+          default: FreeBoardModifyPage
+        },
+        props: {
+          default: true
+        }
+      },
+      // 공지 게시판
+      {
+        path: '/notice/create',
+        name: 'NoticeRegisterPage',
+        components: {
+          default: NoticeRegisterPage
+        }
+      },
+      {
+        path: '/notice',
+        name: 'NoticeListPage',
+        components: {
+          default: NoticeListPage
+        }
+      },
+      {
+        path: '/notice/:noticeNo',
+        name: 'NoticeReadPage',
+        components: {
+          default: NoticeReadPage
+        },
+        props: {
+          default: true
+        }
+      },
+      {
+        path: '/notice/:noticeNo/edit',
+        name: 'NoticeModifyPage',
+        components: {
+          default: NoticeModifyPage
+        },
+        props: {
+          default: true
+        }
+      },
   ]
 })
 
@@ -136,7 +217,3 @@ axios.interceptors.response.use(function (response) {
     // Do something with response error
     return Promise.reject(error);
   });
-
-
-
-// //   https://www.npmjs.com/package/axios

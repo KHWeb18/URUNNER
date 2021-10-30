@@ -40,4 +40,34 @@ public class ImageRegisterController {
 
         return "Success";
     }
+
+    @PostMapping("/uploadImg_Free")
+    @ResponseBody
+    public String requestUploadFile3(
+            @RequestParam("fileList") List<MultipartFile> fileList,
+            @RequestParam("id") String id,
+            @RequestParam("no") String no) {
+
+        log.info("requestUploadFile(): " + fileList);
+        log.info("**params value( id ) : " + id);
+        log.info("**params value( no ) : " + no);
+
+        try {
+            for (MultipartFile multipartFile : fileList) {
+                log.info("requestUploadFile(): Make File");
+                FileOutputStream writer = new FileOutputStream("./images/free/"+ id + "_" + no + ".gif");
+                log.info("multipartFile.getOriginalFilename : " + multipartFile.getOriginalFilename());
+
+
+                writer.write(multipartFile.getBytes());
+                writer.close();
+            }
+        } catch (Exception e) {
+            return "Upload Fail!!!";
+        }
+
+        log.info("requestUploadFile(): Success!!!");
+
+        return "Upload Success!!!";
+    }
 }
