@@ -161,6 +161,10 @@ export default new VueRouter({
           default: true
         }
       },
+      {
+        path: '/*',
+        component: () => import( "../util/Oauth")
+      }
   ]
 })
 

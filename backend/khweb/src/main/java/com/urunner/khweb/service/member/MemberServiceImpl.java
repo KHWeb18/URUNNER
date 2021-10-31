@@ -1,6 +1,7 @@
 package com.urunner.khweb.service.member;
 
 import com.urunner.khweb.controller.dto.MemberRes;
+import com.urunner.khweb.entity.member.AuthProvider;
 import com.urunner.khweb.entity.member.Member;
 import com.urunner.khweb.repository.member.MemberRepository;
 import com.urunner.khweb.repository.member.RoleRepository;
@@ -54,6 +55,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
             member.setEmail(memberRes.getEmail());
             member.setName(memberRes.getName());
             member.setPassword(passwordEncoder.encode(memberRes.getPassword()));
+            member.setProvider(AuthProvider.local);
 
             memberRepository.save(member);
 

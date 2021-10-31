@@ -22,7 +22,6 @@ import java.util.List;
 @Slf4j
 @Controller
 @RequestMapping("/memberManagement")
-@CrossOrigin(origins = "http://localhost:8080", allowedHeaders = "*")
 public class MemberController {
 
     //@Autowired
@@ -34,7 +33,7 @@ public class MemberController {
     @Autowired
     MemberRepository memberRepository;
 
-    private HttpSession session;
+//    private HttpSession session;
 
     //회원가입
     @PostMapping("/register-member")
@@ -59,17 +58,19 @@ public class MemberController {
     }
 
     // 회원 탈퇴
-    @DeleteMapping("/leaveMember")
-    public ResponseEntity<Void> leaveMember() throws Exception {
-
-        log.info("leavemember()");
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        log.info(authentication.getName());
-        //Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        //log.info(principal.toString());
-
-        memberService.leaveMember(authentication.getName());
-
+//    @DeleteMapping("/leaveMember")
+//    public ResponseEntity<Void> leaveMember() throws Exception {
+//
+//        log.info("leavemember()");
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        log.info(authentication.getName());
+//        //Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        //log.info(principal.toString());
+//
+//        memberService.leaveMember(authentication.getName());
+//
+//
+//    }
 
 
     // 비밀번호 찾기 및 이메일 보내기
