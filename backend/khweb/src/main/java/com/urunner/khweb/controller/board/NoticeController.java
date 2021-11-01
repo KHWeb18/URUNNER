@@ -55,11 +55,13 @@ public class NoticeController {
 
     @PutMapping("/modifyNotice/{noticeNo}")
     public  ResponseEntity<Void> modifyNotice(@PathVariable("noticeNo")Long noticeNo,
-                                              @Validated @RequestBody Notice Notice) throws  Exception {
+                                              @Validated @RequestBody Notice notice) throws  Exception {
 
-        Notice.setNoticeNo(noticeNo);
+        log.info("notice param {}", notice);
 
-        noticeService.modifyNotice(Notice);
+        notice.setNoticeNo(noticeNo);
+
+        noticeService.modifyNotice(notice);
 
         return new ResponseEntity<Void>(HttpStatus.OK);
     }

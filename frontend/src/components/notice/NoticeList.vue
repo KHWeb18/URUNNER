@@ -13,7 +13,7 @@
                   @page-count="pageCount = $event"
               ></v-data-table>
 
-              <div class="search-box" style="padding:20px 200px 20px 200px">
+              <div class="search-box" style="padding:20px 350px 20px 350px">
                   <v-text-field
                       v-model="search"
                       append-icon="mdi-magnify"
@@ -51,8 +51,8 @@ export default {
                 headers:[
                           { text: '번호', value: 'noticeNo', width: "70px" },
                           { text: '제목', value: 'title', width: "200px" },
-                          { text: '작성자', value: 'writer', width: "50px" },
-                          { text: '등록일자', value: 'regDate', width: "60px" }
+                          { text: '글쓴이', value: 'writer', width: "80px" },
+                          { text: '최종등록일자', value: 'upDate', width: "60px" }
                         ],
                 icons: ['mdi-rewind', 'mdi-play', 'mdi-fast-forward'],    
               }

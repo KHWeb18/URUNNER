@@ -1,17 +1,15 @@
 <template>
     <div id="notice" align=center>
-        <h3 style="padding:30px 0px 20px 0px; font-weight:bold">공지 사항</h3>
+        <h3 style="padding:30px 0px 0px 0px; font-weight:bold">유러너 공지사항</h3>
+    <div class="게시물목록">
+        <notice-list :notices="notices"/>
+    </div>
         <router-link :to="{ name: 'NoticeRegisterPage' }" style="text-decoration: none;">
-
             <v-btn text color="black" rounded x-large
                 style="padding: 10px; width: 90px;">
             글쓰기
             </v-btn>
         </router-link>
-
-    <div class="게시물목록">
-        <notice-list :notices="notices"/>
-    </div>
     </div>
 </template>
 
@@ -38,6 +36,6 @@ export default {
 <style scoped>
 
 .게시물목록 {
-  padding:0px 50px 100px 50px;
+  padding:0px 50px 0px 50px;
 }
 </style>
