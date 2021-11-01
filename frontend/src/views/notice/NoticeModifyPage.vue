@@ -6,9 +6,11 @@
 </template>
 
 <script>
+
 import NoticeModifyForm from '@/components/notice/NoticeModifyForm'
 import { mapState, mapActions } from 'vuex'
 import axios from 'axios'
+
 export default {
     name: 'NoticeModifyPage',
     components: {

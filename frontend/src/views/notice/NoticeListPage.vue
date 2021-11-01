@@ -14,8 +14,10 @@
 </template>
 
 <script>
+
 import NoticeList from '@/components/notice/NoticeList.vue'
 import { mapState, mapActions } from 'vuex'
+
 export default {
     name: 'NoticeListPage',
     components: {

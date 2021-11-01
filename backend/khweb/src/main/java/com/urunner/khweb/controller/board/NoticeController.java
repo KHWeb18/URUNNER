@@ -60,7 +60,6 @@ public class NoticeController {
         log.info("notice param {}", notice);
 
         notice.setNoticeNo(noticeNo);
-
         noticeService.modifyNotice(notice);
 
         return new ResponseEntity<Void>(HttpStatus.OK);
