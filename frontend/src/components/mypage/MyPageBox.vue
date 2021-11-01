@@ -38,6 +38,24 @@
               </v-card-actions>
             </v-card>
           </v-col>
+          <v-col cols="3">
+            <v-card
+              color="#385F73"
+              dark
+            >
+              <v-card-title class="text-h5-bold">
+                이메일 인증하기
+              </v-card-title>
+
+              <v-card-text> {{email}} </v-card-text>
+
+              <v-card-actions>
+                <v-btn text @click="certfiEmail">
+                    인증하기
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-col>
         </v-row>
     </div>
 </template>
@@ -61,6 +79,13 @@ export default {
             this.latestNote = res.data.latestNote
             
         })
+    },
+    methods:{
+      certfiEmail(){
+        axios.get('http://localhost:7777/my-page/mailcert')
+        .then()
+        alert('이메일 보내기완료!')
+      }
     }
     
 

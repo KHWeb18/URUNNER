@@ -67,6 +67,7 @@ function logout() {
     Vue.$cookies.remove(REFRESH_TOKEN)
     Vue.$cookies.remove(ROLES)
     Vue.$cookies.remove(USER_NAME)
+    Vue.$cookies.remove(NAME)
 
     EventBus.$emit('isLogin', null);
   }

@@ -36,6 +36,9 @@ public class Member {
     @UpdateTimestamp
     private Date upDate;
 
+    @Enumerated(EnumType.STRING)
+    private AuthProvider provider;
+
 
     public Member(String email, String password, String name, String introduce) {
         this.email = email;
@@ -71,5 +74,9 @@ public class Member {
     // 비밀번호 재설정
     public void changePassword(MemberRes memberRes) {
         this.password = memberRes.getPassword();
+    }
+
+    public void setProvider(AuthProvider provider) {
+        this.provider = provider;
     }
 }

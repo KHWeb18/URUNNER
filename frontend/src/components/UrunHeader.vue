@@ -9,7 +9,9 @@
             <div class="category d-flex text-h6 grey--text text--darken-2">
                 <div class="mr-9 hidden-md-and-down">로드맵</div>
                 <div class="mr-9 hidden-md-and-down">강의</div>
-                <div class="mr-9 hidden-md-and-down">커뮤니티</div>
+                <router-link :to="{ name: 'FreeBoardListPage' }">
+                  <div class="mr-9 hidden-md-and-down">커뮤니티</div>
+                </router-link>
                 <div class="hidden-md-and-down">유러너</div>
             </div>
             <div class="end d-flex">

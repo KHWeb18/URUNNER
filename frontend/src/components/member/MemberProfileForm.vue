@@ -87,11 +87,11 @@
                         </v-btn>
                         </router-link>
                     </div>
-                    <!-- <div class="button_box" style="margin-top: 0px;">
+                    <div class="button_box" style="margin-top: 0px;">
                         <v-btn color="transparent" class="item" @click="test()" style="color: #29B6F6;">
                             test
                         </v-btn>
-                    </div> -->
+                    </div>
                 </fieldset>
             </div>
             </v-container>
@@ -137,10 +137,10 @@ export default {
             }, 100)
     },
     methods: {
-        // test() {
-        //     console.log(this.$store.state.introduce)
-        //     this.introduce = this.$store.state.introduce
-        // },
+        test() {
+            console.log(this.$store.state.name)
+            // this.introduce = this.$store.state.introduce
+        },
         profileSubmit () {
                 const { userId, name, password, introduce} = this
                 this.$emit('submit', { userId, name, password, introduce })
