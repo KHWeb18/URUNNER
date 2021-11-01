@@ -36,6 +36,22 @@ export default new VueRouter({
           name: 'memberProfile',
           component: () => import ('../views/MemberProfilePage.vue')
       },
+       // 강의 관리 페이지 (강의 등록 시스템)
+       {
+        path: '/mypage/lecture/lectureList',
+        name: 'lectureListPage',
+        component: () => import ('../views/lecture/LectureListPage.vue')
+      },
+      {
+          path: '/mypage/lecture/registerLecture',
+          name: 'registerLecture',
+          component: () => import ('../views/lecture/RegisterLecturePage.vue')
+      },
+      {
+          path: '/mypage/lecture/registerLectureImage',
+          name: 'LectureImageRegisterPage',
+          component: () => import ('../views/lecture/LectureImageRegisterPage.vue')
+      },
       // 회원 탈퇴
       {
           path: '/leave-member',
