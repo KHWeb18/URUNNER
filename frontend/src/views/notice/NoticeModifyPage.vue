@@ -6,9 +6,11 @@
 </template>
 
 <script>
+
 import NoticeModifyForm from '@/components/notice/NoticeModifyForm'
 import { mapState, mapActions } from 'vuex'
 import axios from 'axios'
+
 export default {
     name: 'NoticeModifyPage',
     components: {
@@ -26,17 +28,13 @@ export default {
     methods: {
         ...mapActions(['fetchNotice']),
         onSubmit (payload) {
-            const { title, writer, content } = payload
-            axios.put(`http://localhost:7777/notice/modifyNotice/${this.noticeNo}`, { title, writer, content })
-                    .then(res => {
+            const { title, writer, content, upDate } = payload
+            axios.put(`http://localhost:7777/notice/modifyNotice/${this.noticeNo}`, { title, writer, content, upDate })
+                    .then(() => {
                         alert('수정 되었습니다.')
                         this.$router.push({
-                            name: 'NoticeReadPage',
-                            params: { noticeNo: res.data.noticeNo.toString() }
+                            name: 'NoticeReadPage'
                         })
-                    })
-                    .catch(err => {
-                        alert(err.response.data.message)
                     })
         }
     },

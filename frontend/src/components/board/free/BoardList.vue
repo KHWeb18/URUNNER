@@ -30,6 +30,7 @@
                     </span>
                 </div>
             </div>
+                    <v-btn @click="test()">web storage 비우기 버튼</v-btn>
             <!-- 게시글 리스트 -->
             <div class="forSearching" v-show="!searchinOn">
                 <div class="post_list" v-show="!toggle_exclusive">
@@ -212,6 +213,7 @@
                         </v-btn>
                     </router-link>
                 </v-flex>
+                
             </div>
             <v-container style="margin-top:20px;">
                 <div class="text-center">
@@ -219,6 +221,7 @@
                 </div>
             </v-container>
             </div>
+            
         </div>
     </div>
 </template>
@@ -261,10 +264,12 @@ import { mapState, mapActions } from 'vuex'
             this.crawlFind()
         },
         methods: {
-            // test() {
-            //     console.log(this.$store.state.name)
-            //     this.$store.state.name = '임시닉네임'
-            // },
+            test() {
+                console.log(this.$store.state.name)
+                this.$store.state.name = '임시닉네임'
+                sessionStorage.clear();
+                localStorage.clear();
+            },
             nextPage() {
                 this.pageNum += 1;
             },
@@ -288,7 +293,7 @@ import { mapState, mapActions } from 'vuex'
             },
             searching () {
                 var lists = this.boards
-
+                console.log(this.$store.state)
                 this.searchingResult = []
                 for(var i = 0; i < lists.length; i++){
                     if(lists[i].title.includes(this.word || lists[i].content.includes(this.word))){

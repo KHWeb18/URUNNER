@@ -41,7 +41,7 @@
 
 <script>
 
-import Editor from '@/components/board/free/Editor.vue'
+import Editor from '@/components/board/Editor.vue'
 
 export default {
     name: 'BoardModifyForm',

@@ -23,25 +23,52 @@
 </template>
 
 <script>
+<<<<<<< HEAD
+=======
+import axios from 'axios';
+import { API_BASE_URL } from '@/constants/index.js'
+
+>>>>>>> upstream/main
 export default {
   data() {
     return {
       lectureInfo: {
         title: '',
+<<<<<<< HEAD
         writer: null,
+=======
+>>>>>>> upstream/main
         description: '',
         price: null,
         category: ''
       },
       temp_category: [], 
+<<<<<<< HEAD
       tags: ['개발 프로그래밍', '자바', '프론트엔드', '백엔드', 'Vue', 'React', 'Html Css', 'docker']
+=======
+      tags: ['개발 프로그래밍', '자바', '프론트엔드', '백엔드', 'Vue', 'React', 'Html Css', 'docker'],
+      dto: []
+>>>>>>> upstream/main
     }
   },
   methods: {
     onSubmit() {
+<<<<<<< HEAD
       this.lectureInfo.writer = 2;
       this.temp_category.filter(c => this.lectureInfo.category += c + ',')
       console.log(this.lectureInfo);
+=======
+      this.temp_category.filter(c => this.lectureInfo.category += c + ',')
+
+      axios.post(API_BASE_URL + "/lecture/newlecture", { lectureInfo:this.lectureInfo })
+      .then(res => {
+        alert(res.data)
+      })
+      .catch(err => {
+        alert(err)
+      })
+
+>>>>>>> upstream/main
       // axios.post(/lecture/registerLecture)
       //       .then(res => { console.log(res.data); })
       //       .catch(err => { console.log(err); })

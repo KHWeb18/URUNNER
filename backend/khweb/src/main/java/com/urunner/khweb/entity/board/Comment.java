@@ -28,17 +28,22 @@ public class Comment {
     @Column(length = 100, nullable = false)
     private String name;
 
+    @Column(length = 100)
+    private Long layer;
+
+    @Column(length = 100)
+    private Long groupNo; // 대댓글이 달리는 코멘트 번호
+
     @CreationTimestamp
     private Date regDate;
 
-    @UpdateTimestamp
-    private Date upDate;
-
-    public Comment(Long boardNo, String content, String writer, String name) {
+    public Comment(Long boardNo, String content, String writer, String name, Long layer, Long groupNo) {
         this.boardNo = boardNo;
         this.content = content;
         this.writer = writer;
         this.name = name;
+        this.layer = layer;
+        this.groupNo = groupNo;
     }
 
 

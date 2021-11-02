@@ -19,6 +19,12 @@ import NoticeListPage from '@/views/notice/NoticeListPage.vue'
 import NoticeReadPage from '@/views/notice/NoticeReadPage.vue'
 import NoticeModifyPage from '@/views/notice/NoticeModifyPage.vue'
 
+// 스터디 게시판
+import StudyBoardRegisterPage from '@/views/board/study/StudyBoardRegisterPage.vue'
+import StudyBoardListPage from '@/views/board/study/StudyBoardListPage.vue'
+import StudyBoardReadPage from '@/views/board/study/StudyBoardReadPage.vue'
+import StudyBoardModifyPage from '@/views/board/study/StudyBoardModifyPage.vue'
+
 Vue.use(VueRouter)
 
 export default new VueRouter({
@@ -51,6 +57,11 @@ export default new VueRouter({
           path: '/mypage/lecture/registerLectureImage',
           name: 'LectureImageRegisterPage',
           component: () => import ('../views/lecture/LectureImageRegisterPage.vue')
+      },
+      {
+        path: '/mypage/lecture/manageLecture',
+        name: 'ManageLecturePage',
+        component: () => import ('../views/lecture/ManageLecturePage.vue'),
       },
       // 회원 탈퇴
       {
@@ -172,6 +183,41 @@ export default new VueRouter({
         name: 'NoticeModifyPage',
         components: {
           default: NoticeModifyPage
+        },
+        props: {
+          default: true
+        }
+      },
+      // 스터디 게시판
+      {
+        path: '/study/create',
+        name: 'StudyBoardRegisterPage',
+        components: {
+          default: StudyBoardRegisterPage
+        }
+      },
+      {
+        path: '/study',
+        name: 'StudyBoardListPage',
+        components: {
+          default: StudyBoardListPage
+        }
+      },
+      {
+        path: '/study/:boardNo',
+        name: 'StudyBoardReadPage',
+        components: {
+          default: StudyBoardReadPage
+        },
+        props: {
+          default: true
+        }
+      },
+      {
+        path: '/study/:boardNo/edit',
+        name: 'StudyBoardModifyPage',
+        components: {
+          default: StudyBoardModifyPage
         },
         props: {
           default: true

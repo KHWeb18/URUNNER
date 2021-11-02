@@ -1,4 +1,4 @@
-package com.urunner.khweb.repository.board;
+package com.urunner.khweb.repository.board.free;
 
 import com.urunner.khweb.entity.board.Free;
 import org.springframework.data.jpa.repository.JpaRepository;

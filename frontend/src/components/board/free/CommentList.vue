@@ -1,30 +1,48 @@
 <template>
 <div>
     댓글 <b style="color:#00897B">{{comments.length}}</b>
+    <!-- 그륩: {{ groupNo }} 코멘트: {{ commentNo }} 레이어: {{ layer }} -->
     <div class="comment_list">
         <div>
             <!-- 댓글 목록 -->
             <div class="post_list">
                 <div class="post_card_box">
-                    <div class="post_card" v-for="mob in paginatedData" :key="mob.commentNo">
-                        <div class="thumbnail">
-                            <v-avatar color="black" size="48" >
-                                <span><img :src="ImgRequest(mob[3])" style="width:60px;height:60px;object-fit: cover"></span></v-avatar>
+                    <div  v-for="mob in paginatedData" :key="mob.commentNo">
+                        <div class="post_card" :class="{ on : mob.layer!==0 }">
+                            <!-- 섬네일 -->
+                            <div class="thumbnail">
+                                <v-avatar color="black" size="48" >
+                                    <span><img :src="ImgRequest(mob.writer)" style="width:60px;height:60px;object-fit: cover"></span></v-avatar>
+                            </div>
+                            <!-- 댓글 박스 -->
+                            <div class="post_box"  @click="temp00(mob)">
+                                <div class="post_title">{{ mob.name }}</div>
+                                <div class="post_reg_date">{{ $moment(mob.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}</div>
+                                <div class="post_content">{{ mob.content }}</div>
+                                <!-- <div class="post_reg_date">commentNO: {{ mob[0] }}</div>
+                                <div class="post_reg_date">groupNO: {{ mob[3] }}</div>
+                                <div class="post_reg_date">layer: {{ mob[4] }}</div> -->
+                            </div>
+                            <div v-show="mob.writer == writer || writer=='admin01'" class="delete_box"><img src="@/assets/delete-empty.png" 
+                                @click="snackbar = true"></div>
                         </div>
-                        <div class="post_box">
-                            <div class="post_title">{{ mob[4] }}</div>
-                            <div class="post_reg_date">{{ $moment(mob[5]).add(-0, 'hours').format('YY-MM-DD HH:mm') }}</div>
-                            <div class="post_content">{{ mob[2] }}</div>                        
-                        </div>
-                        <div v-show="mob[3] == writer || writer=='admin01'" class="delete_box"><img src="@/assets/delete-empty.png" 
-                            @click="snackbar = true"></div>
+                            <!-- 대댓글 입력창 -->
+                            <div class="adit_comment_area" v-show="temp && mob.layer==0 && mob.commentNo==commentNo">
+                                <tr>
+                                    <textarea class="adit_comment_register_box"
+                                    v-model="content2" placeholder="댓글을 입력해주세요"></textarea>
+                                </tr>
+                                <td class="comment_register_btn">
+                                    <v-btn color="blue-grey darken-1 white-text" @click="submit">댓글 등록</v-btn>
+                                </td>
+                            </div>    
                             <!-- 댓글 삭제 클릭시 알림창 -->
                             <div class="text-center">            
                                 <v-snackbar v-model="snackbar"
                                 :timeout="-1" centered outlined>
                                 댓글을 삭제하시겠습니까?
                                     <template v-slot:action="{ attrs }">
-                                        <v-btn color="#424242" text v-bind="attrs" @click="[isNameProblem(mob[0]), snackbar = false]">
+                                        <v-btn color="#424242" text v-bind="attrs" @click="[isNameProblem(mob[7]), snackbar = false]">
                                         확인</v-btn>
                                         <v-btn color="red" text v-bind="attrs" @click="snackbar = false">
                                         취소</v-btn>
@@ -40,10 +58,13 @@
                 </v-container>
             </div>
             <!-- 댓글 입력창 -->
-            <div class="comment_area">
+            <div class="comment_area" @click="temp = false, groupNo = 0, layer = 0, commentNo = 0">
                 <tr>
+                    <!-- <textarea class="comment_register_box"
+                    v-model="content" placeholder="댓글을 입력해주세요" v-on:keyup.enter="submit"></textarea> -->
+                    <!-- 엔터키로 제출하면 줄바꿈도 같이 들어가서 일단 막아둠 -->
                     <textarea class="comment_register_box"
-                    v-model="content" placeholder="댓글을 입력해주세요" v-on:keyup.enter="submit"></textarea>
+                    v-model="content" placeholder="댓글을 입력해주세요"></textarea>
                 </tr>
                 <td class="comment_register_btn">
                     <v-btn color="blue-grey darken-1 white-text" @click="submit">댓글 등록</v-btn>
@@ -71,7 +92,14 @@ export default {
             refresh: 1,
             pageNum: 1,
             pageNumS: 1,
-            snackbar: false
+            snackbar: false,
+
+            //대댓글
+            layer: 0,
+            groupNo: null,
+            temp: false,
+            commentNo: 0,
+            content2: ''
         }
     },
     props: {
@@ -102,12 +130,18 @@ export default {
     methods: {
         submit () {
             console.log('저장하는 순간 store boardNo 값 : ' + this.$store.state.boardNo)
+            if(this.layer==1) {
+                this.content = this.content2
+            }
+            
             this.boardNo = this.$store.state.boardNo
-            const { boardNo, content, writer, name } = this
-            axios.post('http://localhost:7777/freeboard/comment/register', { boardNo, content, writer, name } )
+            this.groupNo = this.commentNo
+            const { boardNo, content, writer, name, layer, groupNo } = this
+            axios.post('http://localhost:7777/freeboard/comment/register', { boardNo, content, writer, name, layer, groupNo } )
                     .then(res => {
-                         console.log('코멘트 번호: ' + res.data.boardNo.toString())
+                        console.log('댓글등록완료 |' + res.status)
                          this.content = ''
+                         this.content2 = ''
                          let listLength = this.comments.length, // 길이
                          listSize = this.pageSize,
                          page = Math.floor(listLength / listSize);
@@ -119,6 +153,10 @@ export default {
                          this.refresh += 1
                          const refresh = this.refresh
                          this.$emit('submit', refresh)
+
+                         this.groupNo = 0 // 초기화
+                         this.layer = 0
+                         this.temp = false
                     })
                     .catch(res => {
                         alert(res.response.data.message + '설마 이거 뜨나?')
@@ -155,6 +193,16 @@ export default {
             } catch (e) {
                 return require(`@/assets/logo.png`)
             }
+        },
+        temp00(data) {
+            this.commentNo = data.commentNo
+            this.layer = 1
+            if(this.temp == true) {
+                this.temp = false
+                this.temp = !this.temp
+            } else {
+                this.temp = !this.temp
+            }
         }
     }
 }
@@ -178,6 +226,13 @@ export default {
     justify-content: row;
     padding: 20 20 5 5;
     margin-bottom: 20px;
+}
+.post_card.on {
+    display: flex;
+    justify-content: row;
+    padding: 20 20 5 5;
+    margin-bottom: 20px;
+    margin-left: 5vw;
 }
 .thumbnail {
     margin: 10px 20px 0px 10px;
@@ -250,5 +305,16 @@ export default {
     max-width: 1040px;
     border-top: 1px solid #BDBDBD;
     margin-top: 15px;
+}
+.adit_comment_area {
+    margin-left: 5vw;
+}
+.adit_comment_register_box {
+    height:100px;
+    width:62vw;
+    max-width: 1000px;
+    border: 1px solid #BDBDBD;    
+    padding: 10px;
+    margin-left: 20px;
 }
 </style>
