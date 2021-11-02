@@ -6,7 +6,7 @@ import com.urunner.khweb.entity.lecture.LectureVideo;
 
 public interface LectureService {
 
-    public void lectureVideo(LectureVideo lectureVideo, EnrollLectureVideoDto enrollLectureVideoDto);
+//    public void lectureVideo(LectureVideo lectureVideo, EnrollLectureVideoDto enrollLectureVideoDto);
 
     public void lectureEnroll(Lecture lecture);
 

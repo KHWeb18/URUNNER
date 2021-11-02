@@ -40,22 +40,22 @@ public class LectureServiceImpl implements LectureService {
     @PersistenceContext
     private EntityManager em;
 
-    @Override
-    public void lectureVideo(LectureVideo lectureVideo, EnrollLectureVideoDto enrollLectureVideoDto) {
-
-        LectureList lectureList = lectureListRepository.enrollLectureList(enrollLectureVideoDto.writer, enrollLectureVideoDto.topic);
-
-        LectureVideo saveVideo = LectureVideo.builder()
-                .title(lectureVideo.getTitle())
-                .description(lectureVideo.getDescription())
-                .sequence(lectureVideo.getSequence())
-                .duration(lectureVideo.getDuration())
-                .build();
-
-        saveVideo.setLectureList(lectureList);
-
-        lectureVideoRepository.save(saveVideo);
-    }
+//    @Override
+//    public void lectureVideo(LectureVideo lectureVideo, EnrollLectureVideoDto enrollLectureVideoDto) {
+//
+//        LectureList lectureList = lectureListRepository.enrollLectureList(enrollLectureVideoDto.writer, enrollLectureVideoDto.topic);
+//
+//        LectureVideo saveVideo = LectureVideo.builder()
+//                .title(lectureVideo.getTitle())
+//                .description(lectureVideo.getDescription())
+//                .sequence(lectureVideo.getSequence())
+//                .duration(lectureVideo.getDuration())
+//                .build();
+//
+//        saveVideo.setLectureList(lectureList);
+//
+//        lectureVideoRepository.save(saveVideo);
+//    }
 
     @Override
     public void lectureEnroll(Lecture lecture) {
