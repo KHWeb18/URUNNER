@@ -14,11 +14,11 @@ import java.util.Date;
 @Entity
 @Table(name = "notice")
 public class Notice {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "notice_no")
     private Long noticeNo;
-
     private String title;
     private String writer;
     private String content;
@@ -26,7 +26,7 @@ public class Notice {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
     @CreationTimestamp
     private Date regDate;
-    
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
     @UpdateTimestamp
     private Date upDate;
@@ -51,6 +51,6 @@ public class Notice {
         this.content = content;
     }
 
-    public void setNoticeNo(Long noticeNo) {
-    }
+    public void setNoticeNo(Long noticeNo) { this.noticeNo = noticeNo; }
+
 }
