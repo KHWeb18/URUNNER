@@ -29,47 +29,41 @@
 </template>
 
 <script>
+import axios from 'axios'
+import { API_BASE_URL } from '@/constants/index.js'
+
 export default {
   data() {
     return {
       thumbnailImage: "thumbnail image",
       detailImage: "detail image",
+      lectureId: 1
     }
   },
   methods: {
      async onSubmit() {
-      const formData1 = new FormData();
-      formData1.append("image", this.thumbnailImage);
+      const formData = new FormData();
+      formData.append("thumbnailImage", this.thumbnailImage);
+      formData.append("imageDetail", this.detailImage);
+      formData.append("lectureId", this.lectureId);
 
-      const formData2 = new FormData();
-      formData2.append("image", this.detailImage);
-
-      console.log(formData1);
+      console.log(formData);
       console.log(this.thumbnailImage);
       this.$router.push('/mypage/lecture/lectureList')
 
-      // try {
-      //   const { data1 } = await axios.post("/lecture/upload/image/thumbnail/:lectureId", formData1,
-      //     {
-      //       headers: {
-      //         "Content-Type": "multipart/form-data",
-      //       },
-      //     }
-      //   );
-      //   console.log(data);
+      try {
+        const { data1 } = await axios.post( API_BASE_URL + "/lecture/upload/image/thumbnail", formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        console.log(data1);
 
-      //   const { data2 } = await axios.post("/lecture/upload/image/detail/:lectureId", formData2,
-      //     {
-      //       headers: {
-      //         "Content-Type": "multipart/form-data",
-      //       },
-      //     }
-      //   );
-      //   console.log(data2);
-
-      // } catch (err) {
-      //   console.log(err);
-      // }
+      } catch (err) {
+        console.log(err);
+      }
     },
 
     // 파일 변경 시 이벤트 핸들러

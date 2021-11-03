@@ -65,5 +65,30 @@ export default {
                 .then((res) => {
                     commit(FETCH_NOTICE, res.data)
                 })
-    }
+    },
+    
+    // 스터디 게시판
+    fetchStudyBoardList ({ commit }) {
+        return axios.get('http://localhost:7777/studyboard/lists')
+                .then((res) => {
+                    const reverse = [...res.data].reverse();
+                    commit(FETCH_BOARD_LIST, reverse)
+                })
+    },
+    fetchStudyBoard ({ commit }, boardNo) {
+        return axios.get(`http://localhost:7777/studyboard/${boardNo}`)
+                .then((res) => {
+                    commit(FETCH_BOARD, res.data)
+                })
+    },
+    fetchStudyCommentList ({ commit }, No) {
+        console.log('fetchStudyCommentList 작동중 받은 No(stated의 boardNo) 값은 : ' + No)
+        return axios.get(`http://localhost:7777/studyboard/comment/${No}`)
+                .then((res) => {
+                    commit(FETCH_COMMENT_LIST, res.data)
+                    console.log(res.data)
+                    console.log(res.data[0][0])
+                })
+
+    },
 }

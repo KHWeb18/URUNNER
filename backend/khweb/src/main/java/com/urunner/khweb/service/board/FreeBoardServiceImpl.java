@@ -2,7 +2,7 @@ package com.urunner.khweb.service.board;
 
 import com.urunner.khweb.controller.dto.FreeRequest;
 import com.urunner.khweb.entity.board.Free;
-import com.urunner.khweb.repository.board.FreeBoardRepository;
+import com.urunner.khweb.repository.board.free.FreeBoardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -11,9 +11,6 @@ import java.util.Optional;
 
 @Service
 public class FreeBoardServiceImpl implements FreeBoardService {
-
-//    @Autowired
-//    private HttpSession session;
 
     @Autowired
     private FreeBoardRepository repository;
@@ -26,15 +23,15 @@ public class FreeBoardServiceImpl implements FreeBoardService {
         return repository.save(postEntity);
     }
 
-    public List<Free> findAll() throws Exception {
+    public List<Free> findAll(){
         return repository.findAll();
     }
 
-    public Optional<Free> findByBoardNo(Long boardNo) throws Exception {
+    public Optional<Free> findByBoardNo(Long boardNo){
         return repository.findByBoardNo(boardNo);
     }
 
-    public void updatePost(FreeRequest freeRequest) throws Exception {
+    public void updatePost(FreeRequest freeRequest){
 
         repository.updatePost(freeRequest.getTitle(), freeRequest.getContent(), freeRequest.getBoardNo());
     }
