@@ -11,6 +11,4 @@ public interface FreeBoardService {
     Optional<Free> findByBoardNo(Long boardNo) throws Exception;
     void updatePost(FreeRequest freeRequest) throws Exception;
     void delete(Long boardNo) throws Exception;
-
-
 }

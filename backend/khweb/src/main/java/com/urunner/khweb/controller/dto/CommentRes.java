@@ -9,12 +9,12 @@ import java.util.Date;
 @Slf4j
 @NoArgsConstructor
 public class CommentRes {
-
     private Long commentNo;
     private Long boardNo;
     private String content;
     private String writer;
     private String name;
+    private Long layer;
+    private Long groupNo;
     private Date regDate;
-
 }

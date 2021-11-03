@@ -26,7 +26,7 @@
 
         </div>
         <div class="button_box">
-            <router-link :to="{ name: 'FreeBoardListPage' }">
+            <router-link :to="{ name: 'StudyBoardListPage' }">
                 <v-btn>
                     취소
                 </v-btn>
@@ -44,7 +44,7 @@
 import Editor from '@/components/board/Editor.vue'
 
 export default {
-    name: 'BoardModifyForm',
+    name: 'StudyBoardModifyForm',
     components: {
         Editor
     },
@@ -107,13 +107,9 @@ export default {
 .main_box {
     color: #424242;
 }
-.title_box {   
-}
 .title_box span {
     font-size: 25px;
     font-weight: bold;
-}
-.page_title {
 }
 .post_card:hover {
     transform: scale(1.005);

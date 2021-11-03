@@ -23,26 +23,60 @@
 </template>
 
 <script>
+<<<<<<< HEAD
 import axios from 'axios';
 import { API_BASE_URL } from '@/constants/index.js'
 
+=======
+<<<<<<< HEAD
+=======
+import axios from 'axios';
+import { API_BASE_URL } from '@/constants/index.js'
+
+>>>>>>> upstream/main
+>>>>>>> upstream/main
 export default {
   data() {
     return {
       lectureInfo: {
         title: '',
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+        writer: null,
+=======
+>>>>>>> upstream/main
+>>>>>>> upstream/main
         description: '',
         price: null,
         category: ''
       },
       temp_category: [], 
+<<<<<<< HEAD
       tags: ['개발 프로그래밍', '자바', '프론트엔드', '백엔드', 'Vue', 'React', 'Html Css', 'docker'],
       dto: []
+=======
+<<<<<<< HEAD
+      tags: ['개발 프로그래밍', '자바', '프론트엔드', '백엔드', 'Vue', 'React', 'Html Css', 'docker']
+=======
+      tags: ['개발 프로그래밍', '자바', '프론트엔드', '백엔드', 'Vue', 'React', 'Html Css', 'docker'],
+      dto: []
+>>>>>>> upstream/main
+>>>>>>> upstream/main
     }
   },
   methods: {
     onSubmit() {
+<<<<<<< HEAD
       this.temp_category.filter(c => this.lectureInfo.category += c + ',')
+=======
+<<<<<<< HEAD
+      this.lectureInfo.writer = 2;
+      this.temp_category.filter(c => this.lectureInfo.category += c + ',')
+      console.log(this.lectureInfo);
+=======
+      this.temp_category.filter(c => this.lectureInfo.category += c + ',')
+>>>>>>> upstream/main
 
       axios.post(API_BASE_URL + "/lecture/newlecture", { lectureInfo:this.lectureInfo })
       .then(res => {
@@ -52,6 +86,10 @@ export default {
         alert(err)
       })
 
+<<<<<<< HEAD
+=======
+>>>>>>> upstream/main
+>>>>>>> upstream/main
       // axios.post(/lecture/registerLecture)
       //       .then(res => { console.log(res.data); })
       //       .catch(err => { console.log(err); })

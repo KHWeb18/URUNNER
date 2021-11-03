@@ -30,7 +30,7 @@ import Editor from '@/components/board/Editor.vue'
 
 
 export default {
-    name: 'BoardRegisterForm',
+    name: 'StudyBoardRegisterForm',
     components: {
         Editor
     },
@@ -70,7 +70,7 @@ export default {
             formData.append('id', ownerId)
             let no = this.$store.state.boardNo
             formData.append('no', no)
-            axios.post('http://localhost:7777/image/uploadImg_Free', formData, {
+            axios.post('http://localhost:7777/image/uploadImg_Study', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -84,7 +84,7 @@ export default {
             }) 
             alert('Processing Complete!')
             this.$router.push({
-                            name: 'FreeBoardListPage'
+                            name: 'StudyBoardListPage'
                         })
         },
         fileDeleteButton () {
@@ -94,7 +94,7 @@ export default {
         boardRegist (data) {            
             this.content = data
             const { title, writer, content, name } = this
-            axios.post('http://localhost:7777/freeboard/register', { title, writer, content, name } )
+            axios.post('http://localhost:7777/studyboard/register', { title, writer, content, name } )
                     .then(res => {
                         console.log(res.data)
                         this.$store.state.boardNo = res.data.boardNo.toString()

@@ -5,7 +5,7 @@
             <div class="title_box">
                 <h4 class="page_title">
                     <v-icon>mdi-exclamation-thick</v-icon>
-                    <span>자유게시판</span></h4>
+                    <span>스터디 모집</span></h4>
             </div>
             <!-- 옵션바 -->
             <div class="option_box">
@@ -30,14 +30,13 @@
                     </span>
                 </div>
             </div>
-                    <v-btn @click="test()">web storage 비우기 버튼</v-btn>
             <!-- 게시글 리스트 -->
             <div class="forSearching" v-show="!searchinOn">
                 <div class="post_list" v-show="!toggle_exclusive">
                     <div class="post_card_box">
                         <div class="post_card" v-for="mob in paginatedData" :key="mob.boardNo">
                             <router-link
-                                    :to="{ name: 'FreeBoardReadPage',
+                                    :to="{ name: 'StudyBoardReadPage',
                                                         params: { boardNo: mob.boardNo.toString() } }">
                             <div class="thumbnail">
                                 <v-img :src="ImgRequest(mob.writer, mob.boardNo)" class="thumbnail_img"></v-img>
@@ -45,7 +44,7 @@
                             <div class="post_box">
                                 <div class="post_tag">#TAG</div>
                                 <router-link
-                                    :to="{ name: 'FreeBoardReadPage',
+                                    :to="{ name: 'StudyBoardReadPage',
                                                         params: { boardNo: mob.boardNo.toString() } }">
                                 <div class="post_title">{{ mob.title }}</div>
                                 <div class="post_content">{{ replaceHtml(mob.content) }}</div>
@@ -55,7 +54,7 @@
                     </div>
                     <div class="button_box">
                         <v-flex text-xs-right="text-xs-right" text-sm-right="text-sm-right">
-                            <router-link :to="{ name: 'FreeBoardRegisterPage' }">
+                            <router-link :to="{ name: 'StudyBoardRegisterPage' }">
                                 <v-btn
                                     v-if="this.$store.state.isLogin"
                                     color="light-blue lighten-1 text center"
@@ -84,7 +83,7 @@
                     <div class="post_card_box">
                         <div class="post_card" v-for="mob in paginatedDataS" :key="mob.boardNo">
                             <router-link
-                                    :to="{ name: 'FreeBoardReadPage',
+                                    :to="{ name: 'StudyBoardReadPage',
                                                         params: { boardNo: mob.boardNo.toString() } }">
                             <div class="thumbnail">
                                 <v-img :src="ImgRequest(mob.writer, mob.boardNo)" class="thumbnail_img"></v-img>
@@ -92,7 +91,7 @@
                             <div class="post_box">
                                 <div class="post_tag">#사료추천</div>
                                 <router-link
-                                    :to="{ name: 'FreeBoardReadPage',
+                                    :to="{ name: 'StudyBoardReadPage',
                                                         params: { boardNo: mob.boardNo.toString() } }">
                                 <div class="post_title">{{ mob.title }}</div>
                                 <div class="post_content">{{ replaceHtml(mob.content) }}</div>
@@ -102,7 +101,7 @@
                     </div>
                     <div class="button_box">
                         <v-flex text-xs-right="text-xs-right" text-sm-right="text-sm-right">
-                            <router-link :to="{ name: 'FreeBoardRegisterPage' }">
+                            <router-link :to="{ name: 'StudyBoardRegisterPage' }">
                                 <v-btn
                                     v-if="this.$store.state.isLogin"
                                     color="light-blue lighten-1 text center"
@@ -143,7 +142,7 @@
                             <td style="text-align:center">{{ mob.boardNo }}</td>
                             <td>
                                 <router-link
-                                    :to="{ name: 'FreeBoardReadPage',
+                                    :to="{ name: 'StudyBoardReadPage',
                                                         params: { boardNo: mob.boardNo.toString() } }">
                                     {{ mob.title }}
                                 </router-link>
@@ -156,7 +155,7 @@
             </v-simple-table>
             <div class="button_box">
                 <v-flex text-xs-right="text-xs-right" text-sm-right="text-sm-right">
-                    <router-link :to="{ name: 'FreeBoardRegisterPage' }">
+                    <router-link :to="{ name: 'StudyBoardRegisterPage' }">
                         <v-btn
                             v-if="this.$store.state.isLogin"
                             color="light-blue lighten-1 text center"
@@ -191,7 +190,7 @@
                             <td style="text-align:center">{{ mob.boardNo }}</td>
                             <td>
                                 <router-link
-                                    :to="{ name: 'FreeBoardReadPage',
+                                    :to="{ name: 'StudyBoardReadPage',
                                                         params: { boardNo: mob.boardNo.toString() } }">
                                     {{ mob.title }}
                                 </router-link>
@@ -204,7 +203,7 @@
             </v-simple-table>
             <div class="button_box">
                 <v-flex text-xs-right="text-xs-right" text-sm-right="text-sm-right">
-                    <router-link :to="{ name: 'FreeBoardRegisterPage' }">
+                    <router-link :to="{ name: 'StudyBoardRegisterPage' }">
                         <v-btn
                             v-if="this.$store.state.isLogin"
                             color="light-blue lighten-1 text center"
@@ -213,7 +212,6 @@
                         </v-btn>
                     </router-link>
                 </v-flex>
-                
             </div>
             <v-container style="margin-top:20px;">
                 <div class="text-center">
@@ -221,16 +219,15 @@
                 </div>
             </v-container>
             </div>
-            
         </div>
     </div>
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState } from 'vuex'
 
     export default {
-        name: 'BoardList',
+        name: 'StudyBoardList',
         props: {
             boards: {
                 type: Array
@@ -260,16 +257,11 @@ import { mapState, mapActions } from 'vuex'
                 }
             }
         },
-        mounted() {
-            this.crawlFind()
-        },
         methods: {
-            test() {
-                console.log(this.$store.state.name)
-                this.$store.state.name = '임시닉네임'
-                sessionStorage.clear();
-                localStorage.clear();
-            },
+            // test() {
+            //     console.log(this.$store.state.name)
+            //     this.$store.state.name = '임시닉네임'
+            // },
             nextPage() {
                 this.pageNum += 1;
             },
@@ -285,7 +277,7 @@ import { mapState, mapActions } from 'vuex'
             ImgRequest( a, b ) {
                 console.log(a + '_' + b)
             try {
-                return require(`../../../../../backend/khweb/images/free/${a}_${b}.gif`
+                return require(`../../../../../backend/khweb/images/study/${a}_${b}.gif`
                 )
             } catch (e) {
                 return require(`@/assets/logo.png`)
@@ -293,7 +285,7 @@ import { mapState, mapActions } from 'vuex'
             },
             searching () {
                 var lists = this.boards
-                console.log(this.$store.state)
+
                 this.searchingResult = []
                 for(var i = 0; i < lists.length; i++){
                     if(lists[i].title.includes(this.word || lists[i].content.includes(this.word))){
@@ -311,7 +303,6 @@ import { mapState, mapActions } from 'vuex'
 
                 
             },
-            ...mapActions(['crawlFind']),
             replaceHtml(data) {
                 var text = data.replace(/(<([^>]+)>)/ig,"");
                 return text
@@ -361,13 +352,9 @@ import { mapState, mapActions } from 'vuex'
 .main_box {
     color: #424242;
 }
-.title_box {   
-}
 .title_box span {
     font-size: 25px;
     font-weight: bold;
-}
-.page_title {
 }
 .option_box {
     display: flex;

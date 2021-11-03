@@ -27,12 +27,13 @@ public class FreeCommentController {
         log.info("comment register request from vue");
         log.info("**comment : " + commentRes);
 
-        return new ResponseEntity<>(service.register(commentRes), HttpStatus.OK);
+        service.register(commentRes);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-
     @GetMapping("/comment/{boardNo}")
-    public ResponseEntity<List> getLists (@PathVariable("boardNo") Long boardNo) throws Exception {
+    public ResponseEntity<List<Comment>> getLists (@PathVariable("boardNo") Long boardNo) throws Exception {
 
         log.info("getLists(): " + service.selectFreeComment(boardNo));
 
