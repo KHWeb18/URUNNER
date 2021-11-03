@@ -58,19 +58,19 @@ public class MemberController {
     }
 
     // 회원 탈퇴
-//    @DeleteMapping("/leaveMember")
-//    public ResponseEntity<Void> leaveMember() throws Exception {
-//
-//        log.info("leavemember()");
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        log.info(authentication.getName());
-//        //Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        //log.info(principal.toString());
-//
-//        memberService.leaveMember(authentication.getName());
-//
-//
-//    }
+    @DeleteMapping("/leaveMember")
+    public ResponseEntity<Void> leaveMember() throws Exception {
+
+        log.info("leavemember()");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        log.info(authentication.getName());
+        //Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        //log.info(principal.toString());
+
+        memberService.leaveMember(authentication.getName());
+
+        return null;
+    }
 
 
     // 비밀번호 찾기 및 이메일 보내기
