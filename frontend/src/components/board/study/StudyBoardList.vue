@@ -119,6 +119,8 @@
                                 <div class="post_title">{{ mob.title }}</div>
                                 <div class="post_content">{{ replaceHtml(mob.content) }}</div>
                                 <div class="post_reg_date">{{ $moment(mob.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}</div></router-link>
+                                <div class="post_title">{{ mob.complete }}</div>
+                                <div class="post_title">{{ mob.fit }}</div>
                             </div>
                             <div v-show="mob.complete == 'true'">
                                 <img src="@/assets/complete.png" v-show="mob.complete" width="130" class="item">
