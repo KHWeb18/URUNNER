@@ -6,7 +6,7 @@
                 <h4 class="page_title">
                     <v-icon>mdi-exclamation-thick</v-icon>
                     <span>자유게시판</span></h4>
-            </div>
+            </div>            
             <!-- 게시글 -->
             <div class="post_list">
                 <div class="post_card_box">
@@ -24,13 +24,51 @@
                     <div v-html="board.content">{{ board.content }}</div>
                 </div>
             </div>
+            <!-- 지원자 목록 -->
+            <v-container fluid>
+                <v-row justify="center">
+                <v-subheader>지원자 목록</v-subheader>
+                    <v-expansion-panels popout>
+                        <v-expansion-panel
+                        v-for="(member, i) in this.$store.state.studyMembers"
+                        :key="i" hide-actions>
+                        <v-expansion-panel-header>
+                            <v-row align="center" class="spacer" no-gutters>
+                                <v-col class="hidden-xs-only" sm="5" md="3">
+                                    <strong v-html="member.name"></strong>
+                                </v-col>
+                            </v-row>
+                        </v-expansion-panel-header>
+                        <v-expansion-panel-content>
+                            <v-divider></v-divider>
+                            <v-card-text v-text="member.introduce"></v-card-text>
+                        </v-expansion-panel-content>
+                    </v-expansion-panel>
+                </v-expansion-panels>
+                </v-row>
+            </v-container>
+            <v-btn @click="appl(board.boardNo)">지원하기</v-btn>
+            <v-btn @click="endRecruit(board.boardNo)">모집 마감</v-btn>
         </div>        
     </div>
 </template>
 
 <script>
+
+import axios from 'axios'
+
 export default {
     name: 'StudyBoardRead',
+    data () {
+        return {
+            name: '',
+            email: '',
+            introduce: 'HELLO WORLD!',
+            refresh: 1,
+            members: this.$store.state.studyMembers,
+            complete: false
+        }
+    },
     props: {
         board: {
             type: Object,
@@ -45,6 +83,39 @@ export default {
             } catch (e) {
                 return require(`@/assets/logo.png`)
             }
+        },
+        appl(data) {
+            this.name = this.$store.state.moduleA.name
+            this.email = this.$store.state.moduleA.email
+            const { name, email, introduce } = this
+            axios.put(`http://localhost:7777/studyboard/apply/${data}`, { name, email, introduce })
+                    .then(res => {
+                        console.log(res)
+                        this.refresh += 1
+                        const refresh = this.refresh
+                        this.$emit('submit', refresh)
+                    })
+                    .catch(err => {
+                        alert(err.response.data.message)
+                    })
+
+        },
+        endRecruit(data) {
+            this.board.complete = !this.board.complete
+            console.log('this.board는 ')
+            console.log(this.board)
+            const { title, content, fit, complete, currentNum } = this.board
+            axios.put(`http://localhost:7777/studyboard/${data}`, { title, content, fit, complete, currentNum })
+                    .then(res => {
+                        console.log(res)
+                        this.$router.push({
+                            name: 'StudyBoardReadPage',
+                            params: { boardNo: this.boardNo }
+                        })
+                    })
+                    .catch(err => {
+                        alert(err.response.data.message)
+                    })
         }
     }
 }

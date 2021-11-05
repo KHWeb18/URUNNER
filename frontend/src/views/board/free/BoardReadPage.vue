@@ -7,12 +7,12 @@
                 <router-link :to="{ name: 'FreeBoardListPage' }">
                         목록
                 </router-link>                
-                <b v-show="board.writer == this.$store.state.email || this.$store.state.isAuth">
+                <b v-show="board.writer == this.$store.state.moduleA.email || this.$store.state.isAuth">
                     <router-link :to="{ name: 'FreeBoardModifyPage', params: { boardNo } }">
                         |수정
                     </router-link>
                 </b>               
-                <b v-show="board.writer == this.$store.state.email || this.$store.state.isAuth" @click="snackbar = true" class="item">
+                <b v-show="board.writer == this.$store.state.moduleA.email || this.$store.state.isAuth" @click="snackbar = true" class="item">
                     |삭제
                 </b>
                  <!-- 게시물 삭제 클릭시 알림창 -->

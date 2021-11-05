@@ -13,7 +13,7 @@ import {
     BEARER,
     NAME
 } from '../constants/index'
-import state from '../store/states'
+import state from '../store/webState'
 
 // 로그인 프로세스
 function loginProcess(loginfo) {
@@ -52,8 +52,8 @@ function PasingInfor(giveMeToken) {
      Vue.$cookies.set(ROLES, roles, SAVE_COOKIE_ACCESS)
      Vue.$cookies.set(NAME, name, SAVE_COOKIE_ACCESS)
 
-     state.name = name
-     state.email = username
+     state.state.name = name
+     state.state.email = username
 
      Vue.$cookies.set(ACCESS_TOKEN, BEARER + giveMeToken.access_token, SAVE_COOKIE_ACCESS)
      Vue.$cookies.set(REFRESH_TOKEN, BEARER + giveMeToken.refresh_token, SAVE_COOKIE_REFRESH)
@@ -68,6 +68,8 @@ function logout() {
     Vue.$cookies.remove(ROLES)
     Vue.$cookies.remove(USER_NAME)
     Vue.$cookies.remove(NAME)
+    sessionStorage.clear();
+    localStorage.clear();
 
     EventBus.$emit('isLogin', null);
   }

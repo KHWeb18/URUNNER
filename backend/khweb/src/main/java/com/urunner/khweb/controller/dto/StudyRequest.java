@@ -3,15 +3,19 @@ package com.urunner.khweb.controller.dto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.annotations.DynamicUpdate;
 
 @Data
 @Slf4j
 @NoArgsConstructor
+@DynamicUpdate
 public class StudyRequest {
-    private String email;
+    private Long boardNo;
+    private String title;
+    private String content;
+    private String writer;
     private String name;
-    private String password;
-    private String introduce;
-    private String participant;
-    private String state;
+    private String complete;
+    private Long fit;
+    private Long currentNum;
 }

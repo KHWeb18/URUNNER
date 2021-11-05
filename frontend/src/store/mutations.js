@@ -9,6 +9,8 @@ import {
     // 공지사항
     FETCH_NOTICE_LIST,
     FETCH_NOTICE,
+    // 스터디
+    FETCH_STUDY_MEMBER_LIST
 
 } from './mutation-types'
 
@@ -39,11 +41,9 @@ export default {
     [FETCH_NOTICE] (state, notice) {
         state.notice = notice
     },
-    // 커리큘럼 관리
-    saveSectionList(state, data) {
-      state.sectionList = data;
-    },
-    saveVideoList(state, data) {
-      state.lectureVideoList = data;
-    },
+    // 스터디
+    [FETCH_STUDY_MEMBER_LIST] (state, studyMembers) {
+        state.studyMembers = studyMembers
+    }
+
 }

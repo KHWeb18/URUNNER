@@ -1,15 +1,5 @@
 <template>
     <div id="board_padding">
-        <v-progress-circular
-        :rotate="-90"
-        :size="100"
-        :width="15"
-        :value="value2"
-        color="primary"
-        >
-        {{ value }} 
-        </v-progress-circular>
-        <!-- 위는 게시판하고 관련없는 거에요 삭제 예정-->
         <v-container>
             <study-board-list :boards="boards"/>
         </v-container>
@@ -23,16 +13,7 @@ import { mapState, mapActions } from 'vuex'
 
 export default {
     name: 'StudyBoardListPage',
-    data () {
-      return {
-        interval: {},
-        value: "1 ／ 5",
-        value2: 20
-      }
-    },
-    beforeDestroy () {
-      clearInterval(this.interval)
-    },
+    
     components: {
         StudyBoardList
     },

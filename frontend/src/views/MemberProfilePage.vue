@@ -30,14 +30,15 @@ export default {
             const { userId, name, password, introduce } = payload
             console.log("제출하기 전 const 상태는 ") 
             console.log(payload)
-            axios.put(`http://localhost:7777/profile/${this.$store.state.email}`, { userId, name, password, introduce })
+            console.log('-----------------------------------------------')
+            axios.put(`http://localhost:7777/profile/${this.$store.state.moduleA.email}`, { userId, name, password, introduce })
                     .then(res => {
                         if (res.data != "") {
                             console.log(userId)
-                            console.log(this.$store.state.email)
+                            console.log(this.$store.state.moduleA.email)
                             alert('변경 성공! - ' + res.data)
                             console.log(res.data)
-                            this.$store.state.name = res.data.name
+                            this.$store.state.moduleA.name = res.data.name
                         } else {
                             alert('변경 실패! - ' + res.data)                            
                         }

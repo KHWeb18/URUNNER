@@ -38,10 +38,10 @@ export default {
         return {
             //초기값 세팅
             title: '',
-            writer: this.$store.state.email,
+            writer: this.$store.state.moduleA.email,
             files: '',
             preview: '',
-            name: this.$store.state.name,
+            name: this.$store.state.moduleA.name,
             content: ''
         }
     },
@@ -51,7 +51,7 @@ export default {
         },
         test() {
             console.log(this.name)
-            console.log(this.$store.state.email)
+            console.log(this.$store.state.moduleA.email)
             console.log(this.content)
         },
         handleFileUpload () {
@@ -66,7 +66,7 @@ export default {
                 console.log(this.files[idx])
             }
             
-            let ownerId = this.$store.state.email
+            let ownerId = this.$store.state.moduleA.email
             formData.append('id', ownerId)
             let no = this.$store.state.boardNo
             formData.append('no', no)

@@ -3,13 +3,17 @@ package com.urunner.khweb.entity.board;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
+@DynamicUpdate
 @Entity
 @Table(name = "studyboard")
 public class Study {
@@ -30,24 +34,25 @@ public class Study {
     @Column(length = 100, nullable = false)
     private String name;
 
-    @Column(length = 200)
-    private String participant;
+    @Column(length = 100, nullable = false)
+    private String complete; // 모집 마감 여부
 
-    @Column(length = 100)
-    private String state;
+    @Column(length = 100, nullable = false)
+    private Long fit; // 모집 인원
+
+    @Column(length = 100, nullable = false)
+    private Long currentNum; // 현재 지원한 인원은 몇 명?
 
     @CreationTimestamp
     private Date regDate;
 
-    @UpdateTimestamp
-    private Date upDate;
-
-    public Study(String title, String content, String writer, String name, String participant, String state) {
+    public Study(String title, String content, String writer, String name, String complete, Long fit, Long currentNum) {
         this.title = title;
         this.content = content;
         this.writer = writer;
         this.name = name;
-        this.participant = participant;
-        this.state = state;
+        this.complete = complete;
+        this.fit = fit;
+        this.currentNum = currentNum;
     }
 }

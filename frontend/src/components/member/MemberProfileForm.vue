@@ -108,8 +108,8 @@ export default {
     name: 'MemberProfileForm',
     data () {
         return {
-            name: this.$store.state.name,
-            userId: this.$store.state.email,
+            name: this.$store.state.moduleA.name,
+            userId: this.$store.state.moduleA.email,
             password: '',
             introduce: this.$store.state.introduce,
             //파일전송용
@@ -138,7 +138,7 @@ export default {
     },
     methods: {
         test() {
-            console.log(this.$store.state.name)
+            console.log(this.$store.state.moduleA.name)
             // this.introduce = this.$store.state.introduce
         },
         profileSubmit () {
@@ -214,7 +214,7 @@ export default {
             for (var idx = 0; idx < this.files.length; idx++) {
                 formData.append('fileList', this.files[idx])                
             }
-            let ownerId = this.$store.state.email
+            let ownerId = this.$store.state.moduleA.email
             formData.append('id', ownerId)
             axios.post('http://localhost:7777/image/uploadImg_Profile', formData, {
                 headers: {

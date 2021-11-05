@@ -39,7 +39,15 @@
                                     :to="{ name: 'StudyBoardReadPage',
                                                         params: { boardNo: mob.boardNo.toString() } }">
                             <div class="thumbnail">
-                                <v-img :src="ImgRequest(mob.writer, mob.boardNo)" class="thumbnail_img"></v-img>
+                                <v-progress-circular
+                                :rotate="-90"
+                                :size="100"
+                                :width="15"
+                                :value="mob.currentNum / mob.fit * 100"
+                                color="primary"
+                                >
+                                {{ mob.currentNum }} / {{ mob.fit }}
+                                </v-progress-circular>
                             </div></router-link>
                             <div class="post_box">
                                 <div class="post_tag">#TAG</div>
@@ -50,7 +58,14 @@
                                 <div class="post_content">{{ replaceHtml(mob.content) }}</div>
                                 <div class="post_reg_date">{{ mob.name }} | {{ $moment(mob.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}</div></router-link>
                             </div>
-                        </div>
+                            <div v-show="mob.complete == 'true'">
+                                <img src="@/assets/complete.png" v-show="mob.complete" width="130" class="item">
+                            </div>
+                            <div style="display:flex;justify-content:center;flex-wrap:wrap;height:20px">
+                                <v-icon color="red" style="height:20px">mdi-heart</v-icon>
+                                    {{mob.currentNum}}
+                            </div>
+                        </div>                        
                     </div>
                     <div class="button_box">
                         <v-flex text-xs-right="text-xs-right" text-sm-right="text-sm-right">
@@ -86,7 +101,15 @@
                                     :to="{ name: 'StudyBoardReadPage',
                                                         params: { boardNo: mob.boardNo.toString() } }">
                             <div class="thumbnail">
-                                <v-img :src="ImgRequest(mob.writer, mob.boardNo)" class="thumbnail_img"></v-img>
+                                <v-progress-circular
+                                :rotate="-90"
+                                :size="100"
+                                :width="15"
+                                :value="value2"
+                                color="primary"
+                                >
+                                {{ value }} 
+                                </v-progress-circular>
                             </div></router-link>
                             <div class="post_box">
                                 <div class="post_tag">#사료추천</div>
@@ -96,6 +119,11 @@
                                 <div class="post_title">{{ mob.title }}</div>
                                 <div class="post_content">{{ replaceHtml(mob.content) }}</div>
                                 <div class="post_reg_date">{{ $moment(mob.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}</div></router-link>
+                                <div class="post_title">{{ mob.complete }}</div>
+                                <div class="post_title">{{ mob.fit }}</div>
+                            </div>
+                            <div v-show="mob.complete == 'true'">
+                                <img src="@/assets/complete.png" v-show="mob.complete" width="130" class="item">
                             </div>
                         </div>
                     </div>
@@ -245,8 +273,15 @@ import { mapState } from 'vuex'
                 toggle_exclusive: [],
                 word: '',
                 searchingResult: [],
-                searchinOn: false
+                searchinOn: false,
+
+                interval: {},
+                value: '',
+                value2: 20
             }
+        },
+        beforeDestroy () {
+        clearInterval(this.interval)
         },
         watch: {
             word(newVal) {       //이런식으로 watch 사용

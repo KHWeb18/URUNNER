@@ -1,18 +1,18 @@
 <template>
     <div>
         <v-container>
-            <study-board-read v-if="board" :board="board"/>
+            <study-board-read v-if="board" :board="board" @submit="onSubmit"/>
             <p v-else>로딩중 ......</p>
             <v-container class="middle_btn_box">
                 <router-link :to="{ name: 'StudyBoardListPage' }">
                         목록
                 </router-link>                
-                <b v-show="board.writer == this.$store.state.email || this.$store.state.isAuth">
+                <b v-show="board.writer == this.$store.state.moduleA.email || this.$store.state.isAuth">
                     <router-link :to="{ name: 'StudyBoardModifyPage', params: { boardNo } }">
                         |수정
                     </router-link>
-                </b>               
-                <b v-show="board.writer == this.$store.state.email || this.$store.state.isAuth" @click="snackbar = true" class="item">
+                </b>                
+                <b v-show="board.writer == this.$store.state.moduleA.email || this.$store.state.isAuth" @click="snackbar = true" class="item">
                     |삭제
                 </b>
                  <!-- 게시물 삭제 클릭시 알림창 -->
@@ -62,16 +62,18 @@ export default {
     watch: {
         refreshCheck(newVal) {
             if(newVal >= 0) {
-                // console.log('refreshCheck값은 : ' + this.refreshCheck)
-            // console.log('댓글 입력 감지')
-            this.fetchStudyCommentList(this.boardNo)
-            this.refreshCheck = 1
+                console.log('refreshCheck값은 : ' + this.refreshCheck)
+                console.log('데이터 변동 감지')
+                this.fetchStudyCommentList(this.boardNo)
+                this.fetchStudyMemberList(this.boardNo)
+                this.refreshCheck = 1
             }
         }
     },
     computed: {
         ...mapState(['board']),
-        ...mapState(['comments'])
+        ...mapState(['comments']),
+        ...mapState(['studyMembers'])
     },    
     created () {
         this.fetchStudyBoard(this.boardNo)
@@ -85,21 +87,23 @@ export default {
                 })
     },
     mounted () {
-        this.fetchStudyCommentList(this.boardNo)  
+        this.fetchStudyCommentList(this.boardNo),
+        this.fetchStudyMemberList(this.boardNo)
     },
     methods: {
         ...mapActions(['fetchStudyBoard']),
+        ...mapActions(['fetchStudyCommentList']),
+        ...mapActions(['fetchStudyMemberList']),
         onDeletePost () {
                         const { boardNo } = this.board
-            axios.delete(`http://localhost:7777/studyfoard/${boardNo}`)
-                    .then(() => {
-                        this.$router.push({ name: 'StudyBoardListPage' })
-                    })
-                    .catch(err => {
-                        alert(err.response.data.message)                                                
-                    })
+                        axios.delete(`http://localhost:7777/studyboard/${boardNo}`)
+                        .then(() => {
+                            this.$router.push({ name: 'StudyBoardListPage' })
+                        })
+                        .catch(err => {
+                            alert(err.response.data.message)
+                        })
         },
-        ...mapActions(['fetchStudyCommentList']),
         onSubmit (payload) {
             const refresh = payload
             this.refreshCheck = refresh

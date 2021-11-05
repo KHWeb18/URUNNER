@@ -2,6 +2,8 @@
     <form @submit.prevent="onSubmit">
         <v-text-field label="제목" v-model="title"></v-text-field>
         <editor placeholder="Write something …" @content="fusion"/>
+        <!-- <v-btn @click="complete = !complete">마감</v-btn> -->
+        <input v-model="fit">
         <!-- 이미지 등록 폼 -->
         <div style="margin-bottom: 10px">
             <div class="image-box">
@@ -38,11 +40,14 @@ export default {
         return {
             //초기값 세팅
             title: '',
-            writer: this.$store.state.email,
+            writer: this.$store.state.moduleA.email,
             files: '',
             preview: '',
-            name: this.$store.state.name,
-            content: ''
+            name: this.$store.state.moduleA.name,
+            content: '',
+            complete: false,
+            fit: 1,
+            currentNum: 1
         }
     },
     methods: {
@@ -51,7 +56,7 @@ export default {
         },
         test() {
             console.log(this.name)
-            console.log(this.$store.state.email)
+            console.log(this.$store.state.moduleA.email)
             console.log(this.content)
         },
         handleFileUpload () {
@@ -66,7 +71,7 @@ export default {
                 console.log(this.files[idx])
             }
             
-            let ownerId = this.$store.state.email
+            let ownerId = this.$store.state.moduleA.email
             formData.append('id', ownerId)
             let no = this.$store.state.boardNo
             formData.append('no', no)
@@ -93,8 +98,8 @@ export default {
         },       
         boardRegist (data) {            
             this.content = data
-            const { title, writer, content, name } = this
-            axios.post('http://localhost:7777/studyboard/register', { title, writer, content, name } )
+            const { title, writer, content, name, complete, fit, currentNum } = this
+            axios.post('http://localhost:7777/studyboard/register', { title, writer, content, name, complete, fit, currentNum } )
                     .then(res => {
                         console.log(res.data)
                         this.$store.state.boardNo = res.data.boardNo.toString()

@@ -8,6 +8,8 @@ import {
     // 공지사항
     FETCH_NOTICE_LIST,
     FETCH_NOTICE,
+    // 스터디
+    FETCH_STUDY_MEMBER_LIST
 
 } from './mutation-types'
 
@@ -90,5 +92,13 @@ export default {
                     console.log(res.data[0][0])
                 })
 
+    },
+    fetchStudyMemberList ({ commit }, boardNo) {
+        return axios.get(`http://localhost:7777/studyboard/memberList/${boardNo}`)
+                .then((res) => {
+                    console.log('fetchStudyMemberList DATA')
+                    console.log(res.data)
+                    commit(FETCH_STUDY_MEMBER_LIST, res.data)
+                })
     },
 }

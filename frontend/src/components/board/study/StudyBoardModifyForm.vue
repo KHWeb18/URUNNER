@@ -17,6 +17,10 @@
             </div>
             <!-- 제목 -->
             <v-text-field label="제목" v-model="title"></v-text-field>
+            <!-- 인원설정 -->
+            <input type="number" v-model="fit">
+            <!-- 마감 -->
+            {{ complete }}
             <!-- 게시글 -->
             <editor :content="content" @content="onSubmit"/>
             <!-- 이미지 -->
@@ -35,6 +39,7 @@
                 등록
             </v-btn>
             <v-btn @click="test()">테스트</v-btn>
+            {{board}}
         </div>
     </div>
 </template>
@@ -57,14 +62,17 @@ export default {
     data () {
         return {
             title: '',
-            content: ''
+            content: '',
+            fit: this.board.fit,
+            complete: this.board.complete,
+            currentNum: this.board.currentNum
         }
     },
     methods: {
         onSubmit (data) {
             this.content = data
-            const { title, content } = this
-            this.$emit('submit', { title, content })
+            const { title, content, fit, complete, currentNum } = this
+            this.$emit('submit', { title, content, fit, complete, currentNum })
         },
         ImgRequest() {
             try {
