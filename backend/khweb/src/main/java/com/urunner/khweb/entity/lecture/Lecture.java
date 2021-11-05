@@ -26,12 +26,13 @@ public class Lecture {
 
     private String description;
 
-
     private Long price;
 
     private boolean inProgress;
 
     private boolean discounted;
+
+    private String thumb_path;
 
     @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LectureList> lectureLists = new ArrayList<>();
@@ -76,6 +77,16 @@ public class Lecture {
 
     public void setDiscounted(Boolean discounted) {
         this.discounted = discounted;
+    }
+
+    public void setLectureThumb(String thumb_path) {
+        this.thumb_path = thumb_path;
+    }
+
+    public void exist(Lecture lecture) throws Exception {
+        if (lecture.getLecture_id() == null) {
+            throw new Exception("없는 강의번호입니다.");
+        }
     }
 
 

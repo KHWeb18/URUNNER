@@ -1,5 +1,7 @@
 package com.urunner.khweb.service.lecture;
 
+import com.urunner.khweb.controller.dto.lecture.LectureDto;
+import com.urunner.khweb.controller.dto.lecture.LectureListDto;
 import com.urunner.khweb.entity.lecture.Lecture;
 import com.urunner.khweb.entity.lecture.LectureImage;
 import com.urunner.khweb.entity.lecture.LectureList;
@@ -7,7 +9,11 @@ import com.urunner.khweb.entity.lecture.LectureVideo;
 import com.urunner.khweb.entity.sort.Category;
 import com.urunner.khweb.entity.sort.CategoryLecture;
 import com.urunner.khweb.repository.lecture.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,8 +21,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-
+@Slf4j
 @Transactional
 @Service
 public class LectureServiceImpl implements LectureService {
@@ -75,7 +84,12 @@ public class LectureServiceImpl implements LectureService {
                 .build();
 
         lectureImage.setLecture(lecture);
+
         System.out.println(lectureImage.getThumb_path());
+
+        lecture.setLectureThumb(thum);
+
+        lectureRepository.save(lecture);
 
         LectureImageRepository.save(lectureImage);
     }
@@ -112,5 +126,75 @@ public class LectureServiceImpl implements LectureService {
         }
 
 
+    }
+
+    @Override
+    public void saveLectureSection(Long lectureId, String topic) {
+
+        try {
+            Lecture lecture = em.find(Lecture.class, lectureId);
+
+            lecture.exist(lecture);
+
+//            중복 나중에 한번에 하기로..
+//            중복검증은 리스트 아이디, 토픽 두개를 가지로 체크 필요
+//            if (lectureListRepository.findByTopic(topic).isPresent()) {
+//                log.info("토픽이 중복이다..");
+//                throw new Exception("중복 토픽입니다.");
+//            }
+
+            LectureList lectureList = LectureList.builder()
+                    .topic(topic)
+                    .build();
+
+            lectureList.setLecture(lecture);
+            lectureListRepository.save(lectureList);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public Page<LectureListDto> findAllLectureSection(Long lectureId) {
+
+//       jpa페이징은 쿼리 -1개
+        Lecture lecture = em.find(Lecture.class, lectureId);
+//      나중에 페이징 처리하도록 둘것
+        PageRequest pageRequest = PageRequest.of(0, 10);
+        Page<LectureList> lecturePaging = lectureListRepository.findByLecture(lecture, pageRequest);
+
+        Page<LectureListDto> pageDto = lecturePaging.map(m -> new LectureListDto(m.getLectureList_id(), m.getTopic(), m.getSection()));
+
+        return pageDto;
+    }
+
+    @Override
+    public void videoUpload(String title, String desc, String dur, Long id, String path) {
+
+        LectureList lectureList = em.find(LectureList.class, id);
+
+        LectureVideo lectureVideo = LectureVideo.builder()
+                .title(title)
+                .description(desc)
+                .duration(dur)
+                .videoPath(path)
+                .build();
+
+        lectureVideo.setLectureList(lectureList);
+
+        lectureVideoRepository.save(lectureVideo);
+
+    }
+
+    @Override
+    public List<LectureDto> getLectureList(String writer) {
+
+        List<Lecture> findAllLecture = lectureRepository.findByWriter(writer);
+
+        return findAllLecture.stream().map(l ->
+                new LectureDto(l.getLecture_id(), l.getWriter(), l.getTitle(),
+                        l.getDescription(), l.getPrice(), l.isInProgress(),
+                        l.isDiscounted(), l.getThumb_path())).collect(Collectors.toList());
     }
 }

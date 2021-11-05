@@ -23,6 +23,7 @@
         </v-alert>
 
         <v-btn @click="onSubmit">등록</v-btn>
+
       </div>
     </form>
   </v-container>
@@ -37,7 +38,8 @@ export default {
     return {
       thumbnailImage: "thumbnail image",
       detailImage: "detail image",
-      lectureId: 1
+      lectureId: this.$store.state.lectureIndex,
+      show: null,
     }
   },
   methods: {
@@ -58,7 +60,9 @@ export default {
               "Content-Type": "multipart/form-data",
             },
           }
-        );
+        ).then(res => {
+          console.log(res.data)
+        })
         console.log(data1);
 
       } catch (err) {
