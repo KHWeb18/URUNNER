@@ -6,6 +6,9 @@
         <router-link :to="{ name: 'StudyBoardListPage' }">
         <v-btn>스터디 게시판</v-btn>
         </router-link>
+        <router-link :to="{ name: 'QnABoardListPage' }">
+        <v-btn>질문 답변 게시판</v-btn>
+        </router-link>
     </div>
 </template>
 

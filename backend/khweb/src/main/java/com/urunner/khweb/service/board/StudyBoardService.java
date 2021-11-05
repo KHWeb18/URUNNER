@@ -17,6 +17,4 @@ public interface StudyBoardService {
     List<StudyMember> selectStudyBoardNo(Long boardNo);
     StudyMember applyMember(StudyMember studyMember);
     Long checkLength(Long boardNo);
-
-
 }

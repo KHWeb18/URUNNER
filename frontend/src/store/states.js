@@ -45,4 +45,6 @@ export default {
   notice: null,
   //스터디
   studyMembers: [],
+  //질문답변
+  qnaMembers: []
 }
