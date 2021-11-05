@@ -44,6 +44,13 @@ export default {
     // 스터디
     [FETCH_STUDY_MEMBER_LIST] (state, studyMembers) {
         state.studyMembers = studyMembers
-    }
+    },
+    // 커리큘럼 관리
+    saveSectionList(state, data) {
+        state.sectionList = data;
+    },
+    saveVideoList(state, data) {
+        state.lectureVideoList = data;
+    },
 
 }

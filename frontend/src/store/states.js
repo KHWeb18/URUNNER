@@ -45,4 +45,15 @@ export default {
   notice: null,
   //스터디
   studyMembers: [],
+
+
+  //커리큘럼 관리
+  sectionList: [],
+  lectureVideoList: [],
+
+// 강의 불러오기
+  getLectureList: [],
+  lectureIndex: null,
+  // 페이지 빠져나가면서 dom상태가 destroy정도 쯤에 이 값 비우도록하기
+  
 }

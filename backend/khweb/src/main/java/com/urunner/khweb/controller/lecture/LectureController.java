@@ -2,12 +2,19 @@ package com.urunner.khweb.controller.lecture;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.urunner.khweb.controller.dto.lecture.LectureDto;
+import com.urunner.khweb.controller.dto.lecture.LectureParse;
 import com.urunner.khweb.service.lecture.LectureService;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.MediaTypeFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
@@ -28,6 +36,9 @@ public class LectureController {
     @Value("${image.location}")
     private String imageLocation;
 
+    @Value("${video.location}")
+    private String videoLocation;
+
     @Autowired
     private LectureService lectureService;
 
@@ -38,10 +49,11 @@ public class LectureController {
     private Long lectureId;
 
     @PostMapping("/upload/image/thumbnail")
-    public @ResponseBody String LectureUpload(@RequestParam("thumbnailImage") List<MultipartFile> thumbnailImage,
-                                                @RequestParam("imageDetail") List<MultipartFile> imageDetail,
+    public @ResponseBody
+    ResponseEntity<UrlResource> LectureUpload(@RequestParam("thumbnailImage") List<MultipartFile> thumbnailImage,
+                                              @RequestParam("imageDetail") List<MultipartFile> imageDetail,
 //                                                String말고 Long으로
-                                                @RequestParam("lectureId") Long lectureId ) throws IOException {
+                                              @RequestParam("lectureId") Long lectureId) throws IOException {
 
         log.info("image Name : " + lectureId);
 
@@ -63,7 +75,7 @@ public class LectureController {
                 try {
                     folder.mkdir();
                     System.out.println("폴더생성함");
-                }catch (Exception e) {
+                } catch (Exception e) {
                     e.getStackTrace();
                 }
             } else {
@@ -75,7 +87,7 @@ public class LectureController {
 
             for (MultipartFile multipartFile : thumbnailImage) {
                 String thumnailImageName = "Thum_" + randomString + multipartFile.getOriginalFilename();
-                FileOutputStream writer = new FileOutputStream(dirPath + "/" + thumnailImageName );
+                FileOutputStream writer = new FileOutputStream(dirPath + "/" + thumnailImageName);
                 writer.write(multipartFile.getBytes());
                 writer.close();
                 log.info("name for db : " + thumnailImageName);
@@ -97,9 +109,28 @@ public class LectureController {
             lectureService.lectureAddImage(this.thum, this.detail, this.lectureId);
 
         } catch (Exception e) {
-            return "upload fail";
+            return null;
         }
-        return "upload success";
+        UrlResource image = new UrlResource("classpath:" + imageLocation + "/" + authentication.getName() + "/" + this.detail);
+
+        return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
+                .contentType(MediaTypeFactory.getMediaType(image).orElse(MediaType.APPLICATION_OCTET_STREAM))
+                .body(image);
+    }
+
+    @GetMapping("/image/{path}/{writer}")
+    public ResponseEntity<UrlResource> getThumnail(@PathVariable("path") String path, @PathVariable("writer") String writer) throws MalformedURLException {
+
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//
+//        System.out.println(authentication);
+
+        UrlResource image = new UrlResource("classpath:" + imageLocation + "/" + writer + "/" + path);
+
+        System.out.println("testestsdtest                        "+image);
+        return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
+                .contentType(MediaTypeFactory.getMediaType(image).orElse(MediaType.APPLICATION_OCTET_STREAM))
+                .body(image);
     }
 
     @PostMapping("/newlecture")
@@ -107,13 +138,7 @@ public class LectureController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        String jsonTest = new JSONObject(test).toString();
-
-        log.info(jsonTest.toString());
-
-        org.json.JSONObject jsonObject = new org.json.JSONObject(jsonTest);
-
-        org.json.JSONObject lectureInfo1 = jsonObject.getJSONObject("lectureInfo");
+        org.json.JSONObject lectureInfo1 = LectureParse.parsingInfoWithString(test, "lectureInfo");
 
         String title = lectureInfo1.getString("title");
         Long price = lectureInfo1.getLong("price");
@@ -125,9 +150,77 @@ public class LectureController {
             System.out.println(s);
         }
 
-        lectureService.lectureRegister(authentication.getName(),title,price,description,category);
+        lectureService.lectureRegister(authentication.getName(), title, price, description, category);
         System.out.println(Arrays.toString(categoryArray));
 
         return null;
+    }
+
+    @PostMapping("/upload/video/lecture")
+    public @ResponseBody
+    String videoUpload(@RequestParam("video") List<MultipartFile> video,
+//                         long으로 받는지 확인
+                       @RequestParam("duration") Long duration,
+                       @RequestParam("title") String title,
+                       @RequestParam("description") String description,
+                       @RequestParam("id") Long id
+    ) throws IOException {
+
+        log.info("title : " + title);
+        log.info("duration : " + duration.toString());
+        log.info("description : " + description.toString());
+        log.info("id : " + id.toString());
+
+//        한시간넘으면 변환할때 이부분 수정하기 1시간 이런식
+//        70min 이런식이면 그대로 ㄱ
+        String dur = Long.toString(duration);
+
+        ClassPathResource resource1 = new ClassPathResource(videoLocation);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println("sc 객체 : " + authentication.getName());
+
+        try {
+            Path path = Paths.get(resource1.getURI());
+            String dirPath = path.toString() + "/" + authentication.getName();
+            File folder = new File(dirPath);
+
+            System.out.println(path.toString());
+
+            if (!folder.exists()) {
+                try {
+                    folder.mkdir();
+                    System.out.println("폴더생성함");
+                } catch (Exception e) {
+                    e.getStackTrace();
+                }
+            } else {
+                System.out.println("이미 존재하는 폴더입니다.");
+            }
+
+            UUID uuid = UUID.randomUUID();
+            String randomString = uuid.toString() + "_";
+
+            for (MultipartFile multipartFile : video) {
+                String lecture = "Lecture_" + randomString + multipartFile.getOriginalFilename();
+                FileOutputStream writer = new FileOutputStream(dirPath + "/" + lecture);
+                writer.write(multipartFile.getBytes());
+                writer.close();
+                log.info("name for db : " + lecture);
+                lectureService.videoUpload(title, description, dur, id, lecture);
+            }
+
+        } catch (Exception e) {
+            return "upload fail";
+        }
+        return "upload success";
+    }
+
+    @GetMapping("/getLectureList")
+    public List<LectureDto> getLectureList() {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        return lectureService.getLectureList(authentication.getName());
     }
 }

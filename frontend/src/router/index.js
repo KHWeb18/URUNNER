@@ -58,6 +58,11 @@ export default new VueRouter({
           name: 'LectureImageRegisterPage',
           component: () => import ('../views/lecture/LectureImageRegisterPage.vue')
       },
+      {
+        path: '/mypage/lecture/manageLecture',
+        name: 'ManageLecturePage',
+        component: () => import ('../views/lecture/ManageLecturePage.vue'),
+      },
       // 회원 탈퇴
       {
           path: '/leave-member',

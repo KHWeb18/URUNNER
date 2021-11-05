@@ -2,24 +2,24 @@
   <v-card
     class="mx-auto d-sm-flex"
   >
-    <v-img v-if="isImgagePath"
+    <v-img v-if="true"
       height="200" width="200"
-      src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
+      :src="this.isImgagePath"
     ></v-img>
-
     <v-card-text v-else class="pa-0" style="width: 200px; height: 200px;">
       <div style="width: 100%; height: 100%;" class="d-flex align-center">
         <v-btn rounded color="primary" class="d-block ma-auto"
           to="/mypage/lecture/registerLectureImage">이미지등록</v-btn>
       </div>
     </v-card-text>
-
     <v-card-text>
+      <!-- 이부분 매핑............... -->
       <v-btn icon class="float-right"><v-icon>mdi-wrench-outline</v-icon></v-btn>
-      <div class="text-h6 black--text">title: testtest</div>
-      <div class="text-h6 black--text">price: 112,000 ₩</div>
+      <div class="text-h6 black--text">title: {{ title }}</div>
+      <div class="text-h6 black--text">price: {{ price }} ₩</div>
+      <!-- 카테고리 나중에 dto에 추가할예정 -->
       <div class="text-h6 black--text">category: vue, front, javasecript</div>
-      <v-btn rounded color="warning" class="mt-5 d-block">커리큘럼 관리</v-btn>
+      <v-btn rounded color="warning" class="mt-5 d-block" @click="lectureList">커리큘럼 관리</v-btn>
     </v-card-text>
 
     <v-card-actions class="pa-0" style="min-width: 150px;">
@@ -39,23 +39,40 @@
 export default {
   data() {
     return {
-      isImgagePath: '',
+      isImgagePath: `http://localhost:7777/lecture/image/${this.thum}/${this.writer}`,
       isProgress: false,
-      lectureList: []
+      // lectureList: [],
     }
   },
-  methods: {
-    getLectureList() {
-      // const id = this.$store.state.userId
-      // axios.get('/lecture/getLectureList', {id: id})
-      //       .then(res => {
-      //         this.lectureList = res.data
-      //       })
-      //       .catch(err => {
-      //         console.log(err);
-      //       })
-      // 사용자의 아이디를 바디에다 보내면 아이디와 일치하는 lecture table과 lecture_image의 전부 보냄 그럼 lectureList에 담아서 v-for 로 뿌려줄 것
+  props: {
+    info: {
+      require: true
+    },
+    title: {
+      require: true
+    },
+    thum: {
+      require: false
+    },
+    price: {
+      require: false
+    },
+    writer: {
+      require: false
     }
+  },
+  computed: {
+    reload() {
+      return this.isImgagePath
+    }
+
+  },
+  methods: {
+    lectureList() {
+      this.$store.state.lectureIndex = this.info
+      
+      this.$router.push({ name: 'ManageLecturePage'})
+    },
   }
 }
 </script>
