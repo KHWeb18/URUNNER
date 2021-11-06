@@ -67,8 +67,7 @@ export default {
                 .then((res) => {
                     commit(FETCH_NOTICE, res.data)
                 })
-    },
-    
+    },    
     // 스터디 게시판
     fetchStudyBoardList ({ commit }) {
         return axios.get('http://localhost:7777/studyboard/lists')
@@ -88,8 +87,6 @@ export default {
         return axios.get(`http://localhost:7777/studyboard/comment/${No}`)
                 .then((res) => {
                     commit(FETCH_COMMENT_LIST, res.data)
-                    console.log(res.data)
-                    console.log(res.data[0][0])
                 })
 
     },
@@ -101,4 +98,34 @@ export default {
                     commit(FETCH_STUDY_MEMBER_LIST, res.data)
                 })
     },
+    // 질문답변 게시판
+    fetchQnABoardList ({ commit }) {
+        return axios.get('http://localhost:7777/qnaboard/lists')
+                .then((res) => {
+                    const reverse = [...res.data].reverse();
+                    commit(FETCH_BOARD_LIST, reverse)
+                })
+    },
+    fetchQnABoard ({ commit }, boardNo) {
+        return axios.get(`http://localhost:7777/qnaboard/${boardNo}`)
+                .then((res) => {
+                    commit(FETCH_BOARD, res.data)
+                })
+    },
+    fetchQnACommentList ({ commit }, No) {
+        console.log('fetchQnACommentList 작동중 받은 No(stated의 boardNo) 값은 : ' + No)
+        return axios.get(`http://localhost:7777/qnaboard/comment/${No}`)
+                .then((res) => {
+                    commit(FETCH_COMMENT_LIST, res.data)
+                })
+
+    },
+    fetchQnAMemberList ({ commit }, boardNo) {
+        return axios.get(`http://localhost:7777/qnaboard/memberList/${boardNo}`)
+                .then((res) => {
+                    console.log('fetchQnAMemberList DATA')
+                    console.log(res.data)
+                    commit(FETCH_STUDY_MEMBER_LIST, res.data)
+                })
+    }
 }
