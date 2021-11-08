@@ -48,6 +48,7 @@ export default {
   //커리큘럼 관리
   sectionList: [],
   lectureVideoList: [],
+  
   // 강의 불러오기
   getLectureList: [],
   lectureIndex: null,

@@ -3,6 +3,7 @@ package com.urunner.khweb.controller.lecture;
 
 import com.urunner.khweb.controller.dto.lecture.LectureListDto;
 import com.urunner.khweb.controller.dto.lecture.LectureParse;
+import com.urunner.khweb.controller.dto.lecture.LectureVideoDto;
 import com.urunner.khweb.service.lecture.LectureService;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.MalformedURLException;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 @RestController
 @RequestMapping("/mypage")
@@ -53,6 +55,15 @@ public class LectureMyPageController {
         return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
                 .contentType(MediaTypeFactory.getMediaType(video).orElse(MediaType.APPLICATION_OCTET_STREAM))
                 .body(video);
+    }
+
+    @PostMapping("/lecture/getLectureVideoList")
+    public List<LectureVideoDto> findAllLectureVideo(@RequestBody LinkedHashMap test) {
+
+        org.json.JSONObject jsonObject = LectureParse.parsingInfo(test);
+        Long lectureListId = jsonObject.getLong("id");
+
+        return lectureService.findAllLectureVideo(lectureListId);
     }
 
 }
