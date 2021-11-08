@@ -3,6 +3,7 @@ package com.urunner.khweb.service.lecture;
 
 import com.urunner.khweb.controller.dto.lecture.LectureDto;
 import com.urunner.khweb.controller.dto.lecture.LectureListDto;
+import com.urunner.khweb.controller.dto.lecture.LectureVideoDto;
 import com.urunner.khweb.entity.lecture.Lecture;
 import com.urunner.khweb.entity.lecture.LectureList;
 import com.urunner.khweb.entity.lecture.LectureVideo;
@@ -27,5 +28,7 @@ public interface LectureService {
     public void videoUpload(String title, String desc, String duration, Long id, String path);
 
     public List<LectureDto> getLectureList(String writer);
+
+    public List<LectureVideoDto> findAllLectureVideo(Long lectureListId);
 
 }
