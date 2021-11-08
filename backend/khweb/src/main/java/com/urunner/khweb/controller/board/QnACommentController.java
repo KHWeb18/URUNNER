@@ -3,6 +3,7 @@ package com.urunner.khweb.controller.board;
 import com.urunner.khweb.controller.dto.CommentRes;
 import com.urunner.khweb.entity.board.QnAComment;
 import com.urunner.khweb.entity.board.StudyComment;
+import com.urunner.khweb.service.board.QnABoardService;
 import com.urunner.khweb.service.board.QnACommentService;
 import com.urunner.khweb.service.board.StudyCommentService;
 import lombok.extern.slf4j.Slf4j;
@@ -25,10 +26,14 @@ public class QnACommentController {
     @Autowired
     private QnACommentService service;
 
+    @Autowired
+    private QnABoardService boardService;
+
     @PostMapping("/comment/register")
     public ResponseEntity<QnAComment> register(@Validated @RequestBody CommentRes commentRes) throws Exception {
         log.info(":::: comment register request from vue");
         log.info(":::: RequestBody value : " + commentRes);
+        boardService.updateComments(commentRes.getBoardNo(), 1L);
 
         return new ResponseEntity<>(service.register(commentRes), HttpStatus.OK);
     }
@@ -41,10 +46,11 @@ public class QnACommentController {
         return new ResponseEntity<>(service.selectStudyComment(boardNo), HttpStatus.OK);
     }
 
-    @DeleteMapping("/comment/{commentNo}")
-    public ResponseEntity<Void> remove(@PathVariable("commentNo") Long commentNo) throws Exception {
-
+    @DeleteMapping("/comment/{boardNo}/{commentNo}")
+    public ResponseEntity<Void> remove(@PathVariable("commentNo") Long commentNo,
+                                       @PathVariable("boardNo") Long boardNo) throws Exception {
         service.delete(commentNo);
+        boardService.updateComments(boardNo, -1L);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

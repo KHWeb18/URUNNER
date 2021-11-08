@@ -21,4 +21,5 @@ public interface QnABoardService {
     List<QnAMember> selectStudyBoardNo(Long boardNo);
     QnAMember applyMember(QnAMember qnAMember);
     Long checkLength(Long boardNo);
+    void updateComments(Long boardNo, Long upDown);
 }

@@ -26,9 +26,6 @@ import { TiptapVuetify, Heading, Bold, Italic, Strike, Underline, Code, Paragrap
  
 export default {
     components: { TiptapVuetify },
-    props: {
-        content: null
-    },
     data() {
         return {
             extensions: [
@@ -52,18 +49,10 @@ export default {
             Paragraph,
             HardBreak,
             Image
-        ],
-        // // starting editor's content
-        // content: ``
+            ],
+            content: ''
         }
     },
-    // watch: {
-    //     content(checkVal) {
-    //         if(checkVal !== '') {
-    //             this.$emit("content",this.content)
-    //         }
-    //     }
-    // },
     methods: {
         contentSubmit() {
             this.$emit("content",this.content)

@@ -3,6 +3,7 @@ package com.urunner.khweb.service.board;
 import com.urunner.khweb.controller.dto.CommentRes;
 import com.urunner.khweb.entity.board.QnAComment;
 import com.urunner.khweb.entity.board.StudyComment;
+import com.urunner.khweb.repository.board.qna.QnABoardRepository;
 import com.urunner.khweb.repository.board.qna.QnACommentRepository;
 import com.urunner.khweb.repository.board.study.StudyCommentRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,9 @@ public class QnACommentServiceImpl implements QnACommentService {
 
     @Autowired
     private QnACommentRepository repository;
+
+    @Autowired
+    private QnABoardRepository boardRepository;
 
     @Override
     public QnAComment register(CommentRes commentRes) throws Exception {
@@ -52,5 +56,4 @@ public class QnACommentServiceImpl implements QnACommentService {
     public void changeGroupNo(QnAComment comment){
         repository.changeGroupNo(comment);
     }
-
 }

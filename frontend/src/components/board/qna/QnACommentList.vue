@@ -42,7 +42,7 @@
                                 :timeout="-1" centered outlined>
                                 댓글을 삭제하시겠습니까?
                                     <template v-slot:action="{ attrs }">
-                                        <v-btn color="#424242" text v-bind="attrs" @click="[isNameProblem(mob.commentNo), snackbar = false]">
+                                        <v-btn color="#424242" text v-bind="attrs" @click="[isNameProblem(mob), snackbar = false]">
                                         확인</v-btn>
                                         <v-btn color="red" text v-bind="attrs" @click="snackbar = false">
                                         취소</v-btn>
@@ -162,13 +162,10 @@ export default {
                         alert(res.response.data.message + '설마 이거 뜨나?')
                     })
         },
-        isNameProblem (commentNumero) {
-            console.log('commentNumero 값은? : ' + commentNumero)
-            console.log('commentNumero 형식은? : ' + typeof commentNumero)
-            let commentNo2 = commentNumero
-            const commentNo = commentNo2
-            console.log('const { commentNo } 값은? : ' + commentNo)
-            axios.delete(`http://localhost:7777/qnaboard/comment/${commentNo}`)
+        isNameProblem (mob) {
+            const boardNo = mob.boardNo
+            const commentNo = mob.commentNo
+            axios.delete(`http://localhost:7777/qnaboard/comment/${boardNo}/${commentNo}`)
                     .then(() => {
                         this.refresh += 1;
                         const refresh = this.refresh;
