@@ -32,11 +32,8 @@ export default {
     }
   },
   computed: {
-     getList: {
-      cache: false,
-        lectureVideoList() {
-        return this.$store.state.lectureVideoList
-      }
+    lectureVideoList() {
+      return this.$store.state.lectureVideoList
     }
   },
   methods: {

@@ -8,7 +8,7 @@
     <!--  맵핑-->
       <!-- 오브젝트가 props에서 안찍히네요 info바로 넣고 info.price 찍으려는데 type 이랑 다 설정해도 안먹힘니다.-->
     <lecture-status-bar 
-      v-for="(info) in getLectureList" :key="info.id"
+      v-for="(info) in getList" :key="info.id"
       :info="info"
     ></lecture-status-bar>
   </v-container>  
@@ -21,9 +21,12 @@ export default {
     LectureStatusBar
   },
   computed: {
-    getLectureList() {
-      return this.$store.state.getLectureList
+    getList: {
+      cache: false,
+      get() {
+       return this.$store.state.getLectureList
     }
+     }
   }
 }
 </script>
