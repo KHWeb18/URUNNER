@@ -23,5 +23,4 @@ public interface QnACommentRepository extends JpaRepository<QnAComment, Long> {
     @Modifying
     @Query(value="update QnAComment u set u.groupNo = :#{#comment.commentNo} WHERE u.commentNo = :#{#comment.commentNo}")
     void changeGroupNo(QnAComment comment);
-
 }

@@ -32,7 +32,7 @@ public class QnABoardServiceImpl implements QnABoardService {
     public QnA register(QnARequest qnARequest) throws Exception {
 
         QnA postEntity = new QnA(qnARequest.getTitle(), qnARequest.getContent(), qnARequest.getWriter(),
-                qnARequest.getName(), qnARequest.getComplete(), qnARequest.getCurrentNum(), qnARequest.getViews());
+                qnARequest.getName(), qnARequest.getComplete(), qnARequest.getCurrentNum(), qnARequest.getViews(), qnARequest.getComments());
 
         return repository.save(postEntity);
     }
@@ -66,6 +66,10 @@ public class QnABoardServiceImpl implements QnABoardService {
     public void updateViews(QnARequest qnARequest){
 
         repository.updateViews(qnARequest.getViews(), qnARequest.getBoardNo());
+    }
+
+    public void updateComments(Long boardNo, Long upDown) {
+        repository.updateComments(boardNo, upDown);
     }
 
     public void delete(Long boardNo) throws Exception {

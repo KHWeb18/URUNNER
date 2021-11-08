@@ -7,19 +7,6 @@
                     <v-icon>mdi-exclamation-thick</v-icon>
                     <span>질문답변 게시판</span></h4>
             </div>
-            <!-- 옵션바 -->
-            <div class="option_box">
-                <div style="transform: scale(0.7);">
-                    <v-btn-toggle v-model="toggle_exclusive" shaped mandatory>
-                        <v-btn>
-                            <v-icon>mdi-image</v-icon>
-                        </v-btn>
-                        <v-btn>
-                            <v-icon>mdi-format-align-justify</v-icon>
-                        </v-btn>
-                    </v-btn-toggle>
-                </div>
-            </div>
             <!-- 검색창 -->
             <div class="searching_box">
                 <div class="searching_bar">
@@ -32,7 +19,7 @@
             </div>
             <!-- 게시글 리스트 -->
             <div class="forSearching" v-show="!searchinOn">
-                <div class="post_list" v-show="!toggle_exclusive">
+                <div class="post_list">
                     <div class="post_card_box">
                         <div class="post_card" v-for="mob in paginatedData" :key="mob.boardNo">
                             <router-link
@@ -47,7 +34,7 @@
                                 <div class="post_title">{{ mob.title }}</div>
                                 <div class="post_content">{{ mob.name }} | {{ $moment(mob.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}
                                     <v-icon color="red" style="height:20px">mdi-heart</v-icon>
-                                    {{mob.currentNum}} | <v-icon>mdi-eye</v-icon>{{ mob.views }}
+                                    {{mob.currentNum}} | <v-icon>mdi-eye</v-icon>{{ mob.views }} | <v-icon>mdi-comment</v-icon>{{ mob.comments }}
 
                                 </div> 
                                 </router-link>
@@ -132,108 +119,7 @@
                     </v-container>
                 </div>
             </div>
-        </div>
-
-        <div class="forSearching"  v-show="!searchinOn">
-            <div v-show="toggle_exclusive" style="max-width:1000px;">
-            <v-simple-table>
-                <template>
-                    <thead>
-                        <tr>
-                            <th class="text-center" width="64">No.</th>
-                            <th class="text-center" style="width:45vw;">제목</th>
-                            <th class="text-center" style="min-width:8px;">작성자</th>
-                            <th class="text-center" style="min-width:8px;">작성일</th>
-                        </tr>
-                        <tr v-if="!boards || (Array.isArray(boards) && boards.length === 0)">
-                            <td colspan="4">
-                                현재 등록된 게시물이 없습니다!
-                            </td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="mob in paginatedData" :key="mob.boardNo" class="item">
-                            <td style="text-align:center">{{ mob.boardNo }}</td>
-                            <td>
-                                <router-link
-                                    :to="{ name: 'QnABoardReadPage',
-                                                        params: { boardNo: mob.boardNo.toString() } }">
-                                    {{ mob.title }}
-                                </router-link>
-                            </td>
-                            <td style="text-align:center">{{ mob.name }}</td>
-                            <td style="text-align:center">{{ $moment(mob.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}</td>
-                        </tr>
-                    </tbody>
-                </template>
-            </v-simple-table>
-            <div class="button_box">
-                <v-flex text-xs-right="text-xs-right" text-sm-right="text-sm-right">
-                    <router-link :to="{ name: 'QnABoardRegisterPage' }">
-                        <v-btn
-                            v-if="this.$store.state.isLogin"
-                            color="light-blue lighten-1 text center"
-                            class="change-font">
-                            글쓰기
-                        </v-btn>
-                    </router-link>
-                </v-flex>
-            </div>
-            <v-container style="margin-top:20px;">
-                <div class="text-center">
-                    <v-pagination class="btn_pagination" v-model="pageNum" :length="pageCount"></v-pagination>
-                </div>
-            </v-container>
-            </div>
-        </div>
-        <!-- 검색결과 리스트형 -->
-        <div class="forSearching"  v-show="searchinOn">
-            <div v-show="toggle_exclusive" style="max-width:1000px;">
-            <v-simple-table>
-                <template>
-                    <thead>
-                        <tr>
-                            <th>No.</th>
-                            <th>제목</th>
-                            <th>작성자</th>
-                            <th>작성일</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="mob in paginatedDataS" :key="mob.boardNo" class="item">
-                            <td style="text-align:center">{{ mob.boardNo }}</td>
-                            <td>
-                                <router-link
-                                    :to="{ name: 'QnABoardReadPage',
-                                                        params: { boardNo: mob.boardNo.toString() } }">
-                                    {{ mob.title }}
-                                </router-link>
-                            </td>
-                            <td style="text-align:center">{{ mob.name }}</td>
-                            <td style="text-align:center">{{ $moment(mob.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}</td>
-                        </tr>
-                    </tbody>
-                </template>
-            </v-simple-table>
-            <div class="button_box">
-                <v-flex text-xs-right="text-xs-right" text-sm-right="text-sm-right">
-                    <router-link :to="{ name: 'QnABoardRegisterPage' }">
-                        <v-btn
-                            v-if="this.$store.state.isLogin"
-                            color="light-blue lighten-1 text center"
-                            class="change-font">
-                            글쓰기
-                        </v-btn>
-                    </router-link>
-                </v-flex>
-            </div>
-            <v-container style="margin-top:20px;">
-                <div class="text-center">
-                    <v-pagination class="btn_pagination" v-model="pageNumS" :length="pageCountS"></v-pagination>
-                </div>
-            </v-container>
-            </div>
-        </div>
+        </div>        
     </div>
 </template>
 

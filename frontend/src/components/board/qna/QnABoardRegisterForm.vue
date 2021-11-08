@@ -43,7 +43,8 @@ export default {
             content: '',
             complete: false,
             currentNum: 1,
-            views: 1
+            views: 1,
+            comments: 0
         }
     },
     methods: {
@@ -94,8 +95,11 @@ export default {
         },       
         boardRegist (data) {            
             this.content = data
-            const { title, writer, content, name, complete, currentNum, views } = this
-            axios.post('http://localhost:7777/qnaboard/register', { title, writer, content, name, complete, currentNum, views } )
+            const { title, writer, content, name, complete, currentNum, views, comments } = this
+            console.log("const값좀보자")
+            console.log("const값좀보자")
+            console.log({ title, writer, content, name, complete, currentNum, views, comments })
+            axios.post('http://localhost:7777/qnaboard/register', { title, writer, content, name, complete, currentNum, views, comments } )
                     .then(res => {
                         console.log(res.data)
                         this.$store.state.boardNo = res.data.boardNo.toString()
