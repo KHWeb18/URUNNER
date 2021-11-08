@@ -4,11 +4,15 @@
 
 <script>
 import LectureListForm from '@/components/lecture/LectureListForm.vue'
+import { getLectureList } from '@/util/AxiosMethod'
+
 export default {
-  name: 'lectureListPage',
   components: {
     LectureListForm,
-  }
+  },
+  created() {
+    getLectureList()
+  },
 }
 </script>
 

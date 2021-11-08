@@ -15,8 +15,10 @@
           hint="What is the lecture about?"
           persistent-hint
         ></v-select>
-        <v-btn @click="onSubmit">등록</v-btn>
-        <v-btn to="/mypage/lecture/lectureList">취소</v-btn>
+        <div class="text-center">
+          <v-btn @click="onSubmit" color="primary" :disabled="!lectureInfo.title || !lectureInfo.price || !lectureInfo.description || !temp_category">등록</v-btn>
+          <v-btn to="/mypage/lecture/lectureList" class="ml-2" color="warning">취소</v-btn>
+        </div>
       </div>
     </form>
   </v-container>
@@ -25,6 +27,7 @@
 <script>
 import axios from 'axios';
 import { API_BASE_URL } from '@/constants/index.js'
+import { getLectureList } from '@/util/AxiosMethod'
 
 export default {
   data() {
@@ -44,19 +47,16 @@ export default {
     onSubmit() {
       this.temp_category.filter(c => this.lectureInfo.category += c + ',')
 
-      axios.post(API_BASE_URL + "/lecture/newlecture", { lectureInfo:this.lectureInfo })
+      axios.post(API_BASE_URL + "/lecture/newlecture", { lectureInfo: this.lectureInfo })
       .then(res => {
-        alert(res.data)
+        getLectureList();
+        alert("강의 기본정보 등록을 성공하였습니다.")
+        console.log(res.data);
+        this.$router.push('/mypage/lecture/lectureList');
       })
       .catch(err => {
         alert(err)
       })
-
-      // axios.post(/lecture/registerLecture)
-      //       .then(res => { console.log(res.data); })
-      //       .catch(err => { console.log(err); })
-      // 강의 기본 정보를 저장
-      this.$router.push('/mypage/lecture/lectureList');
     }
   },
 }
