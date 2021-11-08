@@ -54,12 +54,12 @@ export default new VueRouter({
           component: () => import ('../views/lecture/RegisterLecturePage.vue')
       },
       {
-          path: '/mypage/lecture/registerLectureImage',
-          name: 'LectureImageRegisterPage',
-          component: () => import ('../views/lecture/LectureImageRegisterPage.vue')
+        path: '/mypage/lecture/registerLectureImage/:lectureId',
+        name: 'registerLectureImage',
+        component: () => import ('../views/lecture/LectureImageRegisterPage.vue')
       },
       {
-        path: '/mypage/lecture/manageLecture',
+        path: '/mypage/lecture/manageLecture/:lectureId',
         name: 'ManageLecturePage',
         component: () => import ('../views/lecture/ManageLecturePage.vue'),
       },

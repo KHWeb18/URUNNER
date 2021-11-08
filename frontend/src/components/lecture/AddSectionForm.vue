@@ -1,21 +1,34 @@
 <template>
   <div>
-    <v-btn class="d-block" @click="addSecttion = !addSecttion">add section</v-btn>
-        <v-list dense>
-          <v-list-item v-for="(section, index) in sectionList" :key="index">
-            <v-list-item-title @click="goToUploadLecture(section.LectureList_id)">
-              섹션{{ index + 1 }}.{{ section.topic }}
+    <v-card class="mt-5">
+      <v-card-actions>
+         <v-btn class="d-block" @click="addSecttion = !addSecttion" color="purple" outlined>
+           add section
+        </v-btn>
+      </v-card-actions>
+      <v-divider></v-divider>
+    <v-list>
+      <v-list-item-group
+        mandatory
+        color="purple"
+      >
+        <v-list-item v-for="(section, index) in sectionList" :key="section.id">
+          <v-list-item-content>
+            <v-list-item-title @click="goToUploadLecture(section.lectureList_id, section.topic)">
+              <div class="text-h7">섹션{{ index + 1 }}.{{ section.topic }}</div>
             </v-list-item-title>
-          </v-list-item>
-       </v-list>
-
+          </v-list-item-content>
+        </v-list-item>
+      </v-list-item-group>
+    </v-list>
+  </v-card>
     <v-dialog v-model="addSecttion" width="400">
       <v-card>
         <v-card-title>
           add section
         </v-card-title>
         <v-card-text>
-          <h2>section</h2>
+          <h2>{{ section }}.section</h2>
           <v-text-field label="topic" v-model="topic"/>
         </v-card-text>
         <v-card-actions>
@@ -35,14 +48,17 @@ export default {
   data() {
     return {
       addSecttion: false,
-      topic: 'tt',
-      lectureId: this.$store.state.lectureIndex
+      topic: '',
+      lectureId: this.$route.params.lectureId
     }
   },
   computed: {
     sectionList() {
       return this.$store.state.sectionList;
     },
+    section() {
+      return this.$store.state.sectionList.length + 1;
+    }
   },
   created() {
     this.getLectureSection();
@@ -51,11 +67,11 @@ export default {
     registerSection() {
       const data = {
         topic: this.topic,
-        lectureId: this.lectureId, // 강의 현황에서 강의 리스트중 특정 리스트의 커리큘럼 관리 버튼을 클릭했을 때 나오는 것으로 id를 파라미터도 받음
+        lectureId: this.lectureId, 
       }
       axios.post('http://localhost:7777/mypage/lecture/saveLectureSection', data)
-          .then(res => {
-            console.log(res.data);
+          .then(() => {
+            this.getLectureSection();
             this.addSecttion = !this.addSecttion;
             this.topic = '';
           })
@@ -72,7 +88,6 @@ export default {
             console.log(res.data);
             // 페이징 data구성됨
             this.$store.commit('saveSectionList', res.data.content);
-            console.log(this.$store.state.sectionList);
           })
           .catch(error => {
             console.log(error);
@@ -81,8 +96,9 @@ export default {
     cancel() {
       this.addSecttion = !this.addSecttion
     },
-    goToUploadLecture(id) {
-      this.$emit('goToUploadLecture', id)
+    goToUploadLecture(id, topic) {
+      const info = {id, topic}
+      this.$emit('goToUploadLecture', info);
     }
   },
 }
