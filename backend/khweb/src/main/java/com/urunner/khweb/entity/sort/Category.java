@@ -1,6 +1,7 @@
 package com.urunner.khweb.entity.sort;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.urunner.khweb.entity.lecture.Lecture;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,7 @@ public class Category {
 
     private String categoryName;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
     List<CategoryLecture> lectureList = new ArrayList<>();
 

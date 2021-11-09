@@ -1,6 +1,7 @@
 package com.urunner.khweb.entity.lecture;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.urunner.khweb.entity.sort.Category;
 import com.urunner.khweb.entity.sort.CategoryLecture;
 import lombok.Builder;
@@ -34,11 +35,13 @@ public class Lecture {
 
     private String thumb_path;
 
+    private String detail_path;
+
     @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LectureList> lectureLists = new ArrayList<>();
 
-    @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<LectureImage> lecture_images = new ArrayList<>();
+//    @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<LectureImage> lecture_images = new ArrayList<>();
 
     @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CategoryLecture> categoryList = new ArrayList<>();
@@ -81,6 +84,10 @@ public class Lecture {
 
     public void setLectureThumb(String thumb_path) {
         this.thumb_path = thumb_path;
+    }
+
+    public void setLectureDetail(String detail_path) {
+        this.detail_path = detail_path;
     }
 
     public void exist(Lecture lecture) throws Exception {

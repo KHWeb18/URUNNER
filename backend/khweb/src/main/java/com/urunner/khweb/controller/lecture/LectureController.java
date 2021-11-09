@@ -2,7 +2,9 @@ package com.urunner.khweb.controller.lecture;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.urunner.khweb.controller.dto.lecture.DtoWrapper;
 import com.urunner.khweb.controller.dto.lecture.LectureDto;
+import com.urunner.khweb.controller.dto.lecture.LectureListDto;
 import com.urunner.khweb.controller.dto.lecture.LectureParse;
 import com.urunner.khweb.service.lecture.LectureService;
 import lombok.extern.slf4j.Slf4j;
@@ -223,4 +225,81 @@ public class LectureController {
 
         return lectureService.getLectureList(authentication.getName());
     }
+
+    @GetMapping("/getBasicInfo/{lectureId}")
+    public DtoWrapper getBasicInfo(@PathVariable("lectureId") Long lectureId) {
+
+        Optional<LectureDto> basicInfo = lectureService.getBasicInfo(lectureId);
+        return new DtoWrapper(basicInfo);
+    }
+
+    @DeleteMapping("/deleteThumbImg/{lectureId}")
+    public ResponseEntity deleteThumbImg(@PathVariable("lectureId") Long lectureId) {
+
+        lectureService.deleteThumbImg(lectureId);
+
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/deleteDetailImg/{lectureId}")
+    public ResponseEntity deleteDetailImg(@PathVariable("lectureId") Long lectureId) {
+
+        lectureService.deleteDetailImg(lectureId);
+
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/deleteLecture/{lectureId}")
+    public ResponseEntity deleteLecture(@PathVariable("lectureId") Long lectureId) {
+
+        lectureService.deleteLecture(lectureId);
+
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @PutMapping("/modifyLecture")
+    public ResponseEntity modifyLecture(@RequestBody LectureDto lectureDto) {
+
+        lectureService.modifyLecture(lectureDto);
+
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+
+    @GetMapping("/getSectionTopic/{lectureId}")
+    public DtoWrapper getSectionTopic(@PathVariable("lectureId") Long lectureId) {
+
+        return lectureService.getSectionTopic(lectureId);
+    }
+
+    @DeleteMapping("/deleteSection/{lectureListId}")
+    public ResponseEntity deleteSection(@PathVariable("lectureListId") Long lectureListId) {
+
+        lectureService.deleteSection(lectureListId);
+
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @PutMapping("/modifySectionTopic")
+    public ResponseEntity modifySectionTopic(@RequestBody LectureListDto lectureListDto) {
+
+        lectureService.modifySectionTopic(lectureListDto);
+
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @GetMapping("/getLectureVideoInfo/{videoId}")
+    public DtoWrapper getLectureVideoInfo(@PathVariable("videoId") Long videoId) {
+
+        return lectureService.getLectureVideoInfo(videoId);
+    }
+
+    @DeleteMapping("/deleteLectureVideo/{videoId}")
+    public ResponseEntity deleteLectureVideo(@PathVariable("videoId") Long videoId) {
+
+        lectureService.deleteLectureVideo(videoId);
+
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
 }

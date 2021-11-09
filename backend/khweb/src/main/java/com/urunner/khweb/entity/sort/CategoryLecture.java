@@ -18,9 +18,10 @@ public class CategoryLecture {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "Lecture_id")
     private Lecture lecture;
+
 
     public void setCategory(Category category) {
         this.category = category;
@@ -29,4 +30,5 @@ public class CategoryLecture {
     public void setLecture(Lecture lecture) {
         this.lecture = lecture;
     }
+
 }
