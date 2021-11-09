@@ -1,5 +1,6 @@
 package com.urunner.khweb.service.lecture;
 
+import com.urunner.khweb.controller.dto.lecture.DtoWrapper;
 import com.urunner.khweb.controller.dto.lecture.LectureDto;
 import com.urunner.khweb.controller.dto.lecture.LectureListDto;
 import com.urunner.khweb.controller.dto.lecture.LectureVideoDto;
@@ -15,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +25,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -192,9 +196,12 @@ public class LectureServiceImpl implements LectureService {
     public List<LectureDto> getLectureList(String writer) {
 
         List<Lecture> findAllLecture = lectureRepository.findByWriter(writer);
-
+//      적합한 쿼리
         String query = "select c from Category c join CategoryLecture cl on cl.category = c " +
                 "join Lecture l on l = cl.lecture where l.id = :lectureId";
+//      부적합한 쿼리
+//        String query = "select c from Category c join fetch c.lectureList cl " +
+//                "join fetch cl.lecture l where l.id = :lectureId";
 
         return findAllLecture.stream().map(l ->
                 new LectureDto(l.getLecture_id(), l.getWriter(), l.getTitle(),
@@ -216,5 +223,161 @@ public class LectureServiceImpl implements LectureService {
         return findAllLectureVideo.stream().map(l ->
                 new LectureVideoDto(l.getId(), l.getTitle(), l.getDescription(), l.getSequence(), l.getDuration(),
                         l.getVideoPath())).collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<LectureDto> getBasicInfo(Long lectureId) {
+
+        Optional<Lecture> lecture = lectureRepository.findById(lectureId);
+
+        Lecture lecture1 = em.find(Lecture.class, lectureId);
+
+        String query = "select c from Category c join CategoryLecture cl on cl.category = c " +
+                "join Lecture l on l = cl.lecture where l.id = :lectureId";
+
+        return lecture.stream().map(l ->
+                new LectureDto(l.getLecture_id(), l.getWriter(), l.getTitle(),
+                        l.getDescription(), l.getPrice(), l.isInProgress(), l.isDiscounted(),
+                        l.getThumb_path(), l.getDetail_path(),
+                        em.createQuery(query, Category.class)
+                                .setParameter("lectureId", l.getLecture_id()).
+                                getResultList())).findAny();
+    }
+
+    @Override
+    public void deleteThumbImg(Long lectureId) {
+
+        Optional<Lecture> lecture = lectureRepository.findById(lectureId);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        lecture.orElseThrow(() -> new NoSuchElementException());
+//        ispresnet ifpresent 구분 주의
+        lecture.filter(l -> authentication.getName().equals(l.getWriter()))
+                .ifPresent(l -> {
+                    l.setLectureThumb(null);
+                    lectureRepository.save(l);
+                });
+//        테스트용 토큰없는경우(X)
+//        lecture.ifPresent(l -> {
+//                    l.setLectureThumb(null);
+//                    lectureRepository.save(l);
+//                });
+
+//        파일 삭제 아직 미구현
+
+
+    }
+
+    @Override
+    public void deleteDetailImg(Long lectureId) {
+
+        Optional<Lecture> lecture = lectureRepository.findById(lectureId);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        lecture.orElseThrow(() -> new NoSuchElementException());
+//        ispresnet ifpresent 구분 주의
+        lecture.filter(l -> authentication.getName().equals(l.getWriter()))
+                .ifPresent(l -> {
+                    l.setLectureDetail(null);
+                    lectureRepository.save(l);
+                });
+//        파일 삭제 아직 미구현
+    }
+
+    @Override
+    public void deleteLecture(Long lectureId) {
+        Optional<Lecture> lecture = lectureRepository.findById(lectureId);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        lecture.orElseThrow(() -> new NoSuchElementException());
+//        ispresnet ifpresent 구분 주의
+        lecture.filter(l -> authentication.getName().equals(l.getWriter()))
+                .ifPresent(l -> {
+                    l.setLectureDetail(null);
+                    lectureRepository.deleteById(l.getLecture_id());
+                });
+//        파일 삭제 아직 미구현
+    }
+
+    @Override
+    public void modifyLecture(LectureDto lectureDto) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        Optional<Lecture> lecture = lectureRepository.findById(lectureDto.getId());
+
+        lecture.filter(l -> authentication.getName().equals(l.getWriter()))
+                .ifPresent(l -> {
+                    l.setTitle(lectureDto.getTitle());
+                    l.setPrice(lectureDto.getPrice());
+                    l.setDescription(lectureDto.getDesc());
+                    lectureRepository.save(l);
+                });
+    }
+
+    @Override
+    public DtoWrapper getSectionTopic(Long lectureListId) {
+
+        Optional<LectureList> lectureList = lectureListRepository.findById(lectureListId);
+
+//        인증인가 처리는 get쪽에서  필요가 전혀 없을듯 수정,삭제만 인증 인가
+        Optional<LectureListDto> lectureListDto = lectureList.stream().findAny().map(l -> new LectureListDto(l.getLectureList_id(), l.getTopic(), l.getSection()));
+
+        return new DtoWrapper(lectureList);
+
+    }
+
+    @Override
+    public void deleteSection(Long lectureListId) {
+
+        Optional<LectureList> lectureList = lectureListRepository.findById(lectureListId);
+
+        lectureList.filter(l -> authentication().equals(l.getLecture().getWriter()))
+                .ifPresent(l -> lectureListRepository.deleteById(l.getLectureList_id()));
+
+    }
+
+    @Override
+    public void modifySectionTopic(LectureListDto lectureListDto) {
+
+        Optional<LectureList> lectureList = lectureListRepository.findById(lectureListDto.lectureList_id);
+
+        lectureList.filter(l -> authentication().equals(l.getLecture().getWriter()))
+                .ifPresent(l -> {
+                    l.setTopic(lectureListDto.topic);
+                    lectureListRepository.save(l);
+                });
+    }
+
+    @Override
+    public DtoWrapper getLectureVideoInfo(Long videoId) {
+
+        Optional<LectureVideo> lectureVideo = lectureVideoRepository.findById(videoId);
+
+        Optional<LectureVideoDto> lectureVideoDto = lectureVideo.stream().findAny().map(l ->
+                new LectureVideoDto(l.getId(), l.getTitle(), l.getDescription(), l.getSequence(), l.getDuration(), l.getVideoPath()));
+
+//        Stream<LectureVideoDto> lectureVideoDtoStream = lectureVideo.stream().map(l ->
+//                new LectureVideoDto(l.getId(), l.getTitle(), l.getDescription(), l.getSequence(), l.getDuration(), l.getVideoPath())
+//        );
+
+        return new DtoWrapper(lectureVideoDto);
+    }
+
+    @Override
+    public void deleteLectureVideo(Long videoId) {
+
+        Optional<LectureVideo> videoInfo = lectureVideoRepository.findById(videoId);
+
+        videoInfo.filter(l -> authentication().equals(l.getLectureList().getLecture().getWriter()))
+                .ifPresent(l -> lectureVideoRepository.deleteById(videoId));
+    }
+
+    private String authentication() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getName();
     }
 }

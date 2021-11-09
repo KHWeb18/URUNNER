@@ -1,6 +1,7 @@
 package com.urunner.khweb.entity.lecture;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.urunner.khweb.entity.sort.Category;
 import com.urunner.khweb.entity.sort.CategoryLecture;
 import lombok.Builder;

@@ -1,6 +1,7 @@
 package com.urunner.khweb.service.lecture;
 
 
+import com.urunner.khweb.controller.dto.lecture.DtoWrapper;
 import com.urunner.khweb.controller.dto.lecture.LectureDto;
 import com.urunner.khweb.controller.dto.lecture.LectureListDto;
 import com.urunner.khweb.controller.dto.lecture.LectureVideoDto;
@@ -10,6 +11,7 @@ import com.urunner.khweb.entity.lecture.LectureVideo;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface LectureService {
 
@@ -31,4 +33,23 @@ public interface LectureService {
 
     public List<LectureVideoDto> findAllLectureVideo(Long lectureListId);
 
+    public Optional<LectureDto> getBasicInfo(Long lectureId);
+
+    public void deleteThumbImg(Long lectureId);
+
+    public void deleteDetailImg(Long lectureId);
+
+    public void deleteLecture(Long lectureId);
+
+    public void modifyLecture(LectureDto lectureDto);
+
+    public DtoWrapper getSectionTopic(Long lectureListId);
+
+    public void deleteSection(Long lectureListId);
+
+    public void modifySectionTopic(LectureListDto lectureListDto);
+
+    public DtoWrapper getLectureVideoInfo(Long videoId);
+
+    public void deleteLectureVideo(Long videoId);
 }
