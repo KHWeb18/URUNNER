@@ -29,6 +29,7 @@ public class Member {
     private String name;
     private String password;
     private String introduce;
+    private String nickname;
 
     @CreationTimestamp
     private Date regDate;
@@ -40,11 +41,14 @@ public class Member {
     private AuthProvider provider;
 
 
-    public Member(String email, String password, String name, String introduce) {
+    public Member(String email, String password, String name, String introduce,String nickname) {
+
+        this.nickname = nickname;
         this.email = email;
         this.password = password;
         this.name = name;
         this.introduce = introduce;
+
     }
 
     @OneToMany(cascade = CascadeType.ALL)

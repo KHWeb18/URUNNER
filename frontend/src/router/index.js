@@ -25,6 +25,10 @@ import StudyBoardListPage from '@/views/board/study/StudyBoardListPage.vue'
 import StudyBoardReadPage from '@/views/board/study/StudyBoardReadPage.vue'
 import StudyBoardModifyPage from '@/views/board/study/StudyBoardModifyPage.vue'
 
+//결제관리
+import PaymentPage from '@/views/payment/PaymentPage.vue'
+import PaymentFail from '@/views/payment/PaymentFail.vue'
+import PaymentSuccess from '@/views/payment/PaymentSuccess.vue'
 // 질문답변 게시판
 import QnABoardRegisterPage from '@/views/board/qna/QnABoardRegisterPage.vue'
 import QnABoardListPage from '@/views/board/qna/QnABoardListPage.vue'
@@ -226,6 +230,38 @@ export default new VueRouter({
           default: StudyBoardModifyPage
         },
         props: {
+          default: true
+        }
+      },
+
+      //결제관리 시스템 관련
+      {
+        path: '/payment',
+        name: 'PaymentPage',
+        components: {
+          default: PaymentPage
+        },
+        props:{
+          default: true
+        }
+      },
+      {
+        path: '/payment/fail',
+        name: 'PaymentFail',
+        components: {
+          default: PaymentFail
+        },
+        props:{
+          default: true
+        }
+      },
+      {
+        path: '/payment/success',
+        name: 'PaymentSuccess',
+        components: {
+          default: PaymentSuccess
+        },
+        props:{
           default: true
         }
       },
