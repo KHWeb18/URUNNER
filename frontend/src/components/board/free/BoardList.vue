@@ -3,9 +3,8 @@
         <div class="main_box">
             <!-- 제목 -->
             <div class="title_box">
-                <h4 class="page_title">
-                    <v-icon>mdi-exclamation-thick</v-icon>
-                    <span>자유게시판</span></h4>
+                <h2 class="page_title">
+                    <span>자유 게시판</span></h2>
             </div>
             <!-- 옵션바 -->
             <div class="option_box">
@@ -362,15 +361,15 @@ import { mapState } from 'vuex'
 
 <style scoped>
 .main_box {
+    margin-top: 100px;
     color: #424242;
 }
-.title_box {   
+.title_box {
+    margin-bottom: 100px;
 }
 .title_box span {
-    font-size: 25px;
+    font-size: 55px;
     font-weight: bold;
-}
-.page_title {
 }
 .option_box {
     display: flex;
