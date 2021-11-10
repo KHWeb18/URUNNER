@@ -1,7 +1,7 @@
 <template>
     <form @submit.prevent="onSubmit">
         <v-text-field label="제목" v-model="title"></v-text-field>
-        <editor placeholder="Write something …" @content="fusion"/>
+        <editor placeholder="Write something …" @content="boardRegist"/>
         <!-- <v-btn @click="complete = !complete">마감</v-btn> -->
         <input v-model="fit">
         <!-- 이미지 등록 폼 -->
@@ -104,16 +104,11 @@ export default {
                         console.log(res.data)
                         this.$store.state.boardNo = res.data.boardNo.toString()
                         console.log(this.$store.state.boardNo)
+                        this.onsubmit()
                     })
                     .catch(res => {
                         alert(res.response.data.message)
                     })
-        },
-        fusion (data) {
-            setTimeout(() => {
-                this.onsubmit()
-                }, 1000)
-            this.boardRegist(data)
         }
     }
 }

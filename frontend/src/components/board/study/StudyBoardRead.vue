@@ -1,12 +1,11 @@
 <template>
     <div>
-        <div class="main_box">
+        <div class="main_box" :class="{ on: board.complete == 'true' }">
             <!-- 제목 -->
             <div class="title_box">
                 <h4 class="page_title">
-                    <v-icon>mdi-exclamation-thick</v-icon>
-                    <span>자유게시판</span></h4>
-            </div>            
+                    <span>스터디 모집</span></h4>
+            </div>
             <!-- 게시글 -->
             <div class="post_list">
                 <div class="post_card_box">
@@ -24,8 +23,8 @@
                     <div v-html="board.content">{{ board.content }}</div>
                 </div>
             </div>
-            <!-- 지원자 목록 -->
-            <v-container fluid>
+             <!-- 지원자 목록 -->
+            <div style="width:300px; margin:0px">
                 <v-row justify="center">
                 <v-subheader>지원자 목록</v-subheader>
                     <v-expansion-panels popout>
@@ -46,10 +45,11 @@
                     </v-expansion-panel>
                 </v-expansion-panels>
                 </v-row>
-            </v-container>
-            <v-btn @click="appl(board.boardNo)">지원하기</v-btn>
-            <v-btn @click="endRecruit(board.boardNo)">모집 마감</v-btn>
-        </div>        
+                <br>
+            </div>
+        </div>
+        <v-btn @click="appl(board.boardNo)">지원하기</v-btn>
+        <v-btn @click="endRecruit(board.boardNo)">모집 마감</v-btn>
     </div>
 </template>
 
@@ -127,7 +127,17 @@ export default {
     max-width: 1000px;
 }
 .main_box {
+    display:flex;
+    justify-content: center;
+    flex-direction: column;
     color: #424242;
+}
+.main_box.on {
+    display:flex;
+    justify-content: center;
+    flex-direction: column;
+    color: #424242;
+    opacity: 0.5;
 }
 .title_box {   
 }

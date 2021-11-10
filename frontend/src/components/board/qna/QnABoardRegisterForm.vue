@@ -1,7 +1,7 @@
 <template>
     <form @submit.prevent="onSubmit">
-        <v-text-field label="제목" v-model="title"></v-text-field>
-        <editor placeholder="Write something …" @content="fusion"/>
+        <v-text-field label="제목" v-model="title" maxlength="50"></v-text-field>
+        <editor placeholder="Write something …" @content="boardRegist"/>
         <!-- 이미지 등록 폼 -->
         <div style="margin-bottom: 10px">
             <div class="image-box">
@@ -75,8 +75,7 @@ export default {
             axios.post('http://localhost:7777/image/uploadImg_QnA', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
-                }
-                
+                }                
             })
             .then (res => {
                 this.response = res.data
@@ -104,16 +103,11 @@ export default {
                         console.log(res.data)
                         this.$store.state.boardNo = res.data.boardNo.toString()
                         console.log(this.$store.state.boardNo)
+                        this.onsubmit()
                     })
                     .catch(res => {
                         alert(res.response.data.message)
                     })
-        },
-        fusion (data) {
-            setTimeout(() => {
-                this.onsubmit()
-                }, 1000)
-            this.boardRegist(data)
         }
     }
 }

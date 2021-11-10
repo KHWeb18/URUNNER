@@ -1,61 +1,85 @@
-<template>
-    <div>
+ㅂ<template>
+    <div class="main">
         <div class="main_box">
             <!-- 제목 -->
             <div class="title_box">
-                <h4 class="page_title">
-                    <v-icon>mdi-exclamation-thick</v-icon>
-                    <span>질문답변 게시판</span></h4>
+                <h2 class="page_title">
+                    <span>질문답변 게시판</span></h2>
             </div>
             <!-- 검색창 -->
-            <div class="searching_box">
-                <div class="searching_bar">
-                    <v-icon style="margin:10px">mdi-magnify</v-icon>
-                    <span>
-                        <input type="text" class="searching" placeholder="검색어를 입력해주세요" v-model="word"
-                        @keyup.enter="searching(word)">
-                    </span>
+            <div class="searching_box_top">
+                <div class="searching_barp">
+                    <div class="searching" >
+                        <span>
+                            <input type="text" placeholder="검색어를 입력해주세요" v-model="word"
+                            @keyup.enter="searching(word)">
+                        </span>
+                        <v-icon class="searching_icon" @click="searching(word)">mdi-magnify</v-icon>
+                    </div>
+                </div>
+                <!-- 글쓰기 -->
+                <div style="width:50px;">
+                    <router-link :to="{ name: 'QnABoardRegisterPage' }">
+                        <v-btn
+                            v-if="this.$store.state.isLogin"
+                            color="blue darken-3 text center"
+                            class="change-font">
+                            글쓰기
+                        </v-btn>
+                    </router-link>
                 </div>
             </div>
+            <!-- 분류창 -->
+            <v-spacer class="forLine">
+                <li class="tag_button" :class="{ on : tagSelect1 }" @click="tagSelect1 = !tagSelect1">Vue</li>&nbsp;&nbsp;&nbsp;
+                <li class="tag_button" :class="{ on : tagSelect2 }" @click="tagSelect2 = !tagSelect2">Spring</li>&nbsp;&nbsp;&nbsp;
+                <li class="tag_button" :class="{ on : tagSelect3 }" @click="tagSelect3 = !tagSelect3">Python</li>&nbsp;&nbsp;&nbsp;
+            </v-spacer>
             <!-- 게시글 리스트 -->
             <div class="forSearching" v-show="!searchinOn">
                 <div class="post_list">
                     <div class="post_card_box">
-                        <div class="post_card" v-for="mob in paginatedData" :key="mob.boardNo">
-                            <router-link
-                                    :to="{ name: 'QnABoardReadPage',
-                                                        params: { boardNo: mob.boardNo.toString() } }">
+                        <div v-for="mob in paginatedData" :key="mob.boardNo">
+                            <router-link class="post_card" :to="{ name: 'QnABoardReadPage', params: { boardNo: mob.boardNo.toString() } }" >
+                                <div class="post_num">{{ mob.boardNo }}</div>
+                                <div class="post_title">
+                                    <div class="item4">{{ mob.title }}</div>
+                                    <div class="post_reg_date">{{ calcTime(mob.regDate) }}</div>
+                                </div>
+                                <div class="post_vnc">
+                                    <div class="item2">
+                                        <v-icon size="18px" color="#9e9e9e">mdi-eye</v-icon>
+                                        <div style="padding-top:3px">&nbsp;{{ mob.views }}</div>
+                                    </div>
+                                    <div class="item3">
+                                        <v-icon size="18px" color="#9e9e9e">mdi-comment</v-icon>
+                                        <div style="padding-top:3px">&nbsp;{{ mob.comments }}</div>
+                                    </div>
+                                </div>
+                                <div class="post_name_box">
+                                    <div class="post_name">{{ mob.name }}</div>
+                                </div>
                             </router-link>
-                            <div class="post_box">
-                                <div class="post_tag">#TAG</div>
-                                <router-link
-                                    :to="{ name: 'QnABoardReadPage',
-                                                        params: { boardNo: mob.boardNo.toString() } }">
-                                <div class="post_title">{{ mob.title }}</div>
-                                <div class="post_content">{{ mob.name }} | {{ $moment(mob.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}
-                                    <v-icon color="red" style="height:20px">mdi-heart</v-icon>
-                                    {{mob.currentNum}} | <v-icon>mdi-eye</v-icon>{{ mob.views }} | <v-icon>mdi-comment</v-icon>{{ mob.comments }}
-
-                                </div> 
-                                </router-link>
-                            </div>                            
-                        </div>                        
+                        </div>
                     </div>
                     <div class="button_box">
                         <v-flex text-xs-right="text-xs-right" text-sm-right="text-sm-right">
                             <router-link :to="{ name: 'QnABoardRegisterPage' }">
                                 <v-btn
                                     v-if="this.$store.state.isLogin"
-                                    color="light-blue lighten-1 text center"
+                                    color="blue darken-3 text center"
                                     class="change-font">
                                     글쓰기
                                 </v-btn>
                             </router-link>
                         </v-flex>
                     </div>
+                    <!-- 페이지네이션 -->
                     <v-container style="margin-top:20px;">
                         <div class="text-center">
-                            <v-pagination class="btn_pagination" v-model="pageNum" :length="pageCount"></v-pagination>
+                            <v-pagination class="btn_pagination" v-model="pageNum" :length="pageCount"
+                                prev-icon="mdi-chevron-left" next-icon="mdi-chevron-right" light
+                                ></v-pagination>
                         </div>
                     </v-container>
                 </div>
@@ -86,7 +110,7 @@
                                 </v-progress-circular>
                             </div></router-link>
                             <div class="post_box">
-                                <div class="post_tag">#사료추천</div>
+                                <div class="post_tag">#</div>
                                 <router-link
                                     :to="{ name: 'QnABoardReadPage',
                                                         params: { boardNo: mob.boardNo.toString() } }">
@@ -119,6 +143,18 @@
                     </v-container>
                 </div>
             </div>
+            <!-- 검색창 -->
+            <div class="searching_box">
+                <div class="searching_bar">
+                    <div class="searching" >
+                        <span>
+                            <input type="text" placeholder="검색어를 입력해주세요" v-model="word"
+                            @keyup.enter="searching(word)">
+                        </span>
+                        <v-icon class="searching_icon" @click="searching(word)">mdi-magnify</v-icon>
+                    </div>
+                </div>
+            </div>
         </div>        
     </div>
 </template>
@@ -149,7 +185,10 @@ import { mapState } from 'vuex'
 
                 interval: {},
                 value: '',
-                value2: 20
+                value2: 20,
+                tagSelect1: false,
+                tagSelect2: false,
+                tagSelect3: false,
             }
         },
         beforeDestroy () {
@@ -165,6 +204,25 @@ import { mapState } from 'vuex'
             }
         },
         methods: {
+            calcTime(data) { 
+                const moment = require("moment");
+                var d = new Date();
+                var regDate = moment(data).add(0, 'hours')
+                var calcM = -regDate.diff(d, 'minute')
+                var calcH = -regDate.diff(d, 'hours')
+                var calcD = -regDate.diff(d, 'days')
+                let checkM = Number(calcM)
+
+
+
+                if (checkM < 60) {
+                    return (calcM + ' 분 전')
+                } else if(checkM < 1440) {
+                    return(calcH + ' 시간 전')
+                } else {
+                    return(calcD + ' 일 전')
+                }
+            },
             // test() {
             //     console.log(this.$store.state.name)
             //     this.$store.state.name = '임시닉네임'
@@ -210,6 +268,15 @@ import { mapState } from 'vuex'
             replaceHtml(data) {
                 var text = data.replace(/(<([^>]+)>)/ig,"");
                 return text
+            },
+            selectTag(data) {
+                switch(data) {
+                    case 1:
+                        this.checkTag1 = "black"
+                        break;
+                    default:
+                        break;                   
+                }
             }
         },
         computed: {
@@ -253,11 +320,35 @@ import { mapState } from 'vuex'
 </script>
 
 <style scoped>
+.tag_button {
+    color: #BDBDBD;
+    cursor: pointer;
+}
+.tag_button.on {
+    color: black;
+}
+.tag_button:hover {
+    color: rgb(63, 63, 63);
+    cursor: pointer;
+    transition: all 0.5s ease;
+}
+.forLine {
+    height: 40px;
+    border-bottom: 1px solid #BDBDBD;
+    padding-left: 2vw;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
 .main_box {
+    margin-top: 100px;
     color: #424242;
 }
+.title_box {
+    margin-bottom: 100px;
+}
 .title_box span {
-    font-size: 25px;
+    font-size: 55px;
     font-weight: bold;
 }
 .option_box {
@@ -270,19 +361,55 @@ import { mapState } from 'vuex'
 .searching_box {    
     height: 50px;
 }
+.searching_box_top {
+    height: 50px;
+    max-width: 1110px;
+    display: flex;
+    justify-content: space-between;
+}
 .searching_bar {
     display: flex;
-    justify-content: row;
+    justify-content: center;
     height: 40px;
-    width:70vw;
-    max-width: 1000px;
-    border: 1px solid #BDBDBD;
 }
 .searching {
-    height: 38px !important; 
-    width:60vw !important;
+    display: flex;
+    justify-content: space-between;
+    height: 43px; 
+    width: 350px;
+    padding-left: 10px;
     max-width: 955px;
-    border-style: none !important;
+    border: 1px solid #BDBDBD;
+}
+.searching:hover {
+    display: flex;
+    justify-content: space-between;
+    height: 43px; 
+    width: 350px;
+    padding-left: 10px;
+    max-width: 955px;
+    border: 1px solid rgb(155, 155, 155);
+}
+.searching span {
+    display: flex;
+    align-self: center;
+}
+.searching span input {
+    margin-top: 3px;
+    width: 280px;
+}
+.searching_icon {
+    padding: 11px 10px 10px 10px;
+    border-left: 1px solid #BDBDBD;
+    background-color: #FAFAFA;
+}
+.searching_icon:hover {
+    padding: 11px 10px 10px 10px;
+    border-left: 1px solid #BDBDBD;
+    background-color: #dfdfdf;
+}
+input:focus {
+    outline:none;
 }
 .searching_message_box {
     width:70vw;
@@ -320,22 +447,29 @@ import { mapState } from 'vuex'
 
 
 .post_list {
-    width:70vw;
-    max-width: 1000px;
+    min-width: 475px;
+    max-width: 1500px;
+    margin-right: 10px;
+}
+.post_card_box {
+    min-width: 475px;
 }
 .post_card:hover {
-    transform: scale(1.005);
     box-shadow: 10px 17px 40px 0 rgb(0 0 0 / 4%);
+    background-color: rgb(241, 241, 241);
     cursor: pointer;
     transition: all 0.1s ease;
 }
 .post_card {
     display: flex;
-    justify-content: row;
-    margin: 15px;
-    padding: 20 20 5 5;
-    height: 80px;
+    justify-content: flex-start;
+    margin: 0vw 1vw;
+    max-height: 12vh;
+    height: 8vh;
     border-bottom: 1px solid #BDBDBD;
+}
+.post_card a {
+    width: 1000px;
 }
 .thumbnail {
     margin-right: 20px;
@@ -346,49 +480,83 @@ import { mapState } from 'vuex'
     width: 100%;
     height: 100%;
 }
-.post_box {
-    margin: 10px 10px 20px 5px;
+.post_num {
     display: flex;
-    flex-direction: column;
-    height: 100px;
-    width: 50vw;
-}
-.post_tag {
-    color: #0288D1;
-    font-weight: bold;
-    font-size: 13px;
+    justify-content: center;
+    align-self: center;
+    width: 3vw;
+    text-decoration: none;
+    color: #757575;
+    font-weight: 500;
+    font-size: 14px;
+    margin: 0 0 0 30px;
 }
 .post_title {
-    margin: 0 0 0 0px;
-    font-size: 17px;
-    font-weight: bold;
-    color: #424242;
+    display: flex;
+    flex-direction: column;    
+    align-self: center;
+    margin: 0 0 0 30px;
+    width: 57vw;
+    max-width: 750px;
 }
-.post_title:hover {
-    color: #29B6F6;
-    text-decoration: underline;
-}
-.post_content {
-    font-size: 13px;
-    color: #757575;
-    max-height: 54px;
+.item4 {
+    font-size: 15px !important;
+    font-weight: bold !important;
+    color: #2b2b2b;
+    max-width: 720px;
 
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
-    line-height: 16px;
-    -webkit-line-clamp: 3; /* 표시하고자 하는 라인 수 */
+    -webkit-line-clamp: 1; /* 표시하고자 하는 라인 수 */
     -webkit-box-orient: vertical;
 }
-.post_reg_date {
+.post_name_box {
+    display: flex;
+    align-self: center;
+    justify-content: center;
     font-size: 13px;
     color: #757575;
+    margin-right: 5vw; 
+}
+.post_name {
+    text-align: center;
+	width: 100px;
+    max-width: 100px;
+}
+.post_vnc {
+    width: 10vw;
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    color: #757575;
+    font-weight: 500;
+}
+.item2 {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-size: 11px;
+    color: #757575;
+}
+.item3 {
+    display: flex;
+    flex-direction: row;
+    font-size: 11px;
+    color: #757575;
+}
+.post_reg_date {
+    font-size: 11px;
+    font-weight: 500 !important;
+    color: #757575;
+    letter-spacing: -1px;
 }
 .btn_pagination {
     background-color: transparent;
     box-shadow: none;
 }
 .button_box {
+    max-width: 1140px;
     margin-top: 10px;
     display: flex;
     justify-content: flex-end;
@@ -419,4 +587,7 @@ import { mapState } from 'vuex'
 }
 a { text-decoration:none !important }
 a:hover { text-decoration:none !important }
+ul {
+    list-style:none;
+}
 </style>

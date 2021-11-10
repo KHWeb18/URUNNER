@@ -4,7 +4,6 @@
             <!-- 제목 -->
             <div class="title_box">
                 <h4 class="page_title">
-                    <v-icon>mdi-exclamation-thick</v-icon>
                     <span>스터디 모집</span></h4>
             </div>
             <!-- 옵션바 -->
@@ -34,7 +33,7 @@
             <div class="forSearching" v-show="!searchinOn">
                 <div class="post_list" v-show="!toggle_exclusive">
                     <div class="post_card_box">
-                        <div class="post_card" v-for="mob in paginatedData" :key="mob.boardNo">
+                        <div class="post_card" :class="{ on : mob.complete == 'true' }" v-for="mob in paginatedData" :key="mob.boardNo">
                             <router-link
                                     :to="{ name: 'StudyBoardReadPage',
                                                         params: { boardNo: mob.boardNo.toString() } }">
@@ -58,7 +57,7 @@
                                 <div class="post_content">{{ replaceHtml(mob.content) }}</div>
                                 <div class="post_reg_date">{{ mob.name }} | {{ $moment(mob.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}</div></router-link>
                             </div>
-                            <div v-show="mob.complete == 'true'">
+                            <div class="complete_img" v-show="mob.complete == 'true'">
                                 <img src="@/assets/complete.png" v-show="mob.complete" width="130" class="item">
                             </div>
                             <div style="display:flex;justify-content:center;flex-wrap:wrap;height:20px">
@@ -385,10 +384,14 @@ import { mapState } from 'vuex'
 
 <style scoped>
 .main_box {
+    margin-top: 100px;
     color: #424242;
 }
+.title_box {
+    margin-bottom: 80px;
+}
 .title_box span {
-    font-size: 25px;
+    font-size: 55px;
     font-weight: bold;
 }
 .option_box {
@@ -446,10 +449,6 @@ import { mapState } from 'vuex'
     color: #757575;
 
 }
-
-
-
-
 .post_list {
     width:70vw;
     max-width: 1000px;
@@ -467,6 +466,15 @@ import { mapState } from 'vuex'
     padding: 20 20 5 5;
     height: 150px;
     border-bottom: 1px solid #BDBDBD;
+}
+.post_card.on {
+    display: flex;
+    justify-content: row;
+    margin: 15px;
+    padding: 20 20 5 5;
+    height: 150px;
+    border-bottom: 1px solid #BDBDBD;
+    opacity: 0.5;    
 }
 .thumbnail {
     margin-right: 20px;
