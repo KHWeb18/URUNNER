@@ -12,7 +12,9 @@ public class MemberRes {
 
     private String email;
 
-    private String name;
+    private String name;    //nickname으로 바뀌면 없어질부분
+
+    private String nickname;
 
     private String password;
 

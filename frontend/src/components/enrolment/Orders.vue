@@ -20,12 +20,28 @@
         :length="pageCount"
       ></v-pagination>
    </div>
+    <div>
+     <v-btn @click="test1">test</v-btn>
+   </div>
 </template>
     </v-card>
 </v-container>
 </template>
 
 <script>
+import {
+  // getLectrueBasicInfo,
+  // deleteThumbImg,
+  // deleteDetailImg,
+  // getSectionTopic,
+  // deleteSection,
+  // modifySectionTopic,
+  // deleteLecture,
+  // modifyLecture,
+  // getLectureVideoInfo,
+  deleteLectureVideo,
+  // modifyLectureVideo    
+} from '@/util/LectureUtil.js'
   export default {
     data: () => ({
         page: 1,
@@ -51,6 +67,11 @@
         { text: '금액', value: 'price' },
       ],
     }),
+     methods: {
+      test1() {
+        deleteLectureVideo(1)
+      }
+    }
   }
 </script>
 
