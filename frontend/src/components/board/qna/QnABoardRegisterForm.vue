@@ -39,7 +39,7 @@ export default {
             writer: this.$store.state.moduleA.email,
             files: '',
             preview: '',
-            name: this.$store.state.moduleA.name,
+            nickname: this.$store.state.moduleA.nickname,
             content: '',
             complete: false,
             currentNum: 1,
@@ -52,7 +52,7 @@ export default {
             this.content = data
         },
         test() {
-            console.log(this.name)
+            console.log(this.nickname)
             console.log(this.$store.state.moduleA.email)
             console.log(this.content)
         },
@@ -94,11 +94,11 @@ export default {
         },       
         boardRegist (data) {            
             this.content = data
-            const { title, writer, content, name, complete, currentNum, views, comments } = this
+            const { title, writer, content, nickname, complete, currentNum, views, comments } = this
             console.log("const값좀보자")
             console.log("const값좀보자")
-            console.log({ title, writer, content, name, complete, currentNum, views, comments })
-            axios.post('http://localhost:7777/qnaboard/register', { title, writer, content, name, complete, currentNum, views, comments } )
+            console.log({ title, writer, content, nickname, complete, currentNum, views, comments })
+            axios.post('http://localhost:7777/qnaboard/register', { title, writer, content, nickname, complete, currentNum, views, comments } )
                     .then(res => {
                         console.log(res.data)
                         this.$store.state.boardNo = res.data.boardNo.toString()

@@ -43,7 +43,7 @@ export default {
             writer: this.$store.state.moduleA.email,
             files: '',
             preview: '',
-            name: this.$store.state.moduleA.name,
+            nickname: this.$store.state.moduleA.nickname,
             content: '',
             complete: false,
             fit: 1,
@@ -55,7 +55,7 @@ export default {
             this.content = data
         },
         test() {
-            console.log(this.name)
+            console.log(this.nickname)
             console.log(this.$store.state.moduleA.email)
             console.log(this.content)
         },
@@ -98,8 +98,8 @@ export default {
         },       
         boardRegist (data) {            
             this.content = data
-            const { title, writer, content, name, complete, fit, currentNum } = this
-            axios.post('http://localhost:7777/studyboard/register', { title, writer, content, name, complete, fit, currentNum } )
+            const { title, writer, content, nickname, complete, fit, currentNum } = this
+            axios.post('http://localhost:7777/studyboard/register', { title, writer, content, nickname, complete, fit, currentNum } )
                     .then(res => {
                         console.log(res.data)
                         this.$store.state.boardNo = res.data.boardNo.toString()

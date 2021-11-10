@@ -48,7 +48,7 @@
                                                         params: { boardNo: mob.boardNo.toString() } }">
                                 <div class="post_title">{{ mob.title }}</div>
                                 <div class="post_content">{{ replaceHtml(mob.content) }}</div>
-                                <div class="post_reg_date">{{ mob.name }} | {{ $moment(mob.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}</div></router-link>
+                                <div class="post_reg_date">{{ mob.nickname }} | {{ $moment(mob.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}</div></router-link>
                             </div>
                         </div>
                     </div>
@@ -147,7 +147,7 @@
                                     {{ mob.title }}
                                 </router-link>
                             </td>
-                            <td style="text-align:center">{{ mob.name }}</td>
+                            <td style="text-align:center">{{ mob.nickname }}</td>
                             <td style="text-align:center">{{ $moment(mob.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}</td>
                         </tr>
                     </tbody>
@@ -195,7 +195,7 @@
                                     {{ mob.title }}
                                 </router-link>
                             </td>
-                            <td style="text-align:center">{{ mob.name }}</td>
+                            <td style="text-align:center">{{ mob.nickname }}</td>
                             <td style="text-align:center">{{ $moment(mob.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}</td>
                         </tr>
                     </tbody>
@@ -261,11 +261,11 @@ import { mapState } from 'vuex'
         },
         methods: {
             test() {
-                // console.log(this.$store.state.moduleA.name)
+                // console.log(this.$store.state.moduleA.nickname)
                 // console.log('email: ' + this.$store.state.email)
                 console.log('비우기 버튼!')
                 console.log('this.$store.state.moduleA.email : ' + this.$store.state.moduleA.email)
-                // console.log('name: ' + this.$store.state.name)
+                // console.log('nickname: ' + this.$store.state.nickname)
                 // console.log('email: ' + this.$store.state.email)
                 sessionStorage.clear();
                 localStorage.clear();

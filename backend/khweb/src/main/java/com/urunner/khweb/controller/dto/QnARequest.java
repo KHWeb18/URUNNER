@@ -14,7 +14,7 @@ public class QnARequest {
     private String title;
     private String content;
     private String writer;
-    private String name;
+    private String nickname;
     private String complete;
     private Long currentNum;
     private Long views;

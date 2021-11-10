@@ -14,7 +14,7 @@ public class StudyRequest {
     private String title;
     private String content;
     private String writer;
-    private String name;
+    private String nickname;
     private String complete;
     private Long fit;
     private Long currentNum;

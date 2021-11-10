@@ -41,7 +41,7 @@ export default {
             writer: this.$store.state.moduleA.email,
             files: '',
             preview: '',
-            name: this.$store.state.moduleA.name,
+            nickname: this.$store.state.moduleA.nickname,
             content: ''
         }
     },
@@ -50,7 +50,7 @@ export default {
             this.content = data
         },
         test() {
-            console.log(this.name)
+            console.log(this.nickname)
             console.log(this.$store.state.moduleA.email)
             console.log(this.content)
         },
@@ -93,8 +93,8 @@ export default {
         },       
         boardRegist (data) {            
             this.content = data
-            const { title, writer, content, name } = this
-            axios.post('http://localhost:7777/freeboard/register', { title, writer, content, name } )
+            const { title, writer, content, nickname } = this
+            axios.post('http://localhost:7777/freeboard/register', { title, writer, content, nickname } )
                     .then(res => {
                         console.log(res.data)
                         this.$store.state.boardNo = res.data.boardNo.toString()

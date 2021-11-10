@@ -13,14 +13,14 @@ public interface MemberProfileRepository extends JpaRepository<Member, Long> {
 
     @Transactional
     @Modifying
-    @Query("update Member u set u.name = ?1, u.introduce = ?3 where u.email = ?2")
+    @Query("update Member u set u.nickname = ?1, u.introduce = ?3 where u.email = ?2")
 //    @Query(value = "update member set name = ?1 where email = ?2", nativeQuery = true)
-    void update(String name, String email, String introduce);
+    void update(String nickname, String email, String introduce);
 
     @Transactional
     @Modifying
-    @Query("update Member u set u.name = ?1, u.password = ?3, u.introduce = ?4 where u.email = ?2")
-    void update2(String name, String email, String password, String introduce);
+    @Query("update Member u set u.nickname = ?1, u.password = ?3, u.introduce = ?4 where u.email = ?2")
+    void update2(String nickname, String email, String password, String introduce);
 
     @Transactional
     @Modifying

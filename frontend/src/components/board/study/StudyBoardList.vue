@@ -55,7 +55,7 @@
                                                         params: { boardNo: mob.boardNo.toString() } }">
                                 <div class="post_title">{{ mob.title }}</div>
                                 <div class="post_content">{{ replaceHtml(mob.content) }}</div>
-                                <div class="post_reg_date">{{ mob.name }} | {{ $moment(mob.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}</div></router-link>
+                                <div class="post_reg_date">{{ mob.nickname }} | {{ $moment(mob.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}</div></router-link>
                             </div>
                             <div class="complete_img" v-show="mob.complete == 'true'">
                                 <img src="@/assets/complete.png" v-show="mob.complete" width="130" class="item">
@@ -174,7 +174,7 @@
                                     {{ mob.title }}
                                 </router-link>
                             </td>
-                            <td style="text-align:center">{{ mob.name }}</td>
+                            <td style="text-align:center">{{ mob.nickname }}</td>
                             <td style="text-align:center">{{ $moment(mob.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}</td>
                         </tr>
                     </tbody>
@@ -222,7 +222,7 @@
                                     {{ mob.title }}
                                 </router-link>
                             </td>
-                            <td style="text-align:center">{{ mob.name }}</td>
+                            <td style="text-align:center">{{ mob.nickname }}</td>
                             <td style="text-align:center">{{ $moment(mob.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}</td>
                         </tr>
                     </tbody>
@@ -293,8 +293,8 @@ import { mapState } from 'vuex'
         },
         methods: {
             // test() {
-            //     console.log(this.$store.state.name)
-            //     this.$store.state.name = '임시닉네임'
+            //     console.log(this.$store.state.nickname)
+            //     this.$store.state.nickname = '임시닉네임'
             // },
             nextPage() {
                 this.pageNum += 1;

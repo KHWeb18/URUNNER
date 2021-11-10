@@ -26,12 +26,12 @@
                 <fieldset class="box1">
                     <!-- 닉네임 -->
                     <div class="box2">
-                        <v-text-field class="int" v-model="name" 
+                        <v-text-field class="int" v-model="nickname" 
                         placeholder="닉네임" maxlength="10" @input="searchChangeFunc4($event)"></v-text-field>
                         <span class="validation2" style="left: 85%">
                             <div v-show='toggle4' class="validation_with_length">
-                                <div class="count_name">
-                                {{ count_name }}/10
+                                <div class="count_nickname">
+                                {{ count_nickname }}/10
                                 </div>
                                 <div>
                                 <v-icon class="delete_all_btn" @click="deleteContent4" tabindex="-1">mdi-close-circle-outline</v-icon>
@@ -108,7 +108,8 @@ export default {
     name: 'MemberProfileForm',
     data () {
         return {
-            name: this.$store.state.moduleA.name,
+            name: '',
+            nickname: this.$store.state.moduleA.nickname,
             userId: this.$store.state.moduleA.email,
             password: '',
             introduce: this.$store.state.introduce,
@@ -117,7 +118,7 @@ export default {
             preview: '', 
             //닉네임 길이 체크용
             toggle4: false,
-            count_name: 0,
+            count_nickname: 0,
             toggle2: false,
             toggle_friend2: false,
             toggle_friend_check2: false,
@@ -142,13 +143,13 @@ export default {
             // this.introduce = this.$store.state.introduce
         },
         profileSubmit () {
-                const { userId, name, password, introduce} = this
-                this.$emit('submit', { userId, name, password, introduce })
+                const { userId, nickname, password, introduce} = this
+                this.$emit('submit', { userId, nickname, password, introduce })
         },
         deleteContent4 () {
             this.toggle4 = false
             this.check1 = false
-            this.name = ''
+            this.nickname = ''
             this.onLoginBtn = false
         },
         deleteContent2 () {
@@ -195,14 +196,14 @@ export default {
         },        
         searchChangeFunc4(){
             this.toggle4 = true
-            if (this.name == '') {
+            if (this.nickname == '') {
                 this.toggle4 = false;
                 this.onLoginBtn = false;
             } else {
                 this.onLoginBtn = true
             }
-            this.count_name = this.name.length
-            console.log(this.name)
+            this.count_nickname = this.nickname.length
+            console.log(this.nickname)
         },
         handleFileUpload () {
                 this.files = this.$refs.files.files
@@ -290,7 +291,7 @@ export default {
     color: red;
     font-weight: normal;
 }
-.count_name {
+.count_nickname {
     display: inline;
     min-width: 37px;
     text-align: right;

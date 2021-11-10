@@ -57,7 +57,7 @@
                                     </div>
                                 </div>
                                 <div class="post_name_box">
-                                    <div class="post_name">{{ mob.name }}</div>
+                                    <div class="post_name">{{ mob.nickname }}</div>
                                 </div>
                             </router-link>
                         </div>
@@ -224,8 +224,8 @@ import { mapState } from 'vuex'
                 }
             },
             // test() {
-            //     console.log(this.$store.state.name)
-            //     this.$store.state.name = '임시닉네임'
+            //     console.log(this.$store.state.nickname)
+            //     this.$store.state.nickname = '임시닉네임'
             // },
             nextPage() {
                 this.pageNum += 1;
