@@ -11,8 +11,11 @@ import com.urunner.khweb.entity.lecture.LectureVideo;
 import com.urunner.khweb.entity.sort.Category;
 import com.urunner.khweb.entity.sort.CategoryLecture;
 import com.urunner.khweb.repository.lecture.*;
+import com.urunner.khweb.utility.LectureUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -23,6 +26,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -53,6 +59,10 @@ public class LectureServiceImpl implements LectureService {
 
     @PersistenceContext
     private EntityManager em;
+
+    @Autowired
+    private LectureUtil lectureUtil;
+
 
 //    @Override
 //    public void lectureVideo(LectureVideo lectureVideo, EnrollLectureVideoDto enrollLectureVideoDto) {
@@ -249,11 +259,11 @@ public class LectureServiceImpl implements LectureService {
 
         Optional<Lecture> lecture = lectureRepository.findById(lectureId);
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         lecture.orElseThrow(() -> new NoSuchElementException());
-//        ispresnet ifpresent 구분 주의
-        lecture.filter(l -> authentication.getName().equals(l.getWriter()))
+
+        lectureUtil.deleteUtil("image", lecture.get().getThumb_path());
+
+        lecture.filter(l -> authentication().equals(l.getWriter()))
                 .ifPresent(l -> {
                     l.setLectureThumb(null);
                     lectureRepository.save(l);
@@ -269,16 +279,20 @@ public class LectureServiceImpl implements LectureService {
 
     }
 
+
+
     @Override
     public void deleteDetailImg(Long lectureId) {
 
         Optional<Lecture> lecture = lectureRepository.findById(lectureId);
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         lecture.orElseThrow(() -> new NoSuchElementException());
 //        ispresnet ifpresent 구분 주의
-        lecture.filter(l -> authentication.getName().equals(l.getWriter()))
+
+
+        lectureUtil.deleteUtil("image", lecture.get().getDetail_path());
+
+        lecture.filter(l -> authentication().equals(l.getWriter()))
                 .ifPresent(l -> {
                     l.setLectureDetail(null);
                     lectureRepository.save(l);
@@ -371,6 +385,9 @@ public class LectureServiceImpl implements LectureService {
     public void deleteLectureVideo(Long videoId) {
 
         Optional<LectureVideo> videoInfo = lectureVideoRepository.findById(videoId);
+
+        lectureUtil.deleteUtil("video", videoInfo.get().getVideoPath());
+
 
         videoInfo.filter(l -> authentication().equals(l.getLectureList().getLecture().getWriter()))
                 .ifPresent(l -> lectureVideoRepository.deleteById(videoId));
