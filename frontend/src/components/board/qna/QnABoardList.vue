@@ -67,9 +67,9 @@
                                         <div style="padding-top:3px">&nbsp;{{ mob.comments }}</div>
                                     </div>
                                 </router-link>
-                                    <div class="post_name_box">
-                                        <div class="post_name">{{ mob.nickname }}</div>
-                                    </div>
+                                <div class="post_name_box">
+                                    <div class="post_name">{{ mob.nickname }}</div>
+                                </div>
                             </div>
                         </div>
                     </div>

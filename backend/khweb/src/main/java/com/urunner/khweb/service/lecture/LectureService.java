@@ -23,6 +23,8 @@ public interface LectureService {
 
     public void lectureRegister(String writer, String title, Long price, String desc, String category);
 
+    public void modifyLecture(Long lectureId, String writer, String title, Long price, String desc, String category);
+
     public void saveLectureSection(Long lectureId, String topic);
 
     public Page<LectureListDto> findAllLectureSection(Long lectureId);
@@ -52,4 +54,12 @@ public interface LectureService {
     public DtoWrapper getLectureVideoInfo(Long videoId);
 
     public void deleteLectureVideo(Long videoId);
+
+    public void inProgressToFalse(Long id);
+
+    public void inProgressToTrue(Long id);
+
+    public Optional<LectureVideoDto> modifyVideo(String title, String desc, String duration, Long id, String path);
+
+    public void modifyVideoDelete(Long id);
 }

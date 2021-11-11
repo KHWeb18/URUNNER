@@ -47,6 +47,7 @@ function modifyLecture() {
   // 지금은 임의로 한곳에 나열하기 위함임 이렇게 데이터를 보낼 것이라는 의미
   axios.put(`${API_BASE_URL}/lecture/modifyLecture`, 
    {  
+
       id: "",
       title: "",
       price: "",
@@ -77,6 +78,7 @@ function modifySectionTopic() {
    // 지금은 임의로 한곳에 나열하기 위함임 이렇게 데이터를 보낼 것이라는 의미
   axios.put(`${API_BASE_URL}/lecture/modifySectionTopic`, 
    { 
+
      lectureList_id: "",
      topic: ""
    }

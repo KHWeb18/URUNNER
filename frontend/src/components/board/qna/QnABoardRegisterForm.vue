@@ -92,7 +92,7 @@ export default {
         fileDeleteButton () {
             this.files = '',
             this.preview = ''
-        },       
+        },
         boardRegist (data) {
             this.content = data.content
             this.tags = data.tags

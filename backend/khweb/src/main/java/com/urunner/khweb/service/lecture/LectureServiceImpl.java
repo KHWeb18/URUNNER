@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -84,9 +85,10 @@ public class LectureServiceImpl implements LectureService {
     @Override
     public void lectureEnroll(Lecture lecture) {
 
-
         lectureRepository.save(lecture);
     }
+
+
 
     @Override
     public void lectureAddImage(String thum, String detail, Long id) {
@@ -138,7 +140,42 @@ public class LectureServiceImpl implements LectureService {
                 em.persist(categoryLecture);
             }
         }
+    }
 
+    @Transactional
+    @Override
+    public void modifyLecture(Long lectureId, String writer, String title, Long price, String desc, String categoryArray) {
+
+        String[] category = categoryArray.split(",");
+
+        List<String> cateList = new ArrayList();
+
+        Lecture lecture = em.find(Lecture.class, lectureId);
+
+        for (String s : category) {
+            cateList.add(s);
+        }
+
+        lecture.setTitle(title);
+        lecture.setPrice(price);
+        lecture.setDescription(desc);
+        lectureRepository.save(lecture);
+
+        String query = "delete from CategoryLecture where Lecture_id = :Lecture_id";
+
+        em.createQuery(query)
+                .setParameter("Lecture_id", lectureId)
+                .executeUpdate();
+
+        for (int i = 0; i < category.length; i++) {
+            Category getCategory = categoryRepository.findByCategoryName(cateList.get(i));
+            if (getCategory != null) {
+                CategoryLecture categoryLecture = new CategoryLecture();
+                categoryLecture.setLecture(lecture);
+                categoryLecture.setCategory(getCategory);
+                em.persist(categoryLecture);
+            }
+        }
 
     }
 
@@ -198,6 +235,38 @@ public class LectureServiceImpl implements LectureService {
         lectureVideo.setLectureList(lectureList);
 
         lectureVideoRepository.save(lectureVideo);
+    }
+
+    @Override
+    public Optional<LectureVideoDto> modifyVideo(String title, String desc, String duration, Long id, String path) {
+
+        Optional<LectureVideo> lectureVideo = lectureVideoRepository.findById(id);
+
+        lectureVideo.orElseThrow(() -> new NoSuchElementException());
+
+        lectureVideo.ifPresent(
+                l-> {
+                    l.setTitle(title);
+                    l.setDescription(desc);
+                    l.setDuration(duration);
+                    l.setVideoPath(path);
+                    lectureVideoRepository.save(l);
+                }
+        );
+        return lectureVideo.stream().findAny().map(l ->
+                new LectureVideoDto(l.getId(), l.getTitle(), l.getDescription(), l.getSequence(), l.getDuration(), l.getVideoPath())
+        );
+
+    }
+
+    @Override
+    public void modifyVideoDelete(Long id) {
+
+        Optional<LectureVideo> lectureVideo = lectureVideoRepository.findById(id);
+
+        lectureVideo.orElseThrow(() -> new NoSuchElementException());
+
+        lectureUtil.deleteUtil("video", lectureVideo.get().getVideoPath());
 
     }
 
@@ -392,6 +461,18 @@ public class LectureServiceImpl implements LectureService {
         videoInfo.filter(l -> authentication().equals(l.getLectureList().getLecture().getWriter()))
                 .ifPresent(l -> lectureVideoRepository.deleteById(videoId));
     }
+
+    @Override
+    public void inProgressToFalse(Long id) {
+        lectureUtil.isProgress(id, false);
+    }
+
+    @Override
+    public void inProgressToTrue(Long id) {
+        lectureUtil.isProgress(id, true);
+    }
+
+
 
     private String authentication() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

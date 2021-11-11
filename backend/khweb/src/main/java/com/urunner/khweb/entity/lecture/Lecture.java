@@ -2,6 +2,8 @@ package com.urunner.khweb.entity.lecture;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.urunner.khweb.entity.mypage.Cart;
+import com.urunner.khweb.entity.mypage.WishList;
 import com.urunner.khweb.entity.sort.Category;
 import com.urunner.khweb.entity.sort.CategoryLecture;
 import lombok.Builder;
@@ -45,6 +47,12 @@ public class Lecture {
 
     @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CategoryLecture> categoryList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Cart> cartList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<WishList> wishList = new ArrayList<>();
 
     @Builder
     public Lecture(String writer, String title,

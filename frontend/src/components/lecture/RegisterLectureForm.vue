@@ -36,7 +36,8 @@ export default {
         title: '',
         description: '',
         price: null,
-        category: ''
+        category: '',
+        lectureId: 1
       },
       temp_category: [], 
       tags: ['개발 프로그래밍', '자바', '프론트엔드', '백엔드', 'Vue', 'React', 'Html Css', 'docker'],
@@ -47,7 +48,7 @@ export default {
     onSubmit() {
       this.temp_category.filter(c => this.lectureInfo.category += c + ',')
 
-      axios.post(API_BASE_URL + "/lecture/newlecture", { lectureInfo: this.lectureInfo })
+      axios.put(API_BASE_URL + "/lecture/modifyLectureV2", { lectureInfo: this.lectureInfo })
       .then(res => {
         getLectureList();
         alert("강의 기본정보 등록을 성공하였습니다.")
