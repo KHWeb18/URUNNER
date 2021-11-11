@@ -3,6 +3,7 @@ package com.urunner.khweb.service.member;
 import com.urunner.khweb.controller.dto.MemberRes;
 import com.urunner.khweb.entity.member.AuthProvider;
 import com.urunner.khweb.entity.member.Member;
+import com.urunner.khweb.entity.member.Role;
 import com.urunner.khweb.repository.member.MemberRepository;
 import com.urunner.khweb.repository.member.RoleRepository;
 import com.urunner.khweb.utility.PythonRequest;
@@ -42,6 +43,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     @Override
     public boolean registerMember(MemberRes memberRes) throws Exception {
         Member member = new Member();
+        Role role = new Role();
 
         //아이디 중복확인
         String memberEmail = memberRes.getEmail();
@@ -56,6 +58,10 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
             member.setNickname(memberRes.getNickname());
             member.setPassword(passwordEncoder.encode(memberRes.getPassword()));
             member.setProvider(AuthProvider.local);
+            role.setName("ROLE_USER");
+            role.setMember(member);
+
+            roleRepository.save(role);
 
             memberRepository.save(member);
 
