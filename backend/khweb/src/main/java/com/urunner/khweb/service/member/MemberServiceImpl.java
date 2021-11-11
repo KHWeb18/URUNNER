@@ -53,7 +53,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
         } else {
             //받은요청(MemberRes) Entity(Member)전환 코드
             member.setEmail(memberRes.getEmail());
-            member.setName(memberRes.getName());
+            member.setNickname(memberRes.getNickname());
             member.setPassword(passwordEncoder.encode(memberRes.getPassword()));
             member.setProvider(AuthProvider.local);
 

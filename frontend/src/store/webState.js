@@ -1,6 +1,6 @@
   const moduleA = {
     email: '',
-    name: ''
+    nickname: '야옹이'
   }
   
 export default {

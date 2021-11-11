@@ -13,7 +13,7 @@ public class CommentRes {
     private Long boardNo;
     private String content;
     private String writer;
-    private String name;
+    private String nickname;
     private Long layer;
     private Long groupNo;
     private Date regDate;

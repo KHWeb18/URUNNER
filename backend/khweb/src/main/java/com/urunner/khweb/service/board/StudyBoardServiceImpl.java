@@ -28,7 +28,7 @@ public class StudyBoardServiceImpl implements StudyBoardService {
     public Study register(StudyRequest studyRequest) throws Exception {
 
         Study postEntity = new Study(studyRequest.getTitle(), studyRequest.getContent(), studyRequest.getWriter(),
-                studyRequest.getName(), studyRequest.getComplete(), studyRequest.getFit(), studyRequest.getCurrentNum());
+                studyRequest.getNickname(), studyRequest.getComplete(), studyRequest.getFit(), studyRequest.getCurrentNum());
 
         return repository.save(postEntity);
     }
@@ -79,7 +79,7 @@ public class StudyBoardServiceImpl implements StudyBoardService {
         {
             System.out.println("######## if is true");
             System.out.println(studyMember.getEmail());
-            System.out.println(studyMember.getName());
+            System.out.println(studyMember.getNickname());
             System.out.println(studyMember.getBoardNo());
             System.out.println(studyMember.getIntroduce());
             memberRepository.save(studyMember);

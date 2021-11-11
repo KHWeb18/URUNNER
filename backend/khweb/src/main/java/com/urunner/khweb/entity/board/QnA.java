@@ -30,7 +30,7 @@ public class QnA {
     private String writer;
 
     @Column(length = 100, nullable = false)
-    private String name;
+    private String nickname;
 
     @Column(length = 100, nullable = false)
     private String complete; // 모집 마감 여부
@@ -50,11 +50,11 @@ public class QnA {
     @UpdateTimestamp
     private Date upDate;
 
-    public QnA(String title, String content, String writer, String name, String complete, Long currentNum, Long views, Long comments) {
+    public QnA(String title, String content, String writer, String nickname, String complete, Long currentNum, Long views, Long comments) {
         this.title = title;
         this.content = content;
         this.writer = writer;
-        this.name = name;
+        this.nickname = nickname;
         this.complete = complete;
         this.currentNum = currentNum;
         this.views = views;

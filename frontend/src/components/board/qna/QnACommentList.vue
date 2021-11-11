@@ -16,7 +16,7 @@
                             </div>
                             <!-- 댓글 박스 -->
                             <div class="post_box"  @click="temp00(mob)">
-                                <div class="post_title">{{ mob.name }}</div>
+                                <div class="post_title">{{ mob.nickname }}</div>
                                 <div class="post_reg_date">{{ $moment(mob.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}</div>
                                 <div class="post_content">{{ mob.content }}</div>
                                 <!-- <div class="post_reg_date">commentNO: {{ mob[0] }}</div>
@@ -87,7 +87,7 @@ export default {
         return {
             content: '',
             writer: this.$store.state.moduleA.email,
-            name: this.$store.state.moduleA.name,
+            nickname: this.$store.state.moduleA.nickname,
             boardNo: '',
             refresh: 1,
             pageNum: 1,
@@ -136,8 +136,8 @@ export default {
             
             this.boardNo = this.$store.state.boardNo
             this.groupNo = this.commentNo
-            const { boardNo, content, writer, name, layer, groupNo } = this
-            axios.post('http://localhost:7777/qnaboard/comment/register', { boardNo, content, writer, name, layer, groupNo } )
+            const { boardNo, content, writer, nickname, layer, groupNo } = this
+            axios.post('http://localhost:7777/qnaboard/comment/register', { boardNo, content, writer, nickname, layer, groupNo } )
                     .then(res => {
                         console.log('댓글등록완료 |' + res.status)
                          this.content = ''

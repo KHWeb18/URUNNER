@@ -25,8 +25,14 @@ export default {
   
         axios.post('http://localhost:7777/payment/success',{paymentKey,orderId,amount})
         .then((res)=>{
-            alert(res.data)
-            this.$router.push('/')
+            if(res.data =="success"){
+                alert('결제성공!')
+                this.$router.push('/')
+            }else{
+                alert('결제실패!')
+                this.$router.push('/')
+            }
+    
         }
 
         )

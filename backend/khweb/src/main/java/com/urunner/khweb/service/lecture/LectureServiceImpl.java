@@ -26,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
+
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;

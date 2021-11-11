@@ -13,7 +13,7 @@
                     <div class="searching_message_box">
                         <div class="searching_message">
                             <div style="margin-top:20px;"><b>{{board.title}}</b></div>
-                            <div><p><b class="post_tag">#TAG</b> / {{board.name}} / {{ $moment(board.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}</p></div>
+                            <div><p><b class="post_tag">#TAG</b> / {{board.nickname}} / {{ $moment(board.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}</p></div>
                         </div>
                     </div>
                 </div>
@@ -38,7 +38,7 @@ export default {
     name: 'QnABoardRead',
     data () {
         return {
-            name: '',
+            nickname: '',
             email: '',
             introduce: 'HELLO WORLD!',
             refresh: 1,
@@ -62,10 +62,10 @@ export default {
             }
         },
         appl(data) {
-            this.name = this.$store.state.moduleA.name
+            this.nickname = this.$store.state.moduleA.nickname
             this.email = this.$store.state.moduleA.email
-            const { name, email, introduce } = this
-            axios.put(`http://localhost:7777/qnaboard/apply/${data}`, { name, email, introduce })
+            const { nickname, email, introduce } = this
+            axios.put(`http://localhost:7777/qnaboard/apply/${data}`, { nickname, email, introduce })
                     .then(res => {
                         console.log(res)
                         this.refresh += 1

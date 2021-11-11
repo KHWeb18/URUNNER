@@ -1,19 +1,18 @@
 <template>
     <div>
-        <div class="main_box">
+        <div class="main_box" :class="{ on: board.complete == 'true' }">
             <!-- 제목 -->
             <div class="title_box">
                 <h4 class="page_title">
-                    <v-icon>mdi-exclamation-thick</v-icon>
-                    <span>자유게시판</span></h4>
-            </div>            
+                    <span>스터디 모집</span></h4>
+            </div>
             <!-- 게시글 -->
             <div class="post_list">
                 <div class="post_card_box">
                     <div class="searching_message_box">
                         <div class="searching_message">
                             <div style="margin-top:20px;"><b>{{board.title}}</b></div>
-                            <div><p><b class="post_tag">#TAG</b> / {{board.name}} / {{ $moment(board.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}</p></div>
+                            <div><p><b class="post_tag">#TAG</b> / {{board.nickname}} / {{ $moment(board.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}</p></div>
                         </div>
                     </div>
                 </div>
@@ -24,8 +23,8 @@
                     <div v-html="board.content">{{ board.content }}</div>
                 </div>
             </div>
-            <!-- 지원자 목록 -->
-            <v-container fluid>
+             <!-- 지원자 목록 -->
+            <div style="width:300px; margin:0px">
                 <v-row justify="center">
                 <v-subheader>지원자 목록</v-subheader>
                     <v-expansion-panels popout>
@@ -35,7 +34,7 @@
                         <v-expansion-panel-header>
                             <v-row align="center" class="spacer" no-gutters>
                                 <v-col class="hidden-xs-only" sm="5" md="3">
-                                    <strong v-html="member.name"></strong>
+                                    <strong v-html="member.nickname"></strong>
                                 </v-col>
                             </v-row>
                         </v-expansion-panel-header>
@@ -46,10 +45,11 @@
                     </v-expansion-panel>
                 </v-expansion-panels>
                 </v-row>
-            </v-container>
-            <v-btn @click="appl(board.boardNo)">지원하기</v-btn>
-            <v-btn @click="endRecruit(board.boardNo)">모집 마감</v-btn>
-        </div>        
+                <br>
+            </div>
+        </div>
+        <v-btn @click="appl(board.boardNo)">지원하기</v-btn>
+        <v-btn @click="endRecruit(board.boardNo)">모집 마감</v-btn>
     </div>
 </template>
 
@@ -61,7 +61,7 @@ export default {
     name: 'StudyBoardRead',
     data () {
         return {
-            name: '',
+            nickname: '',
             email: '',
             introduce: 'HELLO WORLD!',
             refresh: 1,
@@ -85,10 +85,10 @@ export default {
             }
         },
         appl(data) {
-            this.name = this.$store.state.moduleA.name
+            this.nickname = this.$store.state.moduleA.nickname
             this.email = this.$store.state.moduleA.email
-            const { name, email, introduce } = this
-            axios.put(`http://localhost:7777/studyboard/apply/${data}`, { name, email, introduce })
+            const { nickname, email, introduce } = this
+            axios.put(`http://localhost:7777/studyboard/apply/${data}`, { nickname, email, introduce })
                     .then(res => {
                         console.log(res)
                         this.refresh += 1
@@ -127,7 +127,17 @@ export default {
     max-width: 1000px;
 }
 .main_box {
+    display:flex;
+    justify-content: center;
+    flex-direction: column;
     color: #424242;
+}
+.main_box.on {
+    display:flex;
+    justify-content: center;
+    flex-direction: column;
+    color: #424242;
+    opacity: 0.5;
 }
 .title_box {   
 }

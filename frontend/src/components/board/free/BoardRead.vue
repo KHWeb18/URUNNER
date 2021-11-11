@@ -13,7 +13,7 @@
                     <div class="searching_message_box">
                         <div class="searching_message">
                             <div style="margin-top:20px;"><b>{{board.title}}</b></div>
-                            <div><p><b class="post_tag">#TAG</b> / {{board.name}} / {{ $moment(board.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}</p></div>
+                            <div><p><b class="post_tag">#TAG</b> / {{board.nickname}} / {{ $moment(board.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}</p></div>
                         </div>
                     </div>
                 </div>

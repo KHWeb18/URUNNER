@@ -10,7 +10,7 @@
                 <div class="post_card_box">
                     <div class="searching_message_box">
                         <div class="searching_message">
-                            <div><p><b class="post_tag">#사료추천</b> / {{board.name}} / {{ $moment(board.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}</p></div>
+                            <div><p><b class="post_tag">#사료추천</b> / {{board.nickname}} / {{ $moment(board.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}</p></div>
                         </div>
                     </div>
                 </div>
