@@ -51,8 +51,7 @@ public class Member {
 
     }
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "member_no")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "member", orphanRemoval = true)
     private Collection<Role> roles = new ArrayList<>();
 
     public void setEmail(String email) {

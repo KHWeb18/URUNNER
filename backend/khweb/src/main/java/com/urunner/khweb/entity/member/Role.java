@@ -16,4 +16,15 @@ public class Role {
 
     private String name;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_no")
+    private Member member;
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
+    }
 }

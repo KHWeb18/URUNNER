@@ -3,9 +3,11 @@ package com.urunner.khweb.oauth2;
 
 import com.urunner.khweb.entity.member.AuthProvider;
 import com.urunner.khweb.entity.member.Member;
+import com.urunner.khweb.entity.member.Role;
 import com.urunner.khweb.oauth2.user.OAuth2UserInfo;
 import com.urunner.khweb.oauth2.user.OAuth2UserInfoFactory;
 import com.urunner.khweb.repository.member.MemberRepository;
+import com.urunner.khweb.repository.member.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
@@ -14,16 +16,21 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.Optional;
 
 // 구글 로그인 이후 가져온 사용자의 정보(eaml,name,pcitrue등)들을 기반으로 가입 및 정보수정, 세션 저장 등의 기능을 지원
 @Service
+@Transactional
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     @Autowired
     private MemberRepository userRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
@@ -85,11 +92,18 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     //  새로운유저 가입
     private Member registerNewUser(OAuth2UserRequest oAuth2UserRequest, OAuth2UserInfo oAuth2UserInfo) {
         Member user = new Member();
+        Role role = new Role();
 
         user.setProvider(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()));
 //        user.setProviderId(oAuth2UserInfo.getId());
         user.setName(oAuth2UserInfo.getName());
         user.setEmail(oAuth2UserInfo.getEmail());
+
+        role.setName("ROLE_USER");
+        role.setMember(user);
+
+        roleRepository.save(role);
+
         return userRepository.save(user);
     }
 
