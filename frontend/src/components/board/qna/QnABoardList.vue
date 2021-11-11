@@ -31,22 +31,33 @@
             </div>
             <!-- 분류창 -->
             <v-spacer class="forLine">
-                <li class="tag_button" :class="{ on : tagSelect1 }" @click="tagSelect1 = !tagSelect1">Vue</li>&nbsp;&nbsp;&nbsp;
-                <li class="tag_button" :class="{ on : tagSelect2 }" @click="tagSelect2 = !tagSelect2">Spring</li>&nbsp;&nbsp;&nbsp;
-                <li class="tag_button" :class="{ on : tagSelect3 }" @click="tagSelect3 = !tagSelect3">Python</li>&nbsp;&nbsp;&nbsp;
+                <div class="tag_button" @click="word = ''">전체글보기</div>&nbsp;&nbsp;&nbsp;
+                <li class="tag_button" :class="{ on : tagSelect1 }" @click="tagSelect1 = !tagSelect1, searchingTag('Java')">Java</li>&nbsp;&nbsp;&nbsp;
+                <li class="tag_button" :class="{ on : tagSelect2 }" @click="tagSelect2 = !tagSelect2, searchingTag('Spring')">Spring</li>&nbsp;&nbsp;&nbsp;
+                <li class="tag_button" :class="{ on : tagSelect3 }" @click="tagSelect3 = !tagSelect3, searchingTag('Python')">Python</li>&nbsp;&nbsp;&nbsp;
+                <li class="tag_button" :class="{ on : tagSelect4 }" @click="tagSelect4 = !tagSelect4, searchingTag('Vue')">Vue</li>&nbsp;&nbsp;&nbsp;
+                <li class="tag_button" :class="{ on : tagSelect5 }" @click="tagSelect5 = !tagSelect5, searchingTag('SQL')">SQL</li>&nbsp;&nbsp;&nbsp;
             </v-spacer>
             <!-- 게시글 리스트 -->
             <div class="forSearching" v-show="!searchinOn">
                 <div class="post_list">
                     <div class="post_card_box">
                         <div v-for="mob in paginatedData" :key="mob.boardNo">
-                            <router-link class="post_card" :to="{ name: 'QnABoardReadPage', params: { boardNo: mob.boardNo.toString() } }" >
-                                <div class="post_num">{{ mob.boardNo }}</div>
+                            <div class="post_card">
+                                <div class="post_num"><div style="width:16px;text-align:center;">{{ mob.boardNo }}</div></div>
                                 <div class="post_title">
-                                    <div class="item4">{{ mob.title }}</div>
-                                    <div class="post_reg_date">{{ calcTime(mob.regDate) }}</div>
+                                    <router-link :to="{ name: 'QnABoardReadPage', params: { boardNo: mob.boardNo.toString() } }" >
+                                        <div class="item4">{{ mob.title }}</div>
+                                    </router-link>
+                                    <div class="tag_box">
+                                        <div class="post_reg_date">{{ calcTime(mob.regDate) }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                                        <div v-for="tag in classifyTag(mob.tags)" :key="tag">
+                                            <btn class="tag_box_button" @click="tagSelect0 = !tagSelect0,searchingTag(tag)">#{{ tag }}</btn>
+                                        </div>
+                                    </div>
+                                    
                                 </div>
-                                <div class="post_vnc">
+                                <router-link class="post_vnc" :to="{ name: 'QnABoardReadPage', params: { boardNo: mob.boardNo.toString() } }" >
                                     <div class="item2">
                                         <v-icon size="18px" color="#9e9e9e">mdi-eye</v-icon>
                                         <div style="padding-top:3px">&nbsp;{{ mob.views }}</div>
@@ -55,11 +66,11 @@
                                         <v-icon size="18px" color="#9e9e9e">mdi-comment</v-icon>
                                         <div style="padding-top:3px">&nbsp;{{ mob.comments }}</div>
                                     </div>
-                                </div>
-                                <div class="post_name_box">
-                                    <div class="post_name">{{ mob.nickname }}</div>
-                                </div>
-                            </router-link>
+                                </router-link>
+                                    <div class="post_name_box">
+                                        <div class="post_name">{{ mob.nickname }}</div>
+                                    </div>
+                            </div>
                         </div>
                     </div>
                     <div class="button_box">
@@ -92,35 +103,36 @@
                         <div><p>{{this.searchingResult.length}} 건의 게시물이 검색되었습니다.</p></div>
                     </div>
                 </div>
-                <div class="post_list" v-show="!toggle_exclusive">
+                <div class="post_list">
                     <div class="post_card_box">
-                        <div class="post_card" v-for="mob in paginatedDataS" :key="mob.boardNo">
-                            <router-link
-                                    :to="{ name: 'QnABoardReadPage',
-                                                        params: { boardNo: mob.boardNo.toString() } }">
-                            <div class="thumbnail">
-                                <v-progress-circular
-                                :rotate="-90"
-                                :size="100"
-                                :width="15"
-                                :value="value2"
-                                color="primary"
-                                >
-                                {{ value }} 
-                                </v-progress-circular>
-                            </div></router-link>
-                            <div class="post_box">
-                                <div class="post_tag">#</div>
-                                <router-link
-                                    :to="{ name: 'QnABoardReadPage',
-                                                        params: { boardNo: mob.boardNo.toString() } }">
-                                <div class="post_title">{{ mob.title }}</div>
-                                <div class="post_content">{{ replaceHtml(mob.content) }}</div>
-                                <div class="post_reg_date">{{ $moment(mob.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}</div></router-link>
-                                <div class="post_title">{{ mob.complete }}</div>
-                            </div>
-                            <div v-show="mob.complete == 'true'">
-                                <img src="@/assets/complete.png" v-show="mob.complete" width="130" class="item">
+                        <div v-for="mob in paginatedDataS" :key="mob.boardNo">
+                            <div class="post_card">
+                                <div class="post_num"><div style="width:16px;text-align:center;">{{ mob.boardNo }}</div></div>
+                                <div class="post_title">
+                                    <router-link :to="{ name: 'QnABoardReadPage', params: { boardNo: mob.boardNo.toString() } }" >
+                                        <div class="item4">{{ mob.title }}</div>
+                                    </router-link>
+                                    <div class="tag_box">
+                                        <div class="post_reg_date">{{ calcTime(mob.regDate) }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                                        <div v-for="tag in classifyTag(mob.tags)" :key="tag">
+                                            <btn class="tag_box_button" @click="tagSelect0 = !tagSelect0, searchingTag(tag)">#{{ tag }}</btn>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                <router-link class="post_vnc" :to="{ name: 'QnABoardReadPage', params: { boardNo: mob.boardNo.toString() } }" >
+                                    <div class="item2">
+                                        <v-icon size="18px" color="#9e9e9e">mdi-eye</v-icon>
+                                        <div style="padding-top:3px">&nbsp;{{ mob.views }}</div>
+                                    </div>
+                                    <div class="item3">
+                                        <v-icon size="18px" color="#9e9e9e">mdi-comment</v-icon>
+                                        <div style="padding-top:3px">&nbsp;{{ mob.comments }}</div>
+                                    </div>
+                                </router-link>
+                                    <div class="post_name_box">
+                                        <div class="post_name">{{ mob.nickname }}</div>
+                                    </div>
                             </div>
                         </div>
                     </div>
@@ -129,7 +141,7 @@
                             <router-link :to="{ name: 'QnABoardRegisterPage' }">
                                 <v-btn
                                     v-if="this.$store.state.isLogin"
-                                    color="light-blue lighten-1 text center"
+                                    color="blue darken-3 text center"
                                     class="change-font">
                                     글쓰기
                                 </v-btn>
@@ -186,6 +198,7 @@ import { mapState } from 'vuex'
                 interval: {},
                 value: '',
                 value2: 20,
+                tagSelect0: false,
                 tagSelect1: false,
                 tagSelect2: false,
                 tagSelect3: false,
@@ -197,9 +210,13 @@ import { mapState } from 'vuex'
         watch: {
             word(newVal) {       //이런식으로 watch 사용
                 if(newVal == '') {
-                    setTimeout(() => {
                         this.searchinOn = false
-                        }, 200)
+                        this.tagSelect0 = false
+                        this.tagSelect1 = false // 전체글보기 클릭시 초기화용
+                        this.tagSelect2 = false
+                        this.tagSelect3 = false
+                        this.tagSelect4 = false
+                        this.tagSelect5 = false
                 }
             }
         },
@@ -250,7 +267,6 @@ import { mapState } from 'vuex'
             },
             searching () {
                 var lists = this.boards
-
                 this.searchingResult = []
                 for(var i = 0; i < lists.length; i++){
                     if(lists[i].title.includes(this.word || lists[i].content.includes(this.word))){
@@ -265,6 +281,27 @@ import { mapState } from 'vuex'
                     this.searchinOn = false
                 }                
             },
+            searchingTag (tag) {
+                this.word = tag
+                var lists = this.boards
+                this.searchingResult = []
+                for(var i = 0; i < lists.length; i++){                    
+                    const regex = new RegExp(tag, "gi");
+                    const comparison = regex.test(lists[i].tags)
+                    if(comparison){
+                        this.searchingResult.push(lists[i])
+                    }
+                }
+                this.searchinOn = true
+                var b = '#'
+                this.word = b.concat(this.word)
+
+                // 하나라도 true면 if문 생략
+                if (!this.tagSelect0 && !this.tagSelect1 && !this.tagSelect2 && !this.tagSelect3 && !this.tagSelect4 && !this.tagSelect5) {
+                    this.searchinOn = false
+                    this.word = ''
+                }
+            },
             replaceHtml(data) {
                 var text = data.replace(/(<([^>]+)>)/ig,"");
                 return text
@@ -277,6 +314,12 @@ import { mapState } from 'vuex'
                     default:
                         break;                   
                 }
+            },
+            classifyTag(data) {
+                var arr = (data||'').split('#');
+                arr.shift()
+                console.log(arr)
+                return arr
             }
         },
         computed: {
@@ -412,20 +455,18 @@ input:focus {
     outline:none;
 }
 .searching_message_box {
-    width:70vw;
-    height: 180px;
-    max-width: 1000px;
     display:flex;
     justify-content: center;
+    flex-direction: column;
+    align-content: center;
 }
 .searching_message {
     display: flex;
     justify-content: center;
     flex-direction: column;
-    width:60vw;
-    max-width: 900px;
     border-bottom: 1px solid #BDBDBD;
     margin-top: 20px;
+    height: 150px;
 }
 .searching_message div {
     text-align: center;
@@ -489,7 +530,8 @@ input:focus {
     color: #757575;
     font-weight: 500;
     font-size: 14px;
-    margin: 0 0 0 30px;
+    text-align: right;
+    margin: 0 0 0 3vw;
 }
 .post_title {
     display: flex;
@@ -526,6 +568,7 @@ input:focus {
 }
 .post_vnc {
     width: 10vw;
+    min-width: 37px;
     display: flex;
     flex-direction: column;
     align-self: center;
@@ -546,6 +589,7 @@ input:focus {
     color: #757575;
 }
 .post_reg_date {
+    padding-top: 2px;
     font-size: 11px;
     font-weight: 500 !important;
     color: #757575;
@@ -589,5 +633,28 @@ a { text-decoration:none !important }
 a:hover { text-decoration:none !important }
 ul {
     list-style:none;
+}
+.tag_box {
+    display:flex;
+    flex-direction: row;
+    align-content: center;
+    height: 20px
+}
+.tag_box_button {
+    display: flex;
+    align-self: center;
+    font-size: 12px;
+    width: 40px;
+    font-weight: 500;
+    color: #01579B;
+
+}
+.tag_box_button:hover {
+    font-size: 12px;
+    width: 40px;
+    color: #01579B;
+    font-weight: bold;
+    transition: all 0.4s ease;
+
 }
 </style>

@@ -32,7 +32,7 @@ public class QnABoardServiceImpl implements QnABoardService {
     public QnA register(QnARequest qnARequest) throws Exception {
 
         QnA postEntity = new QnA(qnARequest.getTitle(), qnARequest.getContent(), qnARequest.getWriter(),
-                qnARequest.getNickname(), qnARequest.getComplete(), qnARequest.getCurrentNum(), qnARequest.getViews(), qnARequest.getComments());
+                qnARequest.getNickname(), qnARequest.getComplete(), qnARequest.getCurrentNum(), qnARequest.getViews(), qnARequest.getComments(), qnARequest.getTags());
 
         return repository.save(postEntity);
     }
@@ -55,7 +55,7 @@ public class QnABoardServiceImpl implements QnABoardService {
     public void updatePost(QnARequest qnARequest){
 
         repository.updatePost(qnARequest.getTitle(), qnARequest.getContent(), qnARequest.getBoardNo(),
-                qnARequest.getComplete(), qnARequest.getCurrentNum());
+                qnARequest.getComplete(), qnARequest.getCurrentNum(), qnARequest.getTags());
     }
 
     public void updateCurrentNum(QnARequest qnARequest){

@@ -1,7 +1,7 @@
 <template>
     <form @submit.prevent="onSubmit">
         <v-text-field label="제목" v-model="title"></v-text-field>
-        <editor placeholder="Write something …" @content="boardRegist"/>
+        <editor placeholder="Write something …" @fromEditor="boardRegist"/>
         <!-- <v-btn @click="complete = !complete">마감</v-btn> -->
         <input v-model="fit">
         <!-- 이미지 등록 폼 -->
@@ -47,7 +47,8 @@ export default {
             content: '',
             complete: false,
             fit: 1,
-            currentNum: 1
+            currentNum: 1,
+            qna: ''
         }
     },
     methods: {

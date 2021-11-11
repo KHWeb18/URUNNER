@@ -14,8 +14,8 @@ public interface QnABoardRepository extends JpaRepository<QnA, Long> {
 
     @Transactional
     @Modifying
-    @Query("update QnA u set u.title = ?1, u.content = ?2, u.complete = ?4, u.currentNum = ?5 where u.boardNo = ?3")
-    void updatePost(String title, String content, Long boardNo, String complete, Long currentNum);
+    @Query("update QnA u set u.title = ?1, u.content = ?2, u.complete = ?4, u.currentNum = ?5, u.tags = ?6 where u.boardNo = ?3")
+    void updatePost(String title, String content, Long boardNo, String complete, Long currentNum, String tags);
 
     @Transactional
     @Modifying
@@ -24,6 +24,7 @@ public interface QnABoardRepository extends JpaRepository<QnA, Long> {
 
     @Transactional
     @Modifying
+
     @Query("update QnA u set u.views = ?1 where u.boardNo = ?2")
     void updateViews(Long views, Long boardNo);
 
