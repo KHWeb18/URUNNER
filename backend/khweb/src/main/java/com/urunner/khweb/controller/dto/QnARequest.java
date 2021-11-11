@@ -19,4 +19,5 @@ public class QnARequest {
     private Long currentNum;
     private Long views;
     private Long comments;
+    private String tags;
 }

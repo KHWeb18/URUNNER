@@ -7,6 +7,7 @@
             placeholder="Write something …"
             />
         <div class="button_box">
+        <v-text-field v-model="tags" placeholder="#Java#Vue#PYTHON"></v-text-field>
         <router-link :to="{ name: 'FreeBoardListPage' }">
             <v-btn>
                 취소
@@ -50,12 +51,14 @@ export default {
             HardBreak,
             Image
             ],
-            content: ''
+            content: '',
+            tags: ''
         }
     },
     methods: {
         contentSubmit() {
-            this.$emit("content",this.content)
+            const { content, tags } = this
+            this.$emit("fromEditor", { content, tags })
         }
         
 

@@ -44,13 +44,16 @@ public class QnA {
     @Column(length = 100)
     private Long comments; // 댓글수
 
+    @Column(length = 200)
+    private String tags; // 댓글수
+
     @CreationTimestamp
     private Date regDate;
 
     @UpdateTimestamp
     private Date upDate;
 
-    public QnA(String title, String content, String writer, String nickname, String complete, Long currentNum, Long views, Long comments) {
+    public QnA(String title, String content, String writer, String nickname, String complete, Long currentNum, Long views, Long comments, String tags) {
         this.title = title;
         this.content = content;
         this.writer = writer;
@@ -59,5 +62,6 @@ public class QnA {
         this.currentNum = currentNum;
         this.views = views;
         this.comments = comments;
+        this.tags = tags;
     }
 }
