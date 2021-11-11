@@ -1,5 +1,8 @@
 package com.urunner.khweb.utility;
 
+import com.urunner.khweb.entity.lecture.Lecture;
+import com.urunner.khweb.repository.lecture.LectureRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.core.Authentication;
@@ -9,6 +12,8 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Component
 public class LectureUtil {
@@ -21,6 +26,9 @@ public class LectureUtil {
 
     @Value("${video.location}")
     String videoLocation;
+
+    @Autowired
+    LectureRepository lectureRepository;
 
     public void deleteUtil(String form, String delPath){
 
@@ -61,6 +69,18 @@ public class LectureUtil {
     public String authentication() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication.getName();
+    }
+
+    public void isProgress(Long id, boolean isProgress) {
+
+        Optional<Lecture> lecture = lectureRepository.findById(id);
+
+        lecture.orElseThrow(() -> new NoSuchElementException());
+
+        lecture.ifPresent(l -> {
+            l.setInProgress(isProgress);
+            lectureRepository.save(l);
+        });
     }
 
 }
