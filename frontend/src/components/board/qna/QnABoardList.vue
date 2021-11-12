@@ -1,37 +1,36 @@
-ㅂ<template>
+<template>
     <div class="main">
         <div class="main_box">
             <!-- 제목 -->
-            <div class="title_box">
-                <h2 class="page_title">
-                    <span>질문답변 게시판</span></h2>
+            <div class="mr-9 hidden-sm-and-down">
+                <div class="title_box">
+                    <h2 class="page_title">
+                        <span>질문답변 게시판</span></h2>
+                </div>
             </div>
-            <!-- 검색창 -->
-            <div class="searching_box_top">
-                <div class="searching_barp">
-                    <div class="searching" >
-                        <span>
-                            <input type="text" placeholder="검색어를 입력해주세요" v-model="word"
-                            @keyup.enter="searching(word)">
-                        </span>
-                        <v-icon class="searching_icon" @click="searching(word)">mdi-magnify</v-icon>
+            <!-- 검색창 + complete 분류 -->
+            <v-spacer class="forLine0">
+                <div class="forLine0sButton">
+                    <div class="tag_button" :class="{ on2 : completeSelect1 }" @click="fetchQnABoardList(),
+                                        completeSelect1 = true, completeSelect2 = false, completeSelect3 = false ">전체</div>&nbsp;&nbsp;&nbsp;
+                    <div class="tag_button" :class="{ on2 : completeSelect2 }"  @click="selectComplete('false')">미답변</div>&nbsp;&nbsp;&nbsp;
+                    <div class="tag_button" :class="{ on2 : completeSelect3 }" @click="selectComplete('true')">답변완료</div>&nbsp;&nbsp;&nbsp;
+                </div>
+                <div class="searching_box_top">
+                    <div class="mr-9 hidden-sm-and-down">
+                        <div class="searching" >
+                            <span>
+                                <input type="text" placeholder="검색어를 입력해주세요" v-model="word"
+                                @keyup.enter="searching(word)">
+                            </span>
+                            <v-icon class="searching_icon" @click="searching(word)">mdi-magnify</v-icon>
+                        </div>
                     </div>
                 </div>
-                <!-- 글쓰기 -->
-                <div style="width:50px;">
-                    <router-link :to="{ name: 'QnABoardRegisterPage' }">
-                        <v-btn
-                            v-if="this.$store.state.isLogin"
-                            color="blue darken-3 text center"
-                            class="change-font">
-                            글쓰기
-                        </v-btn>
-                    </router-link>
-                </div>
-            </div>
+            </v-spacer>
             <!-- 분류창 -->
             <v-spacer class="forLine">
-                <div class="tag_button" @click="word = ''">전체글보기</div>&nbsp;&nbsp;&nbsp;
+                <li class="tag_button" @click="word = ''">ALL</li>&nbsp;&nbsp;&nbsp;
                 <li class="tag_button" :class="{ on : tagSelect1 }" @click="tagSelect1 = !tagSelect1, searchingTag('Java')">Java</li>&nbsp;&nbsp;&nbsp;
                 <li class="tag_button" :class="{ on : tagSelect2 }" @click="tagSelect2 = !tagSelect2, searchingTag('Spring')">Spring</li>&nbsp;&nbsp;&nbsp;
                 <li class="tag_button" :class="{ on : tagSelect3 }" @click="tagSelect3 = !tagSelect3, searchingTag('Python')">Python</li>&nbsp;&nbsp;&nbsp;
@@ -43,38 +42,58 @@
                 <div class="post_list">
                     <div class="post_card_box">
                         <div v-for="mob in paginatedData" :key="mob.boardNo">
-                            <div class="post_card">
-                                <div class="post_num"><div style="width:16px;text-align:center;">{{ mob.boardNo }}</div></div>
+                            <div class="post_card" :class="{ on : mob.complete == 'true' }">
+                                <div class="post_num"><div class="mr-9 hidden-sm-and-down"><div style="width:16px;text-align:center;margin-right:3vw" >{{ mob.boardNo }}</div></div></div>
                                 <div class="post_title">
                                     <router-link :to="{ name: 'QnABoardReadPage', params: { boardNo: mob.boardNo.toString() } }" >
                                         <div class="item4">{{ mob.title }}</div>
                                     </router-link>
                                     <div class="tag_box">
                                         <div class="post_reg_date">{{ calcTime(mob.regDate) }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                                            <div class="hidden-md-and-up">
+                                                <div class="tag_box">
+                                                    <div class="item2">
+                                                        <v-icon size="18px" color="#9e9e9e">mdi-eye</v-icon>
+                                                        <div style="padding-top:3px">&nbsp;{{ mob.views }}</div>
+                                                    </div>
+                                                    <div class="item3">
+                                                        &nbsp;&nbsp;<v-icon size="18px" color="#9e9e9e">mdi-comment</v-icon>
+                                                        <div style="padding-top:3px">&nbsp;{{ mob.comments }}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         <div v-for="tag in classifyTag(mob.tags)" :key="tag">
-                                            <btn class="tag_box_button" @click="tagSelect0 = !tagSelect0,searchingTag(tag)">#{{ tag }}</btn>
+                                            <div class="mr-9 hidden-sm-and-down">
+                                                <div class="tag_box_button_box">
+                                            <btn class="tag_box_button" @click="tagSelect0 = !tagSelect0,searchingTag(tag.text)">#{{ tag.text }}&nbsp;</btn>
+                                            </div>
                                         </div>
+                                        </div>
+                                        <div v-show="mob.complete == 'true'" class="completeDisplay">답변완료</div>
                                     </div>
                                     
                                 </div>
-                                <router-link class="post_vnc" :to="{ name: 'QnABoardReadPage', params: { boardNo: mob.boardNo.toString() } }" >
-                                    <div class="item2">
-                                        <v-icon size="18px" color="#9e9e9e">mdi-eye</v-icon>
-                                        <div style="padding-top:3px">&nbsp;{{ mob.views }}</div>
+                                    <router-link class="post_vnc" :to="{ name: 'QnABoardReadPage', params: { boardNo: mob.boardNo.toString() } }" >
+                                        <div class="mr-2 hidden-sm-and-down">
+                                        <div class="item2">
+                                            <v-icon size="18px" color="#9e9e9e">mdi-eye</v-icon>
+                                            <div style="padding-top:3px">&nbsp;{{ mob.views }}</div>
+                                        </div>
+                                        <div class="item3">
+                                            <v-icon size="18px" color="#9e9e9e">mdi-comment</v-icon>
+                                            <div style="padding-top:3px">&nbsp;{{ mob.comments }}</div>
+                                        </div>
+                                        </div>
+                                    </router-link>
+                                    <div class="post_name_box">
+                                        <div class="mr-9 hidden-sm-and-down"><div class="post_name">{{ mob.nickname }}</div>
+                                        </div>
                                     </div>
-                                    <div class="item3">
-                                        <v-icon size="18px" color="#9e9e9e">mdi-comment</v-icon>
-                                        <div style="padding-top:3px">&nbsp;{{ mob.comments }}</div>
-                                    </div>
-                                </router-link>
-                                <div class="post_name_box">
-                                    <div class="post_name">{{ mob.nickname }}</div>
-                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="button_box">
-                        <v-flex text-xs-right="text-xs-right" text-sm-right="text-sm-right">
+                        <v-flex hidden-sm-and-down text-sm-right="text-sm-right">
                             <router-link :to="{ name: 'QnABoardRegisterPage' }">
                                 <v-btn
                                     v-if="this.$store.state.isLogin"
@@ -106,7 +125,7 @@
                 <div class="post_list">
                     <div class="post_card_box">
                         <div v-for="mob in paginatedDataS" :key="mob.boardNo">
-                            <div class="post_card">
+                            <div class="post_card" :class="{ on : mob.complete == 'true' }">
                                 <div class="post_num"><div style="width:16px;text-align:center;">{{ mob.boardNo }}</div></div>
                                 <div class="post_title">
                                     <router-link :to="{ name: 'QnABoardReadPage', params: { boardNo: mob.boardNo.toString() } }" >
@@ -115,7 +134,7 @@
                                     <div class="tag_box">
                                         <div class="post_reg_date">{{ calcTime(mob.regDate) }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
                                         <div v-for="tag in classifyTag(mob.tags)" :key="tag">
-                                            <btn class="tag_box_button" @click="tagSelect0 = !tagSelect0, searchingTag(tag)">#{{ tag }}</btn>
+                                            <btn class="tag_box_button" @click="tagSelect0 = !tagSelect0,searchingTag(tag.text)">#{{ tag.text }}</btn>
                                         </div>
                                     </div>
                                     
@@ -167,199 +186,226 @@
                     </div>
                 </div>
             </div>
-        </div>        
+        </div>
+        <!-- 모바일 사이즈 때 나타나는 글쓰기 버튼 -->
+        <router-link :to="{ name: 'QnABoardRegisterPage' }">
+            <v-btn fab dark large color="primary" fixed right class="hidden-md-and-up">
+                <v-icon dark>mdi-plus</v-icon>
+            </v-btn>
+        </router-link>
     </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
-    export default {
-        name: 'QnABoardList',
-        props: {
-            boards: {
-                type: Array
-            },
-            pageSize: {
-                type: Number,
-                required: false,
-                default: 10
-            }
+export default {
+    name: 'QnABoardList',
+    props: {
+        boards: {
+            type: Array
         },
-        data() {
-            return {
-                pageNum: 1,
-                pageNumS: 1,
-                toggle_exclusive: [],
-                word: '',
-                searchingResult: [],
-                searchinOn: false,
-
-                interval: {},
-                value: '',
-                value2: 20,
-                tagSelect0: false,
-                tagSelect1: false,
-                tagSelect2: false,
-                tagSelect3: false,
-            }
-        },
-        beforeDestroy () {
-        clearInterval(this.interval)
-        },
-        watch: {
-            word(newVal) {       //이런식으로 watch 사용
-                if(newVal == '') {
-                        this.searchinOn = false
-                        this.tagSelect0 = false
-                        this.tagSelect1 = false // 전체글보기 클릭시 초기화용
-                        this.tagSelect2 = false
-                        this.tagSelect3 = false
-                        this.tagSelect4 = false
-                        this.tagSelect5 = false
-                }
-            }
-        },
-        methods: {
-            calcTime(data) { 
-                const moment = require("moment");
-                var d = new Date();
-                var regDate = moment(data).add(0, 'hours')
-                var calcM = -regDate.diff(d, 'minute')
-                var calcH = -regDate.diff(d, 'hours')
-                var calcD = -regDate.diff(d, 'days')
-                let checkM = Number(calcM)
-
-
-
-                if (checkM < 60) {
-                    return (calcM + ' 분 전')
-                } else if(checkM < 1440) {
-                    return(calcH + ' 시간 전')
-                } else {
-                    return(calcD + ' 일 전')
-                }
-            },
-            // test() {
-            //     console.log(this.$store.state.nickname)
-            //     this.$store.state.nickname = '임시닉네임'
-            // },
-            nextPage() {
-                this.pageNum += 1;
-            },
-            prevPage() {
-                this.pageNum -= 1;
-            },
-            nextPageS() {
-                this.pageNumS += 1;
-            },
-            prevPageS() {
-                this.pageNumS -= 1;
-            },
-            ImgRequest( a, b ) {
-                console.log(a + '_' + b)
-            try {
-                return require(`../../../../../backend/khweb/images/qna/${a}_${b}.gif`
-                )
-            } catch (e) {
-                return require(`@/assets/logo.png`)
-                }
-            },
-            searching () {
-                var lists = this.boards
-                this.searchingResult = []
-                for(var i = 0; i < lists.length; i++){
-                    if(lists[i].title.includes(this.word || lists[i].content.includes(this.word))){
-                        this.searchingResult.push(lists[i])
-                    }
-                }
-                console.log('searching 결과 : ' + this.searchingResult)
-                console.log('0번 값은? : ' + this.searchingResult[0])
-                this.searchinOn = true
-                
-                if (this.word == '') {
-                    this.searchinOn = false
-                }                
-            },
-            searchingTag (tag) {
-                this.word = tag
-                var lists = this.boards
-                this.searchingResult = []
-                for(var i = 0; i < lists.length; i++){                    
-                    const regex = new RegExp(tag, "gi");
-                    const comparison = regex.test(lists[i].tags)
-                    if(comparison){
-                        this.searchingResult.push(lists[i])
-                    }
-                }
-                this.searchinOn = true
-                var b = '#'
-                this.word = b.concat(this.word)
-
-                // 하나라도 true면 if문 생략
-                if (!this.tagSelect0 && !this.tagSelect1 && !this.tagSelect2 && !this.tagSelect3 && !this.tagSelect4 && !this.tagSelect5) {
-                    this.searchinOn = false
-                    this.word = ''
-                }
-            },
-            replaceHtml(data) {
-                var text = data.replace(/(<([^>]+)>)/ig,"");
-                return text
-            },
-            selectTag(data) {
-                switch(data) {
-                    case 1:
-                        this.checkTag1 = "black"
-                        break;
-                    default:
-                        break;                   
-                }
-            },
-            classifyTag(data) {
-                var arr = (data||'').split('#');
-                arr.shift()
-                console.log(arr)
-                return arr
-            }
-        },
-        computed: {
-            pageCount() {
-                let listLength = this.boards.length, // 길이
-                    listSize = this.pageSize,
-                    page = Math.floor(listLength / listSize);
-                if (listLength % listSize > 0) 
-                    page += 1;
-                return page;
-            },
-            paginatedData() {
-                const start = (this.pageNum - 1) * this.pageSize,
-                    end = start + this.pageSize;
-                return this
-                    .boards
-                    .slice(start, end);
-
-            },
-            pageCountS() {
-                let listLength = this.searchingResult.length, // 길이
-                    listSize = this.pageSize,
-                    page = Math.floor(listLength / listSize);
-                if (listLength % listSize > 0) 
-                    page += 1;
-                return page;
-            },
-            paginatedDataS() {
-                const start = (this.pageNumS - 1) * this.pageSize,
-                    end = start + this.pageSize;
-                return this
-                    .searchingResult
-                    .slice(start, end);
-
-            },
-            ...mapState ({
-            lists: state => state.lists
-            }),
+        pageSize: {
+            type: Number,
+            required: false,
+            default: 10
         }
+    },
+    data() {
+        return {
+            pageNum: 1,
+            pageNumS: 1,
+            toggle_exclusive: [],
+            word: '',
+            searchingResult: [],
+            searchinOn: false,
+            complete: '',
+
+            interval: {},
+            value: '',
+            value2: 20,
+            tagSelect0: false,
+            tagSelect1: false,
+            tagSelect2: false,
+            tagSelect3: false,
+            completeSelect1: true,
+            completeSelect2: false,
+            completeSelect3: false
+        }
+    },
+    beforeDestroy () {
+    clearInterval(this.interval)
+    },
+    watch: {
+        word(newVal) {       //이런식으로 watch 사용
+            if(newVal == '') {
+                    this.searchinOn = false
+                    this.tagSelect0 = false
+                    this.tagSelect1 = false // All 클릭시 초기화용
+                    this.tagSelect2 = false
+                    this.tagSelect3 = false
+                    this.tagSelect4 = false
+                    this.tagSelect5 = false
+            }
+        }
+    },
+    methods: {
+        calcTime(data) { 
+            const moment = require("moment");
+            var d = new Date();
+            var regDate = moment(data).add(0, 'hours')
+            var calcM = -regDate.diff(d, 'minute')
+            var calcH = -regDate.diff(d, 'hours')
+            var calcD = -regDate.diff(d, 'days')
+            let checkM = Number(calcM)
+
+
+
+            if (checkM < 60) {
+                return (calcM + ' 분 전')
+            } else if(checkM < 1440) {
+                return(calcH + ' 시간 전')
+            } else {
+                return(calcD + ' 일 전')
+            }
+        },
+        // test() {
+        //     console.log(this.$store.state.nickname)
+        //     this.$store.state.nickname = '임시닉네임'
+        // },
+        nextPage() {
+            this.pageNum += 1;
+        },
+        prevPage() {
+            this.pageNum -= 1;
+        },
+        nextPageS() {
+            this.pageNumS += 1;
+        },
+        prevPageS() {
+            this.pageNumS -= 1;
+        },
+        ImgRequest( a, b ) {
+            console.log(a + '_' + b)
+        try {
+            return require(`../../../../../backend/khweb/images/qna/${a}_${b}.gif`
+            )
+        } catch (e) {
+            return require(`@/assets/logo.png`)
+            }
+        },
+        searching () {
+            var lists = this.boards
+            this.searchingResult = []
+
+            for(var i = 0; i < lists.length; i++){                    
+                const regex = new RegExp(this.word, "gi");
+                const comparison = regex.test(lists[i].title)
+                const comparison2 = regex.test(lists[i].content)
+                const comparison3 = regex.test(lists[i].tags)
+                if(comparison | comparison2 | comparison3){
+                    this.searchingResult.push(lists[i])
+                }
+            }
+            console.log('searching 결과 : ' + this.searchingResult)
+            console.log('0번 값은? : ' + this.searchingResult[0])
+            this.searchinOn = true
+            
+            if (this.word == '') {
+                this.searchinOn = false
+            }                
+        },
+        searchingTag (tag) {
+            var lists = this.boards
+            this.searchingResult = []
+            for(var i = 0; i < lists.length; i++){                    
+                const regex = new RegExp(tag, "gi");
+                const comparison = regex.test(lists[i].tags)
+                if(comparison){
+                    this.searchingResult.push(lists[i])
+                }
+            }
+            this.searchinOn = true
+            var b = '#'
+            this.word = b.concat(tag)
+
+            // 하나라도 true면 if문 생략
+            if (!this.tagSelect0 && !this.tagSelect1 && !this.tagSelect2 && !this.tagSelect3 && !this.tagSelect4 && !this.tagSelect5) {
+                this.searchinOn = false
+                this.word = ''
+            }
+        },
+        replaceHtml(data) {
+            var text = data.replace(/(<([^>]+)>)/ig,"");
+            return text
+        },
+        selectTag(data) {
+            switch(data) {
+                case 1:
+                    this.checkTag1 = "black"
+                    break;
+                default:
+                    break;                   
+            }
+        },
+        classifyTag(data) {
+            var arr = JSON.parse(data)
+            console.log(arr)
+            return arr
+        },
+        selectComplete(data) {
+            if(data == 'true') {
+                this.completeSelect1 = false
+                this.completeSelect2 = false
+                this.completeSelect3 = true
+            } else {
+                this.completeSelect1 = false
+                this.completeSelect2 = true
+                this.completeSelect3 = false
+            }
+            this.fetchQnABoardListWithFilter(data)
+        },
+        ...mapActions(['fetchQnABoardList']),
+        ...mapActions(['fetchQnABoardListWithFilter'])
+    },
+    computed: {
+        pageCount() {
+            let listLength = this.boards.length, // 길이
+                listSize = this.pageSize,
+                page = Math.floor(listLength / listSize);
+            if (listLength % listSize > 0) 
+                page += 1;
+            return page;
+        },
+        paginatedData() {
+            const start = (this.pageNum - 1) * this.pageSize,
+                end = start + this.pageSize;
+            return this
+                .boards
+                .slice(start, end);
+
+        },
+        pageCountS() {
+            let listLength = this.searchingResult.length, // 길이
+                listSize = this.pageSize,
+                page = Math.floor(listLength / listSize);
+            if (listLength % listSize > 0) 
+                page += 1;
+            return page;
+        },
+        paginatedDataS() {
+            const start = (this.pageNumS - 1) * this.pageSize,
+                end = start + this.pageSize;
+            return this
+                .searchingResult
+                .slice(start, end);
+
+        },
+        ...mapState ({
+        lists: state => state.lists
+        })
     }
+}
 </script>
 
 <style scoped>
@@ -370,13 +416,31 @@ import { mapState } from 'vuex'
 .tag_button.on {
     color: black;
 }
+.tag_button.on2 {
+    color: rgb(53, 53, 53);
+    font-weight: bold;
+}
 .tag_button:hover {
     color: rgb(63, 63, 63);
     cursor: pointer;
     transition: all 0.5s ease;
 }
+.forLine0 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 40px;
+    padding-left: 2vw;
+}
+.forLine0sButton {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+
+}
 .forLine {
     height: 40px;
+    border-top: 1px solid #BDBDBD;
     border-bottom: 1px solid #BDBDBD;
     padding-left: 2vw;
     display: flex;
@@ -384,10 +448,10 @@ import { mapState } from 'vuex'
     align-items: center;
 }
 .main_box {
-    margin-top: 100px;
     color: #424242;
 }
 .title_box {
+    margin-top: 100px;
     margin-bottom: 100px;
 }
 .title_box span {
@@ -418,8 +482,9 @@ import { mapState } from 'vuex'
 .searching {
     display: flex;
     justify-content: space-between;
-    height: 43px; 
+    height: 43px;
     width: 350px;
+    min-width: 300px;
     padding-left: 10px;
     max-width: 955px;
     border: 1px solid #BDBDBD;
@@ -531,21 +596,24 @@ input:focus {
     font-weight: 500;
     font-size: 14px;
     text-align: right;
-    margin: 0 0 0 3vw;
+    margin: 0 0 0 2vw;
 }
 .post_title {
     display: flex;
     flex-direction: column;    
     align-self: center;
-    margin: 0 0 0 30px;
+    margin: 0px;
     width: 57vw;
     max-width: 750px;
 }
 .item4 {
+    display: flex;
+    justify-self: start;
     font-size: 15px !important;
     font-weight: bold !important;
     color: #2b2b2b;
-    max-width: 720px;
+    max-width: 55vw;
+    min-width: 450px;
 
     overflow: hidden;
     text-overflow: ellipsis;
@@ -581,14 +649,17 @@ input:focus {
     align-items: center;
     font-size: 11px;
     color: #757575;
+    min-width: 35px;
 }
 .item3 {
     display: flex;
     flex-direction: row;
     font-size: 11px;
     color: #757575;
+    margin-right: 6px;
 }
 .post_reg_date {
+    min-width: 51px;
     padding-top: 2px;
     font-size: 11px;
     font-weight: 500 !important;
@@ -636,6 +707,7 @@ ul {
 }
 .tag_box {
     display:flex;
+    justify-content: start;
     flex-direction: row;
     align-content: center;
     height: 20px
@@ -644,17 +716,37 @@ ul {
     display: flex;
     align-self: center;
     font-size: 12px;
-    width: 40px;
+    min-width: 20px;
     font-weight: 500;
     color: #01579B;
 
 }
 .tag_box_button:hover {
     font-size: 12px;
-    width: 40px;
+    min-width: 40px;
     color: #01579B;
     font-weight: bold;
     transition: all 0.4s ease;
 
+}
+.completeDisplay {
+    background-color: #C2185B;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 20px;
+    padding: 0 4px 0 4px;
+    font-size: 11px;
+    font-weight: bold;
+}
+.v-application .mr-9 {
+    margin: 0px !important;
+}
+.btn_position {
+    position: fixed;
+}
+.v-btn--fixed {
+    top:700px !important;
 }
 </style>

@@ -7,10 +7,13 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface QnABoardRepository extends JpaRepository<QnA, Long> {
     Optional<QnA> findByBoardNo(Long boardNo);
+    List<QnA> findByComplete(String complete);
+
 
     @Transactional
     @Modifying

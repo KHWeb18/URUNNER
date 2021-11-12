@@ -1,6 +1,6 @@
 <template>
     <form @submit.prevent="onSubmit">
-        <v-text-field label="제목" v-model="title" maxlength="50"></v-text-field>
+        <v-text-field label="제목" v-model="title" maxlength="45"></v-text-field>
         <editor placeholder="Write something …" @fromEditor="boardRegist"/>
         <!-- 이미지 등록 폼 -->
         <div style="margin-bottom: 10px">
@@ -92,10 +92,13 @@ export default {
         fileDeleteButton () {
             this.files = '',
             this.preview = ''
-        },
+        },       
         boardRegist (data) {
             this.content = data.content
             this.tags = data.tags
+            if (data.tags == '') {
+                this.tags = '#'                
+            }
             const { title, writer, content, nickname, complete, currentNum, views, comments, tags } = this
             console.log("const값좀보자")
             console.log("const값좀보자")

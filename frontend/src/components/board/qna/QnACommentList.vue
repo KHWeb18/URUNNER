@@ -1,7 +1,7 @@
 <template>
 <div>
-    댓글 <b style="color:#00897B">{{comments.length}}</b>
-    그륩: {{ groupNo }} 코멘트: {{ commentNo }} 레이어: {{ layer }}
+    전체 댓글 <b style="color:#00897B">{{comments.length}}</b>개
+    <!-- 그륩: {{ groupNo }} 코멘트: {{ commentNo }} 레이어: {{ layer }} -->
     <div class="comment_list">
         <div>
             <!-- 댓글 목록 -->
@@ -18,7 +18,7 @@
                             <div class="post_box"  @click="temp00(mob)">
                                 <div class="post_title">{{ mob.nickname }}</div>
                                 <div class="post_reg_date">{{ $moment(mob.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}</div>
-                                <div class="post_content">{{ mob.content }}</div>
+                                <div class="post_content" v-html="mob.content">{{ mob.content }}</div>
                                 <!-- <div class="post_reg_date">commentNO: {{ mob[0] }}</div>
                                 <div class="post_reg_date">groupNO: {{ mob[3] }}</div>
                                 <div class="post_reg_date">layer: {{ mob[4] }}</div> -->
@@ -33,7 +33,7 @@
                                     v-model="content2" placeholder="댓글을 입력해주세요"></textarea>
                                 </tr>
                                 <td class="comment_register_btn">
-                                    <v-btn color="blue-grey darken-1 white-text" @click="submit">댓글 등록</v-btn>
+                                    <v-btn color="blue-grey darken-1 white-text" @click="commentSubmit">댓글 등록</v-btn>
                                 </td>
                             </div>    
                             <!-- 댓글 삭제 클릭시 알림창 -->
@@ -59,16 +59,7 @@
             </div>
             <!-- 댓글 입력창 -->
             <div class="comment_area" @click="temp = false, groupNo = 0, layer = 0, commentNo = 0">
-                <tr>
-                    <!-- <textarea class="comment_register_box"
-                    v-model="content" placeholder="댓글을 입력해주세요" v-on:keyup.enter="submit"></textarea> -->
-                    <!-- 엔터키로 제출하면 줄바꿈도 같이 들어가서 일단 막아둠 -->
-                    <textarea class="comment_register_box"
-                    v-model="content" placeholder="댓글을 입력해주세요"></textarea>
-                </tr>
-                <td class="comment_register_btn">
-                    <v-btn color="blue-grey darken-1 white-text" @click="submit">댓글 등록</v-btn>
-                </td>
+                    <editor-for-comment @fromEditor="commentSubmit"/>
             </div>
         </div>
         <!-- 하단 밑줄용 -->
@@ -80,9 +71,13 @@
 <script>
 
 import axios from 'axios'
+import EditorForComment from '@/components/board/EditorForComment.vue'
 
 export default {
     name: 'CommentList',
+    components: {
+        EditorForComment
+    },
     data () {
         return {
             content: '',
@@ -128,8 +123,10 @@ export default {
         }
     },
     methods: {
-        submit () {
-            console.log('저장하는 순간 store boardNo 값 : ' + this.$store.state.boardNo)
+        commentSubmit (data) {
+            console.log(data)
+            this.content = data
+            console.log('저장하는 순간 store boardNo 값 : ' + this.$store.state.boardNo)            
             if(this.layer==1) {
                 this.content = this.content2
             }
@@ -137,6 +134,8 @@ export default {
             this.boardNo = this.$store.state.boardNo
             this.groupNo = this.commentNo
             const { boardNo, content, writer, nickname, layer, groupNo } = this
+            console.log('저장하는 순간 const값')
+            console.log({ boardNo, content, writer, nickname, layer, groupNo })
             axios.post('http://localhost:7777/qnaboard/comment/register', { boardNo, content, writer, nickname, layer, groupNo } )
                     .then(res => {
                         console.log('댓글등록완료 |' + res.status)
@@ -185,8 +184,7 @@ export default {
             try {
                 var cutId = data.substring(0, data.length-4); // email 뒤 .com 삭제
                 console.log(cutId)
-                return require(`../../../../../backend/khweb/images/profiles/${cutId}.gif`)               
-            
+                return require(`../../../../../backend/khweb/images/profiles/${cutId}.gif`)            
             } catch (e) {
                 return require(`@/assets/logo.png`)
             }
@@ -299,7 +297,7 @@ export default {
 }
 .button_container {
     width:70vw;
-    max-width: 1040px;
+    max-width: 1000px;
     border-top: 1px solid #BDBDBD;
     margin-top: 15px;
 }
@@ -309,7 +307,7 @@ export default {
 .adit_comment_register_box {
     height:100px;
     width:62vw;
-    max-width: 1000px;
+    max-width: 900px;
     border: 1px solid #BDBDBD;    
     padding: 10px;
     margin-left: 20px;
