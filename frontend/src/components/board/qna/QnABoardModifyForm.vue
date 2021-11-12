@@ -3,7 +3,6 @@
         <div class="main_box">
             <div class="title_box">
                 <h4 class="page_title">
-                    <v-icon>mdi-exclamation-thick</v-icon>
                     <span>질문 답변 게시판</span></h4>
             </div>
             <div class="post_list">
@@ -25,10 +24,6 @@
             <v-text-field label="제목" v-model="title"></v-text-field>
             <!-- 게시글 -->
             <editor :board="board" @fromEditor="onSubmit"/>
-            <!-- 이미지 -->
-            <div class="content_img">
-                <img :src="ImgRequest()" class="test">
-            </div>
         </div>
     </div>
 </template>
@@ -141,7 +136,7 @@ export default {
 }
 .post_tag {
     display: flex;
-    justify-content: center;
+    justify-content: start;
     align-content: center;
     color: #0288D1;
     font-weight: bold;

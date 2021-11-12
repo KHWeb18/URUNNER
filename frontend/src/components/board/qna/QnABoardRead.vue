@@ -44,7 +44,7 @@ export default {
             introduce: 'HELLO WORLD!',
             refresh: 1,
             members: this.$store.state.qnaMembers,
-            complete: false
+            complete: '',
         }
     },
     props: {
@@ -64,8 +64,6 @@ export default {
         },
         endRecruit(data) {
             this.board.complete = !this.board.complete
-            console.log('this.board는 ')
-            console.log(this.board)
             const { title, content, complete, currentNum, tags } = this.board
             axios.put(`http://localhost:7777/qnaboard/${data}`, { title, content, complete, currentNum, tags })
                     .then(res => {

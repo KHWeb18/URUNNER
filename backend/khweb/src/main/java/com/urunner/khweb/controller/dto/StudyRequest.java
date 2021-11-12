@@ -18,4 +18,7 @@ public class StudyRequest {
     private String complete;
     private Long fit;
     private Long currentNum;
+    private Long views;
+    private Long comments;
+    private String tags;
 }

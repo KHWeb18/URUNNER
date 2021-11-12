@@ -1,11 +1,6 @@
 <template>
     <div>
-        <div class="main_box" :class="{ on: board.complete == 'true' }">
-            <!-- 제목 -->
-            <div class="title_box">
-                <h4 class="page_title">
-                    <span>스터디 모집</span></h4>
-            </div>
+        <div class="main_box">
             <!-- 게시글 -->
             <div class="post_list">
                 <div class="post_card_box">
@@ -22,34 +17,36 @@
                 <div class="post_content">
                     <div v-html="board.content">{{ board.content }}</div>
                 </div>
-            </div>
-             <!-- 지원자 목록 -->
-            <div style="width:300px; margin:0px">
-                <v-row justify="center">
-                <v-subheader>지원자 목록</v-subheader>
-                    <v-expansion-panels popout>
-                        <v-expansion-panel
-                        v-for="(member, i) in this.$store.state.studyMembers"
-                        :key="i" hide-actions>
-                        <v-expansion-panel-header>
-                            <v-row align="center" class="spacer" no-gutters>
-                                <v-col class="hidden-xs-only" sm="5" md="3">
-                                    <strong v-html="member.nickname"></strong>
-                                </v-col>
-                            </v-row>
-                        </v-expansion-panel-header>
-                        <v-expansion-panel-content>
-                            <v-divider></v-divider>
-                            <v-card-text v-text="member.introduce"></v-card-text>
-                        </v-expansion-panel-content>
-                    </v-expansion-panel>
-                </v-expansion-panels>
-                </v-row>
-                <br>
-            </div>
+                <div class="complete_btn_align">
+                    <v-btn v-show="this.$store.state.moduleA.email = board.writer" @click="appl(board.boardNo)">지원하기</v-btn>
+                    <v-btn v-show="this.$store.state.moduleA.email = board.writer" @click="endRecruit(board.boardNo)">모집 마감</v-btn>
+                </div>
+                 <!-- 지원자 목록 -->
+                <div style="width:300px; margin:0px">
+                    <v-row justify="center">
+                    <v-subheader>지원자 목록</v-subheader>
+                        <v-expansion-panels popout>
+                            <v-expansion-panel
+                            v-for="(member, i) in this.$store.state.studyMembers"
+                            :key="i" hide-actions>
+                            <v-expansion-panel-header>
+                                <v-row align="center" class="spacer" no-gutters>
+                                    <v-col class="hidden-xs-only" sm="5" md="3">
+                                        <strong v-html="member.nickname"></strong>
+                                    </v-col>
+                                </v-row>
+                            </v-expansion-panel-header>
+                            <v-expansion-panel-content>
+                                <v-divider></v-divider>
+                                <v-card-text v-text="member.introduce"></v-card-text>
+                            </v-expansion-panel-content>
+                        </v-expansion-panel>
+                    </v-expansion-panels>
+                    </v-row>
+                    <br>
+                </div>
+            </div>            
         </div>
-        <v-btn @click="appl(board.boardNo)">지원하기</v-btn>
-        <v-btn @click="endRecruit(board.boardNo)">모집 마감</v-btn>
     </div>
 </template>
 
@@ -102,8 +99,6 @@ export default {
         },
         endRecruit(data) {
             this.board.complete = !this.board.complete
-            console.log('this.board는 ')
-            console.log(this.board)
             const { title, content, fit, complete, currentNum } = this.board
             axios.put(`http://localhost:7777/studyboard/${data}`, { title, content, fit, complete, currentNum })
                     .then(res => {
@@ -116,6 +111,11 @@ export default {
                     .catch(err => {
                         alert(err.response.data.message)
                     })
+        },
+        classifyTag(data) {
+            var arr = JSON.parse(data)
+            console.log(arr)
+            return arr
         }
     }
 }
@@ -127,17 +127,7 @@ export default {
     max-width: 1000px;
 }
 .main_box {
-    display:flex;
-    justify-content: center;
-    flex-direction: column;
     color: #424242;
-}
-.main_box.on {
-    display:flex;
-    justify-content: center;
-    flex-direction: column;
-    color: #424242;
-    opacity: 0.5;
 }
 .title_box {   
 }
@@ -172,7 +162,6 @@ export default {
 }
 .searching_message_box {
     width:70vw;
-    height: 150px;
     max-width: 1000px;
     display:flex;
     justify-content: center;
@@ -249,10 +238,21 @@ export default {
     width: 500px;
 }
 .post_tag {
+    display: flex;
+    justify-content: center;
+    align-content: center;
     color: #0288D1;
     font-weight: bold;
     font-size: 16px !important;    
     letter-spacing: 0px !important;
+    margin-bottom: 20px;
+}
+.post_tag_either {
+    display: flex;
+    justify-self: center;
+    align-self: center;
+    font-size: 15px !important;
+    color: #757575;
 }
 .post_title {
     margin: 0 0 0 0px;
@@ -318,4 +318,15 @@ export default {
 }
 a { text-decoration:none !important }
 a:hover { text-decoration:none !important }
+
+.complete_btn_align {
+    display: flex;
+    justify-content: center;
+}
+.tag_box_button {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    font-size: 18px;
+}
 </style>

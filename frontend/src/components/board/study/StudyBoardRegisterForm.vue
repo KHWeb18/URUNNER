@@ -1,26 +1,9 @@
 <template>
-    <form @submit.prevent="onSubmit">
-        <v-text-field label="제목" v-model="title"></v-text-field>
+    <form @submit.prevent="boardRegist">
+        <v-text-field label="제목" v-model="title" maxlength="45"></v-text-field>
+        <!-- 인원설정 -->
+        <v-text-field label="인원설정" placeholder="모집하는 인원수를 정해주세요" type="number" v-model="fit"></v-text-field>
         <editor placeholder="Write something …" @fromEditor="boardRegist"/>
-        <!-- <v-btn @click="complete = !complete">마감</v-btn> -->
-        <input v-model="fit">
-        <!-- 이미지 등록 폼 -->
-        <div style="margin-bottom: 10px">
-            <div class="image-box">
-                <label>이미지 추가
-                    <input
-                        type="file"
-                        class="files"
-                        id="files"
-                        ref="files"
-                        multiple="multiple"
-                        v-on:change="handleFileUpload()"
-                        style="pointer:cursor"></label>
-                    <button @click="fileDeleteButton()" class="image_btn">이미지 삭제</button>
-            </div>
-            <div class="preview_image">
-                <img :src="preview"></div>
-        </div>
     </form>    
 </template>
 
@@ -48,68 +31,31 @@ export default {
             complete: false,
             fit: 1,
             currentNum: 1,
-            qna: ''
+            views: 1,
+            comments: 0,
+            qna: '',
+            tags: '',
         }
     },
     methods: {
         catchContent(data) {
             this.content = data
-        },
-        test() {
-            console.log(this.nickname)
-            console.log(this.$store.state.moduleA.email)
-            console.log(this.content)
-        },
-        handleFileUpload () {
-                this.files = this.$refs.files.files
-                this.preview = URL.createObjectURL(this.files[0])
-                console.log(this.files[0])
-        },
-        onsubmit () {
-            let formData = new FormData()
-            for (var idx = 0; idx < this.files.length; idx++) {
-                formData.append('fileList', this.files[idx])
-                console.log(this.files[idx])
-            }
-            
-            let ownerId = this.$store.state.moduleA.email
-            formData.append('id', ownerId)
-            let no = this.$store.state.boardNo
-            formData.append('no', no)
-            axios.post('http://localhost:7777/image/uploadImg_Study', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-                
-            })
-            .then (res => {
-                this.response = res.data
-            })
-            .catch (res => {
-                this.response = res.message
-            }) 
-            alert('Processing Complete!')
-            this.$router.push({
-                            name: 'StudyBoardListPage'
-                        })
-        },
-        fileDeleteButton () {
-            this.files = '',
-            this.preview = ''
         },       
-        boardRegist (data) {            
-            this.content = data
-            const { title, writer, content, nickname, complete, fit, currentNum } = this
-            axios.post('http://localhost:7777/studyboard/register', { title, writer, content, nickname, complete, fit, currentNum } )
+        boardRegist (data) {
+            this.content = data.content
+            this.tags = data.tags
+            const { title, writer, content, nickname, complete, fit, currentNum, views, comments, tags } = this
+            axios.post('http://localhost:7777/studyboard/register', { title, writer, content, nickname, complete, fit, currentNum, views, comments, tags } )
                     .then(res => {
-                        console.log(res.data)
-                        this.$store.state.boardNo = res.data.boardNo.toString()
-                        console.log(this.$store.state.boardNo)
-                        this.onsubmit()
+                    console.log(res.data)
+                    this.$store.state.boardNo = res.data.boardNo.toString()
+                    this.$router.push({
+                        name: 'StudyBoardListPage'
                     })
-                    .catch(res => {
-                        alert(res.response.data.message)
-                    })
+                })
+                .catch(res => {
+                    alert(res.response.data.message)
+                })
         }
     }
 }

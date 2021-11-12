@@ -1,7 +1,7 @@
 package com.urunner.khweb.controller.board;
 
-import com.urunner.khweb.controller.dto.MemberRes;
 import com.urunner.khweb.controller.dto.StudyRequest;
+import com.urunner.khweb.entity.board.QnA;
 import com.urunner.khweb.entity.board.Study;
 import com.urunner.khweb.entity.board.StudyMember;
 import com.urunner.khweb.service.board.StudyBoardService;
@@ -40,6 +40,13 @@ public class StudyBoardController {
         return new ResponseEntity<>(service.findAll(), HttpStatus.OK);
     }
 
+    @GetMapping("/lists/{complete}")
+    public ResponseEntity<List<Study>> getListsWithFilter (@PathVariable("complete") String complete) throws Exception {
+        log.info("complete value : " + complete);
+
+        return new ResponseEntity<>(service.findByComplete(complete), HttpStatus.OK);
+    }
+
     @GetMapping("/{boardNo}")
     public ResponseEntity<Optional<Study>> read(@PathVariable("boardNo") Long boardNo) throws Exception {
 
@@ -50,19 +57,9 @@ public class StudyBoardController {
 
     @GetMapping("/memberList/{boardNo}") // study에 지원한 memberList 요청
     public ResponseEntity<List<StudyMember>> memberList(@PathVariable("boardNo") Long boardNo){
-
-        log.info("****");
         System.out.println(boardNo);
-        log.info("****");
-        log.info("****");
-        log.info("****");
-        log.info("****");
+
         List<StudyMember> member = service.selectStudyBoardNo(boardNo);
-        log.info("****");
-        log.info("****");
-        log.info("study memberList 값은 : " + member);
-        log.info("****");
-        log.info("****");
 
         return new ResponseEntity<>(member, HttpStatus.OK);
     }
@@ -95,6 +92,9 @@ public class StudyBoardController {
     @PutMapping ("/{boardNo}")
     public ResponseEntity<Study> modify(@PathVariable("boardNo") Long boardNo,
                                        @Validated @RequestBody StudyRequest studyRequest) throws Exception {
+        log.info(":::: post modify request from vue");
+        log.info(":::: RequestBody value : " + studyRequest);
+
         studyRequest.setBoardNo(boardNo);
         service.updatePost(studyRequest);
 

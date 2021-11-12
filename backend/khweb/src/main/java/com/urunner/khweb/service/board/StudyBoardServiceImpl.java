@@ -1,8 +1,6 @@
 package com.urunner.khweb.service.board;
 
-import com.urunner.khweb.controller.dto.MemberRes;
 import com.urunner.khweb.controller.dto.StudyRequest;
-import com.urunner.khweb.entity.board.Free;
 import com.urunner.khweb.entity.board.Study;
 import com.urunner.khweb.entity.board.StudyMember;
 import com.urunner.khweb.repository.board.study.StudyBoardRepository;
@@ -28,7 +26,8 @@ public class StudyBoardServiceImpl implements StudyBoardService {
     public Study register(StudyRequest studyRequest) throws Exception {
 
         Study postEntity = new Study(studyRequest.getTitle(), studyRequest.getContent(), studyRequest.getWriter(),
-                studyRequest.getNickname(), studyRequest.getComplete(), studyRequest.getFit(), studyRequest.getCurrentNum());
+                studyRequest.getNickname(), studyRequest.getComplete(), studyRequest.getCurrentNum(),
+                studyRequest.getViews(), studyRequest.getComments(), studyRequest.getTags(), studyRequest.getFit());
 
         return repository.save(postEntity);
     }
@@ -38,13 +37,24 @@ public class StudyBoardServiceImpl implements StudyBoardService {
     }
 
     public Optional<Study> findByBoardNo(Long boardNo){
-        return repository.findByBoardNo(boardNo);
+
+        Optional<Study> board = repository.findByBoardNo(boardNo);
+
+        System.out.println("*************************board read stage : " + board );
+        Long views = board.get().getViews() + 1;
+        repository.updateViews(views, boardNo); // 조회수 증가
+
+        return board;
+    }
+
+    public List<Study> findByComplete(String complete){
+        return repository.findByComplete(complete);
     }
 
     public void updatePost(StudyRequest studyRequest){
 
         repository.updatePost(studyRequest.getTitle(), studyRequest.getContent(), studyRequest.getBoardNo(),
-                studyRequest.getComplete(), studyRequest.getFit(), studyRequest.getCurrentNum());
+                studyRequest.getComplete(), studyRequest.getCurrentNum(), studyRequest.getTags(), studyRequest.getFit());
     }
 
     public void updateCurrentNum(StudyRequest studyRequest){
@@ -52,6 +62,14 @@ public class StudyBoardServiceImpl implements StudyBoardService {
         repository.updateCurrentNum(studyRequest.getCurrentNum(), studyRequest.getBoardNo());
     }
 
+    public void updateViews(StudyRequest studyRequest){
+
+        repository.updateViews(studyRequest.getViews(), studyRequest.getBoardNo());
+    }
+
+    public void updateComments(Long boardNo, Long upDown) {
+        repository.updateComments(boardNo, upDown);
+    }
 
     public void delete(Long boardNo) throws Exception {
         Study study = new Study();

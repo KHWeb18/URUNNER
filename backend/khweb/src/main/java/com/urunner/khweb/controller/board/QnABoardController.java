@@ -51,12 +51,6 @@ public class QnABoardController {
         return new ResponseEntity<>(service.findByComplete(complete), HttpStatus.OK);
     }
 
-//    @GetMapping("/lists/complete/true")
-//    public ResponseEntity<List<QnA>> getListsWithFilter () throws Exception {
-//
-//        return new ResponseEntity<>(service.findByComplete("true"), HttpStatus.OK);
-//    }
-
     @GetMapping("/{boardNo}")
     public ResponseEntity<Optional<QnA>> read(@PathVariable("boardNo") Long boardNo) throws Exception {
 
@@ -68,19 +62,9 @@ public class QnABoardController {
     @GetMapping("/memberList/{boardNo}")
     // study에 지원한 memberList 요청
     public ResponseEntity<List<QnAMember>> memberList(@PathVariable("boardNo") Long boardNo){
-
-        log.info("****");
         System.out.println(boardNo);
-        log.info("****");
-        log.info("****");
-        log.info("****");
-        log.info("****");
+
         List<QnAMember> member = service.selectStudyBoardNo(boardNo);
-        log.info("****");
-        log.info("****");
-        log.info("study memberList 값은 : " + member);
-        log.info("****");
-        log.info("****");
 
         return new ResponseEntity<>(member, HttpStatus.OK);
     }

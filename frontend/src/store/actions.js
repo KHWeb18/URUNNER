@@ -98,6 +98,14 @@ export default {
                     commit(FETCH_STUDY_MEMBER_LIST, res.data)
                 })
     },
+    fetchStudyBoardListWithFilter ({ commit }, complete) {
+        console.log(complete)
+        return axios.get(`http://localhost:7777/studyboard/lists/${complete}`)
+                .then((res) => {
+                    const reverse = [...res.data].reverse();
+                    commit(FETCH_BOARD_LIST, reverse)
+                })
+    },
     // 질문답변 게시판
     fetchQnABoardList ({ commit }) {
         return axios.get('http://localhost:7777/qnaboard/lists')

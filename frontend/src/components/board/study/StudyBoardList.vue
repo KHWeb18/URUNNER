@@ -1,200 +1,584 @@
 <template>
-    <div>
-        <div class="main_box" :class="{ on: board.complete == 'true' }">
+    <div class="main">
+        <div class="main_box">
             <!-- 제목 -->
-            <div class="title_box">
-                <h4 class="page_title">
-                    <span>스터디 모집</span></h4>
+            <div class="mr-9 hidden-sm-and-down">
+                <div class="title_box">
+                    <h2 class="page_title">
+                        <span>스터디 게시판</span></h2>
+                </div>
             </div>
-            <!-- 게시글 -->
-            <div class="post_list">
-                <div class="post_card_box">
-                    <div class="searching_message_box">
-                        <div class="searching_message">
-                            <div style="margin-top:20px;"><b>{{board.title}}</b></div>
-                            <div><p><b class="post_tag">#TAG</b> / {{board.nickname}} / {{ $moment(board.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}</p></div>
+            <!-- 검색창 + complete 분류 -->
+            <v-spacer class="forLine0">
+                <div class="forLine0sButton">
+                    <div class="tag_button" :class="{ on2 : completeSelect1 }" @click="fetchStudyBoardList(),
+                                        completeSelect1 = true, completeSelect2 = false, completeSelect3 = false ">전체</div>&nbsp;&nbsp;&nbsp;
+                    <div class="tag_button" :class="{ on2 : completeSelect2 }"  @click="selectComplete('false')">모집중</div>&nbsp;&nbsp;&nbsp;
+                    <div class="tag_button" :class="{ on2 : completeSelect3 }" @click="selectComplete('true')">모집완료</div>&nbsp;&nbsp;&nbsp;
+                </div>
+                <div class="searching_box_top">
+                    <div class="mr-9 hidden-sm-and-down">
+                        <div class="searching" >
+                            <span>
+                                <input type="text" placeholder="검색어를 입력해주세요" v-model="word"
+                                @keyup.enter="searching(word)">
+                            </span>
+                            <v-icon class="searching_icon" @click="searching(word)">mdi-magnify</v-icon>
                         </div>
                     </div>
                 </div>
-                <div class="content_img">
-                    <img :src="ImgRequest()" class="test">
-                </div>
-                <div class="post_content">
-                    <div v-html="board.content">{{ board.content }}</div>
+            </v-spacer>
+            <!-- 분류창 -->
+            <v-spacer class="forLine">
+                <li class="tag_button" @click="word = ''">ALL</li>&nbsp;&nbsp;&nbsp;
+                <li class="tag_button" :class="{ on : tagSelect1 }" @click="tagSelect1 = !tagSelect1, searchingTag('Java')">Java</li>&nbsp;&nbsp;&nbsp;
+                <li class="tag_button" :class="{ on : tagSelect2 }" @click="tagSelect2 = !tagSelect2, searchingTag('Spring')">Spring</li>&nbsp;&nbsp;&nbsp;
+                <li class="tag_button" :class="{ on : tagSelect3 }" @click="tagSelect3 = !tagSelect3, searchingTag('Python')">Python</li>&nbsp;&nbsp;&nbsp;
+            </v-spacer>
+            <!-- 게시글 리스트 -->
+            <div class="forSearching" v-show="!searchinOn">
+                <div class="post_list">
+                    <div class="post_card_box">
+                        <div v-for="mob in paginatedData" :key="mob.boardNo">
+                            <div class="post_card" :class="{ on : mob.complete == 'true' }">
+                                <div class="post_num"><div class="mr-9 hidden-sm-and-down">
+                                        <v-progress-circular
+                                        :rotate="-90"
+                                        :size="60"
+                                        :width="12"
+                                        :value="mob.currentNum / mob.fit * 100"
+                                        color="primary"
+                                        >
+                                        {{ mob.currentNum }} / {{ mob.fit }}
+                                        </v-progress-circular></div>
+                                    </div>
+                                <div class="post_title">
+                                    <router-link :to="{ name: 'StudyBoardReadPage', params: { boardNo: mob.boardNo.toString() } }">
+                                        <div class="item4">{{ mob.title }}</div>
+                                    </router-link>
+                                    <div class="tag_box">
+                                        <div class="post_reg_date">{{ calcTime(mob.regDate) }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                                            <div class="hidden-md-and-up">
+                                                <div class="tag_box">
+                                                    <div class="item2">
+                                                        <v-icon size="18px" color="#9e9e9e">mdi-eye</v-icon>
+                                                        <div style="padding-top:3px">&nbsp;{{ mob.views }}</div>
+                                                    </div>
+                                                    <div class="item3">
+                                                        &nbsp;&nbsp;<v-icon size="18px" color="#9e9e9e">mdi-comment</v-icon>
+                                                        <div style="padding-top:3px">&nbsp;{{ mob.comments }}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <div v-for="tag in classifyTag(mob.tags)" :key="tag.text">
+                                            <div class="mr-9 hidden-sm-and-down">
+                                                <div class="tag_box_button_box">
+                                            <btn class="tag_box_button" @click="tagSelect0 = !tagSelect0,searchingTag(tag.text)">#{{ tag.text }}&nbsp;</btn>
+                                            </div>
+                                        </div>
+                                        </div>
+                                        <div v-show="mob.complete == 'true'" class="completeDisplay" @click="selectComplete('true')">모집종료</div>
+                                    </div>
+                                </div>
+                                    <router-link class="post_vnc" :to="{ name: 'StudyBoardReadPage', params: { boardNo: mob.boardNo.toString() } }" >
+                                        <div class="mr-2 hidden-sm-and-down">
+                                        <div class="item2">
+                                            <v-icon size="18px" color="#9e9e9e">mdi-eye</v-icon>
+                                            <div style="padding-top:3px">&nbsp;{{ mob.views }}</div>
+                                        </div>
+                                        <div class="item3">
+                                            <v-icon size="18px" color="#9e9e9e">mdi-comment</v-icon>
+                                            <div style="padding-top:3px">&nbsp;{{ mob.comments }}</div>
+                                        </div>
+                                        </div>
+                                    </router-link>
+                                    <div class="post_name_box">
+                                        <div class="mr-9 hidden-sm-and-down"><div class="post_name">{{ mob.nickname }}</div>
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="button_box">
+                        <v-flex hidden-sm-and-down text-sm-right="text-sm-right">
+                            <router-link :to="{ name: 'StudyBoardRegisterPage' }">
+                                <v-btn
+                                    v-if="this.$store.state.isLogin"
+                                    color="blue darken-3 text center"
+                                    class="change-font">
+                                    글쓰기
+                                </v-btn>
+                            </router-link>
+                        </v-flex>
+                    </div>
+                    <!-- 페이지네이션 -->
+                    <v-container style="margin-top:20px;">
+                        <div class="text-center">
+                            <v-pagination class="btn_pagination" v-model="pageNum" :length="pageCount"
+                                prev-icon="mdi-chevron-left" next-icon="mdi-chevron-right" light
+                                ></v-pagination>
+                        </div>
+                    </v-container>
                 </div>
             </div>
-             <!-- 지원자 목록 -->
-            <div style="width:300px; margin:0px">
-                <v-row justify="center">
-                <v-subheader>지원자 목록</v-subheader>
-                    <v-expansion-panels popout>
-                        <v-expansion-panel
-                        v-for="(member, i) in this.$store.state.studyMembers"
-                        :key="i" hide-actions>
-                        <v-expansion-panel-header>
-                            <v-row align="center" class="spacer" no-gutters>
-                                <v-col sm="5" md="3">
-                                    <strong v-html="member.nickname"></strong>
-                                </v-col>
-                            </v-row>
-                        </v-expansion-panel-header>
-                        <v-expansion-panel-content>
-                            <v-divider></v-divider>
-                            <v-card-text v-text="member.introduce"></v-card-text>
-                        </v-expansion-panel-content>
-                    </v-expansion-panel>
-                </v-expansion-panels>
-                </v-row>
-                <br>
+            <!-- 검색결과 -->
+            <div class="forSearching"  v-show="searchinOn">
+                <div class="searching_message_box">
+                    <div class="searching_message">
+                        <div><b>{{ word }}</b> 검색 결과</div>
+                        <div><p>{{this.searchingResult.length}} 건의 게시물이 검색되었습니다.</p></div>
+                    </div>
+                </div>
+                <div class="post_list">
+                    <div class="post_card_box">
+                        <div v-for="mob in paginatedDataS" :key="mob.boardNo">
+                            <div class="post_card" :class="{ on : mob.complete == 'true' }">
+                                <div class="post_num"><div class="mr-9 hidden-sm-and-down">
+                                        <v-progress-circular
+                                        :rotate="-90"
+                                        :size="60"
+                                        :width="12"
+                                        :value="mob.currentNum / mob.fit * 100"
+                                        color="primary"
+                                        >
+                                        {{ mob.currentNum }} / {{ mob.fit }}
+                                        </v-progress-circular></div>
+                                    </div>
+                                <div class="post_title">
+                                    <router-link :to="{ name: 'StudyBoardReadPage', params: { boardNo: mob.boardNo.toString() } }">
+                                        <div class="item4">{{ mob.title }}</div>
+                                    </router-link>
+                                    <div class="tag_box">
+                                        <div class="post_reg_date">{{ calcTime(mob.regDate) }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                                            <div class="hidden-md-and-up">
+                                                <div class="tag_box">
+                                                    <div class="item2">
+                                                        <v-icon size="18px" color="#9e9e9e">mdi-eye</v-icon>
+                                                        <div style="padding-top:3px">&nbsp;{{ mob.views }}</div>
+                                                    </div>
+                                                    <div class="item3">
+                                                        &nbsp;&nbsp;<v-icon size="18px" color="#9e9e9e">mdi-comment</v-icon>
+                                                        <div style="padding-top:3px">&nbsp;{{ mob.comments }}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <div v-for="tag in classifyTag(mob.tags)" :key="tag.text">
+                                            <div class="mr-9 hidden-sm-and-down">
+                                                <div class="tag_box_button_box">
+                                            <btn class="tag_box_button" @click="tagSelect0 = !tagSelect0,searchingTag(tag.text)">#{{ tag.text }}&nbsp;</btn>
+                                            </div>
+                                        </div>
+                                        </div>
+                                        <div v-show="mob.complete == 'true'" class="completeDisplay" @click="selectComplete('true')">모집종료</div>
+                                    </div>
+                                </div>
+                                    <router-link class="post_vnc" :to="{ name: 'StudyBoardReadPage', params: { boardNo: mob.boardNo.toString() } }" >
+                                        <div class="mr-2 hidden-sm-and-down">
+                                        <div class="item2">
+                                            <v-icon size="18px" color="#9e9e9e">mdi-eye</v-icon>
+                                            <div style="padding-top:3px">&nbsp;{{ mob.views }}</div>
+                                        </div>
+                                        <div class="item3">
+                                            <v-icon size="18px" color="#9e9e9e">mdi-comment</v-icon>
+                                            <div style="padding-top:3px">&nbsp;{{ mob.comments }}</div>
+                                        </div>
+                                        </div>
+                                    </router-link>
+                                    <div class="post_name_box">
+                                        <div class="mr-9 hidden-sm-and-down"><div class="post_name">{{ mob.nickname }}</div>
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="button_box">
+                        <v-flex hidden-sm-and-down text-sm-right="text-sm-right">
+                            <router-link :to="{ name: 'StudyBoardRegisterPage' }">
+                                <v-btn
+                                    v-if="this.$store.state.isLogin"
+                                    color="blue darken-3 text center"
+                                    class="change-font">
+                                    글쓰기
+                                </v-btn>
+                            </router-link>
+                        </v-flex>
+                    </div>
+                    <!-- 페이지네이션 -->
+                    <v-container style="margin-top:20px;">
+                        <div class="text-center">
+                            <v-pagination class="btn_pagination" v-model="pageNumS" :length="pageCountS"
+                                prev-icon="mdi-chevron-left" next-icon="mdi-chevron-right" light
+                                ></v-pagination>
+                        </div>
+                    </v-container>
+                </div>
+            </div>
+            <!-- 검색창 -->
+            <div class="searching_box">
+                <div class="searching_bar">
+                    <div class="searching" >
+                        <span>
+                            <input type="text" placeholder="검색어를 입력해주세요" v-model="word"
+                            @keyup.enter="searching(word)">
+                        </span>
+                        <v-icon class="searching_icon" @click="searching(word)">mdi-magnify</v-icon>
+                    </div>
+                </div>
             </div>
         </div>
-        <v-btn @click="appl(board.boardNo)">지원하기</v-btn>
-        <v-btn @click="endRecruit(board.boardNo)">모집 마감</v-btn>
+        <!-- 모바일 사이즈 때 나타나는 글쓰기 버튼 -->
+        <router-link :to="{ name: 'StudyBoardRegisterPage' }">
+            <v-btn fab dark large color="primary" fixed right class="hidden-md-and-up">
+                <v-icon dark>mdi-plus</v-icon>
+            </v-btn>
+        </router-link>
     </div>
 </template>
 
 <script>
-
-import axios from 'axios'
+import { mapState, mapActions } from 'vuex'
 
 export default {
-    name: 'StudyBoardRead',
-    data () {
-        return {
-            nickname: '',
-            email: '',
-            introduce: 'HELLO WORLD!',
-            refresh: 1,
-            members: this.$store.state.studyMembers,
-            complete: false
-        }
-    },
+    name: 'StudyBoardList',
     props: {
-        board: {
-            type: Object,
-            required: true
+        boards: {
+            type: Array
+        },
+        pageSize: {
+            type: Number,
+            required: false,
+            default: 10
         }
     },
-    methods : {
-        ImgRequest() {
-            try {
-                return require(`../../../../../backend/khweb/images/study/${this.board.writer}_${this.board.boardNo}.gif`
-                )
-            } catch (e) {
-                return require(`@/assets/logo.png`)
+    data() {
+        return {
+            pageNum: 1,
+            pageNumS: 1,
+            toggle_exclusive: [],
+            word: '',
+            searchingResult: [],
+            searchinOn: false,
+            complete: '',
+
+            interval: {},
+            value: '',
+            value2: 20,
+            tagSelect0: false,
+            tagSelect1: false,
+            tagSelect2: false,
+            tagSelect3: false,
+            completeSelect1: true,
+            completeSelect2: false,
+            completeSelect3: false
+        }
+    },
+    beforeDestroy () {
+        clearInterval(this.interval)
+    },
+    watch: {
+        word(newVal) {       //이런식으로 watch 사용
+            if(newVal == '') {
+                    this.searchinOn = false
+                    this.tagSelect0 = false
+                    this.tagSelect1 = false // All 클릭시 초기화용
+                    this.tagSelect2 = false
+                    this.tagSelect3 = false
+            }
+        }
+    },
+    methods: {
+        calcTime(data) { 
+            const moment = require("moment");
+            var d = new Date();
+            var regDate = moment(data).add(0, 'hours')
+            var calcM = -regDate.diff(d, 'minute')
+            var calcH = -regDate.diff(d, 'hours')
+            var calcD = -regDate.diff(d, 'days')
+            let checkM = Number(calcM)
+
+
+
+            if (checkM < 60) {
+                return (calcM + ' 분 전')
+            } else if(checkM < 1440) {
+                return(calcH + ' 시간 전')
+            } else {
+                return(calcD + ' 일 전')
             }
         },
-        appl(data) {
-            this.nickname = this.$store.state.moduleA.nickname
-            this.email = this.$store.state.moduleA.email
-            const { nickname, email, introduce } = this
-            axios.put(`http://localhost:7777/studyboard/apply/${data}`, { nickname, email, introduce })
-                    .then(res => {
-                        console.log(res)
-                        this.refresh += 1
-                        const refresh = this.refresh
-                        this.$emit('submit', refresh)
-                    })
-                    .catch(err => {
-                        alert(err.response.data.message)
-                    })
+        // test() {
+        //     console.log(this.$store.state.nickname)
+        //     this.$store.state.nickname = '임시닉네임'
+        // },
+        nextPage() {
+            this.pageNum += 1;
+        },
+        prevPage() {
+            this.pageNum -= 1;
+        },
+        nextPageS() {
+            this.pageNumS += 1;
+        },
+        prevPageS() {
+            this.pageNumS -= 1;
+        },
+        ImgRequest( a, b ) {
+            console.log(a + '_' + b)
+        try {
+            return require(`../../../../../backend/khweb/images/qna/${a}_${b}.gif`
+            )
+        } catch (e) {
+            return require(`@/assets/logo.png`)
+            }
+        },
+        searching () {
+            var lists = this.boards
+            this.searchingResult = []
+
+            for(var i = 0; i < lists.length; i++){                    
+                const regex = new RegExp(this.word, "gi");
+                const comparison = regex.test(lists[i].title)
+                const comparison2 = regex.test(lists[i].content)
+                const comparison3 = regex.test(lists[i].tags)
+                if(comparison | comparison2 | comparison3){
+                    this.searchingResult.push(lists[i])
+                }
+            }
+            console.log('searching 결과 : ' + this.searchingResult)
+            console.log('0번 값은? : ' + this.searchingResult[0])
+            this.searchinOn = true
+            
+            if (this.word == '') {
+                this.searchinOn = false
+            }                
+        },
+        searchingTag (tag) {
+            var lists = this.boards
+            this.searchingResult = []
+            for(var i = 0; i < lists.length; i++){                    
+                const regex = new RegExp(tag, "gi");
+                const comparison = regex.test(lists[i].tags)
+                if(comparison){
+                    this.searchingResult.push(lists[i])
+                }
+            }
+            this.searchinOn = true
+            var b = '#'
+            this.word = b.concat(tag)
+
+            // 하나라도 true면 if문 생략
+            if (!this.tagSelect0 && !this.tagSelect1 && !this.tagSelect2 && !this.tagSelect3) {
+                this.searchinOn = false
+                this.word = ''
+            }
+        },
+        replaceHtml(data) {
+            var text = data.replace(/(<([^>]+)>)/ig,"");
+            return text
+        },
+        selectTag(data) {
+            switch(data) {
+                case 1:
+                    this.checkTag1 = "black"
+                    break;
+                default:
+                    break;                   
+            }
+        },
+        classifyTag(data) {
+            var arr = JSON.parse(data)
+            console.log(arr)
+            return arr
+        },
+        selectComplete(data) {
+            if(data == 'true') {
+                this.completeSelect1 = false
+                this.completeSelect2 = false
+                this.completeSelect3 = true
+            } else {
+                this.completeSelect1 = false
+                this.completeSelect2 = true
+                this.completeSelect3 = false
+            }
+            this.fetchStudyBoardListWithFilter(data)
+        },
+        ...mapActions(['fetchStudyBoardList']),
+        ...mapActions(['fetchStudyBoardListWithFilter'])
+    },
+    computed: {
+        pageCount() {
+            let listLength = this.boards.length, // 길이
+                listSize = this.pageSize,
+                page = Math.floor(listLength / listSize);
+            if (listLength % listSize > 0) 
+                page += 1;
+            return page;
+        },
+        paginatedData() {
+            const start = (this.pageNum - 1) * this.pageSize,
+                end = start + this.pageSize;
+            return this
+                .boards
+                .slice(start, end);
 
         },
-        endRecruit(data) {
-            this.board.complete = !this.board.complete
-            console.log('this.board는 ')
-            console.log(this.board)
-            const { title, content, fit, complete, currentNum } = this.board
-            axios.put(`http://localhost:7777/studyboard/${data}`, { title, content, fit, complete, currentNum })
-                    .then(res => {
-                        console.log(res)
-                        this.$router.push({
-                            name: 'StudyBoardReadPage',
-                            params: { boardNo: this.boardNo }
-                        })
-                    })
-                    .catch(err => {
-                        alert(err.response.data.message)
-                    })
-        }
+        pageCountS() {
+            let listLength = this.searchingResult.length, // 길이
+                listSize = this.pageSize,
+                page = Math.floor(listLength / listSize);
+            if (listLength % listSize > 0) 
+                page += 1;
+            return page;
+        },
+        paginatedDataS() {
+            const start = (this.pageNumS - 1) * this.pageSize,
+                end = start + this.pageSize;
+            return this
+                .searchingResult
+                .slice(start, end);
+
+        },
+        ...mapState ({
+        lists: state => state.lists
+        })
     }
 }
-</script> 
+</script>
 
 <style scoped>
-.post_list {
-    width:70vw;
-    max-width: 1000px;
+.tag_button {
+    color: #BDBDBD;
+    cursor: pointer;
 }
-.main_box {
-    display:flex;
-    justify-content: center;
-    flex-direction: column;
-    color: #424242;
+.tag_button.on {
+    color: black;
 }
-.main_box.on {
-    display:flex;
-    justify-content: center;
-    flex-direction: column;
-    color: #424242;
-    opacity: 0.5;
-}
-.title_box {   
-}
-.title_box span {
-    font-size: 25px;
+.tag_button.on2 {
+    color: rgb(53, 53, 53);
     font-weight: bold;
 }
-.page_title {
+.tag_button:hover {
+    color: rgb(63, 63, 63);
+    cursor: pointer;
+    transition: all 0.5s ease;
+}
+.forLine0 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 40px;
+    padding-left: 2vw;
+}
+.forLine0sButton {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+
+}
+.forLine {
+    height: 40px;
+    border-top: 1px solid #BDBDBD;
+    border-bottom: 1px solid #BDBDBD;
+    padding-left: 2vw;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+.main_box {
+    color: #424242;
+}
+.title_box {
+    margin-top: 100px;
+    margin-bottom: 100px;
+}
+.title_box span {
+    font-size: 55px;
+    font-weight: bold;
 }
 .option_box {
     display: flex;
     justify-content: flex-end;
+    align-items: stretch;
     width: 70vw;    
     max-width: 1000px;
 }
 .searching_box {    
     height: 50px;
 }
+.searching_box_top {
+    height: 50px;
+    max-width: 1110px;
+    display: flex;
+    justify-content: space-between;
+}
 .searching_bar {
     display: flex;
-    justify-content: row;
+    justify-content: center;
     height: 40px;
-    width:70vw;
-    max-width: 1000px;
-    border: 1px solid #BDBDBD;
 }
 .searching {
-    height: 38px !important; 
-    width:60vw !important;
+    display: flex;
+    justify-content: space-between;
+    height: 43px;
+    width: 350px;
+    min-width: 300px;
+    padding-left: 10px;
     max-width: 955px;
-    border-style: none !important;
+    border: 1px solid #BDBDBD;
+}
+.searching:hover {
+    display: flex;
+    justify-content: space-between;
+    height: 43px; 
+    width: 350px;
+    padding-left: 10px;
+    max-width: 955px;
+    border: 1px solid rgb(155, 155, 155);
+}
+.searching span {
+    display: flex;
+    align-self: center;
+}
+.searching span input {
+    margin-top: 3px;
+    width: 280px;
+}
+.searching_icon {
+    padding: 11px 10px 10px 10px;
+    border-left: 1px solid #BDBDBD;
+    background-color: #FAFAFA;
+}
+.searching_icon:hover {
+    padding: 11px 10px 10px 10px;
+    border-left: 1px solid #BDBDBD;
+    background-color: #dfdfdf;
+}
+input:focus {
+    outline:none;
 }
 .searching_message_box {
-    width:70vw;
-    height: 150px;
-    max-width: 1000px;
     display:flex;
     justify-content: center;
+    flex-direction: column;
+    align-content: center;
 }
 .searching_message {
     display: flex;
     justify-content: center;
     flex-direction: column;
-    width:70vw;
-    max-width: 900px;
-    border-top: 1px solid #BDBDBD;
     border-bottom: 1px solid #BDBDBD;
-    margin-top: 50px;
+    margin-top: 20px;
+    height: 150px;
 }
 .searching_message div {
     text-align: center;
-    font-colr: #333333;
     font-size: 20px;
+    margin-bottom: 10px;
 }
 .searching_message b {
-    letter-spacing: 2px;
-    font-size: 26px;
+    letter-spacing: 3px;
+    color: #0288D1;
+    font-size: 30px;
 }
 .searching_message p {    
     font-size: 13px;
@@ -205,88 +589,127 @@ export default {
 
 
 
-.post_align {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
+.post_list {
+    min-width: 475px;
+    max-width: 1500px;
+    margin-right: 10px;
+}
+.post_card_box {
+    min-width: 475px;
 }
 .post_card:hover {
-    transform: scale(1.005);
     box-shadow: 10px 17px 40px 0 rgb(0 0 0 / 4%);
+    background-color: rgb(241, 241, 241);
     cursor: pointer;
     transition: all 0.1s ease;
 }
 .post_card {
     display: flex;
-    justify-content: row;
-    margin: 15px;
-    padding: 20 20 5 5;
-    height: 150px;
+    justify-content: flex-start;
+    margin: 0vw 1vw;
+    height: 70px;
     border-bottom: 1px solid #BDBDBD;
 }
-.post_card_box {
-
-}
-.content_img {
-    text-align: center;
-    width: 70vw;
-    max-width: 1000px;
+.post_card a {
+    width: 1000px;
 }
 .thumbnail {
-    margin-right: 20px;
-    height: 140px !important; 
-    width: 140px !important; 
+    height: 100px ; 
+    width: 100px ; 
 }
-.thumbnail_img {
-    width: 100%;
-    height: 100%;
-}
-.post_box {
-    margin: 10px 10px 20px 5px;
+.post_num {
     display: flex;
-    flex-direction: column;
-    height: 100px;
-    width: 500px;
-}
-.post_tag {
-    color: #0288D1;
-    font-weight: bold;
-    font-size: 16px !important;    
-    letter-spacing: 0px !important;
+    justify-content: center;
+    align-self: center;
+    width: 3vw;
+    text-decoration: none;
+    color: #757575;
+    font-weight: 500;
+    font-size: 14px;
+    text-align: right;
+    margin: 0 3vw 0 2vw;
 }
 .post_title {
-    margin: 0 0 0 0px;
-    font-size: 17px;
-    font-weight: bold;
-    color: #424242;
+    display: flex;
+    flex-direction: column;    
+    align-self: center;
+    margin: 0px;
+    width: 57vw;
+    max-width: 750px;
 }
-.post_title:hover {
-    color: #29B6F6;
-    text-decoration: underline;
+.item4 {
+    display: flex;
+    justify-self: start;
+    font-size: 15px !important;
+    font-weight: bold !important;
+    color: #2b2b2b;
+    max-width: 55vw;
+    min-width: 450px;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1; /* 표시하고자 하는 라인 수 */
+    -webkit-box-orient: vertical;
 }
-.post_content {
-    margin: 0vw 3vw 0vw 3vw;
-    width: 60vw;
-    font-size: 15px;
-    color: #757575;
-    padding-bottom: 10px;
-}
-.post_reg_date {
+.post_name_box {
+    display: flex;
+    align-self: center;
+    justify-content: center;
     font-size: 13px;
     color: #757575;
+    margin-right: 5vw; 
+}
+.post_name {
+    text-align: center;
+	width: 100px;
+    max-width: 100px;
+}
+.post_vnc {
+    width: 10vw;
+    min-width: 37px;
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    color: #757575;
+    font-weight: 500;
+}
+.item2 {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-size: 11px;
+    color: #757575;
+    min-width: 35px;
+}
+.item3 {
+    display: flex;
+    flex-direction: row;
+    font-size: 11px;
+    color: #757575;
+    margin-right: 6px;
+}
+.post_reg_date {
+    min-width: 51px;
+    padding-top: 2px;
+    font-size: 11px;
+    font-weight: 500 !important;
+    color: #757575;
+    letter-spacing: -1px;
 }
 .btn_pagination {
     background-color: transparent;
     box-shadow: none;
 }
 .button_box {
+    max-width: 1140px;
     margin-top: 10px;
     display: flex;
     justify-content: flex-end;
 }
-.change-font {
+.change-font{
     font: 12pt;
-    color: white;
+    color: white !important;
     font-weight: 800;
 }
 .v-input__slot::before {
@@ -297,25 +720,63 @@ export default {
     letter-spacing: 0;
     color: #757575d0;    
 }
-.post_image {
-    margin: 50px;
-    width: 40vw;
-}
-.test {
-    max-width: 50vw;
-    max-width: 60vw;
-    margin: 80px 0 30px 0;
+.crawl_head {
+    height:52px;
+    width:50px;
+    padding-top:16px;
+    font-size: 14px;
+    font-weight: 700;
 }
 .v-application a {
-    color: #757575 !important;
-    font-weight: bold;
-}
-.middle_btn_box {
-    margin-top: 10px;
-}
-.item {
-    cursor: pointer;
+    color: #01579B !important;
+    font-weight: 600;
 }
 a { text-decoration:none !important }
 a:hover { text-decoration:none !important }
+ul {
+    list-style:none;
+}
+.tag_box {
+    display:flex;
+    justify-content: start;
+    flex-direction: row;
+    align-content: center;
+    height: 20px
+}
+.tag_box_button {
+    display: flex;
+    align-self: center;
+    font-size: 12px;
+    min-width: 20px;
+    font-weight: 500;
+    color: #01579B;
+    transition: all 0.4s ease;
+}
+.tag_box_button:hover {
+    font-size: 12px;
+    min-width: 30px;
+    color: #01579B;
+    font-weight: bold;
+    transition: all 0.4s ease;
+}
+.completeDisplay {
+    background-color: #C2185B;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 20px;
+    padding: 0 4px 0 4px;
+    font-size: 11px;
+    font-weight: bold;
+}
+.v-application .mr-9 {
+    margin: 0px !important;
+}
+.btn_position {
+    position: fixed;
+}
+.v-btn--fixed {
+    top:700px !important;
+}
 </style>

@@ -85,14 +85,16 @@
             </v-combobox>
         </v-container>
             
-        <router-link :to="{ name: 'FreeBoardListPage' }">
+        <div class="button_box2">    
+          <div @click="$router.go(-1)">
             <v-btn>
                 취소
             </v-btn>
-        </router-link>
-        <v-btn color="light-blue lighten-1 text center" @click="contentSubmit()" class="item">
-            등록
-        </v-btn>
+          </div>
+          <v-btn color="light-blue lighten-1 text center" @click="contentSubmit()" class="regist_btn">
+              등록
+          </v-btn>
+          </div>
         </div>
     </div>
 </template>
@@ -247,5 +249,16 @@ export default {
 }
 .ProseMirror {
  min-height: 600px !important;
+}
+.container.container--fluid {
+  padding: 4px 0px 0px 0px
+}
+.button_box2 {
+    display: flex;
+    justify-content: flex-end;
+    margin: 0px;
+}
+.regist_btn {
+  margin-left: 10px;
 }
 </style>

@@ -34,8 +34,6 @@
                 <li class="tag_button" :class="{ on : tagSelect1 }" @click="tagSelect1 = !tagSelect1, searchingTag('Java')">Java</li>&nbsp;&nbsp;&nbsp;
                 <li class="tag_button" :class="{ on : tagSelect2 }" @click="tagSelect2 = !tagSelect2, searchingTag('Spring')">Spring</li>&nbsp;&nbsp;&nbsp;
                 <li class="tag_button" :class="{ on : tagSelect3 }" @click="tagSelect3 = !tagSelect3, searchingTag('Python')">Python</li>&nbsp;&nbsp;&nbsp;
-                <li class="tag_button" :class="{ on : tagSelect4 }" @click="tagSelect4 = !tagSelect4, searchingTag('Vue')">Vue</li>&nbsp;&nbsp;&nbsp;
-                <li class="tag_button" :class="{ on : tagSelect5 }" @click="tagSelect5 = !tagSelect5, searchingTag('SQL')">SQL</li>&nbsp;&nbsp;&nbsp;
             </v-spacer>
             <!-- 게시글 리스트 -->
             <div class="forSearching" v-show="!searchinOn">
@@ -62,14 +60,14 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        <div v-for="tag in classifyTag(mob.tags)" :key="tag">
+                                        <div v-for="tag in classifyTag(mob.tags)" :key="tag.text">
                                             <div class="mr-9 hidden-sm-and-down">
                                                 <div class="tag_box_button_box">
                                             <btn class="tag_box_button" @click="tagSelect0 = !tagSelect0,searchingTag(tag.text)">#{{ tag.text }}&nbsp;</btn>
                                             </div>
                                         </div>
                                         </div>
-                                        <div v-show="mob.complete == 'true'" class="completeDisplay">답변완료</div>
+                                        <div v-show="mob.complete == 'true'" class="completeDisplay" @click="selectComplete('true')">답변완료</div>
                                     </div>
                                     
                                 </div>
@@ -133,7 +131,7 @@
                                     </router-link>
                                     <div class="tag_box">
                                         <div class="post_reg_date">{{ calcTime(mob.regDate) }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
-                                        <div v-for="tag in classifyTag(mob.tags)" :key="tag">
+                                        <div v-for="tag in classifyTag(mob.tags)" :key="tag.text">
                                             <btn class="tag_box_button" @click="tagSelect0 = !tagSelect0,searchingTag(tag.text)">#{{ tag.text }}</btn>
                                         </div>
                                     </div>
@@ -244,8 +242,6 @@ export default {
                     this.tagSelect1 = false // All 클릭시 초기화용
                     this.tagSelect2 = false
                     this.tagSelect3 = false
-                    this.tagSelect4 = false
-                    this.tagSelect5 = false
             }
         }
     },
@@ -330,7 +326,7 @@ export default {
             this.word = b.concat(tag)
 
             // 하나라도 true면 if문 생략
-            if (!this.tagSelect0 && !this.tagSelect1 && !this.tagSelect2 && !this.tagSelect3 && !this.tagSelect4 && !this.tagSelect5) {
+            if (!this.tagSelect0 && !this.tagSelect1 && !this.tagSelect2 && !this.tagSelect3) {
                 this.searchinOn = false
                 this.word = ''
             }
@@ -570,8 +566,7 @@ input:focus {
     display: flex;
     justify-content: flex-start;
     margin: 0vw 1vw;
-    max-height: 12vh;
-    height: 8vh;
+    height: 58px;
     border-bottom: 1px solid #BDBDBD;
 }
 .post_card a {
@@ -719,15 +714,14 @@ ul {
     min-width: 20px;
     font-weight: 500;
     color: #01579B;
-
+    transition: all 0.4s ease;
 }
 .tag_box_button:hover {
     font-size: 12px;
-    min-width: 40px;
+    min-width: 30px;
     color: #01579B;
     font-weight: bold;
     transition: all 0.4s ease;
-
 }
 .completeDisplay {
     background-color: #C2185B;

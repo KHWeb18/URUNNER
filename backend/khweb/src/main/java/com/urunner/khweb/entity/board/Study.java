@@ -37,22 +37,37 @@ public class Study {
     @Column(length = 100, nullable = false)
     private String complete; // 모집 마감 여부
 
-    @Column(length = 100, nullable = false)
-    private Long fit; // 모집 인원
+    @Column(length = 100)
+    private Long currentNum; // 좋아요~
+
+    @Column(length = 100)
+    private Long views; // 조회수
+
+    @Column(length = 100)
+    private Long comments; // 댓글수
+
+    @Column(length = 200)
+    private String tags; // 댓글수
 
     @Column(length = 100, nullable = false)
-    private Long currentNum; // 현재 지원한 인원은 몇 명?
+    private Long fit; // 모집 인원
 
     @CreationTimestamp
     private Date regDate;
 
-    public Study(String title, String content, String writer, String nickname, String complete, Long fit, Long currentNum) {
+    @UpdateTimestamp
+    private Date upDate;
+
+    public Study(String title, String content, String writer, String nickname, String complete, Long currentNum, Long views, Long comments, String tags, Long fit) {
         this.title = title;
         this.content = content;
         this.writer = writer;
         this.nickname = nickname;
         this.complete = complete;
-        this.fit = fit;
         this.currentNum = currentNum;
+        this.views = views;
+        this.comments = comments;
+        this.tags = tags;
+        this.fit = fit;
     }
 }
