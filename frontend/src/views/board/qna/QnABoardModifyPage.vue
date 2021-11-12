@@ -29,8 +29,8 @@ export default {
     methods: {
         ...mapActions(['fetchQnABoard']),
         onSubmit (payload) {
-            const { title, content, complete, currentNum } = payload
-            axios.put(`http://localhost:7777/qnaboard/${this.boardNo}`, { title, content, complete, currentNum })
+            const { title, content, complete, currentNum, tags } = payload
+            axios.put(`http://localhost:7777/qnaboard/${this.boardNo}`, { title, content, complete, currentNum, tags })
                     .then(res => {
                         console.log(res)
                         this.$router.push({

@@ -52,6 +52,11 @@ public class QnABoardServiceImpl implements QnABoardService {
         return board;
     }
 
+    public List<QnA> findByComplete(String complete){
+        return repository.findByComplete(complete);
+    }
+
+
     public void updatePost(QnARequest qnARequest){
 
         repository.updatePost(qnARequest.getTitle(), qnARequest.getContent(), qnARequest.getBoardNo(),

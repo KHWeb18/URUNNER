@@ -1,403 +1,155 @@
 <template>
     <div>
-        <div class="main_box">
+        <div class="main_box" :class="{ on: board.complete == 'true' }">
             <!-- 제목 -->
             <div class="title_box">
                 <h4 class="page_title">
                     <span>스터디 모집</span></h4>
             </div>
-            <!-- 옵션바 -->
-            <div class="option_box">
-                <div style="transform: scale(0.7);">
-                    <v-btn-toggle v-model="toggle_exclusive" shaped mandatory>
-                        <v-btn>
-                            <v-icon>mdi-image</v-icon>
-                        </v-btn>
-                        <v-btn>
-                            <v-icon>mdi-format-align-justify</v-icon>
-                        </v-btn>
-                    </v-btn-toggle>
-                </div>
-            </div>
-            <!-- 검색창 -->
-            <div class="searching_box">
-                <div class="searching_bar">
-                    <v-icon style="margin:10px">mdi-magnify</v-icon>
-                    <span>
-                        <input type="text" class="searching" placeholder="검색어를 입력해주세요" v-model="word"
-                        @keyup.enter="searching(word)">
-                    </span>
-                </div>
-            </div>
-            <!-- 게시글 리스트 -->
-            <div class="forSearching" v-show="!searchinOn">
-                <div class="post_list" v-show="!toggle_exclusive">
-                    <div class="post_card_box">
-                        <div class="post_card" :class="{ on : mob.complete == 'true' }" v-for="mob in paginatedData" :key="mob.boardNo">
-                            <router-link
-                                    :to="{ name: 'StudyBoardReadPage',
-                                                        params: { boardNo: mob.boardNo.toString() } }">
-                            <div class="thumbnail">
-                                <v-progress-circular
-                                :rotate="-90"
-                                :size="100"
-                                :width="15"
-                                :value="mob.currentNum / mob.fit * 100"
-                                color="primary"
-                                >
-                                {{ mob.currentNum }} / {{ mob.fit }}
-                                </v-progress-circular>
-                            </div></router-link>
-                            <div class="post_box">
-                                <div class="post_tag">#TAG</div>
-                                <router-link
-                                    :to="{ name: 'StudyBoardReadPage',
-                                                        params: { boardNo: mob.boardNo.toString() } }">
-                                <div class="post_title">{{ mob.title }}</div>
-                                <div class="post_content">{{ replaceHtml(mob.content) }}</div>
-                                <div class="post_reg_date">{{ mob.nickname }} | {{ $moment(mob.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}</div></router-link>
-                            </div>
-                            <div class="complete_img" v-show="mob.complete == 'true'">
-                                <img src="@/assets/complete.png" v-show="mob.complete" width="130" class="item">
-                            </div>
-                            <div style="display:flex;justify-content:center;flex-wrap:wrap;height:20px">
-                                <v-icon color="red" style="height:20px">mdi-heart</v-icon>
-                                    {{mob.currentNum}}
-                            </div>
-                        </div>                        
-                    </div>
-                    <div class="button_box">
-                        <v-flex text-xs-right="text-xs-right" text-sm-right="text-sm-right">
-                            <router-link :to="{ name: 'StudyBoardRegisterPage' }">
-                                <v-btn
-                                    v-if="this.$store.state.isLogin"
-                                    color="light-blue lighten-1 text center"
-                                    class="change-font">
-                                    글쓰기
-                                </v-btn>
-                            </router-link>
-                        </v-flex>
-                    </div>
-                    <v-container style="margin-top:20px;">
-                        <div class="text-center">
-                            <v-pagination class="btn_pagination" v-model="pageNum" :length="pageCount"></v-pagination>
-                        </div>
-                    </v-container>
-                </div>
-            </div>
-            <!-- 검색결과 -->
-            <div class="forSearching"  v-show="searchinOn">
-                <div class="searching_message_box">
-                    <div class="searching_message">
-                        <div><b>{{ word }}</b> 검색 결과</div>
-                        <div><p>{{this.searchingResult.length}} 건의 게시물이 검색되었습니다.</p></div>
-                    </div>
-                </div>
-                <div class="post_list" v-show="!toggle_exclusive">
-                    <div class="post_card_box">
-                        <div class="post_card" v-for="mob in paginatedDataS" :key="mob.boardNo">
-                            <router-link
-                                    :to="{ name: 'StudyBoardReadPage',
-                                                        params: { boardNo: mob.boardNo.toString() } }">
-                            <div class="thumbnail">
-                                <v-progress-circular
-                                :rotate="-90"
-                                :size="100"
-                                :width="15"
-                                :value="value2"
-                                color="primary"
-                                >
-                                {{ value }} 
-                                </v-progress-circular>
-                            </div></router-link>
-                            <div class="post_box">
-                                <div class="post_tag">#사료추천</div>
-                                <router-link
-                                    :to="{ name: 'StudyBoardReadPage',
-                                                        params: { boardNo: mob.boardNo.toString() } }">
-                                <div class="post_title">{{ mob.title }}</div>
-                                <div class="post_content">{{ replaceHtml(mob.content) }}</div>
-                                <div class="post_reg_date">{{ $moment(mob.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}</div></router-link>
-                                <div class="post_title">{{ mob.complete }}</div>
-                                <div class="post_title">{{ mob.fit }}</div>
-                            </div>
-                            <div v-show="mob.complete == 'true'">
-                                <img src="@/assets/complete.png" v-show="mob.complete" width="130" class="item">
-                            </div>
+            <!-- 게시글 -->
+            <div class="post_list">
+                <div class="post_card_box">
+                    <div class="searching_message_box">
+                        <div class="searching_message">
+                            <div style="margin-top:20px;"><b>{{board.title}}</b></div>
+                            <div><p><b class="post_tag">#TAG</b> / {{board.nickname}} / {{ $moment(board.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}</p></div>
                         </div>
                     </div>
-                    <div class="button_box">
-                        <v-flex text-xs-right="text-xs-right" text-sm-right="text-sm-right">
-                            <router-link :to="{ name: 'StudyBoardRegisterPage' }">
-                                <v-btn
-                                    v-if="this.$store.state.isLogin"
-                                    color="light-blue lighten-1 text center"
-                                    class="change-font">
-                                    글쓰기
-                                </v-btn>
-                            </router-link>
-                        </v-flex>
-                    </div>
-                    <v-container style="margin-top:20px;">
-                        <div class="text-center">
-                            <v-pagination class="btn_pagination" v-model="pageNumS" :length="pageCountS"></v-pagination>
-                        </div>
-                    </v-container>
+                </div>
+                <div class="content_img">
+                    <img :src="ImgRequest()" class="test">
+                </div>
+                <div class="post_content">
+                    <div v-html="board.content">{{ board.content }}</div>
                 </div>
             </div>
-        </div>
-
-        <div class="forSearching"  v-show="!searchinOn">
-            <div v-show="toggle_exclusive" style="max-width:1000px;">
-            <v-simple-table>
-                <template>
-                    <thead>
-                        <tr>
-                            <th class="text-center" width="64">No.</th>
-                            <th class="text-center" style="width:45vw;">제목</th>
-                            <th class="text-center" style="min-width:8px;">작성자</th>
-                            <th class="text-center" style="min-width:8px;">작성일</th>
-                        </tr>
-                        <tr v-if="!boards || (Array.isArray(boards) && boards.length === 0)">
-                            <td colspan="4">
-                                현재 등록된 게시물이 없습니다!
-                            </td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="mob in paginatedData" :key="mob.boardNo" class="item">
-                            <td style="text-align:center">{{ mob.boardNo }}</td>
-                            <td>
-                                <router-link
-                                    :to="{ name: 'StudyBoardReadPage',
-                                                        params: { boardNo: mob.boardNo.toString() } }">
-                                    {{ mob.title }}
-                                </router-link>
-                            </td>
-                            <td style="text-align:center">{{ mob.nickname }}</td>
-                            <td style="text-align:center">{{ $moment(mob.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}</td>
-                        </tr>
-                    </tbody>
-                </template>
-            </v-simple-table>
-            <div class="button_box">
-                <v-flex text-xs-right="text-xs-right" text-sm-right="text-sm-right">
-                    <router-link :to="{ name: 'StudyBoardRegisterPage' }">
-                        <v-btn
-                            v-if="this.$store.state.isLogin"
-                            color="light-blue lighten-1 text center"
-                            class="change-font">
-                            글쓰기
-                        </v-btn>
-                    </router-link>
-                </v-flex>
-            </div>
-            <v-container style="margin-top:20px;">
-                <div class="text-center">
-                    <v-pagination class="btn_pagination" v-model="pageNum" :length="pageCount"></v-pagination>
-                </div>
-            </v-container>
+             <!-- 지원자 목록 -->
+            <div style="width:300px; margin:0px">
+                <v-row justify="center">
+                <v-subheader>지원자 목록</v-subheader>
+                    <v-expansion-panels popout>
+                        <v-expansion-panel
+                        v-for="(member, i) in this.$store.state.studyMembers"
+                        :key="i" hide-actions>
+                        <v-expansion-panel-header>
+                            <v-row align="center" class="spacer" no-gutters>
+                                <v-col sm="5" md="3">
+                                    <strong v-html="member.nickname"></strong>
+                                </v-col>
+                            </v-row>
+                        </v-expansion-panel-header>
+                        <v-expansion-panel-content>
+                            <v-divider></v-divider>
+                            <v-card-text v-text="member.introduce"></v-card-text>
+                        </v-expansion-panel-content>
+                    </v-expansion-panel>
+                </v-expansion-panels>
+                </v-row>
+                <br>
             </div>
         </div>
-        <!-- 검색결과 리스트형 -->
-        <div class="forSearching"  v-show="searchinOn">
-            <div v-show="toggle_exclusive" style="max-width:1000px;">
-            <v-simple-table>
-                <template>
-                    <thead>
-                        <tr>
-                            <th>No.</th>
-                            <th>제목</th>
-                            <th>작성자</th>
-                            <th>작성일</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="mob in paginatedDataS" :key="mob.boardNo" class="item">
-                            <td style="text-align:center">{{ mob.boardNo }}</td>
-                            <td>
-                                <router-link
-                                    :to="{ name: 'StudyBoardReadPage',
-                                                        params: { boardNo: mob.boardNo.toString() } }">
-                                    {{ mob.title }}
-                                </router-link>
-                            </td>
-                            <td style="text-align:center">{{ mob.nickname }}</td>
-                            <td style="text-align:center">{{ $moment(mob.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}</td>
-                        </tr>
-                    </tbody>
-                </template>
-            </v-simple-table>
-            <div class="button_box">
-                <v-flex text-xs-right="text-xs-right" text-sm-right="text-sm-right">
-                    <router-link :to="{ name: 'StudyBoardRegisterPage' }">
-                        <v-btn
-                            v-if="this.$store.state.isLogin"
-                            color="light-blue lighten-1 text center"
-                            class="change-font">
-                            글쓰기
-                        </v-btn>
-                    </router-link>
-                </v-flex>
-            </div>
-            <v-container style="margin-top:20px;">
-                <div class="text-center">
-                    <v-pagination class="btn_pagination" v-model="pageNumS" :length="pageCountS"></v-pagination>
-                </div>
-            </v-container>
-            </div>
-        </div>
+        <v-btn @click="appl(board.boardNo)">지원하기</v-btn>
+        <v-btn @click="endRecruit(board.boardNo)">모집 마감</v-btn>
     </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
 
-    export default {
-        name: 'StudyBoardList',
-        props: {
-            boards: {
-                type: Array
-            },
-            pageSize: {
-                type: Number,
-                required: false,
-                default: 10
-            }
-        },
-        data() {
-            return {
-                pageNum: 1,
-                pageNumS: 1,
-                toggle_exclusive: [],
-                word: '',
-                searchingResult: [],
-                searchinOn: false,
+import axios from 'axios'
 
-                interval: {},
-                value: '',
-                value2: 20
-            }
-        },
-        beforeDestroy () {
-        clearInterval(this.interval)
-        },
-        watch: {
-            word(newVal) {       //이런식으로 watch 사용
-                if(newVal == '') {
-                    setTimeout(() => {
-                        this.searchinOn = false
-                        }, 200)
-                }
-            }
-        },
-        methods: {
-            // test() {
-            //     console.log(this.$store.state.nickname)
-            //     this.$store.state.nickname = '임시닉네임'
-            // },
-            nextPage() {
-                this.pageNum += 1;
-            },
-            prevPage() {
-                this.pageNum -= 1;
-            },
-            nextPageS() {
-                this.pageNumS += 1;
-            },
-            prevPageS() {
-                this.pageNumS -= 1;
-            },
-            ImgRequest( a, b ) {
-                console.log(a + '_' + b)
+export default {
+    name: 'StudyBoardRead',
+    data () {
+        return {
+            nickname: '',
+            email: '',
+            introduce: 'HELLO WORLD!',
+            refresh: 1,
+            members: this.$store.state.studyMembers,
+            complete: false
+        }
+    },
+    props: {
+        board: {
+            type: Object,
+            required: true
+        }
+    },
+    methods : {
+        ImgRequest() {
             try {
-                return require(`../../../../../backend/khweb/images/study/${a}_${b}.gif`
+                return require(`../../../../../backend/khweb/images/study/${this.board.writer}_${this.board.boardNo}.gif`
                 )
             } catch (e) {
                 return require(`@/assets/logo.png`)
-                }
-            },
-            searching () {
-                var lists = this.boards
-
-                this.searchingResult = []
-                for(var i = 0; i < lists.length; i++){
-                    if(lists[i].title.includes(this.word || lists[i].content.includes(this.word))){
-                        this.searchingResult.push(lists[i])
-                    }
-                }
-
-                console.log('searching 결과 : ' + this.searchingResult)
-                console.log('0번 값은? : ' + this.searchingResult[0])
-                this.searchinOn = true
-                
-                if (this.word == '') {
-                    this.searchinOn = false
-                }
-
-                
-            },
-            replaceHtml(data) {
-                var text = data.replace(/(<([^>]+)>)/ig,"");
-                return text
             }
         },
-        computed: {
-            pageCount() {
-                let listLength = this.boards.length, // 길이
-                    listSize = this.pageSize,
-                    page = Math.floor(listLength / listSize);
-                if (listLength % listSize > 0) 
-                    page += 1;
-                return page;
-            },
-            paginatedData() {
-                const start = (this.pageNum - 1) * this.pageSize,
-                    end = start + this.pageSize;
-                return this
-                    .boards
-                    .slice(start, end);
+        appl(data) {
+            this.nickname = this.$store.state.moduleA.nickname
+            this.email = this.$store.state.moduleA.email
+            const { nickname, email, introduce } = this
+            axios.put(`http://localhost:7777/studyboard/apply/${data}`, { nickname, email, introduce })
+                    .then(res => {
+                        console.log(res)
+                        this.refresh += 1
+                        const refresh = this.refresh
+                        this.$emit('submit', refresh)
+                    })
+                    .catch(err => {
+                        alert(err.response.data.message)
+                    })
 
-            },
-            pageCountS() {
-                let listLength = this.searchingResult.length, // 길이
-                    listSize = this.pageSize,
-                    page = Math.floor(listLength / listSize);
-                if (listLength % listSize > 0) 
-                    page += 1;
-                return page;
-            },
-            paginatedDataS() {
-                const start = (this.pageNumS - 1) * this.pageSize,
-                    end = start + this.pageSize;
-                return this
-                    .searchingResult
-                    .slice(start, end);
-
-            },
-            ...mapState ({
-            lists: state => state.lists
-            }),
+        },
+        endRecruit(data) {
+            this.board.complete = !this.board.complete
+            console.log('this.board는 ')
+            console.log(this.board)
+            const { title, content, fit, complete, currentNum } = this.board
+            axios.put(`http://localhost:7777/studyboard/${data}`, { title, content, fit, complete, currentNum })
+                    .then(res => {
+                        console.log(res)
+                        this.$router.push({
+                            name: 'StudyBoardReadPage',
+                            params: { boardNo: this.boardNo }
+                        })
+                    })
+                    .catch(err => {
+                        alert(err.response.data.message)
+                    })
         }
     }
-</script>
+}
+</script> 
 
 <style scoped>
+.post_list {
+    width:70vw;
+    max-width: 1000px;
+}
 .main_box {
-    margin-top: 100px;
+    display:flex;
+    justify-content: center;
+    flex-direction: column;
     color: #424242;
 }
-.title_box {
-    margin-bottom: 80px;
+.main_box.on {
+    display:flex;
+    justify-content: center;
+    flex-direction: column;
+    color: #424242;
+    opacity: 0.5;
+}
+.title_box {   
 }
 .title_box span {
-    font-size: 55px;
+    font-size: 25px;
     font-weight: bold;
+}
+.page_title {
 }
 .option_box {
     display: flex;
     justify-content: flex-end;
-    align-items: stretch;
     width: 70vw;    
     max-width: 1000px;
 }
@@ -420,7 +172,7 @@ import { mapState } from 'vuex'
 }
 .searching_message_box {
     width:70vw;
-    height: 180px;
+    height: 150px;
     max-width: 1000px;
     display:flex;
     justify-content: center;
@@ -429,29 +181,34 @@ import { mapState } from 'vuex'
     display: flex;
     justify-content: center;
     flex-direction: column;
-    width:60vw;
+    width:70vw;
     max-width: 900px;
+    border-top: 1px solid #BDBDBD;
     border-bottom: 1px solid #BDBDBD;
-    margin-top: 20px;
+    margin-top: 50px;
 }
 .searching_message div {
     text-align: center;
+    font-colr: #333333;
     font-size: 20px;
-    margin-bottom: 10px;
 }
 .searching_message b {
-    letter-spacing: 3px;
-    color: #0288D1;
-    font-size: 30px;
+    letter-spacing: 2px;
+    font-size: 26px;
 }
 .searching_message p {    
     font-size: 13px;
     color: #757575;
 
 }
-.post_list {
-    width:70vw;
-    max-width: 1000px;
+
+
+
+
+.post_align {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
 }
 .post_card:hover {
     transform: scale(1.005);
@@ -467,14 +224,13 @@ import { mapState } from 'vuex'
     height: 150px;
     border-bottom: 1px solid #BDBDBD;
 }
-.post_card.on {
-    display: flex;
-    justify-content: row;
-    margin: 15px;
-    padding: 20 20 5 5;
-    height: 150px;
-    border-bottom: 1px solid #BDBDBD;
-    opacity: 0.5;    
+.post_card_box {
+
+}
+.content_img {
+    text-align: center;
+    width: 70vw;
+    max-width: 1000px;
 }
 .thumbnail {
     margin-right: 20px;
@@ -490,12 +246,13 @@ import { mapState } from 'vuex'
     display: flex;
     flex-direction: column;
     height: 100px;
-    width: 50vw;
+    width: 500px;
 }
 .post_tag {
     color: #0288D1;
     font-weight: bold;
-    font-size: 13px;
+    font-size: 16px !important;    
+    letter-spacing: 0px !important;
 }
 .post_title {
     margin: 0 0 0 0px;
@@ -508,16 +265,11 @@ import { mapState } from 'vuex'
     text-decoration: underline;
 }
 .post_content {
-    font-size: 13px;
+    margin: 0vw 3vw 0vw 3vw;
+    width: 60vw;
+    font-size: 15px;
     color: #757575;
-    max-height: 54px;
-
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    line-height: 16px;
-    -webkit-line-clamp: 3; /* 표시하고자 하는 라인 수 */
-    -webkit-box-orient: vertical;
+    padding-bottom: 10px;
 }
 .post_reg_date {
     font-size: 13px;
@@ -532,9 +284,9 @@ import { mapState } from 'vuex'
     display: flex;
     justify-content: flex-end;
 }
-.change-font{
+.change-font {
     font: 12pt;
-    color: white !important;
+    color: white;
     font-weight: 800;
 }
 .v-input__slot::before {
@@ -545,16 +297,24 @@ import { mapState } from 'vuex'
     letter-spacing: 0;
     color: #757575d0;    
 }
-.crawl_head {
-    height:52px;
-    width:50px;
-    padding-top:16px;
-    font-size: 14px;
-    font-weight: 700;
+.post_image {
+    margin: 50px;
+    width: 40vw;
+}
+.test {
+    max-width: 50vw;
+    max-width: 60vw;
+    margin: 80px 0 30px 0;
 }
 .v-application a {
-    color: #01579B !important;
-    font-weight: 600;
+    color: #757575 !important;
+    font-weight: bold;
+}
+.middle_btn_box {
+    margin-top: 10px;
+}
+.item {
+    cursor: pointer;
 }
 a { text-decoration:none !important }
 a:hover { text-decoration:none !important }
