@@ -65,7 +65,6 @@
 
 <script>
 import axios from 'axios'
-
 export default {
   props: {
     sectionId: {
@@ -106,8 +105,7 @@ export default {
       formData.append("title", this.title)
       formData.append("description", this.description)
       formData.append("id", this.sectionId)
-
-      axios.post("http://localhost:7777/lecture/modify/video/lecture", formData,
+      axios.post("http://localhost:7777/lecture/upload/video/lecture", formData,
           {
             headers: {
               "Content-Type": "multipart/form-data",
@@ -125,13 +123,10 @@ export default {
     },
     videoFile(file) {
        this.video = file
-
         var url = URL.createObjectURL(this.video);
         var audioElement = new Audio(url);
-
         var duration;
         var ele = this.$refs.dur
-
         audioElement.addEventListener("loadedmetadata", function() {
           duration = audioElement.duration
           ele.duration = Math.round(duration)
@@ -143,16 +138,11 @@ export default {
     calcDuration(value) {
       var minutes = Math.floor(value / 60)
       var seconds = Math.floor((value - minutes * 60))
-
       return `${minutes}:${seconds}`
     }
-
   }
-
-
 }
 </script>
 
 <style>
-
 </style>

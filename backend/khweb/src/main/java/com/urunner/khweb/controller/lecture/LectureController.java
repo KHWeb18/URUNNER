@@ -2,10 +2,7 @@ package com.urunner.khweb.controller.lecture;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.urunner.khweb.controller.dto.lecture.DtoWrapper;
-import com.urunner.khweb.controller.dto.lecture.LectureDto;
-import com.urunner.khweb.controller.dto.lecture.LectureListDto;
-import com.urunner.khweb.controller.dto.lecture.LectureParse;
+import com.urunner.khweb.controller.dto.lecture.*;
 import com.urunner.khweb.service.lecture.LectureService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -363,6 +360,13 @@ public class LectureController {
         lectureService.inProgressToTrue(id);
 
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @GetMapping("/getLectureDetailInfo/{lectureId}")
+    public DtoWrapper2 getLectureDetailInfo(@PathVariable("lectureId") Long lectureId) {
+        System.out.println(lectureId);
+
+        return lectureService.getLectureDetailInfo(lectureId);
     }
 
     public void mkdirFolder(File folder) {
