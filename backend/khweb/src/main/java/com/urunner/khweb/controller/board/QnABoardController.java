@@ -44,6 +44,19 @@ public class QnABoardController {
         return new ResponseEntity<>(service.findAll(), HttpStatus.OK);
     }
 
+    @GetMapping("/lists/{complete}")
+    public ResponseEntity<List<QnA>> getListsWithFilter (@PathVariable("complete") String complete) throws Exception {
+        log.info("complete value : " + complete);
+
+        return new ResponseEntity<>(service.findByComplete(complete), HttpStatus.OK);
+    }
+
+//    @GetMapping("/lists/complete/true")
+//    public ResponseEntity<List<QnA>> getListsWithFilter () throws Exception {
+//
+//        return new ResponseEntity<>(service.findByComplete("true"), HttpStatus.OK);
+//    }
+
     @GetMapping("/{boardNo}")
     public ResponseEntity<Optional<QnA>> read(@PathVariable("boardNo") Long boardNo) throws Exception {
 
@@ -52,7 +65,8 @@ public class QnABoardController {
         return new ResponseEntity<>(board, HttpStatus.OK);
     }
 
-    @GetMapping("/memberList/{boardNo}") // study에 지원한 memberList 요청
+    @GetMapping("/memberList/{boardNo}")
+    // study에 지원한 memberList 요청
     public ResponseEntity<List<QnAMember>> memberList(@PathVariable("boardNo") Long boardNo){
 
         log.info("****");
@@ -96,7 +110,7 @@ public class QnABoardController {
 
     @PutMapping ("/{boardNo}")
     public ResponseEntity<QnA> modify(@PathVariable("boardNo") Long boardNo,
-                                       @Validated @RequestBody QnARequest qnARequest) throws Exception {
+                                      @Validated @RequestBody QnARequest qnARequest) throws Exception {
         log.info(":::: post modify request from vue");
         log.info(":::: RequestBody value : " + qnARequest);
 

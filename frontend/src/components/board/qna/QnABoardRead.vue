@@ -1,19 +1,19 @@
 <template>
     <div>
-        <div class="main_box">
-            <!-- 제목 -->
-            <div class="title_box">
-                <h4 class="page_title">
-                    <v-icon>mdi-exclamation-thick</v-icon>
-                    <span>자유게시판</span></h4>
-            </div>            
+        <div class="main_box">    
             <!-- 게시글 -->
             <div class="post_list">
                 <div class="post_card_box">
                     <div class="searching_message_box">
                         <div class="searching_message">
                             <div style="margin-top:20px;"><b>{{board.title}}</b></div>
-                            <div><p><b class="post_tag">#TAG</b> / {{board.name}} / {{ $moment(board.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}</p></div>
+                            <div class="post_tag">
+                                <div v-for="tag in classifyTag(board.tags)" :key="tag">
+                                        <btn class="tag_box_button">#{{ tag.text }}&nbsp;</btn>
+                                </div>
+                                <div v-show="board.tags != '#'" class="post_tag_either">/&nbsp;</div>
+                                <div class="post_tag_either">{{board.nickname}} / {{ $moment(board.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -23,9 +23,10 @@
                 <div class="post_content">
                     <div v-html="board.content">{{ board.content }}</div>
                 </div>
+                <div class="complete_btn_align">
+                    <v-btn v-show="this.$store.state.moduleA.email = board.writer" @click="endRecruit(board.boardNo)">질문 완료</v-btn>
+                </div>
             </div>
-            <v-btn @click="endRecruit(board.boardNo)">답변 완료</v-btn>
-            
         </div>        
     </div>
 </template>
@@ -38,7 +39,7 @@ export default {
     name: 'QnABoardRead',
     data () {
         return {
-            name: '',
+            nickname: '',
             email: '',
             introduce: 'HELLO WORLD!',
             refresh: 1,
@@ -61,28 +62,12 @@ export default {
                 return require(`@/assets/logo.png`)
             }
         },
-        appl(data) {
-            this.name = this.$store.state.moduleA.name
-            this.email = this.$store.state.moduleA.email
-            const { name, email, introduce } = this
-            axios.put(`http://localhost:7777/qnaboard/apply/${data}`, { name, email, introduce })
-                    .then(res => {
-                        console.log(res)
-                        this.refresh += 1
-                        const refresh = this.refresh
-                        this.$emit('submit', refresh)
-                    })
-                    .catch(err => {
-                        alert(err.response.data.message)
-                    })
-
-        },
         endRecruit(data) {
             this.board.complete = !this.board.complete
             console.log('this.board는 ')
             console.log(this.board)
-            const { title, content, complete, currentNum } = this.board
-            axios.put(`http://localhost:7777/qnaboard/${data}`, { title, content, complete, currentNum })
+            const { title, content, complete, currentNum, tags } = this.board
+            axios.put(`http://localhost:7777/qnaboard/${data}`, { title, content, complete, currentNum, tags })
                     .then(res => {
                         console.log(res)
                         this.$router.push({
@@ -93,6 +78,11 @@ export default {
                     .catch(err => {
                         alert(err.response.data.message)
                     })
+        },
+        classifyTag(data) {
+            var arr = JSON.parse(data)
+            console.log(arr)
+            return arr
         }
     }
 }
@@ -139,7 +129,6 @@ export default {
 }
 .searching_message_box {
     width:70vw;
-    height: 150px;
     max-width: 1000px;
     display:flex;
     justify-content: center;
@@ -216,10 +205,21 @@ export default {
     width: 500px;
 }
 .post_tag {
+    display: flex;
+    justify-content: center;
+    align-content: center;
     color: #0288D1;
     font-weight: bold;
     font-size: 16px !important;    
     letter-spacing: 0px !important;
+    margin-bottom: 20px;
+}
+.post_tag_either {
+    display: flex;
+    justify-self: center;
+    align-self: center;
+    font-size: 15px !important;
+    color: #757575;
 }
 .post_title {
     margin: 0 0 0 0px;
@@ -285,4 +285,15 @@ export default {
 }
 a { text-decoration:none !important }
 a:hover { text-decoration:none !important }
+
+.complete_btn_align {
+    display: flex;
+    justify-content: center;
+}
+.tag_box_button {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    font-size: 18px;
+}
 </style>

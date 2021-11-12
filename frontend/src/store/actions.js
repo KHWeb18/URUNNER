@@ -127,5 +127,13 @@ export default {
                     console.log(res.data)
                     commit(FETCH_STUDY_MEMBER_LIST, res.data)
                 })
+    },
+    fetchQnABoardListWithFilter ({ commit }, complete) {
+        console.log(complete)
+        return axios.get(`http://localhost:7777/qnaboard/lists/${complete}`)
+                .then((res) => {
+                    const reverse = [...res.data].reverse();
+                    commit(FETCH_BOARD_LIST, reverse)
+                })
     }
 }

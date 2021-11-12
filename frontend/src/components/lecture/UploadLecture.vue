@@ -107,7 +107,7 @@ export default {
       formData.append("description", this.description)
       formData.append("id", this.sectionId)
 
-      axios.post("http://localhost:7777/lecture/upload/video/lecture", formData,
+      axios.post("http://localhost:7777/lecture/modify/video/lecture", formData,
           {
             headers: {
               "Content-Type": "multipart/form-data",

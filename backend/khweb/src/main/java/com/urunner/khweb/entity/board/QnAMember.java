@@ -24,7 +24,7 @@ public class QnAMember {
     private String email;
 
     @Column(length = 100, nullable = false)
-    private String name;
+    private String nickname;
 
     @Column(length = 200, nullable = false)
     private String introduce;
@@ -32,10 +32,10 @@ public class QnAMember {
     @CreationTimestamp
     private Date regDate;
 
-    public QnAMember(Long boardNo, String email, String name, String introduce) {
+    public QnAMember(Long boardNo, String email, String nickname, String introduce) {
         this.boardNo = boardNo;
         this.email = email;
-        this.name = name;
+        this.nickname = nickname;
         this.introduce = introduce;
     }
 //    insert into study_member (board_no, email, introduce, name) value (3, "start132@naver.com", "ㅎㅇㅎㅇ", "야옹이")

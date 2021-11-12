@@ -13,6 +13,7 @@ import java.util.Optional;
 public interface QnABoardService {
     QnA register(QnARequest qnARequest) throws Exception;
     List<QnA> findAll() throws Exception;
+    List<QnA> findByComplete(String complete) throws Exception;
     Optional<QnA> findByBoardNo(Long boardNo) throws Exception;
     void updatePost(QnARequest qnARequest) throws Exception;
     void updateCurrentNum(QnARequest qnARequest) throws Exception;

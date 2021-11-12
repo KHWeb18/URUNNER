@@ -12,5 +12,5 @@ public class FreeRequest {
     private String title;
     private String content;
     private String writer;
-    private String name;
+    private String nickname;
 }

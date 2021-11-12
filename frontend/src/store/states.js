@@ -38,7 +38,8 @@ export default {
   board: null,
   comments: [],
   comment: null,
-  isLogin: true, //임시
+  isLogin: true, //임시,
+  isAuth: true, // 임시
   boardNo: null,
   //공지사항
   notices: [],

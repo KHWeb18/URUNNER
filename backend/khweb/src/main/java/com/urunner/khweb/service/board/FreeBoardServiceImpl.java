@@ -18,7 +18,7 @@ public class FreeBoardServiceImpl implements FreeBoardService {
     @Override
     public Free register(FreeRequest freeRequest) throws Exception {
 
-        Free postEntity = new Free(freeRequest.getTitle(), freeRequest.getContent(), freeRequest.getWriter(), freeRequest.getName());
+        Free postEntity = new Free(freeRequest.getTitle(), freeRequest.getContent(), freeRequest.getWriter(), freeRequest.getNickname());
 
         return repository.save(postEntity);
     }

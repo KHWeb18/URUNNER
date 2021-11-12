@@ -1,7 +1,7 @@
 <template>
     <form @submit.prevent="onSubmit">
         <v-text-field label="제목" v-model="title"></v-text-field>
-        <editor placeholder="Write something …" @content="fusion"/>
+        <editor placeholder="Write something …" @fromEditor="boardRegist"/>
         <!-- <v-btn @click="complete = !complete">마감</v-btn> -->
         <input v-model="fit">
         <!-- 이미지 등록 폼 -->
@@ -43,11 +43,12 @@ export default {
             writer: this.$store.state.moduleA.email,
             files: '',
             preview: '',
-            name: this.$store.state.moduleA.name,
+            nickname: this.$store.state.moduleA.nickname,
             content: '',
             complete: false,
             fit: 1,
-            currentNum: 1
+            currentNum: 1,
+            qna: ''
         }
     },
     methods: {
@@ -55,7 +56,7 @@ export default {
             this.content = data
         },
         test() {
-            console.log(this.name)
+            console.log(this.nickname)
             console.log(this.$store.state.moduleA.email)
             console.log(this.content)
         },
@@ -98,22 +99,17 @@ export default {
         },       
         boardRegist (data) {            
             this.content = data
-            const { title, writer, content, name, complete, fit, currentNum } = this
-            axios.post('http://localhost:7777/studyboard/register', { title, writer, content, name, complete, fit, currentNum } )
+            const { title, writer, content, nickname, complete, fit, currentNum } = this
+            axios.post('http://localhost:7777/studyboard/register', { title, writer, content, nickname, complete, fit, currentNum } )
                     .then(res => {
                         console.log(res.data)
                         this.$store.state.boardNo = res.data.boardNo.toString()
                         console.log(this.$store.state.boardNo)
+                        this.onsubmit()
                     })
                     .catch(res => {
                         alert(res.response.data.message)
                     })
-        },
-        fusion (data) {
-            setTimeout(() => {
-                this.onsubmit()
-                }, 1000)
-            this.boardRegist(data)
         }
     }
 }

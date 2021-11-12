@@ -27,7 +27,7 @@ public class QnAComment {
     private String writer;
 
     @Column(length = 100, nullable = false)
-    private String name;
+    private String nickname;
 
     @Column(length = 100)
     private Long layer;
@@ -38,11 +38,11 @@ public class QnAComment {
     @CreationTimestamp
     private Date regDate;
 
-    public QnAComment(Long boardNo, String content, String writer, String name, Long layer, Long groupNo) {
+    public QnAComment(Long boardNo, String content, String writer, String nickname, Long layer, Long groupNo) {
         this.boardNo = boardNo;
         this.content = content;
         this.writer = writer;
-        this.name = name;
+        this.nickname = nickname;
         this.layer = layer;
         this.groupNo = groupNo;
     }

@@ -30,37 +30,37 @@ public class MemberProfileServiceImpl implements MemberProfileService {
     @Override
     public void update(MemberRes memberRes) throws Exception {
 
-        String name = memberRes.getName();
+        String nickname = memberRes.getNickname();
         String email = memberRes.getEmail();
         String introduce = memberRes.getIntroduce();
 
         System.out.println("Repository STEP(no password)");
         System.out.println("memberEntity.email : " + email);
-        System.out.println("memberEntity.name : " + name);
+        System.out.println("memberEntity.name : " + nickname);
         System.out.println("memberEntity.introduce : " + introduce);
 
-        repository.update(name, email, introduce);
+        repository.update(nickname, email, introduce);
     }
 
     @Override
-    public void update2(MemberRes memberRes) throws Exception {
+    public void update2(MemberRes memberRes) {
 
-        String name = memberRes.getName();
+        String nickname = memberRes.getNickname();
         String email = memberRes.getEmail();
         String password = passwordEncoder.encode(memberRes.getPassword());
         String introduce = memberRes.getIntroduce();
 
         System.out.println("Repository STEP(with password)");
         System.out.println("memberEntity.email : " + email);
-        System.out.println("memberEntity.name : " + name);
+        System.out.println("memberEntity.name : " + nickname);
         System.out.println("memberEntity.password : " + password);
         System.out.println("memberEntity.introduce : " + introduce);
 
-        repository.update2(name, email, password, introduce);
+        repository.update2(nickname, email, password, introduce);
     }
 
     @Override
-    public String findMyIntroduce(MemberRes memberRes) throws Exception {
+    public String findMyIntroduce(MemberRes memberRes) {
         return repository.findMyIntroduce(memberRes.getEmail());
     }
 }

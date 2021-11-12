@@ -22,7 +22,7 @@ public class FreeCommentServiceImpl implements FreeCommentService {
     public Comment register(CommentRes commentRes) throws Exception {
 
         Comment commentEntity = new Comment(commentRes.getBoardNo(), commentRes.getContent(), commentRes.getWriter(),
-                                            commentRes.getName(), commentRes.getLayer(), commentRes.getGroupNo());
+                                            commentRes.getNickname(), commentRes.getLayer(), commentRes.getGroupNo());
 
         repository.save(commentEntity);
 

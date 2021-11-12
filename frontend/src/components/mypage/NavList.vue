@@ -3,6 +3,7 @@
     dense
     nav
     expand
+    class="hidden-md-and-down"
   >
     <template v-for="(item, index) in items ">
       <nav-list-group

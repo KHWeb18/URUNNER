@@ -3,13 +3,13 @@
       <form style="margin-top: 3rem;">
         <h2>회원가입</h2>
         <v-text-field
-          v-model="name"
-          :error-messages="nameErrors"
+          v-model="nickname"
+          :error-messages="nicknameErrors"
           :counter="10"
           label="Name"
           required
-          @input="$v.name.$touch()"
-          @blur="$v.name.$touch()"
+          @input="$v.nickname.$touch()"
+          @blur="$v.nickname.$touch()"
         ></v-text-field>
         <v-text-field
           v-model="email"
@@ -70,7 +70,7 @@
     mixins: [validationMixin],
 
     validations: {
-      name: { required, maxLength: maxLength(10) },
+      nickname: { required, maxLength: maxLength(10) },
       email: { required, email },
       password: {required, maxLength: maxLength(32), minLength: minLength(8)},
       confirmPassword: { sameAsPassword: sameAs('password') },
@@ -82,7 +82,7 @@
     },
 
     data: () => ({
-      name: '',
+      nickname: '',
       email: '',
       password: '',
       confirmPassword: '',
@@ -96,11 +96,11 @@
         !this.$v.checkbox.checked && errors.push('You must agree to continue!')
         return errors
       },
-      nameErrors () {
+      nicknameErrors () {
         const errors = []
-        if (!this.$v.name.$dirty) return errors
-        !this.$v.name.maxLength && errors.push('Name must be at most 10 characters long')
-        !this.$v.name.required && errors.push('Name is required.')
+        if (!this.$v.nickname.$dirty) return errors
+        !this.$v.nickname.maxLength && errors.push('Name must be at most 10 characters long')
+        !this.$v.nickname.required && errors.push('Name is required.')
         return errors
       },
       emailErrors () {
@@ -131,8 +131,8 @@
       submit () {
         this.$v.$touch()
         alert('submit')
-        const{name,email,password} = this
-        axios.post('http://localhost:7777/memberManagement/register-member',{name, email,password})
+        const{nickname,email,password} = this
+        axios.post('http://localhost:7777/memberManagement/register-member',{nickname, email,password})
         .then(res =>{
           if(res.data == true){
             alert('가입성공!')
@@ -142,7 +142,7 @@
           }
           else{
             alert('이미 가입된 이메일입니다!')
-            this.name = '',
+            this.nickname = '',
             this.email = '',
             this.password = '',
             this. confirmPassword = ''

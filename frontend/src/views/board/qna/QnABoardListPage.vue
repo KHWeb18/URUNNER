@@ -1,5 +1,5 @@
 <template>
-    <div id="board_padding">
+    <div id="board_padding">        
         <v-container>
             <qna-board-list :boards="boards"/>
         </v-container>

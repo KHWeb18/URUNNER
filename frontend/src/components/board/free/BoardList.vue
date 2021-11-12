@@ -3,9 +3,8 @@
         <div class="main_box">
             <!-- 제목 -->
             <div class="title_box">
-                <h4 class="page_title">
-                    <v-icon>mdi-exclamation-thick</v-icon>
-                    <span>자유게시판</span></h4>
+                <h2 class="page_title">
+                    <span>자유 게시판</span></h2>
             </div>
             <!-- 옵션바 -->
             <div class="option_box">
@@ -49,7 +48,7 @@
                                                         params: { boardNo: mob.boardNo.toString() } }">
                                 <div class="post_title">{{ mob.title }}</div>
                                 <div class="post_content">{{ replaceHtml(mob.content) }}</div>
-                                <div class="post_reg_date">{{ mob.name }} | {{ $moment(mob.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}</div></router-link>
+                                <div class="post_reg_date">{{ mob.nickname }} | {{ $moment(mob.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}</div></router-link>
                             </div>
                         </div>
                     </div>
@@ -148,7 +147,7 @@
                                     {{ mob.title }}
                                 </router-link>
                             </td>
-                            <td style="text-align:center">{{ mob.name }}</td>
+                            <td style="text-align:center">{{ mob.nickname }}</td>
                             <td style="text-align:center">{{ $moment(mob.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}</td>
                         </tr>
                     </tbody>
@@ -196,7 +195,7 @@
                                     {{ mob.title }}
                                 </router-link>
                             </td>
-                            <td style="text-align:center">{{ mob.name }}</td>
+                            <td style="text-align:center">{{ mob.nickname }}</td>
                             <td style="text-align:center">{{ $moment(mob.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}</td>
                         </tr>
                     </tbody>
@@ -262,11 +261,11 @@ import { mapState } from 'vuex'
         },
         methods: {
             test() {
-                // console.log(this.$store.state.moduleA.name)
+                // console.log(this.$store.state.moduleA.nickname)
                 // console.log('email: ' + this.$store.state.email)
                 console.log('비우기 버튼!')
                 console.log('this.$store.state.moduleA.email : ' + this.$store.state.moduleA.email)
-                // console.log('name: ' + this.$store.state.name)
+                // console.log('nickname: ' + this.$store.state.nickname)
                 // console.log('email: ' + this.$store.state.email)
                 sessionStorage.clear();
                 localStorage.clear();
@@ -362,15 +361,15 @@ import { mapState } from 'vuex'
 
 <style scoped>
 .main_box {
+    margin-top: 100px;
     color: #424242;
 }
-.title_box {   
+.title_box {
+    margin-bottom: 100px;
 }
 .title_box span {
-    font-size: 25px;
+    font-size: 55px;
     font-weight: bold;
-}
-.page_title {
 }
 .option_box {
     display: flex;

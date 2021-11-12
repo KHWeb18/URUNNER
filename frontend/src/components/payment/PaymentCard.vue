@@ -19,7 +19,7 @@ export default {
             //var tossPayments = window.TossPayments(clientKey)
             const tossPayments = window.TossPayments('test_ck_JQbgMGZzorzQGM6Nxm7Vl5E1em4d')
             tossPayments.requestPayment('카드', {
-                amount: 100,
+                amount: 100,  
                 orderId: 'abceded',
                 orderName: '토스 티셔츠 외 2건',
                 customerName: '박토스',

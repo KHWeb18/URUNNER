@@ -27,7 +27,7 @@ public class Free {
     private String writer;
 
     @Column(length = 100, nullable = false)
-    private String name;
+    private String nickname;
 
     @CreationTimestamp
     private Date regDate;
@@ -35,10 +35,10 @@ public class Free {
     @UpdateTimestamp
     private Date upDate;
 
-    public Free(String title, String content, String writer, String name) {
+    public Free(String title, String content, String writer, String nickname) {
         this.title = title;
         this.content = content;
         this.writer = writer;
-        this.name = name;
+        this.nickname = nickname;
     }
 }

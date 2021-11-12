@@ -32,7 +32,7 @@ public class QnABoardServiceImpl implements QnABoardService {
     public QnA register(QnARequest qnARequest) throws Exception {
 
         QnA postEntity = new QnA(qnARequest.getTitle(), qnARequest.getContent(), qnARequest.getWriter(),
-                qnARequest.getName(), qnARequest.getComplete(), qnARequest.getCurrentNum(), qnARequest.getViews(), qnARequest.getComments());
+                qnARequest.getNickname(), qnARequest.getComplete(), qnARequest.getCurrentNum(), qnARequest.getViews(), qnARequest.getComments(), qnARequest.getTags());
 
         return repository.save(postEntity);
     }
@@ -52,10 +52,15 @@ public class QnABoardServiceImpl implements QnABoardService {
         return board;
     }
 
+    public List<QnA> findByComplete(String complete){
+        return repository.findByComplete(complete);
+    }
+
+
     public void updatePost(QnARequest qnARequest){
 
         repository.updatePost(qnARequest.getTitle(), qnARequest.getContent(), qnARequest.getBoardNo(),
-                qnARequest.getComplete(), qnARequest.getCurrentNum());
+                qnARequest.getComplete(), qnARequest.getCurrentNum(), qnARequest.getTags());
     }
 
     public void updateCurrentNum(QnARequest qnARequest){
@@ -98,7 +103,7 @@ public class QnABoardServiceImpl implements QnABoardService {
         {
             System.out.println("######## if is true");
             System.out.println(qnAMember.getEmail());
-            System.out.println(qnAMember.getName());
+            System.out.println(qnAMember.getNickname());
             System.out.println(qnAMember.getBoardNo());
             System.out.println(qnAMember.getIntroduce());
             memberRepository.save(qnAMember);
