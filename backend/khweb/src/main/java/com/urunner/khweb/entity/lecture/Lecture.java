@@ -39,18 +39,22 @@ public class Lecture {
 
     private String detail_path;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LectureList> lectureLists = new ArrayList<>();
 
 //    @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL, orphanRemoval = true)
 //    private List<LectureImage> lecture_images = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CategoryLecture> categoryList = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Cart> cartList = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WishList> wishList = new ArrayList<>();
 

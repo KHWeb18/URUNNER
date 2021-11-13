@@ -1,9 +1,6 @@
 package com.urunner.khweb.service.lecture;
 
-import com.urunner.khweb.controller.dto.lecture.DtoWrapper;
-import com.urunner.khweb.controller.dto.lecture.LectureDto;
-import com.urunner.khweb.controller.dto.lecture.LectureListDto;
-import com.urunner.khweb.controller.dto.lecture.LectureVideoDto;
+import com.urunner.khweb.controller.dto.lecture.*;
 import com.urunner.khweb.entity.lecture.Lecture;
 //import com.urunner.khweb.entity.lecture.LectureImage;
 import com.urunner.khweb.entity.lecture.LectureList;
@@ -225,6 +222,7 @@ public class LectureServiceImpl implements LectureService {
 
         LectureList lectureList = em.find(LectureList.class, id);
 
+        System.out.println(lectureList.getLecture().getLecture_id());
         LectureVideo lectureVideo = LectureVideo.builder()
                 .title(title)
                 .description(desc)
@@ -268,6 +266,44 @@ public class LectureServiceImpl implements LectureService {
 
         lectureUtil.deleteUtil("video", lectureVideo.get().getVideoPath());
 
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public DtoWrapper2 getLectureDetailInfo(Long lectureId) {
+
+        Optional<Lecture> lecture = lectureRepository.findById(lectureId);
+
+        String query = "select c from Category c join CategoryLecture cl on cl.category = c " +
+                "join Lecture l on l = cl.lecture where l.id = :lectureId";
+
+
+        Optional<LectureDto> lectureDto = lecture.stream().findAny().map(l ->
+                new LectureDto(l.getLecture_id(), l.getWriter(), l.getTitle(),
+                        l.getDescription(), l.getPrice(), l.isInProgress(),
+                        l.isDiscounted(), l.getThumb_path(), l.getDetail_path(),
+                        em.createQuery(query, Category.class)
+                                .setParameter("lectureId", l.getLecture_id()).
+                                getResultList()
+                ));
+
+        List<LectureList> lectureLists = lectureListRepository.lectureList(lectureId);
+
+        String query2 = "select v from LectureVideo v where v.lectureList.lectureList_id = :id";
+
+        List<LectureListDto2> list = lectureLists.stream().map(l ->
+                new LectureListDto2(l.getLectureList_id(), l.getSection(), l.getTopic(),
+                        em.createQuery(query2, LectureVideo.class)
+                                .setParameter("id", l.getLectureList_id())
+                                .getResultList()
+                )).collect(Collectors.toList());
+
+//      현재는 4방쿼리
+//        한방쿼리만드는법
+//       1. 네이티브쿼리로 dsl로
+//       2. OneToMany부분 fetch 조인 set으로 바꾸기
+//       3. queryDsl쓰기...
+        return new DtoWrapper2(lectureDto, Optional.of(list));
     }
 
     @Transactional(readOnly = true)
@@ -409,7 +445,7 @@ public class LectureServiceImpl implements LectureService {
 //        인증인가 처리는 get쪽에서  필요가 전혀 없을듯 수정,삭제만 인증 인가
         Optional<LectureListDto> lectureListDto = lectureList.stream().findAny().map(l -> new LectureListDto(l.getLectureList_id(), l.getTopic(), l.getSection()));
 
-        return new DtoWrapper(lectureList);
+        return new DtoWrapper(lectureListDto);
 
     }
 
