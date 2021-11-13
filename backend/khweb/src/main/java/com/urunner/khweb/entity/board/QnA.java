@@ -44,8 +44,8 @@ public class QnA {
     @Column(length = 100)
     private Long comments; // 댓글수
 
-    @Column(length = 200)
-    private String tags; // 댓글수
+    @Column(length = 400)
+    private String tags;
 
     @Column(length = 200)
     private String notice; // 공지사항

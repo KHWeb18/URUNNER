@@ -76,7 +76,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div v-show="mob.complete == 'true'" class="completeDisplay" @click="selectComplete('true')">답변완료</div>
+                                            <div v-show="mob.complete == 'true'" class="completeDisplay2" @click="selectComplete('true')">답변완료</div>
                                         </div>
                                     </router-link>                                    
                                 </div>
@@ -781,6 +781,17 @@ ul {
 }
 .completeDisplay {
     background-color: #FFAB00;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 20px;
+    padding: 0 4px 0 4px;
+    font-size: 11px;
+    font-weight: bold;
+}
+.completeDisplay2 {
+    background-color: #C2185B;
     color: white;
     display: flex;
     justify-content: center;

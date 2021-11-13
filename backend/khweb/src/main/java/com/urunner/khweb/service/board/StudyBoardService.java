@@ -1,7 +1,6 @@
 package com.urunner.khweb.service.board;
 
 import com.urunner.khweb.controller.dto.board.StudyRequest;
-import com.urunner.khweb.entity.board.QnA;
 import com.urunner.khweb.entity.board.Study;
 import com.urunner.khweb.entity.board.StudyMember;
 

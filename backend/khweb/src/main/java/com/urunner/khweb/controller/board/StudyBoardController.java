@@ -66,7 +66,7 @@ public class StudyBoardController {
 
     @PutMapping("/apply/{boardNo}") // study에 지원한 member 등록
     public ResponseEntity<String> apply(@PathVariable("boardNo") Long boardNo,
-                                          @Validated @RequestBody StudyMember studyMember) throws Exception {
+                                        @Validated @RequestBody StudyMember studyMember) throws Exception {
         System.out.println("######## Controller run success");
         studyMember.setBoardNo(boardNo);
         System.out.println("######## applyMember ready");
@@ -91,7 +91,7 @@ public class StudyBoardController {
 
     @PutMapping ("/{boardNo}")
     public ResponseEntity<Study> modify(@PathVariable("boardNo") Long boardNo,
-                                       @Validated @RequestBody StudyRequest studyRequest) throws Exception {
+                                        @Validated @RequestBody StudyRequest studyRequest) throws Exception {
         log.info(":::: post modify request from vue");
         log.info(":::: RequestBody value : " + studyRequest);
 

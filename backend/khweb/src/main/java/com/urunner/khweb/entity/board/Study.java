@@ -46,8 +46,8 @@ public class Study {
     @Column(length = 100)
     private Long comments; // 댓글수
 
-    @Column(length = 200)
-    private String tags; // 댓글수
+    @Column(length = 400)
+    private String tags;
 
     @Column(length = 100, nullable = false)
     private Long fit; // 모집 인원

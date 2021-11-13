@@ -1,7 +1,6 @@
 package com.urunner.khweb.service.board;
 
 import com.urunner.khweb.controller.dto.board.StudyRequest;
-import com.urunner.khweb.entity.board.QnA;
 import com.urunner.khweb.entity.board.Study;
 import com.urunner.khweb.entity.board.StudyMember;
 import com.urunner.khweb.repository.board.study.StudyBoardRepository;
@@ -78,6 +77,15 @@ public class StudyBoardServiceImpl implements StudyBoardService {
     }
 
     public void updateComments(Long boardNo, Long upDown) {
+        log.info("study update comments 작동하나?");
+        log.info("study update comments 작동하나?");
+        log.info("study update comments 작동하나?");
+        log.info("study update comments 작동하나?");
+        log.info("study update comments 작동하나?");
+        log.info("study update comments 작동하나?");
+        log.info("study update comments 작동하나?");
+        log.info("updonwn value : " + upDown);
+        log.info("boardNo value : " + boardNo);
         repository.updateComments(boardNo, upDown);
     }
 

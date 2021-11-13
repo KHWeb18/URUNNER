@@ -87,7 +87,7 @@
             
         <div class="button_box2">
           <div class="checkBox">
-            <v-checkbox v-model="notice" :label="`공지사항`" value></v-checkbox>
+            <v-checkbox v-model="notice" :label="`공지사항`" value ></v-checkbox>
           </div>
           <div @click="$router.go(-1)">
             <v-btn>
@@ -119,6 +119,15 @@ export default {
         this.tags = JSON.parse(this.board.tags)
         this.content = this.board.content
         this.notice = this.board.notice
+        console.log(this.notice)
+
+        if (this.notice == 'true') {
+          this.notice = Boolean(true)
+        } else {
+          this.notice = Boolean(false)
+        }
+
+        console.log(this.notice)
     },
     data: () => ({
         content: '',
@@ -232,10 +241,15 @@ export default {
           .indexOf(query.toString().toLowerCase()) > -1
       },
       contentSubmit() {
-          this.tags = JSON.stringify(this.tags)
+        this.tags = JSON.stringify(this.tags)
+        
+        if (this.tags.length > 400) {
+          alert('태그가 너무 많습니다.')
+          } else {
             const { content, tags, notice } = this
             this.$emit("fromEditor", { content, tags, notice })
             console.log('editor 단계의 notice 값 : ' + this.notice)
+          }
         }
     },
   }
