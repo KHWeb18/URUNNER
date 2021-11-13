@@ -1,4 +1,4 @@
-package com.urunner.khweb.controller.dto;
+package com.urunner.khweb.controller.dto.board;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,16 +9,16 @@ import org.hibernate.annotations.DynamicUpdate;
 @Slf4j
 @NoArgsConstructor
 @DynamicUpdate
-public class StudyRequest {
+public class QnARequest {
     private Long boardNo;
     private String title;
     private String content;
     private String writer;
     private String nickname;
     private String complete;
-    private Long fit;
     private Long currentNum;
     private Long views;
     private Long comments;
     private String tags;
+    private String notice;
 }

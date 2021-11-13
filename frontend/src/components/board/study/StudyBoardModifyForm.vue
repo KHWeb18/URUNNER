@@ -51,15 +51,17 @@ export default {
             content: '',
             fit: this.board.fit,
             complete: this.board.complete,
-            currentNum: this.board.currentNum
+            currentNum: this.board.currentNum,
+            notice: this.board.notice
         }
     },
     methods: {
         onSubmit (data) {
             this.content = data.content
             this.tags = data.tags
-            const { title, content, complete, currentNum, tags, fit } = this
-            this.$emit('submit', { title, content, complete, currentNum, tags, fit })
+            this.notice = data.notice
+            const { title, content, complete, currentNum, tags, fit, notice } = this
+            this.$emit('submit', { title, content, complete, currentNum, tags, fit, notice })
         },
         ImgRequest() {
             try {

@@ -1,7 +1,7 @@
 <template>
     <form @submit.prevent="boardRegist">
         <v-text-field label="제목" v-model="title" maxlength="45"></v-text-field>
-        <editor placeholder="Write something …" @fromEditor="boardRegist"/>
+        <editor placeholder="Write something …" @fromEditor="boardRegist"/>        
     </form>    
 </template>
 
@@ -29,22 +29,17 @@ export default {
             views: 1,
             comments: 0,
             tags: '',
+            notice: false,
         }
     },
-    methods: {
-        catchContent(data) {
-            this.content = data
-        },      
+    methods: {      
         boardRegist (data) {
             this.content = data.content
             this.tags = data.tags
-            const { title, writer, content, nickname, complete, currentNum, views, comments, tags } = this
-            console.log("const값좀보자")
-            console.log("const값좀보자")
-            console.log({ title, writer, content, nickname, complete, currentNum, views, comments })
-            axios.post('http://localhost:7777/qnaboard/register', { title, writer, content, nickname, complete, currentNum, views, comments, tags } )
+            this.notice = data.notice //여기까지 에디터 data
+            const { title, writer, content, nickname, complete, currentNum, views, comments, tags, notice } = this
+            axios.post('http://localhost:7777/qnaboard/register', { title, writer, content, nickname, complete, currentNum, views, comments, tags, notice } )
                     .then(res => {
-                        console.log(res.data)
                         this.$store.state.boardNo = res.data.boardNo.toString()
                         this.$router.push({
                             name: 'QnABoardListPage'

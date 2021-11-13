@@ -34,7 +34,6 @@
             <v-btn color="light-blue lighten-1 text center" @click="onSubmit" class="item">
                 등록
             </v-btn>
-            <v-btn @click="test()">테스트</v-btn>
         </div>
     </div>
 </template>

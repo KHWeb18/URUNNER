@@ -1,9 +1,7 @@
 package com.urunner.khweb.controller.board;
 
-import com.urunner.khweb.controller.dto.CommentRes;
-import com.urunner.khweb.entity.board.Comment;
+import com.urunner.khweb.controller.dto.board.CommentRes;
 import com.urunner.khweb.entity.board.StudyComment;
-import com.urunner.khweb.service.board.FreeCommentService;
 import com.urunner.khweb.service.board.StudyCommentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

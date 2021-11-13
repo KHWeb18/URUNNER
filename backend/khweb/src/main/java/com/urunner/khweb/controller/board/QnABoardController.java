@@ -1,13 +1,9 @@
 package com.urunner.khweb.controller.board;
 
-import com.urunner.khweb.controller.dto.QnARequest;
-import com.urunner.khweb.controller.dto.StudyRequest;
+import com.urunner.khweb.controller.dto.board.QnARequest;
 import com.urunner.khweb.entity.board.QnA;
 import com.urunner.khweb.entity.board.QnAMember;
-import com.urunner.khweb.entity.board.Study;
-import com.urunner.khweb.entity.board.StudyMember;
 import com.urunner.khweb.service.board.QnABoardService;
-import com.urunner.khweb.service.board.StudyBoardService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -41,7 +37,7 @@ public class QnABoardController {
     public ResponseEntity<List<QnA>> getLists () throws Exception {
         log.info("getStudyLists() ");
 
-        return new ResponseEntity<>(service.findAll(), HttpStatus.OK);
+        return new ResponseEntity<>(service.selectQnAList(), HttpStatus.OK);
     }
 
     @GetMapping("/lists/{complete}")

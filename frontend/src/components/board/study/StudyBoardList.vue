@@ -12,9 +12,9 @@
             <v-spacer class="forLine0">
                 <div class="forLine0sButton">
                     <div class="tag_button" :class="{ on2 : completeSelect1 }" @click="fetchStudyBoardList(),
-                                        completeSelect1 = true, completeSelect2 = false, completeSelect3 = false ">전체</div>&nbsp;&nbsp;&nbsp;
-                    <div class="tag_button" :class="{ on2 : completeSelect2 }"  @click="selectComplete('false')">모집중</div>&nbsp;&nbsp;&nbsp;
-                    <div class="tag_button" :class="{ on2 : completeSelect3 }" @click="selectComplete('true')">모집완료</div>&nbsp;&nbsp;&nbsp;
+                                        completeSelect1 = true, completeSelect2 = false, completeSelect3 = false, word = '' ">전체</div>&nbsp;&nbsp;&nbsp;
+                    <div class="tag_button" :class="{ on2 : completeSelect2 }"  @click="selectComplete('false'), word = ''">모집중</div>&nbsp;&nbsp;&nbsp;
+                    <div class="tag_button" :class="{ on2 : completeSelect3 }" @click="selectComplete('true'), word = ''">모집종료</div>&nbsp;&nbsp;&nbsp;
                 </div>
                 <div class="searching_box_top">
                     <div class="mr-9 hidden-sm-and-down">
@@ -38,10 +38,12 @@
             <!-- 게시글 리스트 -->
             <div class="forSearching" v-show="!searchinOn">
                 <div class="post_list">
+                    <div class="for_line"></div>
                     <div class="post_card_box">
                         <div v-for="mob in paginatedData" :key="mob.boardNo">
-                            <div class="post_card" :class="{ on : mob.complete == 'true' }">
-                                <div class="post_num"><div class="mr-9 hidden-sm-and-down">
+                            <div class="post_card" :class="{ on : mob.notice == 'true' }">
+                                <div class="post_num2" v-show="mob.notice == 'false'">
+                                    <div class="mr-9 hidden-sm-and-down">
                                         <v-progress-circular
                                         :rotate="-90"
                                         :size="60"
@@ -50,52 +52,62 @@
                                         color="primary"
                                         >
                                         {{ mob.currentNum }} / {{ mob.fit }}
-                                        </v-progress-circular></div>
+                                        </v-progress-circular>
                                     </div>
+                                </div>
+                                <div class="post_num" v-show="mob.notice == 'true'"><div class="mr-9 hidden-sm-and-down"><div style="width:54px;text-align:center;margin-right:3vw" >
+                                    <div class="completeDisplay">공지사항</div></div></div></div>
                                 <div class="post_title">
-                                    <router-link :to="{ name: 'StudyBoardReadPage', params: { boardNo: mob.boardNo.toString() } }">
+                                    <router-link :to="{ name: 'StudyBoardReadPage', params: { boardNo: mob.boardNo.toString() } }" >
                                         <div class="item4">{{ mob.title }}</div>
-                                    </router-link>
-                                    <div class="tag_box">
-                                        <div class="post_reg_date">{{ calcTime(mob.regDate) }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
-                                            <div class="hidden-md-and-up">
-                                                <div class="tag_box">
-                                                    <div class="item2">
-                                                        <v-icon size="18px" color="#9e9e9e">mdi-eye</v-icon>
-                                                        <div style="padding-top:3px">&nbsp;{{ mob.views }}</div>
+                                    </router-link>                                    
+                                    <router-link :to="{ name: 'StudyBoardReadPage', params: { boardNo: mob.boardNo.toString() } }" >
+                                        <div class="tag_box">
+                                            <div class="post_reg_date">{{ calcTime(mob.regDate) }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                                                <div class="hidden-md-and-up">
+                                                    <div class="tag_box">
+                                                        <div class="item2">
+                                                            <v-icon size="18px" color="#9e9e9e">mdi-eye</v-icon>
+                                                            <div style="padding-top:3px">&nbsp;{{ mob.views }}</div>
+                                                        </div>
+                                                        <div class="item3">
+                                                            &nbsp;&nbsp;<v-icon size="18px" color="#9e9e9e">mdi-comment</v-icon>
+                                                            <div style="padding-top:3px">&nbsp;{{ mob.comments }}</div>
+                                                        </div>
                                                     </div>
-                                                    <div class="item3">
-                                                        &nbsp;&nbsp;<v-icon size="18px" color="#9e9e9e">mdi-comment</v-icon>
-                                                        <div style="padding-top:3px">&nbsp;{{ mob.comments }}</div>
+                                                </div>
+                                            <div v-show="mob.notice == 'true'">
+                                                <div class="hidden-md-and-up">
+                                                    <div class="completeDisplay">공지사항</div>
+                                                </div>
+                                            </div>
+                                            <div v-show="mob.notice == 'false'" v-for="tag in classifyTag(mob.tags)" :key="tag.text">
+                                                <div class="mr-9 hidden-sm-and-down">
+                                                    <div class="tag_box_button_box">
+                                                        <btn class="tag_box_button" @click="tagSelect0 = !tagSelect0,searchingTag(tag.text)">#{{ tag.text }}&nbsp;</btn>
                                                     </div>
                                                 </div>
                                             </div>
-                                        <div v-for="tag in classifyTag(mob.tags)" :key="tag.text">
-                                            <div class="mr-9 hidden-sm-and-down">
-                                                <div class="tag_box_button_box">
-                                            <btn class="tag_box_button" @click="tagSelect0 = !tagSelect0,searchingTag(tag.text)">#{{ tag.text }}&nbsp;</btn>
-                                            </div>
+                                            <div v-show="mob.complete == 'true' && mob.notice == 'false'" class="completeDisplay" @click="selectComplete('true')">모집종료</div>
                                         </div>
-                                        </div>
-                                        <div v-show="mob.complete == 'true'" class="completeDisplay" @click="selectComplete('true')">모집종료</div>
+                                    </router-link>                                    
+                                </div>
+                                <router-link class="post_vnc" :to="{ name: 'StudyBoardReadPage', params: { boardNo: mob.boardNo.toString() } }" >
+                                    <div class="mr-2 hidden-sm-and-down">
+                                    <div class="item2">
+                                        <v-icon size="18px" color="#9e9e9e">mdi-eye</v-icon>
+                                        <div style="padding-top:3px">&nbsp;{{ mob.views }}</div>
+                                    </div>
+                                    <div class="item3">
+                                        <v-icon size="18px" color="#9e9e9e">mdi-comment</v-icon>
+                                        <div style="padding-top:3px">&nbsp;{{ mob.comments }}</div>
+                                    </div>
+                                    </div>
+                                </router-link>
+                                <div class="post_name_box">
+                                    <div class="mr-9 hidden-sm-and-down"><div class="post_name">{{ mob.nickname }}</div>
                                     </div>
                                 </div>
-                                    <router-link class="post_vnc" :to="{ name: 'StudyBoardReadPage', params: { boardNo: mob.boardNo.toString() } }" >
-                                        <div class="mr-2 hidden-sm-and-down">
-                                        <div class="item2">
-                                            <v-icon size="18px" color="#9e9e9e">mdi-eye</v-icon>
-                                            <div style="padding-top:3px">&nbsp;{{ mob.views }}</div>
-                                        </div>
-                                        <div class="item3">
-                                            <v-icon size="18px" color="#9e9e9e">mdi-comment</v-icon>
-                                            <div style="padding-top:3px">&nbsp;{{ mob.comments }}</div>
-                                        </div>
-                                        </div>
-                                    </router-link>
-                                    <div class="post_name_box">
-                                        <div class="mr-9 hidden-sm-and-down"><div class="post_name">{{ mob.nickname }}</div>
-                                        </div>
-                                    </div>
                             </div>
                         </div>
                     </div>
@@ -130,10 +142,12 @@
                     </div>
                 </div>
                 <div class="post_list">
+                    <div class="for_line"></div>
                     <div class="post_card_box">
                         <div v-for="mob in paginatedDataS" :key="mob.boardNo">
-                            <div class="post_card" :class="{ on : mob.complete == 'true' }">
-                                <div class="post_num"><div class="mr-9 hidden-sm-and-down">
+                            <div class="post_card" :class="{ on : mob.notice == 'true' }">
+                                <div class="post_num2" v-show="mob.notice == 'false'">
+                                    <div class="mr-9 hidden-sm-and-down">
                                         <v-progress-circular
                                         :rotate="-90"
                                         :size="60"
@@ -142,52 +156,62 @@
                                         color="primary"
                                         >
                                         {{ mob.currentNum }} / {{ mob.fit }}
-                                        </v-progress-circular></div>
+                                        </v-progress-circular>
                                     </div>
+                                </div>
+                                <div class="post_num" v-show="mob.notice == 'true'"><div class="mr-9 hidden-sm-and-down"><div style="width:54px;text-align:center;margin-right:3vw" >
+                                    <div class="completeDisplay">공지사항</div></div></div></div>
                                 <div class="post_title">
-                                    <router-link :to="{ name: 'StudyBoardReadPage', params: { boardNo: mob.boardNo.toString() } }">
+                                    <router-link :to="{ name: 'StudyBoardReadPage', params: { boardNo: mob.boardNo.toString() } }" >
                                         <div class="item4">{{ mob.title }}</div>
-                                    </router-link>
-                                    <div class="tag_box">
-                                        <div class="post_reg_date">{{ calcTime(mob.regDate) }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
-                                            <div class="hidden-md-and-up">
-                                                <div class="tag_box">
-                                                    <div class="item2">
-                                                        <v-icon size="18px" color="#9e9e9e">mdi-eye</v-icon>
-                                                        <div style="padding-top:3px">&nbsp;{{ mob.views }}</div>
+                                    </router-link>                                    
+                                    <router-link :to="{ name: 'StudyBoardReadPage', params: { boardNo: mob.boardNo.toString() } }" >
+                                        <div class="tag_box">
+                                            <div class="post_reg_date">{{ calcTime(mob.regDate) }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                                                <div class="hidden-md-and-up">
+                                                    <div class="tag_box">
+                                                        <div class="item2">
+                                                            <v-icon size="18px" color="#9e9e9e">mdi-eye</v-icon>
+                                                            <div style="padding-top:3px">&nbsp;{{ mob.views }}</div>
+                                                        </div>
+                                                        <div class="item3">
+                                                            &nbsp;&nbsp;<v-icon size="18px" color="#9e9e9e">mdi-comment</v-icon>
+                                                            <div style="padding-top:3px">&nbsp;{{ mob.comments }}</div>
+                                                        </div>
                                                     </div>
-                                                    <div class="item3">
-                                                        &nbsp;&nbsp;<v-icon size="18px" color="#9e9e9e">mdi-comment</v-icon>
-                                                        <div style="padding-top:3px">&nbsp;{{ mob.comments }}</div>
+                                                </div>
+                                            <div v-show="mob.notice == 'true'">
+                                                <div class="hidden-md-and-up">
+                                                    <div class="completeDisplay">공지사항</div>
+                                                </div>
+                                            </div>
+                                            <div v-show="mob.notice == 'false'" v-for="tag in classifyTag(mob.tags)" :key="tag.text">
+                                                <div class="mr-9 hidden-sm-and-down">
+                                                    <div class="tag_box_button_box">
+                                                        <btn class="tag_box_button" @click="tagSelect0 = !tagSelect0,searchingTag(tag.text)">#{{ tag.text }}&nbsp;</btn>
                                                     </div>
                                                 </div>
                                             </div>
-                                        <div v-for="tag in classifyTag(mob.tags)" :key="tag.text">
-                                            <div class="mr-9 hidden-sm-and-down">
-                                                <div class="tag_box_button_box">
-                                            <btn class="tag_box_button" @click="tagSelect0 = !tagSelect0,searchingTag(tag.text)">#{{ tag.text }}&nbsp;</btn>
-                                            </div>
+                                            <div v-show="mob.complete == 'true' && mob.notice == 'false'" class="completeDisplay" @click="selectComplete('true')">모집종료</div>
                                         </div>
-                                        </div>
-                                        <div v-show="mob.complete == 'true'" class="completeDisplay" @click="selectComplete('true')">모집종료</div>
+                                    </router-link>                                    
+                                </div>
+                                <router-link class="post_vnc" :to="{ name: 'StudyBoardReadPage', params: { boardNo: mob.boardNo.toString() } }" >
+                                    <div class="mr-2 hidden-sm-and-down">
+                                    <div class="item2">
+                                        <v-icon size="18px" color="#9e9e9e">mdi-eye</v-icon>
+                                        <div style="padding-top:3px">&nbsp;{{ mob.views }}</div>
+                                    </div>
+                                    <div class="item3">
+                                        <v-icon size="18px" color="#9e9e9e">mdi-comment</v-icon>
+                                        <div style="padding-top:3px">&nbsp;{{ mob.comments }}</div>
+                                    </div>
+                                    </div>
+                                </router-link>
+                                <div class="post_name_box">
+                                    <div class="mr-9 hidden-sm-and-down"><div class="post_name">{{ mob.nickname }}</div>
                                     </div>
                                 </div>
-                                    <router-link class="post_vnc" :to="{ name: 'StudyBoardReadPage', params: { boardNo: mob.boardNo.toString() } }" >
-                                        <div class="mr-2 hidden-sm-and-down">
-                                        <div class="item2">
-                                            <v-icon size="18px" color="#9e9e9e">mdi-eye</v-icon>
-                                            <div style="padding-top:3px">&nbsp;{{ mob.views }}</div>
-                                        </div>
-                                        <div class="item3">
-                                            <v-icon size="18px" color="#9e9e9e">mdi-comment</v-icon>
-                                            <div style="padding-top:3px">&nbsp;{{ mob.comments }}</div>
-                                        </div>
-                                        </div>
-                                    </router-link>
-                                    <div class="post_name_box">
-                                        <div class="mr-9 hidden-sm-and-down"><div class="post_name">{{ mob.nickname }}</div>
-                                        </div>
-                                    </div>
                             </div>
                         </div>
                     </div>
@@ -585,14 +609,15 @@ input:focus {
     color: #757575;
 
 }
-
-
-
-
+.for_line {
+    border-bottom: 1px solid #BDBDBD;
+    margin: 0vw 1vw
+}
 .post_list {
     min-width: 475px;
     max-width: 1500px;
     margin-right: 10px;
+    margin-top: 30px;
 }
 .post_card_box {
     min-width: 475px;
@@ -610,12 +635,31 @@ input:focus {
     height: 70px;
     border-bottom: 1px solid #BDBDBD;
 }
+.post_card.on {
+    display: flex;
+    justify-content: flex-start;
+    margin: 0vw 1vw;
+    height: 58px;
+    border-bottom: 1px solid #BDBDBD;
+    background-color: #F5F5F5;
+}
+.post_card.on:hover {
+    box-shadow: 10px 17px 40px 0 rgb(0 0 0 / 4%);
+    background-color: rgb(241, 241, 241);
+    cursor: pointer;
+    transition: all 0.1s ease;
+}
 .post_card a {
     width: 1000px;
 }
 .thumbnail {
-    height: 100px ; 
-    width: 100px ; 
+    margin-right: 20px;
+    height: 140px !important; 
+    width: 140px !important; 
+}
+.thumbnail_img {
+    width: 100%;
+    height: 100%;
 }
 .post_num {
     display: flex;
@@ -627,7 +671,19 @@ input:focus {
     font-weight: 500;
     font-size: 14px;
     text-align: right;
-    margin: 0 3vw 0 2vw;
+    margin: 0 0 0 2.5vw;
+}
+.post_num2 {
+    display: flex;
+    justify-content: center;
+    align-self: center;
+    width: 3vw;
+    text-decoration: none;
+    color: #757575;
+    font-weight: 500;
+    font-size: 14px;
+    text-align: right;
+    margin: 0 1.25vw 0 1.25vw;
 }
 .post_title {
     display: flex;
@@ -760,7 +816,7 @@ ul {
     transition: all 0.4s ease;
 }
 .completeDisplay {
-    background-color: #C2185B;
+    background-color: #FFAB00;
     color: white;
     display: flex;
     justify-content: center;

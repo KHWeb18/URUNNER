@@ -1,7 +1,6 @@
 <template>
     <form @submit.prevent="boardRegist">
         <v-text-field label="제목" v-model="title" maxlength="45"></v-text-field>
-        <!-- 인원설정 -->
         <v-text-field label="인원설정" placeholder="모집하는 인원수를 정해주세요" type="number" v-model="fit"></v-text-field>
         <editor placeholder="Write something …" @fromEditor="boardRegist"/>
     </form>    
@@ -35,6 +34,7 @@ export default {
             comments: 0,
             qna: '',
             tags: '',
+            notice: false
         }
     },
     methods: {
@@ -44,8 +44,9 @@ export default {
         boardRegist (data) {
             this.content = data.content
             this.tags = data.tags
-            const { title, writer, content, nickname, complete, fit, currentNum, views, comments, tags } = this
-            axios.post('http://localhost:7777/studyboard/register', { title, writer, content, nickname, complete, fit, currentNum, views, comments, tags } )
+            this.notice = data.notice //여기까지 에디터 data
+            const { title, writer, content, nickname, complete, fit, currentNum, views, comments, tags, notice } = this
+            axios.post('http://localhost:7777/studyboard/register', { title, writer, content, nickname, complete, fit, currentNum, views, comments, tags, notice } )
                     .then(res => {
                     console.log(res.data)
                     this.$store.state.boardNo = res.data.boardNo.toString()

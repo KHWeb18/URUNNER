@@ -85,7 +85,10 @@
             </v-combobox>
         </v-container>
             
-        <div class="button_box2">    
+        <div class="button_box2">
+          <div class="checkBox">
+            <v-checkbox v-model="notice" :label="`공지사항`" value></v-checkbox>
+          </div>
           <div @click="$router.go(-1)">
             <v-btn>
                 취소
@@ -115,9 +118,11 @@ export default {
     created() {
         this.tags = JSON.parse(this.board.tags)
         this.content = this.board.content
+        this.notice = this.board.notice
     },
     data: () => ({
         content: '',
+        notice: false,
       activator: null,
       attach: null,
       colors: ['green', 'purple', 'indigo', 'cyan', 'teal', 'orange'],
@@ -228,10 +233,9 @@ export default {
       },
       contentSubmit() {
           this.tags = JSON.stringify(this.tags)
-          console.log(this.tags)
-          console.log(typeof(this.tags))
-            const { content, tags } = this
-            this.$emit("fromEditor", { content, tags })
+            const { content, tags, notice } = this
+            this.$emit("fromEditor", { content, tags, notice })
+            console.log('editor 단계의 notice 값 : ' + this.notice)
         }
     },
   }
@@ -260,5 +264,8 @@ export default {
 }
 .regist_btn {
   margin-left: 10px;
+}
+.v-input--selection-controls.v-input {
+  margin: 5px 15px;
 }
 </style>

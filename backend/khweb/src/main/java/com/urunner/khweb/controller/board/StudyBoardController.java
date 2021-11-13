@@ -1,6 +1,6 @@
 package com.urunner.khweb.controller.board;
 
-import com.urunner.khweb.controller.dto.StudyRequest;
+import com.urunner.khweb.controller.dto.board.StudyRequest;
 import com.urunner.khweb.entity.board.QnA;
 import com.urunner.khweb.entity.board.Study;
 import com.urunner.khweb.entity.board.StudyMember;
@@ -37,7 +37,7 @@ public class StudyBoardController {
     public ResponseEntity<List<Study>> getLists () throws Exception {
         log.info("getStudyLists() ");
 
-        return new ResponseEntity<>(service.findAll(), HttpStatus.OK);
+        return new ResponseEntity<>(service.selectStudyList(), HttpStatus.OK);
     }
 
     @GetMapping("/lists/{complete}")

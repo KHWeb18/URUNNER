@@ -17,13 +17,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="content_img">
-                    <img :src="ImgRequest()" class="test">
-                </div>
                 <div class="post_content">
                     <div v-html="board.content">{{ board.content }}</div>
                 </div>
-                <div class="complete_btn_align">
+                <div v-show="board.notice == 'false'" class="complete_btn_align">
                     <v-btn v-show="this.$store.state.moduleA.email = board.writer" @click="endRecruit(board.boardNo)">질문 완료</v-btn>
                 </div>
             </div>
@@ -64,8 +61,8 @@ export default {
         },
         endRecruit(data) {
             this.board.complete = !this.board.complete
-            const { title, content, complete, currentNum, tags } = this.board
-            axios.put(`http://localhost:7777/qnaboard/${data}`, { title, content, complete, currentNum, tags })
+            const { title, content, complete, currentNum, tags, notice } = this.board
+            axios.put(`http://localhost:7777/qnaboard/${data}`, { title, content, complete, currentNum, tags, notice })
                     .then(res => {
                         console.log(res)
                         this.$router.push({

@@ -1,7 +1,6 @@
 package com.urunner.khweb.service.board;
 
-import com.urunner.khweb.controller.dto.QnARequest;
-import com.urunner.khweb.controller.dto.StudyRequest;
+import com.urunner.khweb.controller.dto.board.StudyRequest;
 import com.urunner.khweb.entity.board.QnA;
 import com.urunner.khweb.entity.board.Study;
 import com.urunner.khweb.entity.board.StudyMember;
@@ -11,7 +10,7 @@ import java.util.Optional;
 
 public interface StudyBoardService {
     Study register(StudyRequest studyRequest) throws Exception;
-    List<Study> findAll() throws Exception;
+    List<Study> selectStudyList() throws Exception;
     List<Study> findByComplete(String complete) throws Exception;
     Optional<Study> findByBoardNo(Long boardNo) throws Exception;
     void updatePost(StudyRequest studyRequest) throws Exception;

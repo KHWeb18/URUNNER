@@ -48,15 +48,18 @@ export default {
             title: '',
             content: this.board.content,
             complete: this.board.complete,
-            currentNum: this.board.currentNum
+            currentNum: this.board.currentNum,
+            notice: this.board.notice
         }
     },
     methods: {
         onSubmit (data) {
             this.content = data.content
             this.tags = data.tags
-            const { title, content, complete, currentNum, tags } = this
-            this.$emit('submit', { title, content, complete, currentNum, tags })
+            this.notice = data.notice            
+            console.log('modifyForm 단계의 notice 값 : ' + this.notice)
+            const { title, content, complete, currentNum, tags, notice } = this
+            this.$emit('submit', { title, content, complete, currentNum, tags, notice })
         },
         ImgRequest() {
             try {

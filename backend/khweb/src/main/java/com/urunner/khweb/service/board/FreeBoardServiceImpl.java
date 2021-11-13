@@ -1,6 +1,6 @@
 package com.urunner.khweb.service.board;
 
-import com.urunner.khweb.controller.dto.FreeRequest;
+import com.urunner.khweb.controller.dto.board.FreeRequest;
 import com.urunner.khweb.entity.board.Free;
 import com.urunner.khweb.repository.board.free.FreeBoardRepository;
 import org.springframework.beans.factory.annotation.Autowired;

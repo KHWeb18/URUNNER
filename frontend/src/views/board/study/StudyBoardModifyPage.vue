@@ -29,8 +29,8 @@ export default {
     methods: {
         ...mapActions(['fetchStudyBoard']),
         onSubmit (payload) {
-            const { title, content, fit, complete, currentNum } = payload
-            axios.put(`http://localhost:7777/studyboard/${this.boardNo}`, { title, content, fit, complete, currentNum })
+            const { title, content, fit, complete, currentNum, notice } = payload
+            axios.put(`http://localhost:7777/studyboard/${this.boardNo}`, { title, content, fit, complete, currentNum, notice })
                     .then(res => {
                         console.log(res)
                         this.$router.push({

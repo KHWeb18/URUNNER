@@ -7,22 +7,25 @@
                     <div class="searching_message_box">
                         <div class="searching_message">
                             <div style="margin-top:20px;"><b>{{board.title}}</b></div>
-                            <div><p><b class="post_tag">#TAG</b> / {{board.nickname}} / {{ $moment(board.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}</p></div>
+                            <div class="post_tag">
+                                <div v-for="tag in classifyTag(board.tags)" :key="tag">
+                                        <btn class="tag_box_button">#{{ tag.text }}&nbsp;</btn>
+                                </div>
+                                <div v-show="board.tags != '#'" class="post_tag_either">/&nbsp;</div>
+                                <div class="post_tag_either">{{board.nickname}} / {{ $moment(board.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}</div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="content_img">
-                    <img :src="ImgRequest()" class="test">
                 </div>
                 <div class="post_content">
                     <div v-html="board.content">{{ board.content }}</div>
                 </div>
                 <div class="complete_btn_align">
-                    <v-btn v-show="this.$store.state.moduleA.email = board.writer" @click="appl(board.boardNo)">지원하기</v-btn>
+                    <v-btn v-show="this.$store.state.moduleA.email = board.writer" @click="appl(board.boardNo)" style="margin-right:10px">지원하기</v-btn>
                     <v-btn v-show="this.$store.state.moduleA.email = board.writer" @click="endRecruit(board.boardNo)">모집 마감</v-btn>
                 </div>
-                 <!-- 지원자 목록 -->
-                <div style="width:300px; margin:0px">
+                <!-- 지원자 목록 -->
+                <div class="member_list">
                     <v-row justify="center">
                     <v-subheader>지원자 목록</v-subheader>
                         <v-expansion-panels popout>
@@ -99,8 +102,8 @@ export default {
         },
         endRecruit(data) {
             this.board.complete = !this.board.complete
-            const { title, content, fit, complete, currentNum } = this.board
-            axios.put(`http://localhost:7777/studyboard/${data}`, { title, content, fit, complete, currentNum })
+            const { title, content, fit, complete, currentNum, notice} = this.board
+            axios.put(`http://localhost:7777/studyboard/${data}`, { title, content, fit, complete, currentNum, notice })
                     .then(res => {
                         console.log(res)
                         this.$router.push({
@@ -123,8 +126,12 @@ export default {
 
 <style scoped>
 .post_list {
-    width:70vw;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width:100vw;
     max-width: 1000px;
+    margin: 0px;
 }
 .main_box {
     color: #424242;
@@ -161,7 +168,7 @@ export default {
     border-style: none !important;
 }
 .searching_message_box {
-    width:70vw;
+    width:100vw;
     max-width: 1000px;
     display:flex;
     justify-content: center;
@@ -170,7 +177,7 @@ export default {
     display: flex;
     justify-content: center;
     flex-direction: column;
-    width:70vw;
+    width:100vw;
     max-width: 900px;
     border-top: 1px solid #BDBDBD;
     border-bottom: 1px solid #BDBDBD;
@@ -216,11 +223,6 @@ export default {
 .post_card_box {
 
 }
-.content_img {
-    text-align: center;
-    width: 70vw;
-    max-width: 1000px;
-}
 .thumbnail {
     margin-right: 20px;
     height: 140px !important; 
@@ -265,7 +267,7 @@ export default {
     text-decoration: underline;
 }
 .post_content {
-    margin: 0vw 3vw 0vw 3vw;
+    margin: 10vw 3vw 0vw 3vw;
     width: 60vw;
     font-size: 15px;
     color: #757575;
@@ -328,5 +330,12 @@ a:hover { text-decoration:none !important }
     justify-content: center;
     align-content: center;
     font-size: 18px;
+}
+.member_list {
+    display: flex;
+    justify-self: center;
+    align-self: center;
+    width: 300px;
+    margin: 30px;
 }
 </style>

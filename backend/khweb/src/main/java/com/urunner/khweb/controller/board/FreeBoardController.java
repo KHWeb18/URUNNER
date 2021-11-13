@@ -1,6 +1,6 @@
 package com.urunner.khweb.controller.board;
 
-import com.urunner.khweb.controller.dto.FreeRequest;
+import com.urunner.khweb.controller.dto.board.FreeRequest;
 import com.urunner.khweb.entity.board.Free;
 import com.urunner.khweb.service.board.FreeBoardService;
 import lombok.extern.slf4j.Slf4j;

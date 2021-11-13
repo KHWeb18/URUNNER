@@ -52,13 +52,16 @@ public class Study {
     @Column(length = 100, nullable = false)
     private Long fit; // 모집 인원
 
+    @Column(length = 200)
+    private String notice; // 공지사항
+
     @CreationTimestamp
     private Date regDate;
 
     @UpdateTimestamp
     private Date upDate;
 
-    public Study(String title, String content, String writer, String nickname, String complete, Long currentNum, Long views, Long comments, String tags, Long fit) {
+    public Study(String title, String content, String writer, String nickname, String complete, Long currentNum, Long views, Long comments, String tags, Long fit, String notice) {
         this.title = title;
         this.content = content;
         this.writer = writer;
@@ -69,5 +72,6 @@ public class Study {
         this.comments = comments;
         this.tags = tags;
         this.fit = fit;
+        this.notice = notice;
     }
 }

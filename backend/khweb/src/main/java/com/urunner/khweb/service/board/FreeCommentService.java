@@ -1,8 +1,8 @@
 package com.urunner.khweb.service.board;
 
-import com.urunner.khweb.controller.dto.CommentRes;
+import com.urunner.khweb.controller.dto.board.CommentRes;
 import com.urunner.khweb.entity.board.Comment;
-import com.urunner.khweb.entity.board.Free;
+
 import java.util.List;
 
 public interface FreeCommentService {

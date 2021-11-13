@@ -1,6 +1,7 @@
 package com.urunner.khweb.service.board;
 
-import com.urunner.khweb.controller.dto.StudyRequest;
+import com.urunner.khweb.controller.dto.board.StudyRequest;
+import com.urunner.khweb.entity.board.QnA;
 import com.urunner.khweb.entity.board.Study;
 import com.urunner.khweb.entity.board.StudyMember;
 import com.urunner.khweb.repository.board.study.StudyBoardRepository;
@@ -9,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 
@@ -27,9 +29,17 @@ public class StudyBoardServiceImpl implements StudyBoardService {
 
         Study postEntity = new Study(studyRequest.getTitle(), studyRequest.getContent(), studyRequest.getWriter(),
                 studyRequest.getNickname(), studyRequest.getComplete(), studyRequest.getCurrentNum(),
-                studyRequest.getViews(), studyRequest.getComments(), studyRequest.getTags(), studyRequest.getFit());
+                studyRequest.getViews(), studyRequest.getComments(), studyRequest.getTags(), studyRequest.getFit(), studyRequest.getNotice());
+
+        if (Objects.equals(postEntity.getNotice(), "true")) {
+            postEntity.setComplete("true");
+        }// 모집마감 아이콘이 뜨지 않도록 하기 위한 절차인데 필요 없을 거 같음 추후 생각
 
         return repository.save(postEntity);
+    }
+
+    public List<Study> selectStudyList() {
+        return repository.selectStudyList();
     }
 
     public List<Study> findAll(){
@@ -54,7 +64,7 @@ public class StudyBoardServiceImpl implements StudyBoardService {
     public void updatePost(StudyRequest studyRequest){
 
         repository.updatePost(studyRequest.getTitle(), studyRequest.getContent(), studyRequest.getBoardNo(),
-                studyRequest.getComplete(), studyRequest.getCurrentNum(), studyRequest.getTags(), studyRequest.getFit());
+                studyRequest.getComplete(), studyRequest.getCurrentNum(), studyRequest.getTags(), studyRequest.getFit(), studyRequest.getNotice());
     }
 
     public void updateCurrentNum(StudyRequest studyRequest){
