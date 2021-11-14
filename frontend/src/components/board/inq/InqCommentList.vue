@@ -1,6 +1,6 @@
 <template>
 <div>
-    전체 댓글 <b style="color:#00897B">{{comments.length}}</b>개
+    댓글 <b style="color:#00897B">{{comments.length}}</b>
     <div class="comment_list">
         <div>
             <!-- 댓글 목록 -->
@@ -32,7 +32,7 @@
                                     v-model="content2" placeholder="댓글을 입력해주세요"></textarea>
                                 </tr>
                                 <td class="comment_register_btn">
-                                    <v-btn color="blue-grey darken-1 white-text" @click="commentSubmit">댓글 등록</v-btn>
+                                    <v-btn color="blue-grey darken-1 white-text" @click="submit">댓글 등록</v-btn>
                                 </td>
                             </div>    
                             <!-- 댓글 삭제 클릭시 알림창 -->
@@ -41,7 +41,7 @@
                                 :timeout="-1" centered outlined>
                                 댓글을 삭제하시겠습니까?
                                     <template v-slot:action="{ attrs }">
-                                        <v-btn color="#424242" text v-bind="attrs" @click="[isNameProblem(mob), snackbar = false]">
+                                        <v-btn color="#424242" text v-bind="attrs" @click="[isNameProblem(mob.commentNo), snackbar = false]">
                                         확인</v-btn>
                                         <v-btn color="red" text v-bind="attrs" @click="snackbar = false">
                                         취소</v-btn>
@@ -58,7 +58,7 @@
             </div>
             <!-- 댓글 입력창 -->
             <div class="comment_area" @click="temp = false, groupNo = 0, layer = 0, commentNo = 0">
-                    <editor-for-comment @fromEditor="commentSubmit"/>
+                <editor-for-comment @fromEditor="commentSubmit"/>
             </div>
         </div>
         <!-- 하단 밑줄용 -->
@@ -135,7 +135,7 @@ export default {
             const { boardNo, content, writer, nickname, layer, groupNo } = this
             console.log('저장하는 순간 const값')
             console.log({ boardNo, content, writer, nickname, layer, groupNo })
-            axios.post('http://localhost:7777/qnaboard/comment/register', { boardNo, content, writer, nickname, layer, groupNo } )
+            axios.post('http://localhost:7777/inqboard/comment/register', { boardNo, content, writer, nickname, layer, groupNo } )
                     .then(res => {
                         console.log('댓글등록완료 |' + res.status)
                          this.content = ''
@@ -160,10 +160,13 @@ export default {
                         alert(res.response.data.message + '설마 이거 뜨나?')
                     })
         },
-        isNameProblem (mob) {
-            const boardNo = mob.boardNo
-            const commentNo = mob.commentNo
-            axios.delete(`http://localhost:7777/qnaboard/comment/${boardNo}/${commentNo}`)
+        isNameProblem (commentNumero) {
+            console.log('commentNumero 값은? : ' + commentNumero)
+            console.log('commentNumero 형식은? : ' + typeof commentNumero)
+            let commentNo2 = commentNumero
+            const commentNo = commentNo2
+            console.log('const { commentNo } 값은? : ' + commentNo)
+            axios.delete(`http://localhost:7777/inqboard/comment/${commentNo}`)
                     .then(() => {
                         this.refresh += 1;
                         const refresh = this.refresh;
@@ -183,7 +186,8 @@ export default {
             try {
                 var cutId = data.substring(0, data.length-4); // email 뒤 .com 삭제
                 console.log(cutId)
-                return require(`../../../../../backend/khweb/images/profiles/${cutId}.gif`)            
+                return require(`../../../../../backend/khweb/images/profiles/${cutId}.gif`)               
+            
             } catch (e) {
                 return require(`@/assets/logo.png`)
             }
@@ -205,14 +209,14 @@ export default {
 
 <style scoped>
 .comment_list {
-    width:70vw;
-    max-width: 1000px;
+    width:100vw;
+    max-width: 1050px;
     margin-top: 10px;
     border-top: #BDBDBD solid 1px;
     padding-top: 20px;
 }
 .post_list {
-    width:70vw;
+    width:100vw;
     max-width: 1000px;
 }
 .post_card {
@@ -240,7 +244,7 @@ export default {
 .post_box {
     display: flex;
     flex-direction: column;
-    width: 60vw;
+    width: 70vw;
 }
 .post_tag {
     color: #0288D1;
@@ -279,15 +283,13 @@ export default {
 .comment_register_box {
     height:150px;
     width:65vw;
-    max-width: 1000px;
+    max-width: 1040px;
     border: 1px solid #BDBDBD;    
     padding: 10px;
-    margin-left: 20px;
 }
 .comment_register_btn {
     text-align: right;
     padding: 0px;
-    padding-left: 20px;
 }
 ::placeholder {
     font-size: 16px;
@@ -295,10 +297,10 @@ export default {
     color: #757575;    
 }
 .button_container {
-    width:70vw;
-    max-width: 1000px;
+    max-width: 1040px;
     border-top: 1px solid #BDBDBD;
     margin-top: 15px;
+    margin-right: 300px;
 }
 .adit_comment_area {
     margin-left: 5vw;
@@ -306,7 +308,7 @@ export default {
 .adit_comment_register_box {
     height:100px;
     width:62vw;
-    max-width: 900px;
+    max-width: 1000px;
     border: 1px solid #BDBDBD;    
     padding: 10px;
     margin-left: 20px;

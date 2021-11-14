@@ -5,13 +5,13 @@
             <div class="mr-9 hidden-sm-and-down">
                 <div class="title_box">
                     <h2 class="page_title">
-                        <span>자유 게시판</span></h2>
+                        <span>1:1 문의 게시판 for user</span></h2>
                 </div>
             </div>
             <!-- 검색창 + complete 분류 -->
             <v-spacer class="forLine0">
                 <div class="forLine0sButton">
-                    <div class="tag_button" :class="{ on2 : completeSelect1 }" @click="fetchFreeBoardList(),
+                    <div class="tag_button" :class="{ on2 : completeSelect1 }" @click="fetchInqBoardForUserList(email),
                                         completeSelect1 = true, completeSelect2 = false, completeSelect3 = false, word = '' ">전체</div>&nbsp;&nbsp;&nbsp;
                 </div>
                 <div class="searching_box_top">
@@ -26,12 +26,24 @@
                     </div>
                 </div>
             </v-spacer>
-            <!-- 분류창 -->
-            <v-spacer class="forLine">
+             <!-- 분류창 -->
+            <v-spacer class="forLine hidden-sm-and-down">
                 <li class="tag_button" @click="word = ''">ALL</li>&nbsp;&nbsp;&nbsp;
-                <li class="tag_button" :class="{ on : tagSelect1 }" @click="tagSelect1 = !tagSelect1, searchingTag('Java')">Java</li>&nbsp;&nbsp;&nbsp;
-                <li class="tag_button" :class="{ on : tagSelect2 }" @click="tagSelect2 = !tagSelect2, searchingTag('Spring')">Spring</li>&nbsp;&nbsp;&nbsp;
-                <li class="tag_button" :class="{ on : tagSelect3 }" @click="tagSelect3 = !tagSelect3, searchingTag('Python')">Python</li>&nbsp;&nbsp;&nbsp;
+                <li class="tag_button" :class="{ on : tagSelect1 }" @click="tagSelect1 = !tagSelect1, searchingTag('사이트 이용 문의')">사이트 이용 문의</li>&nbsp;&nbsp;&nbsp;
+                <li class="tag_button" :class="{ on : tagSelect2 }" @click="tagSelect2 = !tagSelect2, searchingTag('결제 문의')">결제 문의</li>&nbsp;&nbsp;&nbsp;
+                <li class="tag_button" :class="{ on : tagSelect3 }" @click="tagSelect3 = !tagSelect3, searchingTag('수강 문의')">수강 문의</li>&nbsp;&nbsp;&nbsp;
+                <li class="tag_button" :class="{ on : tagSelect3 }" @click="tagSelect3 = !tagSelect3, searchingTag('회원가입/탈퇴 문의')">회원가입/탈퇴 문의</li>&nbsp;&nbsp;&nbsp;
+                <li class="tag_button" :class="{ on : tagSelect3 }" @click="tagSelect3 = !tagSelect3, searchingTag('이벤트 문의')">이벤트 문의</li>&nbsp;&nbsp;&nbsp;
+                <li class="tag_button" :class="{ on : tagSelect3 }" @click="tagSelect3 = !tagSelect3, searchingTag('기타 문의')">기타 문의</li>&nbsp;&nbsp;&nbsp;
+            </v-spacer>            
+            <v-spacer class="forLine2 hidden-md-and-up">
+                <p class="tag_button" @click="word = ''">ALL</p>&nbsp;&nbsp;&nbsp;
+                <p class="tag_button" :class="{ on : tagSelect1 }" @click="tagSelect1 = !tagSelect1, searchingTag('사이트 이용 문의')">사이트</p>&nbsp;&nbsp;&nbsp;
+                <p class="tag_button" :class="{ on : tagSelect2 }" @click="tagSelect2 = !tagSelect2, searchingTag('결제 문의')">결제</p>&nbsp;&nbsp;&nbsp;
+                <p class="tag_button" :class="{ on : tagSelect3 }" @click="tagSelect3 = !tagSelect3, searchingTag('수강 문의')">수강</p>&nbsp;&nbsp;&nbsp;
+                <p class="tag_button" :class="{ on : tagSelect3 }" @click="tagSelect3 = !tagSelect3, searchingTag('회원가입/탈퇴 문의')">회원가입/탈퇴</p>&nbsp;&nbsp;&nbsp;
+                <p class="tag_button" :class="{ on : tagSelect3 }" @click="tagSelect3 = !tagSelect3, searchingTag('이벤트 문의')">이벤트</p>&nbsp;&nbsp;&nbsp;
+                <p class="tag_button" :class="{ on : tagSelect3 }" @click="tagSelect3 = !tagSelect3, searchingTag('기타 문의')">기타</p>&nbsp;&nbsp;&nbsp;
             </v-spacer>
             <!-- 게시글 리스트 -->
             <div class="forSearching" v-show="!searchinOn">
@@ -44,26 +56,17 @@
                                 <div class="post_num" v-show="mob.notice == 'true'"><div class="mr-9 hidden-sm-and-down"><div style="width:54px;text-align:center;margin-right:3vw" >
                                     <div class="completeDisplay">공지사항</div></div></div></div>
                                 <div class="post_title">
-                                    <router-link :to="{ name: 'FreeBoardReadPage', params: { boardNo: mob.boardNo.toString() } }" >
+                                    <router-link :to="{ name: 'InqBoardReadPage', params: { boardNo: mob.boardNo.toString() } }" >
                                         <div class="item4">{{ mob.title }}</div>
                                     </router-link>                                    
-                                    <router-link :to="{ name: 'FreeBoardReadPage', params: { boardNo: mob.boardNo.toString() } }" >
+                                    <router-link :to="{ name: 'InqBoardReadPage', params: { boardNo: mob.boardNo.toString() } }" >
                                         <div class="tag_box">
                                             <div class="post_reg_date">{{ calcTime(mob.regDate) }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
                                                 <div class="hidden-md-and-up">
                                                     <div class="tag_box">
-                                                        <!-- 여기는 모바일 사이즈 때 보이는 정보 -->
-                                                        <div class="item2">
-                                                            <v-icon size="18px" color="#9e9e9e">mdi-eye</v-icon>
-                                                            <div style="padding-top:3px">&nbsp;{{ mob.views }}</div>
-                                                        </div>
                                                         <div class="item3">
                                                             &nbsp;&nbsp;<v-icon size="18px" color="#9e9e9e">mdi-comment</v-icon>
                                                             <div style="padding-top:3px">&nbsp;{{ mob.comments }}</div>
-                                                        </div>
-                                                        <div class="item3">
-                                                            &nbsp;&nbsp;<v-icon size="18px" color="#E57373">mdi-heart</v-icon>
-                                                            <div style="padding-top:3px">&nbsp;{{ mob.currentNum }}</div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -72,35 +75,28 @@
                                                     <div class="completeDisplay">공지사항</div>
                                                 </div>
                                             </div>
-                                            <div v-show="mob.notice == 'false'" v-for="tag in classifyTag(mob.tags)" :key="tag.text">
+                                            <div v-show="mob.notice == 'false'">
                                                 <div class="mr-9 hidden-sm-and-down">
                                                     <div class="tag_box_button_box">
-                                                        <btn class="tag_box_button" @click="tagSelect0 = !tagSelect0,searchingTag(tag.text)">#{{ tag.text }}&nbsp;</btn>
+                                                        <btn class="completeDisplay3" @click="tagSelect0 = !tagSelect0,searchingTag(tag.text)">{{ classifyTag(mob.tags).text }}&nbsp;</btn>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div v-show="mob.complete == 'true'" class="completeDisplay2" @click="selectComplete('true')">답변완료</div>
+                                            <div v-show="mob.complete == 'true'" class="completeDisplay2">답변완료</div>
                                         </div>
                                     </router-link>                                    
                                 </div>
-                                <router-link class="post_vnc" :to="{ name: 'FreeBoardReadPage', params: { boardNo: mob.boardNo.toString() } }" >
+                                <router-link class="post_vnc" :to="{ name: 'InqBoardReadPage', params: { boardNo: mob.boardNo.toString() } }" >
                                     <div class="mr-2 hidden-sm-and-down">
-                                    <div class="item2">
-                                        <v-icon size="18px" color="#9e9e9e">mdi-eye</v-icon>
-                                        <div style="padding-top:3px">&nbsp;{{ mob.views }}</div>
-                                    </div>
                                     <div class="item3">
                                         <v-icon size="18px" color="#9e9e9e">mdi-comment</v-icon>
                                         <div style="padding-top:3px">&nbsp;{{ mob.comments }}</div>
-                                    </div>
-                                    <div class="item3">
-                                        <v-icon size="18px" color="#E57373">mdi-heart</v-icon>
-                                        <div style="padding-top:3px">&nbsp;{{ mob.currentNum }}</div>
                                     </div>
                                     </div>
                                 </router-link>
                                 <div class="post_name_box">
                                     <div class="mr-9 hidden-sm-and-down"><div class="post_name">{{ mob.nickname }}</div>
+                                    <div class="post_name">{{ mob.writer }}</div>
                                     </div>
                                 </div>
                             </div>
@@ -108,7 +104,7 @@
                     </div>
                     <div class="button_box">
                         <v-flex hidden-sm-and-down text-sm-right="text-sm-right">
-                            <router-link :to="{ name: 'FreeBoardRegisterPage' }">
+                            <router-link :to="{ name: 'InqBoardRegisterPage' }">
                                 <v-btn
                                     v-if="this.$store.state.isLogin"
                                     color="blue darken-3 text center"
@@ -145,26 +141,17 @@
                                 <div class="post_num" v-show="mob.notice == 'true'"><div class="mr-9 hidden-sm-and-down"><div style="width:54px;text-align:center;margin-right:3vw" >
                                     <div class="completeDisplay">공지사항</div></div></div></div>
                                 <div class="post_title">
-                                    <router-link :to="{ name: 'FreeBoardReadPage', params: { boardNo: mob.boardNo.toString() } }" >
+                                    <router-link :to="{ name: 'InqBoardReadPage', params: { boardNo: mob.boardNo.toString() } }" >
                                         <div class="item4">{{ mob.title }}</div>
                                     </router-link>                                    
-                                    <router-link :to="{ name: 'FreeBoardReadPage', params: { boardNo: mob.boardNo.toString() } }" >
+                                    <router-link :to="{ name: 'InqBoardReadPage', params: { boardNo: mob.boardNo.toString() } }" >
                                         <div class="tag_box">
                                             <div class="post_reg_date">{{ calcTime(mob.regDate) }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
                                                 <div class="hidden-md-and-up">
                                                     <div class="tag_box">
-                                                        <!-- 여기는 모바일 사이즈 때 보이는 정보 -->
-                                                        <div class="item2">
-                                                            <v-icon size="18px" color="#9e9e9e">mdi-eye</v-icon>
-                                                            <div style="padding-top:3px">&nbsp;{{ mob.views }}</div>
-                                                        </div>
                                                         <div class="item3">
                                                             &nbsp;&nbsp;<v-icon size="18px" color="#9e9e9e">mdi-comment</v-icon>
                                                             <div style="padding-top:3px">&nbsp;{{ mob.comments }}</div>
-                                                        </div>
-                                                        <div class="item3">
-                                                            &nbsp;&nbsp;<v-icon size="18px" color="#E57373">mdi-heart</v-icon>
-                                                            <div style="padding-top:3px">&nbsp;{{ mob.currentNum }}</div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -173,30 +160,22 @@
                                                     <div class="completeDisplay">공지사항</div>
                                                 </div>
                                             </div>
-                                            <div v-show="mob.notice == 'false'" v-for="tag in classifyTag(mob.tags)" :key="tag.text">
+                                            <div v-show="mob.notice == 'false'">
                                                 <div class="mr-9 hidden-sm-and-down">
                                                     <div class="tag_box_button_box">
-                                                        <btn class="tag_box_button" @click="tagSelect0 = !tagSelect0,searchingTag(tag.text)">#{{ tag.text }}&nbsp;</btn>
+                                                        <btn class="completeDisplay3" @click="tagSelect0 = !tagSelect0,searchingTag(tag.text)">{{ classifyTag(mob.tags).text }}&nbsp;</btn>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div v-show="mob.complete == 'true'" class="completeDisplay2" @click="selectComplete('true')">답변완료</div>
+                                            <div v-show="mob.complete == 'true'" class="completeDisplay">답변완료</div>
                                         </div>
                                     </router-link>                                    
                                 </div>
-                                <router-link class="post_vnc" :to="{ name: 'FreeBoardReadPage', params: { boardNo: mob.boardNo.toString() } }" >
+                                <router-link class="post_vnc" :to="{ name: 'InqBoardReadPage', params: { boardNo: mob.boardNo.toString() } }" >
                                     <div class="mr-2 hidden-sm-and-down">
-                                    <div class="item2">
-                                        <v-icon size="18px" color="#9e9e9e">mdi-eye</v-icon>
-                                        <div style="padding-top:3px">&nbsp;{{ mob.views }}</div>
-                                    </div>
                                     <div class="item3">
                                         <v-icon size="18px" color="#9e9e9e">mdi-comment</v-icon>
                                         <div style="padding-top:3px">&nbsp;{{ mob.comments }}</div>
-                                    </div>
-                                    <div class="item3">
-                                        <v-icon size="18px" color="#E57373">mdi-heart</v-icon>
-                                        <div style="padding-top:3px">&nbsp;{{ mob.currentNum }}</div>
                                     </div>
                                     </div>
                                 </router-link>
@@ -209,7 +188,7 @@
                     </div>
                     <div class="button_box">
                         <v-flex hidden-sm-and-down text-sm-right="text-sm-right">
-                            <router-link :to="{ name: 'FreeBoardRegisterPage' }">
+                            <router-link :to="{ name: 'InqBoardRegisterPage' }">
                                 <v-btn
                                     v-if="this.$store.state.isLogin"
                                     color="blue darken-3 text center"
@@ -243,24 +222,10 @@
             </div>
         </div>
         <!-- 모바일 사이즈 때 나타나는 글쓰기 버튼 -->
-        <router-link :to="{ name: 'FreeBoardRegisterPage' }">
+        <router-link :to="{ name: 'InqBoardRegisterPage' }">
             <v-btn fab dark large color="primary" fixed right class="hidden-md-and-up">
                 <v-icon dark>mdi-plus</v-icon>
             </v-btn>
-        </router-link>
-
-        링크용
-        <router-link :to="{ name: 'StudyBoardListPage' }">
-            <v-btn>스터디 게시판</v-btn>
-        </router-link>
-        <router-link :to="{ name: 'QnABoardListPage' }">
-            <v-btn>QnA 게시판</v-btn>
-        </router-link>
-        <router-link :to="{ name: 'InqBoardListPage' }">
-            <v-btn>문의 게시판</v-btn>
-        </router-link>
-        <router-link :to="{ name: 'InqBoardListForUserPage' }">
-            <v-btn>문의 for user 게시판</v-btn>
         </router-link>
     </div>
 </template>
@@ -269,7 +234,7 @@
 import { mapState, mapActions } from 'vuex'
 
 export default {
-    name: 'FreeBoardList',
+    name: 'InqBoardList',
     props: {
         boards: {
             type: Array
@@ -299,7 +264,9 @@ export default {
             tagSelect3: false,
             completeSelect1: true,
             completeSelect2: false,
-            completeSelect3: false
+            completeSelect3: false,
+
+            email: this.$store.state.moduleA.email
         }
     },
     beforeDestroy () {
@@ -417,7 +384,14 @@ export default {
         },
         classifyTag(data) {
             var arr = JSON.parse(data)
+            console.log('-------------------')
             console.log(arr)
+            console.log("zz")
+            console.log(arr[0])
+            console.log("zz")
+            console.log(arr.text)
+            // console.log(arr[0].text)
+            console.log('-------------------')
             return arr
         },
         selectComplete(data) {
@@ -430,10 +404,10 @@ export default {
                 this.completeSelect2 = true
                 this.completeSelect3 = false
             }
-            this.fetchFreeBoardListWithFilter(data)
+            this.fetchInqBoardListWithFilter(data)
         },
-        ...mapActions(['fetchFreeBoardList']),
-        ...mapActions(['fetchFreeBoardListWithFilter'])
+        ...mapActions(['fetchInqBoardForUserList']),
+        ...mapActions(['fetchInqBoardListWithFilter'])
     },
     computed: {
         pageCount() {
@@ -479,6 +453,7 @@ export default {
 .tag_button {
     color: #BDBDBD;
     cursor: pointer;
+    margin: 0px;
 }
 .tag_button.on {
     color: black;
@@ -506,6 +481,16 @@ export default {
 
 }
 .forLine {
+    height: 40px;
+    border-top: 1px solid #BDBDBD;
+    border-bottom: 1px solid #BDBDBD;
+    padding-left: 2vw;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+.forLine2 {
+    text-align: center;
     height: 40px;
     border-top: 1px solid #BDBDBD;
     border-bottom: 1px solid #BDBDBD;
@@ -638,14 +623,14 @@ input:focus {
     display: flex;
     justify-content: flex-start;
     margin: 0vw 1vw;
-    height: 62px;
+    height: 58px;
     border-bottom: 1px solid #BDBDBD;
 }
 .post_card.on {
     display: flex;
     justify-content: flex-start;
     margin: 0vw 1vw;
-    height: 62px;
+    height: 58px;
     border-bottom: 1px solid #BDBDBD;
     background-color: #F5F5F5;
 }
@@ -797,14 +782,14 @@ ul {
     display: flex;
     align-self: center;
     font-size: 12px;
-    min-width: 20px;
+    min-width: 120px;
     font-weight: 500;
     color: #01579B;
     transition: all 0.4s ease;
 }
 .tag_box_button:hover {
     font-size: 12px;
-    min-width: 30px;
+    min-width: 120px;
     color: #01579B;
     font-weight: bold;
     transition: all 0.4s ease;
@@ -822,6 +807,18 @@ ul {
 }
 .completeDisplay2 {
     background-color: #C2185B;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 20px;
+    padding: 0 4px 0 4px;
+    font-size: 11px;
+    font-weight: bold;
+    margin-left: 3px;
+}
+.completeDisplay3 {
+    background-color: #00897B;
     color: white;
     display: flex;
     justify-content: center;

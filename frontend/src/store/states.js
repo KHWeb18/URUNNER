@@ -40,6 +40,7 @@ export default {
   comment: null,
   isLogin: true, //임시,
   isAuth: true, // 임시
+  isAuth2: 'true',
   boardNo: null,
   //공지사항
   notices: [],

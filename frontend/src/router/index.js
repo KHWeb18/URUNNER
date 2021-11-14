@@ -29,11 +29,19 @@ import StudyBoardModifyPage from '@/views/board/study/StudyBoardModifyPage.vue'
 import PaymentPage from '@/views/payment/PaymentPage.vue'
 import PaymentFail from '@/views/payment/PaymentFail.vue'
 import PaymentSuccess from '@/views/payment/PaymentSuccess.vue'
+
 // 질문답변 게시판
 import QnABoardRegisterPage from '@/views/board/qna/QnABoardRegisterPage.vue'
 import QnABoardListPage from '@/views/board/qna/QnABoardListPage.vue'
 import QnABoardReadPage from '@/views/board/qna/QnABoardReadPage.vue'
 import QnABoardModifyPage from '@/views/board/qna/QnABoardModifyPage.vue'
+
+// 1:1 문의 게시판
+import InqBoardRegisterPage from '@/views/board/inq/InqBoardRegisterPage.vue'
+import InqBoardListPage from '@/views/board/inq/InqBoardListPage.vue'
+import InqBoardListForUserPage from '@/views/board/inq/InqBoardListForUserPage.vue'
+import InqBoardReadPage from '@/views/board/inq/InqBoardReadPage.vue'
+import InqBoardModifyPage from '@/views/board/inq/InqBoardModifyPage.vue'
 
 Vue.use(VueRouter)
 
@@ -295,6 +303,48 @@ export default new VueRouter({
         name: 'QnABoardModifyPage',
         components: {
           default: QnABoardModifyPage
+        },
+        props: {
+          default: true
+        }
+      },
+      // 질문답변 게시판
+      {
+        path: '/inq/create',
+        name: 'InqBoardRegisterPage',
+        components: {
+          default: InqBoardRegisterPage
+        }
+      },
+      {
+        path: '/inq',
+        name: 'InqBoardListPage',
+        components: {
+          default: InqBoardListPage
+        }
+      },
+      {
+        path: '/inqforuser',
+        name: 'InqBoardListForUserPage',
+        components: {
+          default: InqBoardListForUserPage
+        }
+      },
+      {
+        path: '/inq/:boardNo',
+        name: 'InqBoardReadPage',
+        components: {
+          default: InqBoardReadPage
+        },
+        props: {
+          default: true
+        }
+      },
+      {
+        path: '/inq/:boardNo/edit',
+        name: 'InqBoardModifyPage',
+        components: {
+          default: InqBoardModifyPage
         },
         props: {
           default: true
