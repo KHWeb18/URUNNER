@@ -65,7 +65,6 @@ export default {
                 console.log('refreshCheck값은 : ' + this.refreshCheck)
                 console.log('데이터 변동 감지')
                 this.fetchQnACommentList(this.boardNo)
-                this.fetchQnAMemberList(this.boardNo)
                 this.fetchQnABoard(this.boardNo)
                 this.refreshCheck = 1
             }
@@ -88,13 +87,11 @@ export default {
                 })
     },
     mounted () {
-        this.fetchQnACommentList(this.boardNo),
-        this.fetchQnAMemberList(this.boardNo)
+        this.fetchQnACommentList(this.boardNo)
     },
     methods: {
         ...mapActions(['fetchQnABoard']),
         ...mapActions(['fetchQnACommentList']),
-        ...mapActions(['fetchQnAMemberList']),
         onDeletePost () {
                         const { boardNo } = this.board
                         axios.delete(`http://localhost:7777/qnaboard/${boardNo}`)
@@ -126,8 +123,7 @@ export default {
 .v-btn {
     margin-right: 10px;
 }
-.middle_btn_box {    
-    width:70vw;
+.middle_btn_box {
     max-width: 1000px;
     text-align: center;
     margin: 0px;

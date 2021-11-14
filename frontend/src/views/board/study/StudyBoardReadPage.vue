@@ -126,7 +126,6 @@ export default {
     margin-right: 10px;
 }
 .middle_btn_box {    
-    width:70vw;
     max-width: 1000px;
     text-align: center;
     margin: 0px;

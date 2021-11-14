@@ -1,26 +1,20 @@
 <template>
-    <div id="board_padding">
+    <div id="board_padding">        
         <v-container>
-            <board-list :boards="boards"/>
+            <free-board-list :boards="boards"/>
         </v-container>
-        <router-link :to="{ name: 'StudyBoardListPage' }">
-        <v-btn>스터디 게시판</v-btn>
-        </router-link>
-        <router-link :to="{ name: 'QnABoardListPage' }">
-        <v-btn>질문 답변 게시판</v-btn>
-        </router-link>
     </div>
 </template>
 
 <script>
 
-import BoardList from '@/components/board/free/BoardList.vue'
+import FreeBoardList from '@/components/board/free/FreeBoardList.vue'
 import { mapState, mapActions } from 'vuex'
 
 export default {
-    name: 'BoardListPage',
+    name: 'FreeBoardListPage',
     components: {
-        BoardList
+        FreeBoardList
     },
     computed: {
         ...mapState(['boards'])
@@ -35,3 +29,17 @@ export default {
 }
 
 </script>
+
+<style scoped>
+.board_title {
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 32px;
+    color: #333d4b;
+    margin-bottom: 60px;
+    margin-top: 70px;
+}
+.v-progress-circular {
+  margin: 1rem;
+}
+</style>

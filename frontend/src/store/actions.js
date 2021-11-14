@@ -31,7 +31,20 @@ export default {
                     this.$store.state.introduce = res.data
                 })
     },
-    // 자유게시판
+    // 공지사항
+    fetchNoticeList ({ commit }) {
+        return axios.get('http://localhost:7777/notice/noticeLists')
+                .then((res) => {
+                    commit(FETCH_NOTICE_LIST, res.data)
+                })
+    },
+    fetchNotice ({ commit }, noticeNo) {
+        return axios.get(`http://localhost:7777/notice/${noticeNo}`)
+                .then((res) => {
+                    commit(FETCH_NOTICE, res.data)
+                })
+    },
+    // 자유 게시판
     fetchFreeBoardList ({ commit }) {
         return axios.get('http://localhost:7777/freeboard/lists')
                 .then((res) => {
@@ -46,26 +59,19 @@ export default {
                 })
     },
     fetchFreeCommentList ({ commit }, No) {
-        console.log('fetchCommentList 작동중 받은 No(stated의 boardNo) 값은 : ' + No)
+        console.log('fetchFreeCommentList 작동중 받은 No(stated의 boardNo) 값은 : ' + No)
         return axios.get(`http://localhost:7777/freeboard/comment/${No}`)
                 .then((res) => {
                     commit(FETCH_COMMENT_LIST, res.data)
-                    console.log(res.data)
-                    console.log(res.data[0][0])
                 })
 
     },
-    // 공지사항
-    fetchNoticeList ({ commit }) {
-        return axios.get('http://localhost:7777/notice/noticeLists')
+    fetchFreeBoardListWithFilter ({ commit }, complete) {
+        console.log(complete)
+        return axios.get(`http://localhost:7777/freeboard/lists/${complete}`)
                 .then((res) => {
-                    commit(FETCH_NOTICE_LIST, res.data)
-                })
-    },
-    fetchNotice ({ commit }, noticeNo) {
-        return axios.get(`http://localhost:7777/notice/${noticeNo}`)
-                .then((res) => {
-                    commit(FETCH_NOTICE, res.data)
+                    const reverse = [...res.data].reverse();
+                    commit(FETCH_BOARD_LIST, reverse)
                 })
     },    
     // 스터디 게시판

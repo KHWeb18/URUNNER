@@ -2,6 +2,7 @@ package com.urunner.khweb.controller.board;
 
 import com.urunner.khweb.controller.dto.board.FreeRequest;
 import com.urunner.khweb.entity.board.Free;
+import com.urunner.khweb.entity.board.QnAMember;
 import com.urunner.khweb.service.board.FreeBoardService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,23 +23,20 @@ public class FreeBoardController {
     @Autowired
     private FreeBoardService service;
 
-    @Autowired
-    private HttpSession session;
-
     @PostMapping("/register")
     public ResponseEntity<Free> register(
             @Validated @RequestBody FreeRequest freeRequest) throws Exception {
-        log.info("post register request from vue");
-        log.info("**board : " + freeRequest);
+        log.info(":::: post register request from vue");
+        log.info(":::: RequestBody value : " + freeRequest);
 
         return new ResponseEntity<>(service.register(freeRequest), HttpStatus.OK);
     }
 
     @GetMapping("/lists")
     public ResponseEntity<List<Free>> getLists () throws Exception {
-        log.info("getFreeLists() ");
+        log.info("getStudyLists() ");
 
-        return new ResponseEntity<>(service.findAll(), HttpStatus.OK);
+        return new ResponseEntity<>(service.selectFreeList(), HttpStatus.OK);
     }
 
     @GetMapping("/{boardNo}")
@@ -50,9 +47,35 @@ public class FreeBoardController {
         return new ResponseEntity<>(board, HttpStatus.OK);
     }
 
+    @PutMapping("/apply/{boardNo}") // study에 지원한 member 등록
+    public ResponseEntity<String> apply(@PathVariable("boardNo") Long boardNo,
+                                        @Validated @RequestBody QnAMember qnAMember) throws Exception {
+        System.out.println("######## Controller run success");
+        qnAMember.setBoardNo(boardNo);
+        System.out.println("######## applyMember ready");
+        service.applyMember(qnAMember); //일단 memberList에 추가하고(중복체크까지)
+        System.out.println("######## applyMember success");
+
+        System.out.println("######## checkLength ready");
+        Long num = service.checkLength(boardNo);// boardNO 값을 가지는 테이블의 length를 구해서 num으로 주고
+        System.out.println("######## checkLength success and num value is" + num);
+        num += 1;
+
+        FreeRequest freeRequest = new FreeRequest();
+        freeRequest.setCurrentNum(num);
+        freeRequest.setBoardNo(boardNo);
+        System.out.println("######## studyRequest value :" + freeRequest);
+        service.updateCurrentNum(freeRequest); // post 값 갱신
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @PutMapping ("/{boardNo}")
     public ResponseEntity<Free> modify(@PathVariable("boardNo") Long boardNo,
-                                       @Validated @RequestBody FreeRequest freeRequest) throws Exception {
+                                      @Validated @RequestBody FreeRequest freeRequest) throws Exception {
+        log.info(":::: post modify request from vue");
+        log.info(":::: RequestBody value : " + freeRequest);
+
         freeRequest.setBoardNo(boardNo);
         service.updatePost(freeRequest);
 

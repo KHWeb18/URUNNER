@@ -1,7 +1,6 @@
 <template>
 <div>
     댓글 <b style="color:#00897B">{{comments.length}}</b>
-    <!-- 그륩: {{ groupNo }} 코멘트: {{ commentNo }} 레이어: {{ layer }} -->
     <div class="comment_list">
         <div>
             <!-- 댓글 목록 -->
@@ -59,16 +58,11 @@
             </div>
             <!-- 댓글 입력창 -->
             <div class="comment_area" @click="temp = false, groupNo = 0, layer = 0, commentNo = 0">
-                <tr>
-                    <!-- <textarea class="comment_register_box"
-                    v-model="content" placeholder="댓글을 입력해주세요" v-on:keyup.enter="submit"></textarea> -->
-                    <!-- 엔터키로 제출하면 줄바꿈도 같이 들어가서 일단 막아둠 -->
-                    <textarea class="comment_register_box"
-                    v-model="content" placeholder="댓글을 입력해주세요"></textarea>
-                </tr>
-                <td class="comment_register_btn">
-                    <v-btn color="blue-grey darken-1 white-text" @click="submit">댓글 등록</v-btn>
-                </td>
+                <textarea class="comment_register_box"
+                v-model="content" placeholder="댓글을 입력해주세요" style="width:95vw;"></textarea>
+                <div class="comment_register_btn">
+                    <v-btn color="blue-grey darken-1 white-text" @click="submit" style="margin-right:30px">댓글 등록</v-btn>
+                </div>
             </div>
         </div>
         <!-- 하단 밑줄용 -->
@@ -211,14 +205,14 @@ export default {
 
 <style scoped>
 .comment_list {
-    width:70vw;
-    max-width: 1000px;
+    width:100vw;
+    max-width: 1050px;
     margin-top: 10px;
     border-top: #BDBDBD solid 1px;
     padding-top: 20px;
 }
 .post_list {
-    width:70vw;
+    width:100vw;
     max-width: 1000px;
 }
 .post_card {
@@ -246,7 +240,7 @@ export default {
 .post_box {
     display: flex;
     flex-direction: column;
-    width: 60vw;
+    width: 70vw;
 }
 .post_tag {
     color: #0288D1;
@@ -285,15 +279,13 @@ export default {
 .comment_register_box {
     height:150px;
     width:65vw;
-    max-width: 1000px;
+    max-width: 1040px;
     border: 1px solid #BDBDBD;    
     padding: 10px;
-    margin-left: 20px;
 }
 .comment_register_btn {
     text-align: right;
     padding: 0px;
-    padding-left: 20px;
 }
 ::placeholder {
     font-size: 16px;
@@ -301,10 +293,10 @@ export default {
     color: #757575;    
 }
 .button_container {
-    width:70vw;
     max-width: 1040px;
     border-top: 1px solid #BDBDBD;
     margin-top: 15px;
+    margin-right: 300px;
 }
 .adit_comment_area {
     margin-left: 5vw;
