@@ -1,13 +1,9 @@
 package com.urunner.khweb.controller.board;
 
-import com.urunner.khweb.controller.dto.QnARequest;
-import com.urunner.khweb.controller.dto.StudyRequest;
+import com.urunner.khweb.controller.dto.board.QnARequest;
 import com.urunner.khweb.entity.board.QnA;
 import com.urunner.khweb.entity.board.QnAMember;
-import com.urunner.khweb.entity.board.Study;
-import com.urunner.khweb.entity.board.StudyMember;
 import com.urunner.khweb.service.board.QnABoardService;
-import com.urunner.khweb.service.board.StudyBoardService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -41,7 +37,7 @@ public class QnABoardController {
     public ResponseEntity<List<QnA>> getLists () throws Exception {
         log.info("getStudyLists() ");
 
-        return new ResponseEntity<>(service.findAll(), HttpStatus.OK);
+        return new ResponseEntity<>(service.selectQnAList(), HttpStatus.OK);
     }
 
     @GetMapping("/lists/{complete}")
@@ -50,12 +46,6 @@ public class QnABoardController {
 
         return new ResponseEntity<>(service.findByComplete(complete), HttpStatus.OK);
     }
-
-//    @GetMapping("/lists/complete/true")
-//    public ResponseEntity<List<QnA>> getListsWithFilter () throws Exception {
-//
-//        return new ResponseEntity<>(service.findByComplete("true"), HttpStatus.OK);
-//    }
 
     @GetMapping("/{boardNo}")
     public ResponseEntity<Optional<QnA>> read(@PathVariable("boardNo") Long boardNo) throws Exception {
@@ -68,19 +58,9 @@ public class QnABoardController {
     @GetMapping("/memberList/{boardNo}")
     // study에 지원한 memberList 요청
     public ResponseEntity<List<QnAMember>> memberList(@PathVariable("boardNo") Long boardNo){
-
-        log.info("****");
         System.out.println(boardNo);
-        log.info("****");
-        log.info("****");
-        log.info("****");
-        log.info("****");
+
         List<QnAMember> member = service.selectStudyBoardNo(boardNo);
-        log.info("****");
-        log.info("****");
-        log.info("study memberList 값은 : " + member);
-        log.info("****");
-        log.info("****");
 
         return new ResponseEntity<>(member, HttpStatus.OK);
     }

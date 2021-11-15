@@ -17,13 +17,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="content_img">
-                    <img :src="ImgRequest()" class="test">
-                </div>
                 <div class="post_content">
                     <div v-html="board.content">{{ board.content }}</div>
                 </div>
-                <div class="complete_btn_align">
+                <div v-show="board.notice == 'false'" class="complete_btn_align">
                     <v-btn v-show="this.$store.state.moduleA.email = board.writer" @click="endRecruit(board.boardNo)">질문 완료</v-btn>
                 </div>
             </div>
@@ -44,7 +41,7 @@ export default {
             introduce: 'HELLO WORLD!',
             refresh: 1,
             members: this.$store.state.qnaMembers,
-            complete: false
+            complete: '',
         }
     },
     props: {
@@ -63,11 +60,13 @@ export default {
             }
         },
         endRecruit(data) {
-            this.board.complete = !this.board.complete
-            console.log('this.board는 ')
-            console.log(this.board)
-            const { title, content, complete, currentNum, tags } = this.board
-            axios.put(`http://localhost:7777/qnaboard/${data}`, { title, content, complete, currentNum, tags })
+            if(this.board.complete == 'true') {
+                this.board.complete = false
+            } else {
+                this.board.complete = true
+            }
+            const { title, content, complete, currentNum, tags, notice } = this.board
+            axios.put(`http://localhost:7777/qnaboard/${data}`, { title, content, complete, currentNum, tags, notice })
                     .then(res => {
                         console.log(res)
                         this.$router.push({
@@ -90,8 +89,12 @@ export default {
 
 <style scoped>
 .post_list {
-    width:70vw;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width:100vw;
     max-width: 1000px;
+    margin: 0px;
 }
 .main_box {
     color: #424242;
@@ -128,7 +131,7 @@ export default {
     border-style: none !important;
 }
 .searching_message_box {
-    width:70vw;
+    width:100vw;
     max-width: 1000px;
     display:flex;
     justify-content: center;
@@ -137,7 +140,7 @@ export default {
     display: flex;
     justify-content: center;
     flex-direction: column;
-    width:70vw;
+    width:100vw;
     max-width: 900px;
     border-top: 1px solid #BDBDBD;
     border-bottom: 1px solid #BDBDBD;
@@ -183,11 +186,6 @@ export default {
 .post_card_box {
 
 }
-.content_img {
-    text-align: center;
-    width: 70vw;
-    max-width: 1000px;
-}
 .thumbnail {
     margin-right: 20px;
     height: 140px !important; 
@@ -232,7 +230,7 @@ export default {
     text-decoration: underline;
 }
 .post_content {
-    margin: 0vw 3vw 0vw 3vw;
+    margin: 10vw 3vw 0vw 3vw;
     width: 60vw;
     font-size: 15px;
     color: #757575;
@@ -295,5 +293,12 @@ a:hover { text-decoration:none !important }
     justify-content: center;
     align-content: center;
     font-size: 18px;
+}
+.member_list {
+    display: flex;
+    justify-self: center;
+    align-self: center;
+    width: 300px;
+    margin: 30px;
 }
 </style>

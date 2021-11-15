@@ -1,15 +1,12 @@
 package com.urunner.khweb.service.board;
 
-import com.urunner.khweb.controller.dto.CommentRes;
-import com.urunner.khweb.controller.dto.FreeRequest;
+import com.urunner.khweb.controller.dto.board.CommentRes;
 import com.urunner.khweb.entity.board.Comment;
-import com.urunner.khweb.entity.board.Free;
 import com.urunner.khweb.repository.board.free.FreeCommentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.Objects;
 
 @Slf4j
 @Service

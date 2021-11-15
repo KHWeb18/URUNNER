@@ -5,7 +5,7 @@
        width="100%" max-height="200px"
         :src="`http://localhost:7777/lecture/image/${info.thumbPath}/${info.writer}`"
       >
-        <v-btn icon class="float-right"><v-icon>mdi-wrench-outline</v-icon></v-btn>
+        <v-btn icon class="float-right" color="cyan accent-2" :to="`/mypage/lecture/modifyLectureImage/${info.id}`"><v-icon>mdi-wrench-outline</v-icon></v-btn>
       </v-img>
       <v-card-actions v-else style="padding: 0;height: 100%">
         <div class="ma-auto mt-5">
@@ -16,22 +16,22 @@
     </div>
     <v-card-text style="border: 0.3rem solid lightgray;min-width: 50%">
       <!-- 이부분 매핑............... -->
-      <v-btn icon class="float-right"><v-icon>mdi-wrench-outline</v-icon></v-btn>
+      <v-btn icon class="float-right" :to="`/mypage/lecture/modifyLecture/${info.id}`"><v-icon>mdi-wrench-outline</v-icon></v-btn>
       <div class="text-h6 black--text">Title: <span>{{ info.title }}</span></div>
       <div class="text-h6 black--text">Price: <span>{{ getCurrencyFormat(info.price) }}</span> ₩</div>
       <!-- 카테고리 나중에 dto에 추가할예정 -->
-      <div class="text-h6 black--text">Category: <span>vue, front, javasecript</span></div>
+      <div class="text-h6 black--text">Category: <span v-for="(category) in info.category" :key="category.category_id"># {{ category.categoryName }}</span></div>
       <v-btn rounded color="warning" class="mt-3 d-block" @click="goToManageLecture(info.id)">커리큘럼 관리</v-btn>
     </v-card-text>
 
     <v-card-actions class="pa-0" style="min-width: 20%;">
      <div v-if="info.inProgress" style="width: 100%;height: 100%">
         <p class="text-center pa-3">status: <v-chip color="green">진행중</v-chip></p>
-        <v-btn color="red" class="d-block ma-auto mb-3">중단하기</v-btn>
+        <v-btn color="red" class="d-block ma-auto mb-3" @click="inProgressToFalse(info.id)">중단하기</v-btn>
       </div>
       <div v-else style="width: 100%;height: 100%">
         <p class="text-center pa-3">Status: <v-chip color="yellow">준비중</v-chip></p>
-        <v-btn color="green" class="d-block ma-auto mb-3">진행하기</v-btn>
+        <v-btn color="green" class="d-block ma-auto mb-3" @click="inProgressToTrue(info.id)">진행하기</v-btn>
       </div>
     </v-card-actions>
   </v-card>
@@ -59,6 +59,12 @@ export default {
     },
     goToInsertImage(id) {
       this.$router.push({ name: 'registerLectureImage', params: { lectureId: id }})
+    },
+    inProgressToTrue(id) {
+      this.$emit('inProgressToTrue', id)
+    },
+    inProgressToFalse(id) {
+       this.$emit('inProgressToFalse', id)
     }
   }
 }

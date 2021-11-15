@@ -1,11 +1,8 @@
 package com.urunner.khweb.service.board;
 
-import com.urunner.khweb.controller.dto.QnARequest;
-import com.urunner.khweb.controller.dto.StudyRequest;
+import com.urunner.khweb.controller.dto.board.QnARequest;
 import com.urunner.khweb.entity.board.QnA;
 import com.urunner.khweb.entity.board.QnAMember;
-import com.urunner.khweb.entity.board.Study;
-import com.urunner.khweb.entity.board.StudyMember;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +10,7 @@ import java.util.Optional;
 public interface QnABoardService {
     QnA register(QnARequest qnARequest) throws Exception;
     List<QnA> findAll() throws Exception;
+    List<QnA> selectQnAList() throws Exception;
     List<QnA> findByComplete(String complete) throws Exception;
     Optional<QnA> findByBoardNo(Long boardNo) throws Exception;
     void updatePost(QnARequest qnARequest) throws Exception;

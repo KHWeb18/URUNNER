@@ -85,14 +85,19 @@
             </v-combobox>
         </v-container>
             
-        <router-link :to="{ name: 'FreeBoardListPage' }">
+        <div class="button_box2">
+          <div class="checkBox">
+            <v-checkbox v-model="notice" :label="`공지사항`" value ></v-checkbox>
+          </div>
+          <div @click="$router.go(-1)">
             <v-btn>
                 취소
             </v-btn>
-        </router-link>
-        <v-btn color="light-blue lighten-1 text center" @click="contentSubmit()" class="item">
-            등록
-        </v-btn>
+          </div>
+          <v-btn color="light-blue lighten-1 text center" @click="contentSubmit()" class="regist_btn">
+              등록
+          </v-btn>
+          </div>
         </div>
     </div>
 </template>
@@ -113,9 +118,20 @@ export default {
     created() {
         this.tags = JSON.parse(this.board.tags)
         this.content = this.board.content
+        this.notice = this.board.notice
+        console.log(this.notice)
+
+        if (this.notice == 'true') {
+          this.notice = Boolean(true)
+        } else {
+          this.notice = Boolean(false)
+        }
+
+        console.log(this.notice)
     },
     data: () => ({
         content: '',
+        notice: false,
       activator: null,
       attach: null,
       colors: ['green', 'purple', 'indigo', 'cyan', 'teal', 'orange'],
@@ -225,11 +241,15 @@ export default {
           .indexOf(query.toString().toLowerCase()) > -1
       },
       contentSubmit() {
-          this.tags = JSON.stringify(this.tags)
-          console.log(this.tags)
-          console.log(typeof(this.tags))
-            const { content, tags } = this
-            this.$emit("fromEditor", { content, tags })
+        this.tags = JSON.stringify(this.tags)
+        
+        if (this.tags.length > 400) {
+          alert('태그가 너무 많습니다.')
+          } else {
+            const { content, tags, notice } = this
+            this.$emit("fromEditor", { content, tags, notice })
+            console.log('editor 단계의 notice 값 : ' + this.notice)
+          }
         }
     },
   }
@@ -247,5 +267,19 @@ export default {
 }
 .ProseMirror {
  min-height: 600px !important;
+}
+.container.container--fluid {
+  padding: 4px 0px 0px 0px
+}
+.button_box2 {
+    display: flex;
+    justify-content: flex-end;
+    margin: 0px;
+}
+.regist_btn {
+  margin-left: 10px;
+}
+.v-input--selection-controls.v-input {
+  margin: 5px 15px;
 }
 </style>

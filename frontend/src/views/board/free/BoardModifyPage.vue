@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-container>
-        <board-modify-form v-if="board" :board="board" @submit="onSubmit"/>
+        <free-board-modify-form v-if="board" :board="board" @submit="onSubmit"/>
         <p v-else>로딩중 .......</p>
         </v-container>
     </div>
@@ -9,13 +9,13 @@
 </template>
 
 <script>
-import BoardModifyForm from '@/components/board/free/BoardModifyForm'
+import FreeBoardModifyForm from '@/components/board/free/FreeBoardModifyForm'
 import { mapState, mapActions } from 'vuex'
 import axios from 'axios'
 export default {
-    name: 'BoardModifyPage',
+    name: 'FreeBoardModifyPage',
     components: {
-        BoardModifyForm
+        FreeBoardModifyForm
     },
     props: {
         boardNo: {
@@ -29,8 +29,8 @@ export default {
     methods: {
         ...mapActions(['fetchFreeBoard']),
         onSubmit (payload) {
-            const { title, content } = payload
-            axios.put(`http://localhost:7777/freeboard/${this.boardNo}`, { title, content })
+            const { title, content, complete, currentNum, tags, notice } = payload
+            axios.put(`http://localhost:7777/freeboard/${this.boardNo}`, { title, content, complete, currentNum, tags, notice })
                     .then(res => {
                         console.log(res)
                         this.$router.push({

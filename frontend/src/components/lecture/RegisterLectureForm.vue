@@ -5,10 +5,16 @@
     <form @submit.prevent="onSubmit">
       <div>
         <v-text-field label="title" v-model="lectureInfo.title"></v-text-field>
+         <v-select
+          :items="items2"
+          label="grade"
+          v-model="lectureInfo.grade"
+         ></v-select>
         <v-text-field label="price" type="number" v-model="lectureInfo.price"></v-text-field>
         <v-textarea label="description" v-model="lectureInfo.description"></v-textarea>
+        <content-editor @submitContent="submitContent"/>
         <v-select v-model="temp_category"
-          :items="tags"
+          :items="items"
           label="category"
           multiple
           chips
@@ -26,10 +32,14 @@
 
 <script>
 import axios from 'axios';
+import ContentEditor from '@/components/lecture/editor/ContentEditor.vue';
 import { API_BASE_URL } from '@/constants/index.js'
 import { getLectureList } from '@/util/AxiosMethod'
 
 export default {
+  components: {
+    ContentEditor
+  },
   data() {
     return {
       lectureInfo: {
@@ -37,10 +47,12 @@ export default {
         description: '',
         price: null,
         category: '',
-        lectureId: 1
+        content: '',
+        grade: ''
       },
       temp_category: [], 
-      tags: ['개발 프로그래밍', '자바', '프론트엔드', '백엔드', 'Vue', 'React', 'Html Css', 'docker'],
+      items: this.$store.state.category,
+      items2: ['입문', '초급', '중급 이상'],
       dto: []
     }
   },
@@ -48,7 +60,7 @@ export default {
     onSubmit() {
       this.temp_category.filter(c => this.lectureInfo.category += c + ',')
 
-      axios.put(API_BASE_URL + "/lecture/modifyLectureV2", { lectureInfo: this.lectureInfo })
+      axios.post(API_BASE_URL + "/lecture/newlecture", { lectureInfo: this.lectureInfo })
       .then(res => {
         getLectureList();
         alert("강의 기본정보 등록을 성공하였습니다.")
@@ -58,6 +70,10 @@ export default {
       .catch(err => {
         alert(err)
       })
+    },
+    submitContent(content) {
+      this.lectureInfo.content = content
+
     }
   },
 }

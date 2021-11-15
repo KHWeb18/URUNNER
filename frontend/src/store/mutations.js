@@ -10,7 +10,9 @@ import {
     FETCH_NOTICE_LIST,
     FETCH_NOTICE,
     // 스터디
-    FETCH_STUDY_MEMBER_LIST
+    FETCH_STUDY_MEMBER_LIST,
+    // 내학습
+    FETCH_MY_LECTURE_LIST
 
 } from './mutation-types'
 
@@ -44,6 +46,10 @@ export default {
     // 스터디
     [FETCH_STUDY_MEMBER_LIST] (state, studyMembers) {
         state.studyMembers = studyMembers
+    },
+    // 내학습
+    [FETCH_MY_LECTURE_LIST] (state, myLecturelist) {
+        state.myLecturelist = myLecturelist
     },
     // 커리큘럼 관리
     saveSectionList(state, data) {

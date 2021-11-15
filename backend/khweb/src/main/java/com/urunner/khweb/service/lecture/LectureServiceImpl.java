@@ -109,7 +109,7 @@ public class LectureServiceImpl implements LectureService {
     }
 
     @Override
-    public void lectureRegister(String writer, String title, Long price, String desc, String categoryArray) {
+    public void lectureRegister(String writer, String title, Long price, String desc, String content, String grade, String categoryArray) {
 
         String[] category = categoryArray.split(",");
 
@@ -120,6 +120,8 @@ public class LectureServiceImpl implements LectureService {
                 .title(title)
                 .price(price)
                 .description(desc)
+                .content(content)
+                .grade(grade)
                 .build();
 
         lectureRepository.save(lecture);
@@ -141,7 +143,7 @@ public class LectureServiceImpl implements LectureService {
 
     @Transactional
     @Override
-    public void modifyLecture(Long lectureId, String writer, String title, Long price, String desc, String categoryArray) {
+    public void modifyLecture(Long lectureId, String writer, String title, Long price, String desc, String content, String grade, String categoryArray) {
 
         String[] category = categoryArray.split(",");
 
@@ -156,6 +158,8 @@ public class LectureServiceImpl implements LectureService {
         lecture.setTitle(title);
         lecture.setPrice(price);
         lecture.setDescription(desc);
+        lecture.setGrade(grade);
+        lecture.setContent(content);
         lectureRepository.save(lecture);
 
         String query = "delete from CategoryLecture where Lecture_id = :Lecture_id";
@@ -281,7 +285,11 @@ public class LectureServiceImpl implements LectureService {
         Optional<LectureDto> lectureDto = lecture.stream().findAny().map(l ->
                 new LectureDto(l.getLecture_id(), l.getWriter(), l.getTitle(),
                         l.getDescription(), l.getPrice(), l.isInProgress(),
+<<<<<<< HEAD
                         l.isDiscounted(), l.getThumb_path(), l.getDetail_path(),
+=======
+                        l.isDiscounted(), l.getThumb_path(), l.getDetail_path(), l.getContent(), l.getGrade(),
+>>>>>>> upstream/main
                         em.createQuery(query, Category.class)
                                 .setParameter("lectureId", l.getLecture_id()).
                                 getResultList()
@@ -306,6 +314,26 @@ public class LectureServiceImpl implements LectureService {
         return new DtoWrapper2(lectureDto, Optional.of(list));
     }
 
+<<<<<<< HEAD
+=======
+    @Override
+    public List<LectureDto> getAllLectureList() {
+        List<Lecture> findAllLectureList = lectureRepository.findAll();
+
+        String query = "select c from Category c join CategoryLecture cl on cl.category = c " +
+                "join Lecture l on l = cl.lecture where l.id = :lectureId";
+
+        return findAllLectureList.stream().map(l ->
+                new LectureDto(l.getLecture_id(), l.getWriter(), l.getTitle(),
+                        l.getDescription(), l.getPrice(), l.isInProgress(),
+                        l.isDiscounted(), l.getThumb_path(), l.getDetail_path(), l.getContent(), l.getGrade(),
+                        em.createQuery(query, Category.class)
+                                .setParameter("lectureId", l.getLecture_id()).
+                                getResultList()
+                )).collect(Collectors.toList());
+    }
+
+>>>>>>> upstream/main
     @Transactional(readOnly = true)
     @Override
     public List<LectureDto> getLectureList(String writer) {
@@ -321,7 +349,7 @@ public class LectureServiceImpl implements LectureService {
         return findAllLecture.stream().map(l ->
                 new LectureDto(l.getLecture_id(), l.getWriter(), l.getTitle(),
                         l.getDescription(), l.getPrice(), l.isInProgress(),
-                        l.isDiscounted(), l.getThumb_path(), l.getDetail_path(),
+                        l.isDiscounted(), l.getThumb_path(), l.getDetail_path(),  l.getContent(), l.getGrade(),
                         em.createQuery(query, Category.class)
                                 .setParameter("lectureId", l.getLecture_id()).
                                 getResultList()
@@ -354,6 +382,7 @@ public class LectureServiceImpl implements LectureService {
                 new LectureDto(l.getLecture_id(), l.getWriter(), l.getTitle(),
                         l.getDescription(), l.getPrice(), l.isInProgress(), l.isDiscounted(),
                         l.getThumb_path(), l.getDetail_path(),
+                        l.getContent(), l.getGrade(),
                         em.createQuery(query, Category.class)
                                 .setParameter("lectureId", l.getLecture_id()).
                                 getResultList())).findAny();

@@ -12,9 +12,9 @@
             <v-spacer class="forLine0">
                 <div class="forLine0sButton">
                     <div class="tag_button" :class="{ on2 : completeSelect1 }" @click="fetchQnABoardList(),
-                                        completeSelect1 = true, completeSelect2 = false, completeSelect3 = false ">전체</div>&nbsp;&nbsp;&nbsp;
-                    <div class="tag_button" :class="{ on2 : completeSelect2 }"  @click="selectComplete('false')">미답변</div>&nbsp;&nbsp;&nbsp;
-                    <div class="tag_button" :class="{ on2 : completeSelect3 }" @click="selectComplete('true')">답변완료</div>&nbsp;&nbsp;&nbsp;
+                                        completeSelect1 = true, completeSelect2 = false, completeSelect3 = false, word = '' ">전체</div>&nbsp;&nbsp;&nbsp;
+                    <div class="tag_button" :class="{ on2 : completeSelect2 }"  @click="selectComplete('false'), word = ''">미답변</div>&nbsp;&nbsp;&nbsp;
+                    <div class="tag_button" :class="{ on2 : completeSelect3 }" @click="selectComplete('true'), word = ''">답변완료</div>&nbsp;&nbsp;&nbsp;
                 </div>
                 <div class="searching_box_top">
                     <div class="mr-9 hidden-sm-and-down">
@@ -34,61 +34,68 @@
                 <li class="tag_button" :class="{ on : tagSelect1 }" @click="tagSelect1 = !tagSelect1, searchingTag('Java')">Java</li>&nbsp;&nbsp;&nbsp;
                 <li class="tag_button" :class="{ on : tagSelect2 }" @click="tagSelect2 = !tagSelect2, searchingTag('Spring')">Spring</li>&nbsp;&nbsp;&nbsp;
                 <li class="tag_button" :class="{ on : tagSelect3 }" @click="tagSelect3 = !tagSelect3, searchingTag('Python')">Python</li>&nbsp;&nbsp;&nbsp;
-                <li class="tag_button" :class="{ on : tagSelect4 }" @click="tagSelect4 = !tagSelect4, searchingTag('Vue')">Vue</li>&nbsp;&nbsp;&nbsp;
-                <li class="tag_button" :class="{ on : tagSelect5 }" @click="tagSelect5 = !tagSelect5, searchingTag('SQL')">SQL</li>&nbsp;&nbsp;&nbsp;
             </v-spacer>
             <!-- 게시글 리스트 -->
             <div class="forSearching" v-show="!searchinOn">
                 <div class="post_list">
+                    <div class="for_line"></div>
                     <div class="post_card_box">
                         <div v-for="mob in paginatedData" :key="mob.boardNo">
-                            <div class="post_card" :class="{ on : mob.complete == 'true' }">
-                                <div class="post_num"><div class="mr-9 hidden-sm-and-down"><div style="width:16px;text-align:center;margin-right:3vw" >{{ mob.boardNo }}</div></div></div>
+                            <div class="post_card" :class="{ on : mob.notice == 'true' }">
+                                <div class="post_num" v-show="mob.notice == 'false'"><div class="mr-9 hidden-sm-and-down"><div style="width:16px;text-align:center;margin-right:3vw" >{{ mob.boardNo }}</div></div></div>
+                                <div class="post_num" v-show="mob.notice == 'true'"><div class="mr-9 hidden-sm-and-down"><div style="width:54px;text-align:center;margin-right:3vw" >
+                                    <div class="completeDisplay">공지사항</div></div></div></div>
                                 <div class="post_title">
                                     <router-link :to="{ name: 'QnABoardReadPage', params: { boardNo: mob.boardNo.toString() } }" >
                                         <div class="item4">{{ mob.title }}</div>
-                                    </router-link>
-                                    <div class="tag_box">
-                                        <div class="post_reg_date">{{ calcTime(mob.regDate) }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
-                                            <div class="hidden-md-and-up">
-                                                <div class="tag_box">
-                                                    <div class="item2">
-                                                        <v-icon size="18px" color="#9e9e9e">mdi-eye</v-icon>
-                                                        <div style="padding-top:3px">&nbsp;{{ mob.views }}</div>
+                                    </router-link>                                    
+                                    <router-link :to="{ name: 'QnABoardReadPage', params: { boardNo: mob.boardNo.toString() } }" >
+                                        <div class="tag_box">
+                                            <div class="post_reg_date">{{ calcTime(mob.regDate) }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                                                <div class="hidden-md-and-up">
+                                                    <div class="tag_box">
+                                                        <div class="item2">
+                                                            <v-icon size="18px" color="#9e9e9e">mdi-eye</v-icon>
+                                                            <div style="padding-top:3px">&nbsp;{{ mob.views }}</div>
+                                                        </div>
+                                                        <div class="item3">
+                                                            &nbsp;&nbsp;<v-icon size="18px" color="#9e9e9e">mdi-comment</v-icon>
+                                                            <div style="padding-top:3px">&nbsp;{{ mob.comments }}</div>
+                                                        </div>
                                                     </div>
-                                                    <div class="item3">
-                                                        &nbsp;&nbsp;<v-icon size="18px" color="#9e9e9e">mdi-comment</v-icon>
-                                                        <div style="padding-top:3px">&nbsp;{{ mob.comments }}</div>
+                                                </div>
+                                            <div v-show="mob.notice == 'true'">
+                                                <div class="hidden-md-and-up">
+                                                    <div class="completeDisplay">공지사항</div>
+                                                </div>
+                                            </div>
+                                            <div v-show="mob.notice == 'false'" v-for="tag in classifyTag(mob.tags)" :key="tag.text">
+                                                <div class="mr-9 hidden-sm-and-down">
+                                                    <div class="tag_box_button_box">
+                                                        <btn class="tag_box_button" @click="tagSelect0 = !tagSelect0,searchingTag(tag.text)">#{{ tag.text }}&nbsp;</btn>
                                                     </div>
                                                 </div>
                                             </div>
-                                        <div v-for="tag in classifyTag(mob.tags)" :key="tag">
-                                            <div class="mr-9 hidden-sm-and-down">
-                                                <div class="tag_box_button_box">
-                                            <btn class="tag_box_button" @click="tagSelect0 = !tagSelect0,searchingTag(tag.text)">#{{ tag.text }}&nbsp;</btn>
-                                            </div>
+                                            <div v-show="mob.complete == 'true'" class="completeDisplay2" @click="selectComplete('true')">답변완료</div>
                                         </div>
-                                        </div>
-                                        <div v-show="mob.complete == 'true'" class="completeDisplay">답변완료</div>
-                                    </div>
-                                    
+                                    </router-link>                                    
                                 </div>
-                                    <router-link class="post_vnc" :to="{ name: 'QnABoardReadPage', params: { boardNo: mob.boardNo.toString() } }" >
-                                        <div class="mr-2 hidden-sm-and-down">
-                                        <div class="item2">
-                                            <v-icon size="18px" color="#9e9e9e">mdi-eye</v-icon>
-                                            <div style="padding-top:3px">&nbsp;{{ mob.views }}</div>
-                                        </div>
-                                        <div class="item3">
-                                            <v-icon size="18px" color="#9e9e9e">mdi-comment</v-icon>
-                                            <div style="padding-top:3px">&nbsp;{{ mob.comments }}</div>
-                                        </div>
-                                        </div>
-                                    </router-link>
-                                    <div class="post_name_box">
-                                        <div class="mr-9 hidden-sm-and-down"><div class="post_name">{{ mob.nickname }}</div>
-                                        </div>
+                                <router-link class="post_vnc" :to="{ name: 'QnABoardReadPage', params: { boardNo: mob.boardNo.toString() } }" >
+                                    <div class="mr-2 hidden-sm-and-down">
+                                    <div class="item2">
+                                        <v-icon size="18px" color="#9e9e9e">mdi-eye</v-icon>
+                                        <div style="padding-top:3px">&nbsp;{{ mob.views }}</div>
                                     </div>
+                                    <div class="item3">
+                                        <v-icon size="18px" color="#9e9e9e">mdi-comment</v-icon>
+                                        <div style="padding-top:3px">&nbsp;{{ mob.comments }}</div>
+                                    </div>
+                                    </div>
+                                </router-link>
+                                <div class="post_name_box">
+                                    <div class="mr-9 hidden-sm-and-down"><div class="post_name">{{ mob.nickname }}</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -123,23 +130,50 @@
                     </div>
                 </div>
                 <div class="post_list">
+                    <div class="for_line"></div>
                     <div class="post_card_box">
                         <div v-for="mob in paginatedDataS" :key="mob.boardNo">
-                            <div class="post_card" :class="{ on : mob.complete == 'true' }">
-                                <div class="post_num"><div style="width:16px;text-align:center;">{{ mob.boardNo }}</div></div>
+                            <div class="post_card" :class="{ on : mob.notice == 'true' }">
+                                <div class="post_num" v-show="mob.notice == 'false'"><div class="mr-9 hidden-sm-and-down"><div style="width:16px;text-align:center;margin-right:3vw" >{{ mob.boardNo }}</div></div></div>
+                                <div class="post_num" v-show="mob.notice == 'true'"><div class="mr-9 hidden-sm-and-down"><div style="width:54px;text-align:center;margin-right:3vw" >
+                                    <div class="completeDisplay">공지사항</div></div></div></div>
                                 <div class="post_title">
                                     <router-link :to="{ name: 'QnABoardReadPage', params: { boardNo: mob.boardNo.toString() } }" >
                                         <div class="item4">{{ mob.title }}</div>
-                                    </router-link>
-                                    <div class="tag_box">
-                                        <div class="post_reg_date">{{ calcTime(mob.regDate) }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
-                                        <div v-for="tag in classifyTag(mob.tags)" :key="tag">
-                                            <btn class="tag_box_button" @click="tagSelect0 = !tagSelect0,searchingTag(tag.text)">#{{ tag.text }}</btn>
+                                    </router-link>                                    
+                                    <router-link :to="{ name: 'QnABoardReadPage', params: { boardNo: mob.boardNo.toString() } }" >
+                                        <div class="tag_box">
+                                            <div class="post_reg_date">{{ calcTime(mob.regDate) }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                                                <div class="hidden-md-and-up">
+                                                    <div class="tag_box">
+                                                        <div class="item2">
+                                                            <v-icon size="18px" color="#9e9e9e">mdi-eye</v-icon>
+                                                            <div style="padding-top:3px">&nbsp;{{ mob.views }}</div>
+                                                        </div>
+                                                        <div class="item3">
+                                                            &nbsp;&nbsp;<v-icon size="18px" color="#9e9e9e">mdi-comment</v-icon>
+                                                            <div style="padding-top:3px">&nbsp;{{ mob.comments }}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            <div v-show="mob.notice == 'true'">
+                                                <div class="hidden-md-and-up">
+                                                    <div class="completeDisplay">공지사항</div>
+                                                </div>
+                                            </div>
+                                            <div v-show="mob.notice == 'false'" v-for="tag in classifyTag(mob.tags)" :key="tag.text">
+                                                <div class="mr-9 hidden-sm-and-down">
+                                                    <div class="tag_box_button_box">
+                                                        <btn class="tag_box_button" @click="tagSelect0 = !tagSelect0,searchingTag(tag.text)">#{{ tag.text }}&nbsp;</btn>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div v-show="mob.complete == 'true'" class="completeDisplay" @click="selectComplete('true')">답변완료</div>
                                         </div>
-                                    </div>
-                                    
+                                    </router-link>                                    
                                 </div>
                                 <router-link class="post_vnc" :to="{ name: 'QnABoardReadPage', params: { boardNo: mob.boardNo.toString() } }" >
+                                    <div class="mr-2 hidden-sm-and-down">
                                     <div class="item2">
                                         <v-icon size="18px" color="#9e9e9e">mdi-eye</v-icon>
                                         <div style="padding-top:3px">&nbsp;{{ mob.views }}</div>
@@ -148,15 +182,17 @@
                                         <v-icon size="18px" color="#9e9e9e">mdi-comment</v-icon>
                                         <div style="padding-top:3px">&nbsp;{{ mob.comments }}</div>
                                     </div>
-                                </router-link>
-                                    <div class="post_name_box">
-                                        <div class="post_name">{{ mob.nickname }}</div>
                                     </div>
+                                </router-link>
+                                <div class="post_name_box">
+                                    <div class="mr-9 hidden-sm-and-down"><div class="post_name">{{ mob.nickname }}</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="button_box">
-                        <v-flex text-xs-right="text-xs-right" text-sm-right="text-sm-right">
+                        <v-flex hidden-sm-and-down text-sm-right="text-sm-right">
                             <router-link :to="{ name: 'QnABoardRegisterPage' }">
                                 <v-btn
                                     v-if="this.$store.state.isLogin"
@@ -167,9 +203,12 @@
                             </router-link>
                         </v-flex>
                     </div>
+                    <!-- 페이지네이션 -->
                     <v-container style="margin-top:20px;">
                         <div class="text-center">
-                            <v-pagination class="btn_pagination" v-model="pageNumS" :length="pageCountS"></v-pagination>
+                            <v-pagination class="btn_pagination" v-model="pageNumS" :length="pageCountS"
+                                prev-icon="mdi-chevron-left" next-icon="mdi-chevron-right" light
+                                ></v-pagination>
                         </div>
                     </v-container>
                 </div>
@@ -244,8 +283,6 @@ export default {
                     this.tagSelect1 = false // All 클릭시 초기화용
                     this.tagSelect2 = false
                     this.tagSelect3 = false
-                    this.tagSelect4 = false
-                    this.tagSelect5 = false
             }
         }
     },
@@ -330,7 +367,7 @@ export default {
             this.word = b.concat(tag)
 
             // 하나라도 true면 if문 생략
-            if (!this.tagSelect0 && !this.tagSelect1 && !this.tagSelect2 && !this.tagSelect3 && !this.tagSelect4 && !this.tagSelect5) {
+            if (!this.tagSelect0 && !this.tagSelect1 && !this.tagSelect2 && !this.tagSelect3) {
                 this.searchinOn = false
                 this.word = ''
             }
@@ -548,14 +585,15 @@ input:focus {
     color: #757575;
 
 }
-
-
-
-
+.for_line {
+    border-bottom: 1px solid #BDBDBD;
+    margin: 0vw 1vw
+}
 .post_list {
     min-width: 475px;
     max-width: 1500px;
     margin-right: 10px;
+    margin-top: 30px;
 }
 .post_card_box {
     min-width: 475px;
@@ -570,9 +608,22 @@ input:focus {
     display: flex;
     justify-content: flex-start;
     margin: 0vw 1vw;
-    max-height: 12vh;
-    height: 8vh;
+    height: 58px;
     border-bottom: 1px solid #BDBDBD;
+}
+.post_card.on {
+    display: flex;
+    justify-content: flex-start;
+    margin: 0vw 1vw;
+    height: 58px;
+    border-bottom: 1px solid #BDBDBD;
+    background-color: #F5F5F5;
+}
+.post_card.on:hover {
+    box-shadow: 10px 17px 40px 0 rgb(0 0 0 / 4%);
+    background-color: rgb(241, 241, 241);
+    cursor: pointer;
+    transition: all 0.1s ease;
 }
 .post_card a {
     width: 1000px;
@@ -596,7 +647,7 @@ input:focus {
     font-weight: 500;
     font-size: 14px;
     text-align: right;
-    margin: 0 0 0 2vw;
+    margin: 0 0 0 2.5vw;
 }
 .post_title {
     display: flex;
@@ -719,17 +770,27 @@ ul {
     min-width: 20px;
     font-weight: 500;
     color: #01579B;
-
+    transition: all 0.4s ease;
 }
 .tag_box_button:hover {
     font-size: 12px;
-    min-width: 40px;
+    min-width: 30px;
     color: #01579B;
     font-weight: bold;
     transition: all 0.4s ease;
-
 }
 .completeDisplay {
+    background-color: #FFAB00;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 20px;
+    padding: 0 4px 0 4px;
+    font-size: 11px;
+    font-weight: bold;
+}
+.completeDisplay2 {
     background-color: #C2185B;
     color: white;
     display: flex;

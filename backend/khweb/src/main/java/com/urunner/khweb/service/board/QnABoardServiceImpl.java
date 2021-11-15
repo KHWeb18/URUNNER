@@ -1,15 +1,11 @@
 package com.urunner.khweb.service.board;
 
-import com.urunner.khweb.controller.dto.QnARequest;
-import com.urunner.khweb.controller.dto.StudyRequest;
+import com.urunner.khweb.controller.dto.board.QnARequest;
 import com.urunner.khweb.entity.board.QnA;
+import com.urunner.khweb.entity.board.QnAComment;
 import com.urunner.khweb.entity.board.QnAMember;
-import com.urunner.khweb.entity.board.Study;
-import com.urunner.khweb.entity.board.StudyMember;
 import com.urunner.khweb.repository.board.qna.QnABoardRepository;
 import com.urunner.khweb.repository.board.qna.QnAMemberRepository;
-import com.urunner.khweb.repository.board.study.StudyBoardRepository;
-import com.urunner.khweb.repository.board.study.StudyMemberRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,13 +28,18 @@ public class QnABoardServiceImpl implements QnABoardService {
     public QnA register(QnARequest qnARequest) throws Exception {
 
         QnA postEntity = new QnA(qnARequest.getTitle(), qnARequest.getContent(), qnARequest.getWriter(),
-                qnARequest.getNickname(), qnARequest.getComplete(), qnARequest.getCurrentNum(), qnARequest.getViews(), qnARequest.getComments(), qnARequest.getTags());
+                qnARequest.getNickname(), qnARequest.getComplete(), qnARequest.getCurrentNum(), qnARequest.getViews(),
+                qnARequest.getComments(), qnARequest.getTags(), qnARequest.getNotice());
 
         return repository.save(postEntity);
     }
 
     public List<QnA> findAll(){
         return repository.findAll();
+    }
+
+    public List<QnA> selectQnAList() {
+        return repository.selectQnAList();
     }
 
     public Optional<QnA> findByBoardNo(Long boardNo){
@@ -60,7 +61,7 @@ public class QnABoardServiceImpl implements QnABoardService {
     public void updatePost(QnARequest qnARequest){
 
         repository.updatePost(qnARequest.getTitle(), qnARequest.getContent(), qnARequest.getBoardNo(),
-                qnARequest.getComplete(), qnARequest.getCurrentNum(), qnARequest.getTags());
+                qnARequest.getComplete(), qnARequest.getCurrentNum(), qnARequest.getTags(), qnARequest.getNotice());
     }
 
     public void updateCurrentNum(QnARequest qnARequest){

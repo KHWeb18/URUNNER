@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-container>
-            <board-read v-if="board" :board="board"/>
+            <free-board-read v-if="board" :board="board" @submit="onSubmit"/>
             <p v-else>로딩중 ......</p>
             <v-container class="middle_btn_box">
                 <router-link :to="{ name: 'FreeBoardListPage' }">
@@ -11,7 +11,7 @@
                     <router-link :to="{ name: 'FreeBoardModifyPage', params: { boardNo } }">
                         |수정
                     </router-link>
-                </b>               
+                </b>                
                 <b v-show="board.writer == this.$store.state.moduleA.email || this.$store.state.isAuth" @click="snackbar = true" class="item">
                     |삭제
                 </b>
@@ -29,19 +29,19 @@
                     </v-snackbar>
                 </div>
             </v-container>
-            <comment-list v-if="comments" :comments="comments" @submit="onSubmit"/>
+            <free-comment-list v-if="comments" :comments="comments" @submit="onSubmit"/>
             <p v-else>로딩중 ......</p>            
         </v-container>        
     </div>
 </template>
 
 <script>
-import BoardRead from '@/components/board/free/BoardRead.vue'
-import CommentList from '@/components/board/free/CommentList.vue'
+import FreeBoardRead from '@/components/board/free/FreeBoardRead.vue'
+import FreeCommentList from '@/components/board/free/FreeCommentList.vue'
 import { mapState, mapActions } from 'vuex'
 import axios from 'axios'
 export default {
-    name: 'BoardReadPage',
+    name: 'FreeBoardReadPage',
     props: {
         boardNo: {
             type: String,
@@ -56,22 +56,25 @@ export default {
         }
     },
     components: {
-        BoardRead,
-        CommentList
+        FreeBoardRead,
+        FreeCommentList
     },
     watch: {
         refreshCheck(newVal) {
             if(newVal >= 0) {
-                // console.log('refreshCheck값은 : ' + this.refreshCheck)
-            // console.log('댓글 입력 감지')
-            this.fetchFreeCommentList(this.boardNo)
-            this.refreshCheck = 1
+                console.log('refreshCheck값은 : ' + this.refreshCheck)
+                console.log('데이터 변동 감지')
+                this.fetchFreeCommentList(this.boardNo)
+                this.fetchFreeMemberList(this.boardNo)
+                this.fetchFreeBoard(this.boardNo)
+                this.refreshCheck = 1
             }
         }
     },
     computed: {
         ...mapState(['board']),
-        ...mapState(['comments'])
+        ...mapState(['comments']),
+        ...mapState(['freeMembers'])
     },    
     created () {
         this.fetchFreeBoard(this.boardNo)
@@ -85,21 +88,23 @@ export default {
                 })
     },
     mounted () {
-        this.fetchFreeCommentList(this.boardNo)  
+        this.fetchFreeCommentList(this.boardNo),
+        this.fetchFreeMemberList(this.boardNo)
     },
     methods: {
         ...mapActions(['fetchFreeBoard']),
+        ...mapActions(['fetchFreeCommentList']),
+        ...mapActions(['fetchFreeMemberList']),
         onDeletePost () {
                         const { boardNo } = this.board
-            axios.delete(`http://localhost:7777/freeboard/${boardNo}`)
-                    .then(() => {
-                        this.$router.push({ name: 'FreeBoardListPage' })
-                    })
-                    .catch(err => {
-                        alert(err.response.data.message)                                                
-                    })
+                        axios.delete(`http://localhost:7777/freeboard/${boardNo}`)
+                        .then(() => {
+                            this.$router.push({ name: 'FreeBoardListPage' })
+                        })
+                        .catch(err => {
+                            alert(err.response.data.message)
+                        })
         },
-        ...mapActions(['fetchFreeCommentList']),
         onSubmit (payload) {
             const refresh = payload
             this.refreshCheck = refresh
@@ -121,11 +126,11 @@ export default {
 .v-btn {
     margin-right: 10px;
 }
-.middle_btn_box {    
-    width:70vw;
+.middle_btn_box {
     max-width: 1000px;
     text-align: center;
     margin: 0px;
+    padding: 0px;
     color: #757575 !important;
     font-weight: bold;
 }

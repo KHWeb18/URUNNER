@@ -3,14 +3,19 @@
         <div class="main_box">
             <div class="title_box">
                 <h4 class="page_title">
-                    <v-icon>mdi-exclamation-thick</v-icon>
-                    <span>자유게시판</span></h4>
+                    <span>스터디 게시판</span></h4>
             </div>
             <div class="post_list">
                 <div class="post_card_box">
                     <div class="searching_message_box">
                         <div class="searching_message">
-                            <div><p><b class="post_tag">#사료추천</b> / {{board.nickname}} / {{ $moment(board.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}</p></div>
+                            <div class="post_tag">
+                                <div v-for="tag in classifyTag(board.tags)" :key="tag">
+                                        <btn class="tag_box_button">#{{ tag.text }}&nbsp;</btn>
+                                </div>
+                                <div v-show="board.tags != '#'" class="post_tag_either">/&nbsp;</div>
+                                <div class="post_tag_either">{{board.nickname}} / {{ $moment(board.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -18,28 +23,9 @@
             <!-- 제목 -->
             <v-text-field label="제목" v-model="title"></v-text-field>
             <!-- 인원설정 -->
-            <input type="number" v-model="fit">
-            <!-- 마감 -->
-            {{ complete }}
+            <v-text-field label="인원설정" placeholder="모집하는 인원수를 정해주세요" type="number" v-model="fit"></v-text-field>
             <!-- 게시글 -->
-            <editor :content="content" @content="onSubmit"/>
-            <!-- 이미지 -->
-            <div class="content_img">
-                <img :src="ImgRequest()" class="test">
-            </div>
-
-        </div>
-        <div class="button_box">
-            <router-link :to="{ name: 'StudyBoardListPage' }">
-                <v-btn>
-                    취소
-                </v-btn>
-            </router-link>
-            <v-btn color="light-blue lighten-1 text center" @click="onSubmit" class="item">
-                등록
-            </v-btn>
-            <v-btn @click="test()">테스트</v-btn>
-            {{board}}
+            <editor :board="board" @fromEditor="onSubmit"/>
         </div>
     </div>
 </template>
@@ -65,14 +51,17 @@ export default {
             content: '',
             fit: this.board.fit,
             complete: this.board.complete,
-            currentNum: this.board.currentNum
+            currentNum: this.board.currentNum,
+            notice: this.board.notice
         }
     },
     methods: {
         onSubmit (data) {
-            this.content = data
-            const { title, content, fit, complete, currentNum } = this
-            this.$emit('submit', { title, content, fit, complete, currentNum })
+            this.content = data.content
+            this.tags = data.tags
+            this.notice = data.notice
+            const { title, content, complete, currentNum, tags, fit, notice } = this
+            this.$emit('submit', { title, content, complete, currentNum, tags, fit, notice })
         },
         ImgRequest() {
             try {
@@ -81,6 +70,11 @@ export default {
             } catch (e) {
                 return require(`@/assets/logo.png`)
             }
+        },
+        classifyTag(data) {
+            var arr = JSON.parse(data)
+            console.log(arr)
+            return arr
         }
     },
     created () {
@@ -146,10 +140,21 @@ export default {
     width: 500px;
 }
 .post_tag {
+    display: flex;
+    justify-content: start;
+    align-content: center;
     color: #0288D1;
     font-weight: bold;
     font-size: 16px !important;    
     letter-spacing: 0px !important;
+    margin-bottom: 20px;
+}
+.post_tag_either {
+    display: flex;
+    justify-self: center;
+    align-self: center;
+    font-size: 15px !important;
+    color: #757575;
 }
 .post_title {
     margin: 0 0 0 0px;

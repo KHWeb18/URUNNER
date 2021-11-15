@@ -29,11 +29,22 @@ import StudyBoardModifyPage from '@/views/board/study/StudyBoardModifyPage.vue'
 import PaymentPage from '@/views/payment/PaymentPage.vue'
 import PaymentFail from '@/views/payment/PaymentFail.vue'
 import PaymentSuccess from '@/views/payment/PaymentSuccess.vue'
+
 // 질문답변 게시판
 import QnABoardRegisterPage from '@/views/board/qna/QnABoardRegisterPage.vue'
 import QnABoardListPage from '@/views/board/qna/QnABoardListPage.vue'
 import QnABoardReadPage from '@/views/board/qna/QnABoardReadPage.vue'
 import QnABoardModifyPage from '@/views/board/qna/QnABoardModifyPage.vue'
+
+// 1:1 문의 게시판
+import InqBoardRegisterPage from '@/views/board/inq/InqBoardRegisterPage.vue'
+import InqBoardListPage from '@/views/board/inq/InqBoardListPage.vue'
+import InqBoardListForUserPage from '@/views/board/inq/InqBoardListForUserPage.vue'
+import InqBoardReadPage from '@/views/board/inq/InqBoardReadPage.vue'
+import InqBoardModifyPage from '@/views/board/inq/InqBoardModifyPage.vue'
+
+// 내학습
+import MyLecturePage from '@/views/mypage/MyLecturePage.vue'
 
 Vue.use(VueRouter)
 
@@ -52,27 +63,40 @@ export default new VueRouter({
           name: 'memberProfile',
           component: () => import ('../views/MemberProfilePage.vue')
       },
-       // 강의 관리 페이지 (강의 등록 시스템)
-       {
-        path: '/mypage/lecture/lectureList',
-        name: 'lectureListPage',
-        component: () => import ('../views/lecture/LectureListPage.vue')
-      },
+      // 강의 관리 페이지 (강의 등록 시스템)
       {
-          path: '/mypage/lecture/registerLecture',
-          name: 'registerLecture',
-          component: () => import ('../views/lecture/RegisterLecturePage.vue')
-      },
-      {
-        path: '/mypage/lecture/registerLectureImage/:lectureId',
-        name: 'registerLectureImage',
-        component: () => import ('../views/lecture/LectureImageRegisterPage.vue')
-      },
-      {
-        path: '/mypage/lecture/manageLecture/:lectureId',
-        name: 'ManageLecturePage',
-        component: () => import ('../views/lecture/ManageLecturePage.vue'),
-      },
+       path: '/mypage/lecture/lectureList',
+       name: 'lectureListPage',
+       component: () => import ('../views/lecture/LectureListPage.vue')
+     },
+     {
+         path: '/mypage/lecture/registerLecture',
+         name: 'registerLecture',
+         component: () => import ('../views/lecture/RegisterLecturePage.vue')
+     },
+     {
+         path: '/mypage/lecture/modifyLecture/:lectureId',
+         component: () => import ('../views/lecture/ModifyLecturePage.vue')
+     },
+     {
+       path: '/mypage/lecture/registerLectureImage/:lectureId',
+       name: 'registerLectureImage',
+       component: () => import ('../views/lecture/LectureImageRegisterPage.vue')
+     },
+     {
+       path: '/mypage/lecture/modifyLectureImage/:lectureId',
+       component: () => import ('../views/lecture/LectureImageModifyPage.vue')
+     },
+     {
+       path: '/mypage/lecture/manageLecture/:lectureId',
+       name: 'ManageLecturePage',
+       component: () => import ('../views/lecture/ManageLecturePage.vue'),
+     },
+     //강의 상세 페이지
+     {
+        path: '/course/:lectureId',
+        component: () => import ('../views/lecture_detail/LectureDetailPage.vue'),
+     },
       // 회원 탈퇴
       {
           path: '/leave-member',
@@ -298,6 +322,56 @@ export default new VueRouter({
         },
         props: {
           default: true
+        }
+      },
+      // 1:1 문의 게시판
+      {
+        path: '/inq/create',
+        name: 'InqBoardRegisterPage',
+        components: {
+          default: InqBoardRegisterPage
+        }
+      },
+      {
+        path: '/inq',
+        name: 'InqBoardListPage',
+        components: {
+          default: InqBoardListPage
+        }
+      },
+      {
+        path: '/inqforuser',
+        name: 'InqBoardListForUserPage',
+        components: {
+          default: InqBoardListForUserPage
+        }
+      },
+      {
+        path: '/inq/:boardNo',
+        name: 'InqBoardReadPage',
+        components: {
+          default: InqBoardReadPage
+        },
+        props: {
+          default: true
+        }
+      },
+      {
+        path: '/inq/:boardNo/edit',
+        name: 'InqBoardModifyPage',
+        components: {
+          default: InqBoardModifyPage
+        },
+        props: {
+          default: true
+        }
+      },
+      // Mypage MyLecture(내학습)
+      {
+        path: '/mypage/myLecture',
+        name: 'MyLecturePage',
+        components: {
+          default: MyLecturePage
         }
       },
       {
