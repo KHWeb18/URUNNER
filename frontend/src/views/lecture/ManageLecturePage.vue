@@ -3,10 +3,10 @@
     <h2>강의 커리큘럼 관리</h2>
     <hr>
     <v-row>
-      <v-col cols="12" md="3">
+      <v-col cols="12" md="4">
         <add-section-form @goToUploadLecture="goToUploadLecture"></add-section-form>
       </v-col>
-      <v-col cols="12" md="9">
+      <v-col cols="12" md="8">
         <upload-lecture :sectionId="sectionId"
                         :sectionTopic="sectionTopic"
                         :lectureVideoList="lectureVideoList"
@@ -28,16 +28,17 @@ export default {
   data() {
     return {
       sectionId: null,
-      sectionTopic: ''
+      sectionTopic: '',
+      lectureVideoList: []
     }
   },
   computed: {
-     getList: {
-      cache: false,
-        lectureVideoList() {
-        return this.$store.state.lectureVideoList
-      }
-    }
+    //  getList: {
+    //   cache: false,
+    //     lectureVideoList() {
+    //     return this.$store.state.lectureVideoList
+    //   }
+    // }
   },
   methods: {
     goToUploadLecture(info) {
@@ -53,6 +54,7 @@ export default {
             .then(res => {
               console.log(res.data);
               this.$store.state.lectureVideoList = res.data
+              this.lectureVideoList = res.data
             })
             .catch(err => {
               console.log(err);

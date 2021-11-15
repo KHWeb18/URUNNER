@@ -34,7 +34,6 @@
 <script>
 import axios from 'axios'
 import { API_BASE_URL } from '@/constants/index.js'
-
 export default {
   data() {
     return {

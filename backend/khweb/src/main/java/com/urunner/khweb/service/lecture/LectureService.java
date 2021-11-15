@@ -18,9 +18,9 @@ public interface LectureService {
 
     public void lectureAddImage(String thum, String image, Long id);
 
-    public void lectureRegister(String writer, String title, Long price, String desc, String category);
+    public void lectureRegister(String writer, String title, Long price, String desc, String content, String grade, String category);
 
-    public void modifyLecture(Long lectureId, String writer, String title, Long price, String desc, String category);
+    public void modifyLecture(Long lectureId, String writer, String title, Long price, String desc, String content, String grade, String category);
 
     public void saveLectureSection(Long lectureId, String topic);
 
@@ -61,4 +61,6 @@ public interface LectureService {
     public void modifyVideoDelete(Long id);
 
     public DtoWrapper2 getLectureDetailInfo(Long lectureId);
+
+    public  List<LectureDto> getAllLectureList();
 }

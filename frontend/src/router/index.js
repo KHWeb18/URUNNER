@@ -63,27 +63,40 @@ export default new VueRouter({
           name: 'memberProfile',
           component: () => import ('../views/MemberProfilePage.vue')
       },
-       // 강의 관리 페이지 (강의 등록 시스템)
-       {
-        path: '/mypage/lecture/lectureList',
-        name: 'lectureListPage',
-        component: () => import ('../views/lecture/LectureListPage.vue')
-      },
+      // 강의 관리 페이지 (강의 등록 시스템)
       {
-          path: '/mypage/lecture/registerLecture',
-          name: 'registerLecture',
-          component: () => import ('../views/lecture/RegisterLecturePage.vue')
-      },
-      {
-        path: '/mypage/lecture/registerLectureImage/:lectureId',
-        name: 'registerLectureImage',
-        component: () => import ('../views/lecture/LectureImageRegisterPage.vue')
-      },
-      {
-        path: '/mypage/lecture/manageLecture/:lectureId',
-        name: 'ManageLecturePage',
-        component: () => import ('../views/lecture/ManageLecturePage.vue'),
-      },
+       path: '/mypage/lecture/lectureList',
+       name: 'lectureListPage',
+       component: () => import ('../views/lecture/LectureListPage.vue')
+     },
+     {
+         path: '/mypage/lecture/registerLecture',
+         name: 'registerLecture',
+         component: () => import ('../views/lecture/RegisterLecturePage.vue')
+     },
+     {
+         path: '/mypage/lecture/modifyLecture/:lectureId',
+         component: () => import ('../views/lecture/ModifyLecturePage.vue')
+     },
+     {
+       path: '/mypage/lecture/registerLectureImage/:lectureId',
+       name: 'registerLectureImage',
+       component: () => import ('../views/lecture/LectureImageRegisterPage.vue')
+     },
+     {
+       path: '/mypage/lecture/modifyLectureImage/:lectureId',
+       component: () => import ('../views/lecture/LectureImageModifyPage.vue')
+     },
+     {
+       path: '/mypage/lecture/manageLecture/:lectureId',
+       name: 'ManageLecturePage',
+       component: () => import ('../views/lecture/ManageLecturePage.vue'),
+     },
+     //강의 상세 페이지
+     {
+        path: '/course/:lectureId',
+        component: () => import ('../views/lecture_detail/LectureDetailPage.vue'),
+     },
       // 회원 탈퇴
       {
           path: '/leave-member',

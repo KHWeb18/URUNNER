@@ -5,11 +5,12 @@
       <v-btn color="primary" to="/mypage/lecture/registerLecture">강의 등록</v-btn>
     </div>
     <hr/>
-    <!--  맵핑-->
-      <!-- 오브젝트가 props에서 안찍히네요 info바로 넣고 info.price 찍으려는데 type 이랑 다 설정해도 안먹힘니다.-->
+
     <lecture-status-bar 
       v-for="(info) in getList" :key="info.id"
       :info="info"
+      @inProgressToFalse="inProgressToFalse"
+      @inProgressToTrue="inProgressToTrue"
     ></lecture-status-bar>
   </v-container>  
 </template>
@@ -23,10 +24,18 @@ export default {
   computed: {
     getList: {
       cache: false,
-      get() {
-       return this.$store.state.getLectureList
-    }
+        get() {
+          return this.$store.state.getLectureList
+        }
      }
+  },
+  methods: {
+    inProgressToTrue(id) {
+      this.$emit('inProgressToTrue', id)
+    },
+    inProgressToFalse(id) {
+      this.$emit('inProgressToFalse', id)
+    },
   }
 }
 </script>

@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.springframework.boot:spring-boot-starter-oauth2-client:2.5.5">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-oauth2-client/2.5.5/d8c572f7e77fd55ce425b4d5cf4d9a4c88191ff6/spring-boot-starter-oauth2-client-2.5.5.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-oauth2-client/2.5.5/86249964c54554d9ada9ba62e50b25ed869c2b54/spring-boot-starter-oauth2-client-2.5.5-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
