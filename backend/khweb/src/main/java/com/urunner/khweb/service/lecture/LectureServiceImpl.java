@@ -1,9 +1,6 @@
 package com.urunner.khweb.service.lecture;
 
-import com.urunner.khweb.controller.dto.lecture.DtoWrapper;
-import com.urunner.khweb.controller.dto.lecture.LectureDto;
-import com.urunner.khweb.controller.dto.lecture.LectureListDto;
-import com.urunner.khweb.controller.dto.lecture.LectureVideoDto;
+import com.urunner.khweb.controller.dto.lecture.*;
 import com.urunner.khweb.entity.lecture.Lecture;
 //import com.urunner.khweb.entity.lecture.LectureImage;
 import com.urunner.khweb.entity.lecture.LectureList;
@@ -112,7 +109,7 @@ public class LectureServiceImpl implements LectureService {
     }
 
     @Override
-    public void lectureRegister(String writer, String title, Long price, String desc, String categoryArray) {
+    public void lectureRegister(String writer, String title, Long price, String desc, String content, String grade, String categoryArray) {
 
         String[] category = categoryArray.split(",");
 
@@ -123,6 +120,8 @@ public class LectureServiceImpl implements LectureService {
                 .title(title)
                 .price(price)
                 .description(desc)
+                .content(content)
+                .grade(grade)
                 .build();
 
         lectureRepository.save(lecture);
@@ -144,7 +143,7 @@ public class LectureServiceImpl implements LectureService {
 
     @Transactional
     @Override
-    public void modifyLecture(Long lectureId, String writer, String title, Long price, String desc, String categoryArray) {
+    public void modifyLecture(Long lectureId, String writer, String title, Long price, String desc, String content, String grade, String categoryArray) {
 
         String[] category = categoryArray.split(",");
 
@@ -159,6 +158,8 @@ public class LectureServiceImpl implements LectureService {
         lecture.setTitle(title);
         lecture.setPrice(price);
         lecture.setDescription(desc);
+        lecture.setGrade(grade);
+        lecture.setContent(content);
         lectureRepository.save(lecture);
 
         String query = "delete from CategoryLecture where Lecture_id = :Lecture_id";
@@ -225,6 +226,7 @@ public class LectureServiceImpl implements LectureService {
 
         LectureList lectureList = em.find(LectureList.class, id);
 
+        System.out.println(lectureList.getLecture().getLecture_id());
         LectureVideo lectureVideo = LectureVideo.builder()
                 .title(title)
                 .description(desc)
@@ -272,6 +274,61 @@ public class LectureServiceImpl implements LectureService {
 
     @Transactional(readOnly = true)
     @Override
+    public DtoWrapper2 getLectureDetailInfo(Long lectureId) {
+
+        Optional<Lecture> lecture = lectureRepository.findById(lectureId);
+
+        String query = "select c from Category c join CategoryLecture cl on cl.category = c " +
+                "join Lecture l on l = cl.lecture where l.id = :lectureId";
+
+
+        Optional<LectureDto> lectureDto = lecture.stream().findAny().map(l ->
+                new LectureDto(l.getLecture_id(), l.getWriter(), l.getTitle(),
+                        l.getDescription(), l.getPrice(), l.isInProgress(),
+                        l.isDiscounted(), l.getThumb_path(), l.getDetail_path(), l.getContent(), l.getGrade(),
+                        em.createQuery(query, Category.class)
+                                .setParameter("lectureId", l.getLecture_id()).
+                                getResultList()
+                ));
+
+        List<LectureList> lectureLists = lectureListRepository.lectureList(lectureId);
+
+        String query2 = "select v from LectureVideo v where v.lectureList.lectureList_id = :id";
+
+        List<LectureListDto2> list = lectureLists.stream().map(l ->
+                new LectureListDto2(l.getLectureList_id(), l.getSection(), l.getTopic(),
+                        em.createQuery(query2, LectureVideo.class)
+                                .setParameter("id", l.getLectureList_id())
+                                .getResultList()
+                )).collect(Collectors.toList());
+
+//      현재는 4방쿼리
+//        한방쿼리만드는법
+//       1. 네이티브쿼리로 dsl로
+//       2. OneToMany부분 fetch 조인 set으로 바꾸기
+//       3. queryDsl쓰기...
+        return new DtoWrapper2(lectureDto, Optional.of(list));
+    }
+
+    @Override
+    public List<LectureDto> getAllLectureList() {
+        List<Lecture> findAllLectureList = lectureRepository.findAll();
+
+        String query = "select c from Category c join CategoryLecture cl on cl.category = c " +
+                "join Lecture l on l = cl.lecture where l.id = :lectureId";
+
+        return findAllLectureList.stream().map(l ->
+                new LectureDto(l.getLecture_id(), l.getWriter(), l.getTitle(),
+                        l.getDescription(), l.getPrice(), l.isInProgress(),
+                        l.isDiscounted(), l.getThumb_path(), l.getDetail_path(), l.getContent(), l.getGrade(),
+                        em.createQuery(query, Category.class)
+                                .setParameter("lectureId", l.getLecture_id()).
+                                getResultList()
+                )).collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    @Override
     public List<LectureDto> getLectureList(String writer) {
 
         List<Lecture> findAllLecture = lectureRepository.findByWriter(writer);
@@ -285,7 +342,7 @@ public class LectureServiceImpl implements LectureService {
         return findAllLecture.stream().map(l ->
                 new LectureDto(l.getLecture_id(), l.getWriter(), l.getTitle(),
                         l.getDescription(), l.getPrice(), l.isInProgress(),
-                        l.isDiscounted(), l.getThumb_path(), l.getDetail_path(),
+                        l.isDiscounted(), l.getThumb_path(), l.getDetail_path(),  l.getContent(), l.getGrade(),
                         em.createQuery(query, Category.class)
                                 .setParameter("lectureId", l.getLecture_id()).
                                 getResultList()
@@ -318,6 +375,7 @@ public class LectureServiceImpl implements LectureService {
                 new LectureDto(l.getLecture_id(), l.getWriter(), l.getTitle(),
                         l.getDescription(), l.getPrice(), l.isInProgress(), l.isDiscounted(),
                         l.getThumb_path(), l.getDetail_path(),
+                        l.getContent(), l.getGrade(),
                         em.createQuery(query, Category.class)
                                 .setParameter("lectureId", l.getLecture_id()).
                                 getResultList())).findAny();
@@ -409,7 +467,7 @@ public class LectureServiceImpl implements LectureService {
 //        인증인가 처리는 get쪽에서  필요가 전혀 없을듯 수정,삭제만 인증 인가
         Optional<LectureListDto> lectureListDto = lectureList.stream().findAny().map(l -> new LectureListDto(l.getLectureList_id(), l.getTopic(), l.getSection()));
 
-        return new DtoWrapper(lectureList);
+        return new DtoWrapper(lectureListDto);
 
     }
 

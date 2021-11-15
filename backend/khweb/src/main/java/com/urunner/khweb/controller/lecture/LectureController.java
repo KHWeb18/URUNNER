@@ -2,10 +2,7 @@ package com.urunner.khweb.controller.lecture;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.urunner.khweb.controller.dto.lecture.DtoWrapper;
-import com.urunner.khweb.controller.dto.lecture.LectureDto;
-import com.urunner.khweb.controller.dto.lecture.LectureListDto;
-import com.urunner.khweb.controller.dto.lecture.LectureParse;
+import com.urunner.khweb.controller.dto.lecture.*;
 import com.urunner.khweb.service.lecture.LectureService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,6 +128,8 @@ public class LectureController {
         String title = lectureInfo1.getString("title");
         Long price = lectureInfo1.getLong("price");
         String description = lectureInfo1.getString("description");
+        String content = lectureInfo1.getString("content");
+        String grade = lectureInfo1.getString("grade");
         String category = lectureInfo1.getString("category");
 
         String[] categoryArray = category.split(",");
@@ -138,7 +137,7 @@ public class LectureController {
             System.out.println(s);
         }
 
-        lectureService.lectureRegister(authentication.getName(), title, price, description, category);
+        lectureService.lectureRegister(authentication.getName(), title, price, description, content, grade, category);
         System.out.println(Arrays.toString(categoryArray));
 
         return null;
@@ -155,13 +154,15 @@ public class LectureController {
         Long price = lectureInfo1.getLong("price");
         String description = lectureInfo1.getString("description");
         String category = lectureInfo1.getString("category");
+        String content = lectureInfo1.getString("content");
+        String grade = lectureInfo1.getString("grade");
 
         String[] categoryArray = category.split(",");
         for (String s : categoryArray) {
             System.out.println(s);
         }
 
-        lectureService.modifyLecture(lectureId, authentication.getName(), title, price, description, category);
+        lectureService.modifyLecture(lectureId, authentication.getName(), title, price, description, content, grade, category);
         System.out.println(Arrays.toString(categoryArray));
 
         return null;
@@ -363,6 +364,19 @@ public class LectureController {
         lectureService.inProgressToTrue(id);
 
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @GetMapping("/getLectureDetailInfo/{lectureId}")
+    public DtoWrapper2 getLectureDetailInfo(@PathVariable("lectureId") Long lectureId) {
+        System.out.println(lectureId);
+
+        return lectureService.getLectureDetailInfo(lectureId);
+    }
+
+    @GetMapping("/getAllLecture")
+    public List<LectureDto> getAllLecture() {
+
+        return lectureService.getAllLectureList();
     }
 
     public void mkdirFolder(File folder) {

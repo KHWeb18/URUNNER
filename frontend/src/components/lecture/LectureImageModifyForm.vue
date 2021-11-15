@@ -1,11 +1,15 @@
 <template>
   <v-container>
-    <h2>강의 이미지 등록</h2>
+    <h2>강의 이미지 수정 및 삭제</h2>
     <hr>
     <form @submit.prevent="onSubmit">
       <div>
         <label for="thumb">썸네일 이미지: </label>
         <v-file-input label="upload tumbnail image" id="thumb" @change="thumbFile" accept="image/png, image/jpeg, image/jpg"></v-file-input>
+        <div v-if="lectureInfo.thumbPath" class="ma-3">
+          <v-img :src="`http://localhost:7777/lecture/image/${lectureInfo.thumbPath}/${lectureInfo.writer}`" width="250">
+          </v-img>
+        </div>
         <v-alert border="top" colored-border type="info" elevation="2">
          <ul>
             <li>파일 사이즈 : 5M 이하</li>
@@ -15,6 +19,10 @@
 
         <label for="detail">디테일 이미지: </label>
         <v-file-input label="upload detail image" id="detil" @change="detailFile" accept="image/png, image/jpeg, image/jpg"></v-file-input>
+        <div v-if="lectureInfo.detailPath" class="ma-3">
+          <v-img :src="`http://localhost:7777/lecture/image/${lectureInfo.detailPath}/${lectureInfo.writer}`" width="250">
+          </v-img>
+        </div>
         <v-alert border="top" colored-border type="info" elevation="2">
          <ul>
             <li>파일 사이즈 : 5M 이하</li>
@@ -23,7 +31,7 @@
         </v-alert>
 
         <div class="text-center">
-          <v-btn @click="onSubmit" color="primary" :disabled="!thumbnailImage || !detailImage">등록</v-btn>
+          <v-btn @click="onSubmit" color="primary" :disabled="!thumbnailImage || !detailImage">수정</v-btn>
           <v-btn to="/mypage/lecture/lectureList" color="warning" class="ml-2">취소</v-btn>
         </div>
       </div>
@@ -40,6 +48,12 @@ export default {
       thumbnailImage: "",
       detailImage: "",
       show: null,
+    }
+  },
+  props: {
+    lectureInfo: {
+      type: Object,
+      require: true
     }
   },
   methods: {
@@ -73,7 +87,7 @@ export default {
     },
     detailFile(file) {
       this.detailImage = file;
-    }
+    },
   }
 
 }

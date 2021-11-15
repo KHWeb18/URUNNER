@@ -64,14 +64,27 @@ export default new VueRouter({
           component: () => import ('../views/lecture/RegisterLecturePage.vue')
       },
       {
+          path: '/mypage/lecture/modifyLecture/:lectureId',
+          component: () => import ('../views/lecture/ModifyLecturePage.vue')
+      },
+      {
         path: '/mypage/lecture/registerLectureImage/:lectureId',
         name: 'registerLectureImage',
         component: () => import ('../views/lecture/LectureImageRegisterPage.vue')
       },
       {
+        path: '/mypage/lecture/modifyLectureImage/:lectureId',
+        component: () => import ('../views/lecture/LectureImageModifyPage.vue')
+      },
+      {
         path: '/mypage/lecture/manageLecture/:lectureId',
         name: 'ManageLecturePage',
         component: () => import ('../views/lecture/ManageLecturePage.vue'),
+      },
+      //강의 상세 페이지
+      {
+         path: '/course/:lectureId',
+         component: () => import ('../views/lecture_detail/LectureDetailPage.vue'),
       },
       // 회원 탈퇴
       {

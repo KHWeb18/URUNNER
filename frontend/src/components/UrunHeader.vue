@@ -8,7 +8,20 @@
             </div>
             <div class="category d-flex text-h6 grey--text text--darken-2">
                 <div class="mr-9 hidden-md-and-down">로드맵</div>
-                <div class="mr-9 hidden-md-and-down">강의</div>
+                <v-menu offset-y open-on-hover>
+                  <template v-slot:activator="{ on, attrs }">
+                     <div class="mr-9 hidden-md-and-down" v-on="on" v-bind="attrs">강의</div>
+                  </template>
+                  <v-card width="400" max-height="500">
+                    <v-list dense="dense" nav="nav">
+                      <v-list-item v-for="item in category" :key="item" link="link">
+                        <v-list-item-content>
+                          <v-list-item-title>{{ item }}</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                  </v-list>    
+                  </v-card>
+                </v-menu>
                 <router-link :to="{ name: 'FreeBoardListPage' }">
                   <div class="mr-9 hidden-md-and-down">커뮤니티</div>
                 </router-link>
@@ -65,9 +78,9 @@
             </v-list-item>
             <v-divider></v-divider>
             <v-list dense="dense" nav="nav">
-                <v-list-item v-for="item in items" :key="item.title" link="link">
+                <v-list-item v-for="item in category" :key="item" link="link">
                     <v-list-item-content>
-                        <v-list-item-title>{{ item.title }}</v-list-item-title>
+                        <v-list-item-title>{{ item }}</v-list-item-title>
                     </v-list-item-content>
                  </v-list-item>
              </v-list>
@@ -90,30 +103,27 @@ import OpenMainMenuLogo from '../components/headerLoginMenu/OpenMainMenuLogo.vue
       },
       data: () => ({
             drawer: false,
-            items: [
-                {
-                    title: '개발'
-                }, {
-                    title: '언어'
-                }
-            ],
             isLogin: Vue.$cookies.get("ACCESS_TOKEN")
         }),
-       created: function() {
+      created: function() {
          EventBus.$on('isLogin', (isLogin) => this.isLogin = isLogin)
-       },
-
-        methods: {
-          goToMemberRegisterPage() {
-            this.$router.push('/memberRegister')
-          },
-          clickLoginBtn() {
-            this.$emit('clickLoginBtn')
-          },
-          clickLogoutBtn() {
-            this.$emit('clickLogoutBtn')
-          } 
+      },
+      computed:{
+        category() {
+          return this.$store.state.category
         }
+      },
+      methods: {
+        goToMemberRegisterPage() {
+          this.$router.push('/memberRegister')
+        },
+        clickLoginBtn() {
+          this.$emit('clickLoginBtn')
+        },
+        clickLogoutBtn() {
+          this.$emit('clickLogoutBtn')
+        } 
+      }
     }
 </script>
 

@@ -1,10 +1,7 @@
 package com.urunner.khweb.service.lecture;
 
 
-import com.urunner.khweb.controller.dto.lecture.DtoWrapper;
-import com.urunner.khweb.controller.dto.lecture.LectureDto;
-import com.urunner.khweb.controller.dto.lecture.LectureListDto;
-import com.urunner.khweb.controller.dto.lecture.LectureVideoDto;
+import com.urunner.khweb.controller.dto.lecture.*;
 import com.urunner.khweb.entity.lecture.Lecture;
 import com.urunner.khweb.entity.lecture.LectureList;
 import com.urunner.khweb.entity.lecture.LectureVideo;
@@ -21,9 +18,9 @@ public interface LectureService {
 
     public void lectureAddImage(String thum, String image, Long id);
 
-    public void lectureRegister(String writer, String title, Long price, String desc, String category);
+    public void lectureRegister(String writer, String title, Long price, String desc, String content, String grade, String category);
 
-    public void modifyLecture(Long lectureId, String writer, String title, Long price, String desc, String category);
+    public void modifyLecture(Long lectureId, String writer, String title, Long price, String desc, String content, String grade, String category);
 
     public void saveLectureSection(Long lectureId, String topic);
 
@@ -62,4 +59,8 @@ public interface LectureService {
     public Optional<LectureVideoDto> modifyVideo(String title, String desc, String duration, Long id, String path);
 
     public void modifyVideoDelete(Long id);
+
+    public DtoWrapper2 getLectureDetailInfo(Long lectureId);
+
+    public  List<LectureDto> getAllLectureList();
 }
