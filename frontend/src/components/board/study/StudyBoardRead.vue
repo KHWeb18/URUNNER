@@ -101,6 +101,11 @@ export default {
 
         },
         endRecruit(data) {
+            if(this.board.complete) {
+                this.board.complete = false
+            } else {
+                this.board.complete = true
+            }
             const { title, content, fit, complete, currentNum, notice} = this.board
             axios.put(`http://localhost:7777/studyboard/${data}`, { title, content, fit, complete, currentNum, notice })
                     .then(res => {

@@ -247,8 +247,7 @@
             <v-btn fab dark large color="primary" fixed right class="hidden-md-and-up">
                 <v-icon dark>mdi-plus</v-icon>
             </v-btn>
-        </router-link>
-
+        </router-link
         링크용
         <router-link :to="{ name: 'StudyBoardListPage' }">
             <v-btn>스터디 게시판</v-btn>

@@ -197,12 +197,11 @@ export default {
                     const reverse = [...res.data].reverse();
                     commit(FETCH_BOARD_LIST, reverse)
                 })
-    },
     // 내학습 게시판
     fetchMyLectureList ({ commit }) {
         return axios.get('http://localhost:7777/mypage/myLecturelist')
                 .then((res) => {
                     commit(FETCH_MY_LECTURE_LIST, res.data)
                 })
-    },
+    }
 }
