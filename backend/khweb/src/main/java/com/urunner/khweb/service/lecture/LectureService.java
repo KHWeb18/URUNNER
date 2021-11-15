@@ -63,4 +63,6 @@ public interface LectureService {
     public DtoWrapper2 getLectureDetailInfo(Long lectureId);
 
     public  List<LectureDto> getAllLectureList();
+
+    public Optional<LectureVideoInfo> getVideoInfo(Long lectureId);
 }

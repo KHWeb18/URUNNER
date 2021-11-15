@@ -9,10 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.UrlResource;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.MediaTypeFactory;
-import org.springframework.http.ResponseEntity;
+import org.springframework.core.io.support.ResourceRegion;
+import org.springframework.http.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
@@ -377,6 +375,38 @@ public class LectureController {
     public List<LectureDto> getAllLecture() {
 
         return lectureService.getAllLectureList();
+    }
+
+    @GetMapping("/videos/{lectureId}")
+    public ResponseEntity<ResourceRegion> getVideo(@PathVariable Long lectureId,
+                                                   @RequestHeader HttpHeaders headers) throws IOException {
+
+        Optional<LectureVideoInfo> videoInfo = lectureService.getVideoInfo(lectureId);
+
+        log.info("getVideo");
+
+        UrlResource video = new UrlResource("classpath:" + videoLocation+ "/" + videoInfo.get().getWriter()  + "/" + videoInfo.get().getPath());
+        ResourceRegion region = resourceRegion(video, headers);
+        return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
+                .contentType(MediaTypeFactory.getMediaType(video).orElse(MediaType.APPLICATION_OCTET_STREAM))
+                .body(region);
+    }
+
+    private ResourceRegion resourceRegion(UrlResource video, HttpHeaders headers) throws IOException {
+
+        final long chunkSize = 1000000L;
+        long contentLength = video.contentLength();
+
+        HttpRange httpRange = headers.getRange().stream().findFirst().get();
+        if(httpRange != null) {
+            long start = httpRange.getRangeStart(contentLength);
+            long end = httpRange.getRangeEnd(contentLength);
+            long rangeLength = Long.min(chunkSize, end - start + 1);
+            return new ResourceRegion(video, start, rangeLength);
+        } else {
+            long rangeLength = Long.min(chunkSize, contentLength);
+            return new ResourceRegion(video, 0, rangeLength);
+        }
     }
 
     public void mkdirFolder(File folder) {

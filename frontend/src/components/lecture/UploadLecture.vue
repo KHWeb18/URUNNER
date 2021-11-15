@@ -128,7 +128,6 @@ export default {
       formData.append("title", this.title)
       formData.append("description", this.description)
       formData.append("id", this.sectionId)
-
       axios.post("http://localhost:7777/lecture/upload/video/lecture", formData,
           {
             headers: {
@@ -147,13 +146,10 @@ export default {
     },
     videoFile(file) {
        this.video = file
-
         var url = URL.createObjectURL(this.video);
         var audioElement = new Audio(url);
-
         var duration;
         var ele = this.$refs.dur
-
         audioElement.addEventListener("loadedmetadata", function() {
           duration = audioElement.duration
           ele.duration = Math.round(duration)
@@ -215,11 +211,8 @@ export default {
       })
     }
   }
-
-
 }
 </script>
 
 <style>
-
 </style>

@@ -86,6 +86,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
                 .withIssuer(request.getRequestURI().toString())
                 .withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .withClaim("name", memberInfo.getName())
+                .withClaim("nickname", memberInfo.getNickname())
                 .sign(algorithm);
 
         String refresh_token = JWT.create()
@@ -94,6 +95,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
                 .withIssuer(request.getRequestURI().toString())
                 .withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .withClaim("name", memberInfo.getName())
+                .withClaim("nickname", memberInfo.getNickname())
                 .sign(algorithm);
 
         Map<String, String> tokens = new HashMap<>();
