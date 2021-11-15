@@ -9,7 +9,9 @@ import {
     FETCH_NOTICE_LIST,
     FETCH_NOTICE,
     // 스터디
-    FETCH_STUDY_MEMBER_LIST
+    FETCH_STUDY_MEMBER_LIST,
+    // 내학습
+    FETCH_MY_LECTURE_LIST
 
 } from './mutation-types'
 
@@ -195,5 +197,12 @@ export default {
                     const reverse = [...res.data].reverse();
                     commit(FETCH_BOARD_LIST, reverse)
                 })
-    }
+    },
+    // 내학습 게시판
+    fetchMyLectureList ({ commit }) {
+        return axios.get('http://localhost:7777/mypage/myLecturelist')
+                .then((res) => {
+                    commit(FETCH_MY_LECTURE_LIST, res.data)
+                })
+    },
 }

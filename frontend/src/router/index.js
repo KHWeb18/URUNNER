@@ -43,6 +43,9 @@ import InqBoardListForUserPage from '@/views/board/inq/InqBoardListForUserPage.v
 import InqBoardReadPage from '@/views/board/inq/InqBoardReadPage.vue'
 import InqBoardModifyPage from '@/views/board/inq/InqBoardModifyPage.vue'
 
+// 내학습
+import MyLecturePage from '@/views/mypage/MyLecturePage.vue'
+
 Vue.use(VueRouter)
 
 export default new VueRouter({
@@ -308,7 +311,7 @@ export default new VueRouter({
           default: true
         }
       },
-      // 질문답변 게시판
+      // 1:1 문의 게시판
       {
         path: '/inq/create',
         name: 'InqBoardRegisterPage',
@@ -348,6 +351,14 @@ export default new VueRouter({
         },
         props: {
           default: true
+        }
+      },
+      // Mypage MyLecture(내학습)
+      {
+        path: '/mypage/myLecture',
+        name: 'MyLecturePage',
+        components: {
+          default: MyLecturePage
         }
       },
       {

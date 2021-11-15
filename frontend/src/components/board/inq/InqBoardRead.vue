@@ -60,7 +60,11 @@ export default {
             }
         },
         endRecruit(data) {
-            this.board.complete = !this.board.complete
+            if(this.board.complete == 'true') {
+                this.board.complete = false
+            } else {
+                this.board.complete = true
+            }
             const { title, content, complete, currentNum, tags, notice } = this.board
             axios.put(`http://localhost:7777/inqboard/${data}`, { title, content, complete, currentNum, tags, notice })
                     .then(res => {
