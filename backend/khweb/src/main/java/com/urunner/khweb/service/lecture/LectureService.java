@@ -61,9 +61,8 @@ public interface LectureService {
     public void modifyVideoDelete(Long id);
 
     public DtoWrapper2 getLectureDetailInfo(Long lectureId);
-<<<<<<< HEAD
-=======
 
     public  List<LectureDto> getAllLectureList();
->>>>>>> upstream/main
+
+    public Optional<LectureVideoInfo> getVideoInfo(Long lectureId);
 }

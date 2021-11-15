@@ -39,14 +39,11 @@ public class Lecture {
 
     private String detail_path;
 
-<<<<<<< HEAD
-=======
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
     private String grade;
 
->>>>>>> upstream/main
     @JsonIgnore
     @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LectureList> lectureLists = new ArrayList<>();

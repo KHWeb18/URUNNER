@@ -85,10 +85,7 @@
 
 <script>
 import axios from 'axios'
-<<<<<<< HEAD
-=======
 import { API_BASE_URL } from '@/constants/index'
->>>>>>> upstream/main
 export default {
   props: {
     sectionId: {
@@ -131,10 +128,6 @@ export default {
       formData.append("title", this.title)
       formData.append("description", this.description)
       formData.append("id", this.sectionId)
-<<<<<<< HEAD
-=======
-
->>>>>>> upstream/main
       axios.post("http://localhost:7777/lecture/upload/video/lecture", formData,
           {
             headers: {

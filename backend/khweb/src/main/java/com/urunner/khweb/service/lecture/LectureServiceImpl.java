@@ -285,11 +285,7 @@ public class LectureServiceImpl implements LectureService {
         Optional<LectureDto> lectureDto = lecture.stream().findAny().map(l ->
                 new LectureDto(l.getLecture_id(), l.getWriter(), l.getTitle(),
                         l.getDescription(), l.getPrice(), l.isInProgress(),
-<<<<<<< HEAD
-                        l.isDiscounted(), l.getThumb_path(), l.getDetail_path(),
-=======
                         l.isDiscounted(), l.getThumb_path(), l.getDetail_path(), l.getContent(), l.getGrade(),
->>>>>>> upstream/main
                         em.createQuery(query, Category.class)
                                 .setParameter("lectureId", l.getLecture_id()).
                                 getResultList()
@@ -314,8 +310,18 @@ public class LectureServiceImpl implements LectureService {
         return new DtoWrapper2(lectureDto, Optional.of(list));
     }
 
-<<<<<<< HEAD
-=======
+    @Override
+    public Optional<LectureVideoInfo> getVideoInfo(Long lectureId) {
+
+        Optional<LectureVideo> videoInfo = lectureVideoRepository.findById(lectureId);
+
+        Optional<LectureVideoInfo> lectureVideoInfo = videoInfo.stream().findFirst().map(l ->
+                new LectureVideoInfo(l.getLectureList().getLecture().getWriter(), l.getVideoPath())
+        );
+
+        return lectureVideoInfo;
+    }
+
     @Override
     public List<LectureDto> getAllLectureList() {
         List<Lecture> findAllLectureList = lectureRepository.findAll();
@@ -333,7 +339,6 @@ public class LectureServiceImpl implements LectureService {
                 )).collect(Collectors.toList());
     }
 
->>>>>>> upstream/main
     @Transactional(readOnly = true)
     @Override
     public List<LectureDto> getLectureList(String writer) {

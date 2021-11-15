@@ -34,7 +34,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     private MemberRepository memberRepository;
 
-//  성공시 토큰 생성, 쿠키생성
+    //  성공시 토큰 생성, 쿠키생성
     @Autowired
     OAuth2AuthenticationSuccessHandler(HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository, MemberRepository memberRepository) {
         this.httpCookieOAuth2AuthorizationRequestRepository = httpCookieOAuth2AuthorizationRequestRepository;
@@ -84,6 +84,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                 .withIssuer(request.getRequestURI().toString())
                 .withClaim("roles", authority)
                 .withClaim("name", memberInfo.getName())
+                .withClaim("nickname", memberInfo.getNickname())
                 .sign(algorithm);
 
         System.out.println(access_token);
