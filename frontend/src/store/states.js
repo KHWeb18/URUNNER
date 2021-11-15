@@ -49,15 +49,13 @@ export default {
   //커리큘럼 관리
   sectionList: [],
   lectureVideoList: [],
-
   // 강의 불러오기
   getLectureList: [],
   lectureIndex: null,
   // 페이지 빠져나가면서 dom상태가 destroy정도 쯤에 이 값 비우도록하기    
-  
-  //질문답변
+
   qnaMembers: [],
 
-  category: ['개발 프로그래밍', '자바', '프론트엔드', '백엔드', 'Vue', 'React', 'Html Css', 'docker', 'JavaScript', '게임 개발', 'Golang', '데이터 사이언스', 'Python', '인공지능', '딥러닝', '데이터베이스', 'SQL', 'MongoDB', '보안', '모바일 앱 개발', 'Swift', '안드로이드', 'Kotlin', '코딩테스트', '기타']
+  category: ['개발 프로그래밍', '자바', '프론트엔드', '백엔드', 'Vue', 'React', 'Html Css', 'docker', 'JavaScript', '게임 개발', 'Golang', '데이터 사이언스', 'Python', '인공지능', '딥러닝', '데이터베이스', 'SQL', 'MongoDB', '보안', '모바일 앱 개발', 'Swift', '안드로이드', 'Kotlin', '코딩테스트', '기타'],
 }
 
