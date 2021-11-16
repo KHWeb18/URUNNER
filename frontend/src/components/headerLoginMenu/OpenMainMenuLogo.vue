@@ -8,7 +8,7 @@
           <v-list-item-content>
             <router-link :to="{ name: 'memberProfile' }">
               <v-list-item-title class="text-h6">
-                {{ this.$store.state.moduleA.name }}
+                {{ this.$store.state.moduleA.nickname }}
               </v-list-item-title>
             </router-link>
             <v-list-item-subtitle>Student</v-list-item-subtitle>

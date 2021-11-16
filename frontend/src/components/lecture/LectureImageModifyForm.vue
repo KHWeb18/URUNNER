@@ -7,7 +7,7 @@
         <label for="thumb">썸네일 이미지: </label>
         <v-file-input label="upload tumbnail image" id="thumb" @change="thumbFile" accept="image/png, image/jpeg, image/jpg"></v-file-input>
         <div v-if="lectureInfo.thumbPath" class="ma-3">
-          <v-img :src="`http://localhost:7777/lecture/image/${lectureInfo.thumbPath}/${lectureInfo.writer}`" width="250">
+          <v-img :src="`${thumb}`" width="250">
           </v-img>
         </div>
         <v-alert border="top" colored-border type="info" elevation="2">
@@ -20,7 +20,7 @@
         <label for="detail">디테일 이미지: </label>
         <v-file-input label="upload detail image" id="detil" @change="detailFile" accept="image/png, image/jpeg, image/jpg"></v-file-input>
         <div v-if="lectureInfo.detailPath" class="ma-3">
-          <v-img :src="`http://localhost:7777/lecture/image/${lectureInfo.detailPath}/${lectureInfo.writer}`" width="250">
+          <v-img :src="`${detail}`" width="250">
           </v-img>
         </div>
         <v-alert border="top" colored-border type="info" elevation="2">
@@ -45,16 +45,26 @@ import { API_BASE_URL } from '@/constants/index.js'
 export default {
   data() {
     return {
-      thumbnailImage: "",
+      thumbnailImage: '',
       detailImage: "",
+      lectureInfo: {},
       show: null,
+      thumb: null,
+      detail: null,
+      
     }
   },
-  props: {
-    lectureInfo: {
-      type: Object,
-      require: true
-    }
+  created() {
+      const lectureId = this.$route.params.lectureId
+      axios.get(`${API_BASE_URL}/lecture/getBasicInfo/${lectureId}`)
+            .then(res => {
+              this.lectureInfo = res.data.opData;
+            })
+            .then(() => {
+              this.thumb = `http://localhost:7777/lecture/image/${this.lectureInfo.thumbPath}/${this.lectureInfo.writer}`
+              this.detail = `http://localhost:7777/lecture/image/${this.lectureInfo.detailPath}/${this.lectureInfo.writer}`
+            })
+            .catch(err => {console.log(err);})
   },
   methods: {
      async onSubmit() {
@@ -89,7 +99,6 @@ export default {
       this.detailImage = file;
     },
   }
-
 }
 </script>
 
