@@ -43,9 +43,6 @@ import InqBoardListForUserPage from '@/views/board/inq/InqBoardListForUserPage.v
 import InqBoardReadPage from '@/views/board/inq/InqBoardReadPage.vue'
 import InqBoardModifyPage from '@/views/board/inq/InqBoardModifyPage.vue'
 
-// 내학습
-import MyLecturePage from '@/views/mypage/MyLecturePage.vue'
-
 Vue.use(VueRouter)
 
 export default new VueRouter({
@@ -142,6 +139,10 @@ export default new VueRouter({
             {
               path: '/my-points',
               component: () => import("../components/enrolment/Mypoints.vue")
+            },
+            {
+              path: '/myLecture',
+              component: () => import("../components/mypage/MyLecture.vue")
             }
           ]
       },
@@ -364,14 +365,6 @@ export default new VueRouter({
         },
         props: {
           default: true
-        }
-      },
-      // Mypage MyLecture(내학습)
-      {
-        path: '/mypage/myLecture',
-        name: 'MyLecturePage',
-        components: {
-          default: MyLecturePage
         }
       },
       {

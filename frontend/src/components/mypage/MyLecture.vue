@@ -1,101 +1,110 @@
 <template>
-    <div>
-        <!-- 제목 -->
-        <div class="title_box">
-            <h4 class="page_title">
-                <v-icon>mdi-food-apple</v-icon>
-                <span>내 수강 리스트</span>
-            </h4>
-        </div>
-        <!-- 검색창 -->
-        <div class="searching_box">
-            <div class="searching_bar">
-                <v-icon style="margin:10px">mdi-magnify</v-icon>
-                <span>
-                    <input type="text" class="searching" placeholder="검색어를 입력해주세요" v-model="word"
-                    @keyup.enter="searching(word)">
-                </span>
+    <div class="main">
+        <div class="main_box">
+            <!-- 제목 -->
+            <div class="mr-9 hidden-sm-and-down">
+                <div class="title_box">
+                    <h2 class="page_title">
+                        <h3>{{ isAuth }}</h3>
+                        <span>질문답변 게시판</span></h2>
+                </div>
             </div>
-        </div>
-        <div class="searching_message_box" v-show="searchinOn">
-            <div class="searching_message">
-                <div><b>{{ word }}</b> 검색 결과</div>
-                <div><p>&nbsp;&nbsp; <b>{{this.searchingResult.length}}</b>개 검색되었습니다.</p></div>
-            </div>
-        </div>
-        <!-- 리스트 -->
-        <v-container class="lecture01">
-            <div v-show="!searchinOn">
-                <v-container class="lecture_box">
-                    <div v-for="mob in paginatedData2" :key="mob.boardNo" class="item">
-                        <v-card class="mx-auto">
-                            <v-img :src="ImgRequest(mob.boardNo)" height="200px"></v-img>
-                            <div class="btn-plus"><span draggable="false"><v-icon color="white">mdi-arrow-right</v-icon></span></div>
-                            <v-dialog width="700px">
-                                <template v-slot:activator="{ on }">
-                                    <div class="btn-plus2" v-on="on"><span draggable="false"></span></div>
-                                </template>
-                                <v-card>
-                                    <v-img :src="ImgRequest(mob.boardNo)"></v-img>
-                                </v-card>
-                            </v-dialog>
-                            <v-card-title>
-                                {{mob.boardNo}}. 
-                                {{mob.title}}
-                            </v-card-title>
-                            <v-card-subtitle style="height:187px">
-                                <br>
-                                    {{ mob.introduce }}
-                                <br>
-                            </v-card-subtitle>
-                            <v-card-actions>
-                                <v-dialog width="600px">
+            <!-- 검색창 + complete 분류 -->
+            <v-spacer class="forLine0">
+                <div class="forLine0sButton">
+                    <div class="tag_button" :class="{ on2 : completeSelect1 }" @click="fetchQnABoardList(),
+                                        completeSelect1 = true, completeSelect2 = false, completeSelect3 = false, word = '' ">전체</div>&nbsp;&nbsp;&nbsp;
+                    <div class="tag_button" :class="{ on2 : completeSelect2 }"  @click="selectComplete('false'), word = ''">수강중</div>&nbsp;&nbsp;&nbsp;
+                    <div class="tag_button" :class="{ on2 : completeSelect3 }" @click="selectComplete('true'), word = ''">수강완료</div>&nbsp;&nbsp;&nbsp;
+                </div>
+                <div class="searching_box_top">
+                    <div class="mr-9 hidden-sm-and-down">
+                        <div class="searching" >
+                            <span>
+                                <input type="text" placeholder="검색어를 입력해주세요" v-model="word"
+                                @keyup.enter="searching(word)">
+                            </span>
+                            <v-icon class="searching_icon" @click="searching(word)">mdi-magnify</v-icon>
+                        </div>
+                    </div>
+                </div>
+            </v-spacer>
+            <!-- 분류창 -->
+            <v-spacer class="forLine">
+                <li class="tag_button" @click="word = ''">ALL</li>&nbsp;&nbsp;&nbsp;
+                <li class="tag_button" :class="{ on : tagSelect1 }" @click="tagSelect1 = !tagSelect1, searchingTag('Java')">Java</li>&nbsp;&nbsp;&nbsp;
+                <li class="tag_button" :class="{ on : tagSelect2 }" @click="tagSelect2 = !tagSelect2, searchingTag('Spring')">Spring</li>&nbsp;&nbsp;&nbsp;
+                <li class="tag_button" :class="{ on : tagSelect3 }" @click="tagSelect3 = !tagSelect3, searchingTag('Python')">Python</li>&nbsp;&nbsp;&nbsp;
+            </v-spacer>
+            <!-- 리스트 -->
+            <v-container class="lecture01">
+                <div v-show="!searchinOn">
+                    <v-container class="lecture_box">
+                        <div v-for="mob in paginatedData2" :key="mob.boardNo" class="item">
+                            <v-card class="mx-auto">
+                                <v-img :src="ImgRequest(mob.boardNo)" height="200px"></v-img>
+                                <div class="btn-plus"><span draggable="false"><v-icon color="white">mdi-arrow-right</v-icon></span></div>
+                                <v-dialog width="700px">
                                     <template v-slot:activator="{ on }">
-                                        <p>
-                                            <v-btn style="font-weight:bold; font-size:15px; color:#039BE5;" 
-                                            text="text">수강완료</v-btn></p>
-                                        <p v-show="checkAFFO(mob) == '수강중'">
-                                            <v-btn v-bind="attrs" v-on="on" style="font-weight:bold; font-size:15px; color:#DD2C00;" 
-                                            text="text">{{checkAFFO(mob)}}</v-btn></p>
+                                        <div class="btn-plus2" v-on="on"><span draggable="false"></span></div>
                                     </template>
                                     <v-card>
-                                        <v-card-title>
-                                            <span class="text-h5">AAFCO 인증이란 무엇인가요?</span>
-                                        </v-card-title>
-                                        <v-card-text>
-                                            zzzz<br>
-                                        </v-card-text>
+                                        <v-img :src="ImgRequest(mob.boardNo)"></v-img>
                                     </v-card>
                                 </v-dialog>
-                                <v-dialog width="600px">
-                                    <template v-slot:activator="{ on, attrs }">
-                                        <v-btn v-bind="attrs" v-on="on" color="purple" text="text">
-                                            {{mob.nickname}}</v-btn>
-                                    </template>
-                                    <v-card>
-                                        <v-card-title>
-                                            <span class="text-h5">zz</span>
-                                        </v-card-title>
-                                        <v-card-text>
-                                            zzzzzzzzzz
-                                        </v-card-text>
-                                    </v-card>
-                                </v-dialog>
-                                <v-spacer></v-spacer>
-                                <v-btn icon="icon" @click="show = !show">
-                                    <v-icon>{{ show ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon></v-btn>
-                            </v-card-actions>                            
-                        </v-card>
-                    </div>
-                    <v-container style="margin-top:20px;">
-                    <div class="text-center">
-                        <v-pagination class="btn_pagination" v-model="pageNum2" :length="pageCount2"></v-pagination>
-                    </div>
+                                <v-card-title class="temp">
+                                    {{mob.title}}
+                                </v-card-title>
+                                 <v-card-title class="temp2">
+                                    <v-progress-linear
+                                        v-model="valueDeterminate" color="indigo darken-2"></v-progress-linear>
+                                    </v-card-title>
+                                    <div style="font-size:12px;color:#424242;padding-left:5px;">
+                                    전체 진도율 : 15%
+                                    </div>
+
+                                <v-card-actions>
+                                    <v-dialog width="600px">
+                                        <template v-slot:activator="{ on, attrs }">
+                                            <v-btn v-bind="attrs" v-on="on" color="#424242" text="text">
+                                                {{mob.grade}}</v-btn>
+                                        </template>
+                                        <v-card>
+                                            <v-card-title>
+                                                <span class="text-h5">Grade 구분이 뭔데</span>
+                                            </v-card-title>
+                                            <v-card-text>
+                                                대충 정보
+                                            </v-card-text>
+                                        </v-card>
+                                    </v-dialog>
+                                    <v-dialog width="600px">
+                                        <template v-slot:activator="{ on, attrs }">
+                                            <v-btn v-bind="attrs" v-on="on" color="#424242" text="text">
+                                                {{mob.nickname}}</v-btn>
+                                        </template>
+                                        <v-card>
+                                            <v-card-title>
+                                                <span class="text-h5">ㅇㅇㅋ</span>
+                                            </v-card-title>
+                                            <v-card-text>
+                                                강의자 소개? 혹은 여유되면 강의자가 만든 강의 목록 페이지로 가게 할까
+                                            </v-card-text>
+                                        </v-card>
+                                    </v-dialog>
+                                    <v-spacer></v-spacer>
+                                </v-card-actions>                            
+                            </v-card>
+                        </div>
+                        <v-container style="margin-top:20px;">
+                        <div class="text-center">
+                            <v-pagination class="btn_pagination" v-model="pageNum2" :length="pageCount2"></v-pagination>
+                        </div>
+                        </v-container>
                     </v-container>
-                </v-container>
-            </div>
-        </v-container>            
-        <br>        
+                </div>
+            </v-container>            
+        </div>
     </div>
 </template>
 
@@ -125,7 +134,8 @@
                 searchinOn: false,
                 word: '',
                 headers: [
-                ]
+                ],
+                valueDeterminate: 15
             }
         },
         watch: {
@@ -155,19 +165,8 @@
                 return require(`../../../../../Mini/Images/lecture/${boardNo}.gif`
                 )
             } catch (e) {
-                return require(`@/assets/logo.png`)
+                return require(`@/assets/temp.png`)
                 }
-            },
-            checkAFFO(mob) {
-                if (mob.protein <= 29) {
-                    return '미달'
-                } else if (mob.fat <= 10) {
-                    return '미달'
-                } else if (mob.mineral < 2.6) {
-                    return '미달'
-                } else {
-                    return '인증'
-                }                
             },
             searching () {
                 var lists = this.myLecturelist
@@ -208,8 +207,8 @@
 
 <style scoped="scoped" > 
 .mx-auto:hover {
-    transform: translate3d(0px, -10px, 0px);
-    box-shadow: 10px 17px 40px 0 rgb(0 0 0 / 45%);
+    transform: translate3d(0px, -1px, 0px);
+    box-shadow: 10px 17px 40px 0 rgb(0 0 0 / 15%);
     transition: all 1s ease;
 }
 .data_table_box {
@@ -228,7 +227,7 @@
     position: relative;
     margin: 0;
     padding: 0;
-    width: 70vw;
+    width: 100vw;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -258,6 +257,12 @@ p {
     width: 70vw;
     max-width: 1300px;
 }
+.searching_box_top {
+    height: 50px;
+    max-width: 1110px;
+    display: flex;
+    justify-content: space-between;
+}
 .searching_box {    
     height: 50px;
 }
@@ -270,10 +275,14 @@ p {
     border: 1px solid #BDBDBD;
 }
 .searching {
-    height: 38px !important; 
-    width:60vw !important;
+    display: flex;
+    justify-content: space-between;
+    height: 43px;
+    width: 350px;
+    min-width: 300px;
+    padding-left: 10px;
     max-width: 955px;
-    border-style: none !important;
+    border: 1px solid #BDBDBD;
 }
 .title_box span {
     font-size: 25px;
@@ -382,5 +391,109 @@ p {
   font-size:2.3em;
   color:#ffffff;
   user-select:none;
+}
+
+
+
+.tag_button {
+    color: #BDBDBD;
+    cursor: pointer;
+}
+.tag_button.on {
+    color: black;
+}
+.tag_button.on2 {
+    color: rgb(53, 53, 53);
+    font-weight: bold;
+}
+.tag_button:hover {
+    color: rgb(63, 63, 63);
+    cursor: pointer;
+    transition: all 0.5s ease;
+}
+.forLine0 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 40px;
+    padding-left: 2vw;
+}
+.forLine0sButton {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+.forLine {
+    height: 40px;
+    border-top: 1px solid #BDBDBD;
+    border-bottom: 1px solid #BDBDBD;
+    padding-left: 2vw;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+.searching {
+    display: flex;
+    justify-content: space-between;
+    height: 43px;
+    width: 350px;
+    min-width: 300px;
+    padding-left: 10px;
+    max-width: 955px;
+    border: 1px solid #BDBDBD;
+}
+.searching:hover {
+    display: flex;
+    justify-content: space-between;
+    height: 43px; 
+    width: 350px;
+    padding-left: 10px;
+    max-width: 955px;
+    border: 1px solid rgb(155, 155, 155);
+}
+.searching span {
+    display: flex;
+    align-self: center;
+}
+.searching span input {
+    margin-top: 3px;
+    width: 280px;
+}
+.searching_icon {
+    padding: 11px 10px 10px 10px;
+    border-left: 1px solid #BDBDBD;
+    background-color: #FAFAFA;
+}
+.searching_icon:hover {
+    padding: 11px 10px 10px 10px;
+    border-left: 1px solid #BDBDBD;
+    background-color: #dfdfdf;
+}
+input:focus {
+    outline:none;
+}
+.main_box {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    
+    color: #424242;
+}
+.temp {
+    font-size: 15px;
+    font-weight: bold;
+    color: #424242;
+    padding: 5px 10px 5px 10px;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    line-height: 30px;
+    -webkit-line-clamp: 1; /* 표시하고자 하는 라인 수 */
+    -webkit-box-orient: vertical;
+}
+.temp2 {
+    font-size: 15px;
+    padding: 3px;
 }
 </style>
