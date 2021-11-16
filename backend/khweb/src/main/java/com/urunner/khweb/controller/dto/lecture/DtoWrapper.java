@@ -4,6 +4,7 @@ package com.urunner.khweb.controller.dto.lecture;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.Optional;
 
 @Data
@@ -17,4 +18,7 @@ public class DtoWrapper<T> {
         this.opData = opData;
     }
 
+    public DtoWrapper(T data) {
+        this.data = data;
+    }
 }
