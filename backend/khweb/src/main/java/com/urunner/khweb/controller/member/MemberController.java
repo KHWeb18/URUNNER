@@ -93,4 +93,13 @@ public class MemberController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PatchMapping("/getManager/{email}")
+    public ResponseEntity<Void> getManager(@PathVariable("email")String email) throws Exception {
+
+        //Member member = memberService.findByEmail(email);
+        memberService.getManager(email);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }

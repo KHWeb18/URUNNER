@@ -196,6 +196,29 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
 
         memberRepository.save(member);
     }
+
+    @Override
+    public void getManager(String email) throws Exception {
+
+        Role role = new Role();
+
+        Member member1 = memberRepository.findByEmail(email);
+        if (member1 != null) {
+
+            log.info("아이디 찾았습니다!");
+
+            role.setName("ROLE_MANAGER");
+            role.setMember(member1);
+
+            roleRepository.save(role);
+
+
+
+            log.info("관리자 변경 성공");
+
+
+        }
+    }
 }
 
 

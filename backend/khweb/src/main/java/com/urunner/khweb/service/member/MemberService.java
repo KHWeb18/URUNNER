@@ -17,5 +17,7 @@ public interface MemberService {
     Member findByName(String name) throws Exception;
     // 비밀번호 변경
     void changePw(Member member, MemberRes memberRes) throws Exception;
+    //관리자 설정
+    public void getManager (String email) throws  Exception ;
 
 }
