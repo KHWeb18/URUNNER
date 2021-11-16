@@ -100,10 +100,15 @@ public class LectureServiceImpl implements LectureService {
 //        lectureImage.setLecture(lecture);
 //
 //        System.out.println(lectureImage.getThumb_path());
-
-        lecture.setLectureThumb(thum);
-
-        lecture.setLectureDetail(detail);
+        try {
+            if (lecture.getThumb_path() != null && lecture.getDetail_path() != null) {
+                lectureUtil.deleteUtil("image", lecture.getThumb_path());
+                lectureUtil.deleteUtil("image", lecture.getDetail_path());
+            }
+        } finally {
+            lecture.setLectureThumb(thum);
+            lecture.setLectureDetail(detail);
+        }
 
         lectureRepository.save(lecture);
     }
@@ -338,23 +343,44 @@ public class LectureServiceImpl implements LectureService {
                                 getResultList()
                 )).collect(Collectors.toList());
     }
+    //  옳게 된 쿼리
+    @Override
+    public DtoWrapper lectureBanner(int page) {
 
+        PageRequest pageRequest = PageRequest.of(page, 4);
+
+        Page<Lecture> findAllLecture = lectureRepository.findByInProgressTrue(true, pageRequest);
+
+        Page<LectureDto> lectureDtos = findAllLecture.map(l ->
+                new LectureDto(l.getLecture_id(), l.getWriter(), l.getTitle(),
+                        l.getDescription(), l.getPrice(), l.isInProgress(),
+                        l.isDiscounted(), l.getThumb_path(), l.getDetail_path(), l.getContent(), l.getGrade(),
+                        l.getCategoryList().stream().map(CategoryLecture::getCategory).collect(Collectors.toList())
+                ));
+
+
+        return new DtoWrapper(lectureDtos);
+    }
+
+    //   심각하게 잘못된 쿼리
     @Transactional(readOnly = true)
     @Override
     public List<LectureDto> getLectureList(String writer) {
 
         List<Lecture> findAllLecture = lectureRepository.findByWriter(writer);
-//      적합한 쿼리
+//      부적합한 쿼리 N + 1
         String query = "select c from Category c join CategoryLecture cl on cl.category = c " +
                 "join Lecture l on l = cl.lecture where l.id = :lectureId";
-//      부적합한 쿼리
+//      부적합한 쿼리 N + 1
 //        String query = "select c from Category c join fetch c.lectureList cl " +
 //                "join fetch cl.lecture l where l.id = :lectureId";
+
+//        fetch join을 위에서 사용해야됨
 
         return findAllLecture.stream().map(l ->
                 new LectureDto(l.getLecture_id(), l.getWriter(), l.getTitle(),
                         l.getDescription(), l.getPrice(), l.isInProgress(),
-                        l.isDiscounted(), l.getThumb_path(), l.getDetail_path(),  l.getContent(), l.getGrade(),
+                        l.isDiscounted(), l.getThumb_path(), l.getDetail_path(), l.getContent(), l.getGrade(),
                         em.createQuery(query, Category.class)
                                 .setParameter("lectureId", l.getLecture_id()).
                                 getResultList()
