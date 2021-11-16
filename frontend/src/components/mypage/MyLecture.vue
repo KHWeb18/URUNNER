@@ -58,42 +58,18 @@
                                  <v-card-title class="temp2">
                                     <v-progress-linear
                                         v-model="valueDeterminate" color="indigo darken-2"></v-progress-linear>
-                                    </v-card-title>
-                                    <div style="font-size:12px;color:#424242;padding-left:5px;">
-                                    전체 진도율 : 15%
+                                </v-card-title>
+                                <div class="card_text">
+                                    <div>
+                                        전체 진도율 : 15% | <v-icon size="15" style="cursoer:pointer" @click="info()">mdi-alert-circle-outline</v-icon>
                                     </div>
-
+                                    <div></div><div></div><div></div>
+                                    <div>
+                                        {{ mob.grade }} | {{ mob.nickname }}
+                                    </div>
+                                </div>
                                 <v-card-actions>
-                                    <v-dialog width="600px">
-                                        <template v-slot:activator="{ on, attrs }">
-                                            <v-btn v-bind="attrs" v-on="on" color="#424242" text="text">
-                                                {{mob.grade}}</v-btn>
-                                        </template>
-                                        <v-card>
-                                            <v-card-title>
-                                                <span class="text-h5">Grade 구분이 뭔데</span>
-                                            </v-card-title>
-                                            <v-card-text>
-                                                대충 정보
-                                            </v-card-text>
-                                        </v-card>
-                                    </v-dialog>
-                                    <v-dialog width="600px">
-                                        <template v-slot:activator="{ on, attrs }">
-                                            <v-btn v-bind="attrs" v-on="on" color="#424242" text="text">
-                                                {{mob.nickname}}</v-btn>
-                                        </template>
-                                        <v-card>
-                                            <v-card-title>
-                                                <span class="text-h5">ㅇㅇㅋ</span>
-                                            </v-card-title>
-                                            <v-card-text>
-                                                강의자 소개? 혹은 여유되면 강의자가 만든 강의 목록 페이지로 가게 할까
-                                            </v-card-text>
-                                        </v-card>
-                                    </v-dialog>
-                                    <v-spacer></v-spacer>
-                                </v-card-actions>                            
+                                </v-card-actions>
                             </v-card>
                         </div>
                         <v-container style="margin-top:20px;">
@@ -232,10 +208,6 @@
     flex-wrap: wrap;
     justify-content: center;
 }
-.item {
-    margin: 10px;
-    width: 300px;
-}
 .btn_pagination {
     background-color: transparent;
     box-shadow: none;
@@ -353,12 +325,12 @@ p {
 }
 .item {
     margin: 10px;
-    width: 300px;
+    width: 250px;
 }
 .btn-plus {
   position:absolute;
   top:77.5px;
-  left:122.5px;
+  left:102.5px;
   background:rgb(65, 84, 192, 0.8);
   width:55px;
   height:55px;
@@ -379,7 +351,7 @@ p {
   position:absolute;
   top:0.001px;
   background:rgba(0, 0, 0, 0.2);
-  width:300px;
+  width:250px;
   height:200px;
   text-align:center;
   border-radius: 6px 6px 0px 0px;
@@ -495,5 +467,26 @@ input:focus {
 .temp2 {
     font-size: 15px;
     padding: 3px;
+}
+.card_text {
+    display: flex;
+    justify-content: space-around;
+    font-size:11px;
+    font-weight: 00;
+    color:#424242;
+    margin:5px 5px 0px 5px;
+    padding-bottom:5px;
+    border-bottom:1px solid #ececec
+}
+.card_text2 {
+    font-size:12px;
+    font-weight: 500;
+    color:#424242;
+    margin:0px 0px;
+    padding:0 0 10px 0;
+}
+.v-sheet.v-card:not(.v-sheet--outlined) {
+    box-shadow: 0 1px 1px -1px rgb(0 0 0 / 10%), 0 2px 2px 0 rgb(0 0 0 / 4%), 0 1px 5px 0 rgb(0 0 0 / 6%) !important;
+
 }
 </style>
