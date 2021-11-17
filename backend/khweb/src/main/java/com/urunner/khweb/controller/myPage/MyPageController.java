@@ -59,6 +59,13 @@ public class MyPageController {
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
+    @GetMapping("/getPoint")
+    public ResponseEntity<Long> getPoint() {
+
+        return new ResponseEntity<Long>(mypageService.getPoint(), HttpStatus.OK);
+
+    }
+
 
 
 

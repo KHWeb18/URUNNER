@@ -504,9 +504,6 @@ public class LectureServiceImpl implements LectureService {
                         lectureRepository.deleteById(l.getLecture_id());
                     });
         }
-
-
-
     }
 
     @Override

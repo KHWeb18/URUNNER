@@ -10,4 +10,6 @@ public interface MypageService {
     //Lecture Entity생성후 반환타입 바꾸어야함
     public TempLecture latestLec() throws Exception;
 
+    public Long getPoint();
+
 }
