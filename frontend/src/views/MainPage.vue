@@ -28,10 +28,11 @@ export default {
   },
   methods: {
     fetchAllLecture() {
-      axios.get(`${API_BASE_URL}/lecture/getAllLecture`)
+      axios.get(`${API_BASE_URL}/lecture/getLectureBanner/0`)
             .then(({ data }) => {
-               console.log(JSON.stringify(data))
-               this.allLectureList = data;
+              console.log(data)
+              //  console.log(JSON.stringify(data))
+              //  this.allLectureList = data;
             })
     }
   },
