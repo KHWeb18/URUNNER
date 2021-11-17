@@ -99,11 +99,9 @@ public class LectureController {
         } catch (Exception e) {
             return null;
         }
-        UrlResource image = new UrlResource("classpath:" + imageLocation + "/" + authentication.getName() + "/" + this.detail);
+//        UrlResource image = new UrlResource("classpath:" + imageLocation + "/" + authentication.getName() + "/" + this.detail);
 
-        return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
-                .contentType(MediaTypeFactory.getMediaType(image).orElse(MediaType.APPLICATION_OCTET_STREAM))
-                .body(image);
+        return null;
     }
 
     @GetMapping("/image/{path}/{writer}")
@@ -212,22 +210,22 @@ public class LectureController {
         return "upload success";
     }
 
-//    나중에 쓰는부분 다붙이기
+    //    나중에 쓰는부분 다붙이기
     @Transactional
     @PostMapping("/modify/video/lecture")
     public @ResponseBody
     DtoWrapper modifyVideoUpload(@RequestParam("video") List<MultipartFile> video,
 //                         long으로 받는지 확인
-                       @RequestParam("duration") Long duration,
-                       @RequestParam("title") String title,
-                       @RequestParam("description") String description,
-                       @RequestParam("id") Long id
+                                 @RequestParam("duration") Long duration,
+                                 @RequestParam("title") String title,
+                                 @RequestParam("description") String description,
+                                 @RequestParam("id") Long id
     ) throws IOException {
 
         lectureService.modifyVideoDelete(id);
-        
+
         String lectureName = null;
-        
+
         String dur = Long.toString(duration);
 
         ClassPathResource resource1 = new ClassPathResource(videoLocation);
@@ -247,7 +245,7 @@ public class LectureController {
             UUID uuid = UUID.randomUUID();
             String randomString = uuid.toString() + "_";
 
-            
+
             for (MultipartFile multipartFile : video) {
                 String lecture = "Lecture_" + randomString + multipartFile.getOriginalFilename();
                 FileOutputStream writer = new FileOutputStream(dirPath + "/" + lecture);
@@ -377,6 +375,12 @@ public class LectureController {
         return lectureService.getAllLectureList();
     }
 
+    @GetMapping("/getLectureBanner/{page}")
+    public DtoWrapper getLectureBanner(@PathVariable("page") int page) {
+
+        return lectureService.lectureBanner(page);
+    }
+
     @GetMapping("/videos/{lectureId}")
     public ResponseEntity<ResourceRegion> getVideo(@PathVariable Long lectureId,
                                                    @RequestHeader HttpHeaders headers) throws IOException {
@@ -385,7 +389,7 @@ public class LectureController {
 
         log.info("getVideo");
 
-        UrlResource video = new UrlResource("classpath:" + videoLocation+ "/" + videoInfo.get().getWriter()  + "/" + videoInfo.get().getPath());
+        UrlResource video = new UrlResource("classpath:" + videoLocation + "/" + videoInfo.get().getWriter() + "/" + videoInfo.get().getPath());
         ResourceRegion region = resourceRegion(video, headers);
         return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
                 .contentType(MediaTypeFactory.getMediaType(video).orElse(MediaType.APPLICATION_OCTET_STREAM))

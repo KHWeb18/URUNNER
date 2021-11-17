@@ -5,6 +5,7 @@
             <div class="mr-9 hidden-sm-and-down">
                 <div class="title_box">
                     <h2 class="page_title">
+                        <h3>{{ isAuth }}</h3>
                         <span>질문답변 게시판</span></h2>
                 </div>
             </div>
@@ -269,7 +270,9 @@ export default {
             tagSelect3: false,
             completeSelect1: true,
             completeSelect2: false,
-            completeSelect3: false
+            completeSelect3: false,
+
+            // isAuth: this.$cookies.get(ROLES)
         }
     },
     beforeDestroy () {
@@ -466,6 +469,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100vw !important;
     height: 40px;
     padding-left: 2vw;
 }
@@ -485,6 +489,7 @@ export default {
     align-items: center;
 }
 .main_box {
+    width: 100vw!important;
     color: #424242;
 }
 .title_box {
@@ -767,17 +772,15 @@ ul {
     display: flex;
     align-self: center;
     font-size: 12px;
-    min-width: 20px;
+    min-width: 32px;
     font-weight: 500;
     color: #01579B;
-    transition: all 0.4s ease;
 }
 .tag_box_button:hover {
     font-size: 12px;
-    min-width: 30px;
+    min-width: 32px;
     color: #01579B;
     font-weight: bold;
-    transition: all 0.4s ease;
 }
 .completeDisplay {
     background-color: #FFAB00;

@@ -132,6 +132,10 @@ export default {
         }
     },
     created () {
+            console.log('this.$store.state.moduleA.email : ' + this.$store.state.moduleA.email)
+            console.log('this.$store.state.moduleA.nickname : ' + this.$store.state.moduleA.nickname)
+            console.log('this.$store.state.email : ' + this.$store.state.email)
+            console.log('this.$store.state.nickname : ' + this.$store.state.nickname)
         this.fetchMyIntroduce(this.userId) 
         setTimeout(() => {
             this.introduce = this.$store.state.introduce // data 갱신용 왜 fetch로 값 받아오면 갱신이 안 되네
@@ -139,8 +143,10 @@ export default {
     },
     methods: {
         test() {
-            console.log(this.$store.state.moduleA.name)
-            // this.introduce = this.$store.state.introduce
+            console.log('this.$store.state.moduleA.email : ' + this.$store.state.moduleA.email)
+            console.log('this.$store.state.moduleA.name : ' + this.$store.state.moduleA.name)
+            console.log('this.$store.state.email : ' + this.$store.state.email)
+            console.log('this.$store.state.name : ' + this.$store.state.name)
         },
         profileSubmit () {
                 const { userId, nickname, password, introduce} = this

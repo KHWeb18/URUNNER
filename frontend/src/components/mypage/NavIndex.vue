@@ -1,19 +1,16 @@
 <template>
   <v-row>
-    <v-col cols="auto">
-    <v-navigation-drawer >
+    <v-col cols="3" class="hidden-md-and-down">
       <v-list
         dense
       >
          <nav-list />
       </v-list>
-    </v-navigation-drawer>
     </v-col>
-    <v-col cols="9">
+    <v-col cols="12" lg="9">
       <defaultView/>
     </v-col>
   </v-row>
-
 </template>
 
 <script>

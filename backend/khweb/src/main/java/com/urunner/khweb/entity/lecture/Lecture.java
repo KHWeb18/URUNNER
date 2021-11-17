@@ -27,6 +27,7 @@ public class Lecture {
 
     private String title;
 
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String description;
 
     private Long price;
