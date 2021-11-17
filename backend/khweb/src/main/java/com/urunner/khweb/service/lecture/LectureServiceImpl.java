@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
 import java.io.File;
@@ -358,6 +359,7 @@ public class LectureServiceImpl implements LectureService {
                         l.getCategoryList().stream().map(CategoryLecture::getCategory).collect(Collectors.toList())
                 ));
 
+        log.info(findAllLecture.get().findFirst().get().getCategoryList().toString());
 
         return new DtoWrapper(lectureDtos);
     }
@@ -467,18 +469,44 @@ public class LectureServiceImpl implements LectureService {
 
     @Override
     public void deleteLecture(Long lectureId) {
-        Optional<Lecture> lecture = lectureRepository.findById(lectureId);
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        try {
+            String query = "select l from Lecture l join l.lectureLists li join li.lectureVideos where l.lecture_id = :id";
 
-        lecture.orElseThrow(() -> new NoSuchElementException());
-//        ispresnet ifpresent 구분 주의
-        lecture.filter(l -> authentication.getName().equals(l.getWriter()))
-                .ifPresent(l -> {
-                    l.setLectureDetail(null);
-                    lectureRepository.deleteById(l.getLecture_id());
-                });
-//        파일 삭제 아직 미구현
+            Lecture lecture1 = em.createQuery(query, Lecture.class)
+                    .setParameter("id", lectureId)
+                    .getSingleResult();
+
+            List<LectureList> lectureLists = lecture1.getLectureLists();
+
+            if (lecture1.getThumb_path() != null && lecture1.getDetail_path() != null) {
+                lectureUtil.deleteUtil("image", lecture1.getThumb_path());
+                lectureUtil.deleteUtil("image", lecture1.getDetail_path());
+            }
+
+            for (int i = 0; i < lectureLists.size(); i++) {
+                for (int j = 0; j < lectureLists.get(i).getLectureVideos().size(); j++) {
+                    lectureUtil.deleteUtil("video", lectureLists.get(i).getLectureVideos().get(j).getVideoPath());
+                }
+            }
+
+        } catch (NoResultException re) {
+            log.info("error");
+        } finally {
+
+            Optional<Lecture> lecture = lectureRepository.findById(lectureId);
+
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+            lecture.filter(l -> authentication.getName().equals(l.getWriter()))
+                    .ifPresent(l -> {
+                        l.setLectureDetail(null);
+                        lectureRepository.deleteById(l.getLecture_id());
+                    });
+        }
+
+
+
     }
 
     @Override
