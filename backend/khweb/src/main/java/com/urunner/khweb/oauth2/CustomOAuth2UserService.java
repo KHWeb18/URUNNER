@@ -4,10 +4,12 @@ package com.urunner.khweb.oauth2;
 import com.urunner.khweb.entity.member.AuthProvider;
 import com.urunner.khweb.entity.member.Member;
 import com.urunner.khweb.entity.member.Role;
+import com.urunner.khweb.entity.mypage.MyPage;
 import com.urunner.khweb.oauth2.user.OAuth2UserInfo;
 import com.urunner.khweb.oauth2.user.OAuth2UserInfoFactory;
 import com.urunner.khweb.repository.member.MemberRepository;
 import com.urunner.khweb.repository.member.RoleRepository;
+import com.urunner.khweb.repository.mypage.MyPageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
@@ -31,6 +33,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private MyPageRepository myPageRepository;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
@@ -93,6 +98,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private Member registerNewUser(OAuth2UserRequest oAuth2UserRequest, OAuth2UserInfo oAuth2UserInfo) {
         Member user = new Member();
         Role role = new Role();
+        MyPage myPage = new MyPage(0L);
 
         user.setProvider(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()));
 //        user.setProviderId(oAuth2UserInfo.getId());
@@ -101,8 +107,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         role.setName("ROLE_USER");
         role.setMember(user);
+        myPage.setMember(user);
 
         roleRepository.save(role);
+        myPageRepository.save(myPage);
 
         return userRepository.save(user);
     }

@@ -4,8 +4,10 @@ import com.urunner.khweb.controller.dto.MemberRes;
 import com.urunner.khweb.entity.member.AuthProvider;
 import com.urunner.khweb.entity.member.Member;
 import com.urunner.khweb.entity.member.Role;
+import com.urunner.khweb.entity.mypage.MyPage;
 import com.urunner.khweb.repository.member.MemberRepository;
 import com.urunner.khweb.repository.member.RoleRepository;
+import com.urunner.khweb.repository.mypage.MyPageRepository;
 import com.urunner.khweb.utility.PythonRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,11 +41,13 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     private final MemberRepository memberRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final MyPageRepository myPageRepository;
 
     @Override
     public boolean registerMember(MemberRes memberRes) throws Exception {
         Member member = new Member();
         Role role = new Role();
+        MyPage myPage = new MyPage(0L);
 
         //아이디 중복확인
         String memberEmail = memberRes.getEmail();
@@ -60,9 +64,10 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
             member.setProvider(AuthProvider.local);
             role.setName("ROLE_USER");
             role.setMember(member);
+            myPage.setMember(member);
 
             roleRepository.save(role);
-
+            myPageRepository.save(myPage);
             memberRepository.save(member);
 
             log.info("가입성공");

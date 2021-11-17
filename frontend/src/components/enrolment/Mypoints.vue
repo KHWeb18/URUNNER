@@ -8,10 +8,30 @@
 </template>
 
 <script>
+import { API_BASE_URL } from '@/constants/index'
+import axios from 'axios'
 export default {
     data:() => ({
         point: 0
-    })
+    }),
+    computed: {
+        
+    },
+    methods: {
+        getPoint() {
+            axios.get(`${API_BASE_URL}/my-page/getPoint`)
+            .then(res => {
+                this.point = res.data
+                console.log(res.data)
+            })
+            .catch(err => {
+                console.log(err)
+            })
+        }
+    },
+    created() {
+        this.getPoint()
+    }
 
 }
 </script>
