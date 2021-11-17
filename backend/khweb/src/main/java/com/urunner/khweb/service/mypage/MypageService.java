@@ -12,4 +12,7 @@ public interface MypageService {
 
     public Long getPoint();
 
+    public boolean lectureAddToCart(Long lectureId);
+
+
 }

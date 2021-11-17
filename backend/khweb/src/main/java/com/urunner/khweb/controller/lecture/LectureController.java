@@ -381,6 +381,12 @@ public class LectureController {
         return lectureService.lectureBanner(page);
     }
 
+    @GetMapping("/getVideoInfo/{videoId}")
+    public DtoWrapper getVideoInfo(@PathVariable Long videoId) {
+
+        return lectureService.getVideoInfoDetail(videoId);
+    }
+
     @GetMapping("/videos/{lectureId}")
     public ResponseEntity<ResourceRegion> getVideo(@PathVariable Long lectureId,
                                                    @RequestHeader HttpHeaders headers) throws IOException {

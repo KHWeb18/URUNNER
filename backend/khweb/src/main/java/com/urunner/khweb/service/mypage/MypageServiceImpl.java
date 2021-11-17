@@ -8,6 +8,7 @@ import com.urunner.khweb.repository.member.MemberRepository;
 import com.urunner.khweb.repository.mypage.MyNoteRepository;
 import com.urunner.khweb.repository.mypage.MyPageRepository;
 import com.urunner.khweb.repository.mypage.TempLectureRepository;
+import com.urunner.khweb.repository.mypage.WishListRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -28,6 +29,9 @@ public class MypageServiceImpl implements MypageService{
 
     @Autowired
     private MemberRepository memberRepository;
+
+    @Autowired
+    private WishListRepository wishListRepository;
 
 
 
@@ -56,9 +60,27 @@ public class MypageServiceImpl implements MypageService{
 
     @Override
     public Long getPoint() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Authentication authentication = getAuthentication();
 //      두번조회
         Member member = memberRepository.findByEmail(authentication.getName());
         return member.getMyPage().getPoint();
+    }
+
+
+
+    @Override
+    public boolean lectureAddToCart(Long lectureId) {
+
+        Authentication authentication = getAuthentication();
+
+//        le
+//
+//        wishListRepository.
+
+        return false;
+    }
+
+    private Authentication getAuthentication() {
+        return SecurityContextHolder.getContext().getAuthentication();
     }
 }

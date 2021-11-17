@@ -28,4 +28,10 @@ public class LectureVideoDto {
         this.videoPath = videoPath;
         this.description = description;
     }
+
+    public LectureVideoDto(String title, String description, String duration) {
+        this.title = title;
+        this.description = description;
+        this.duration = duration;
+    }
 }

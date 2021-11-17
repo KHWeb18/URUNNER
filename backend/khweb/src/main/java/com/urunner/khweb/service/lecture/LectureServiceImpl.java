@@ -8,6 +8,7 @@ import com.urunner.khweb.entity.lecture.LectureVideo;
 import com.urunner.khweb.entity.sort.Category;
 import com.urunner.khweb.entity.sort.CategoryLecture;
 import com.urunner.khweb.repository.lecture.*;
+import com.urunner.khweb.repository.mypage.WishListRepository;
 import com.urunner.khweb.utility.LectureUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +62,6 @@ public class LectureServiceImpl implements LectureService {
 
     @Autowired
     private LectureUtil lectureUtil;
-
 
 //    @Override
 //    public void lectureVideo(LectureVideo lectureVideo, EnrollLectureVideoDto enrollLectureVideoDto) {
@@ -329,6 +329,14 @@ public class LectureServiceImpl implements LectureService {
     }
 
     @Override
+    public DtoWrapper getVideoInfoDetail(Long id) {
+
+        Optional<LectureVideo> videoInfo = lectureVideoRepository.findById(id);
+
+        return new DtoWrapper(videoInfo.map(l -> new LectureVideoDto(l.getTitle(), l.getDescription(), l.getDuration())));
+    }
+
+    @Override
     public List<LectureDto> getAllLectureList() {
         List<Lecture> findAllLectureList = lectureRepository.findAll();
 
@@ -363,6 +371,7 @@ public class LectureServiceImpl implements LectureService {
 
         return new DtoWrapper(lectureDtos);
     }
+
 
     //   심각하게 잘못된 쿼리
     @Transactional(readOnly = true)
