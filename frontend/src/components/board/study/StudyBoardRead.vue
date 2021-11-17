@@ -11,8 +11,9 @@
                                 <div v-for="tag in classifyTag(board.tags)" :key="tag">
                                         <btn class="tag_box_button">#{{ tag.text }}&nbsp;</btn>
                                 </div>
-                                <div v-show="board.tags != '#'" class="post_tag_either">/&nbsp;</div>
-                                <div class="post_tag_either">{{board.nickname}} / {{ $moment(board.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}</div>
+                                <div v-show="board.tags != '#'" class="post_tag_either"></div>
+                                <div class="post_tag_either"><h v-show="board.notice =='false'">&nbsp;/&nbsp;{{board.nickname}}&nbsp;/&nbsp;</h>
+                                {{ $moment(board.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}</div>
                             </div>
                         </div>
                     </div>
@@ -133,7 +134,7 @@ export default {
     display: flex;
     justify-content: center;
     flex-direction: column;
-    width:100vw;
+    width:95vw;
     max-width: 1000px;
     margin: 0px;
 }
@@ -172,7 +173,7 @@ export default {
     border-style: none !important;
 }
 .searching_message_box {
-    width:100vw;
+    width:95vw;
     max-width: 1000px;
     display:flex;
     justify-content: center;

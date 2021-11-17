@@ -7,6 +7,8 @@ import LeaveMemberPage from '@/views/member/LeaveMemberPage.vue'
 //마이 페이지
 import MyPageStatus from '@/views/mypage/MyPageStatus.vue'
 
+
+import BoardCollectionPage from '@/views/board/BoardCollectionPage.vue'
 // 게시판
 import FreeBoardListPage from '@/views/board/free/BoardListPage.vue'
 import FreeBoardRegisterPage from '@/views/board/free/BoardRegisterPage.vue'
@@ -143,6 +145,10 @@ export default new VueRouter({
             {
               path: '/myLecture',
               component: () => import("../components/mypage/MyLecture.vue")
+            },
+            {
+              path: '/myPostList',
+              component: () => import("../components/mypage/MyPostList.vue")
             }
           ]
       },
@@ -153,6 +159,13 @@ export default new VueRouter({
       {
         path: '/orders',
         component: () => import("../components/enrolment/Orders.vue")
+      },
+      {
+        path: '/boardCol',
+        name: 'BoardCollectionPage',
+        components: {
+          default: BoardCollectionPage
+        }
       },
       {
         path: '/freeBoard',

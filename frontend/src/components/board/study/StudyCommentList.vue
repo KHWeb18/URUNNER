@@ -205,7 +205,7 @@ export default {
 
 <style scoped>
 .comment_list {
-    width:100vw;
+    width:95vw;
     max-width: 1050px;
     margin-top: 10px;
     border-top: #BDBDBD solid 1px;

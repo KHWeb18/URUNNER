@@ -44,6 +44,7 @@ export default {
                         this.$router.push({
                             name: 'FreeBoardListPage'
                         })
+                        // this.$emit("BoardNo", res.data.boardNo.toString())
                     })
                     .catch(res => {
                         alert(res.response.data.message)

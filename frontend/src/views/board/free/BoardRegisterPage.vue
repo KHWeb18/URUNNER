@@ -2,6 +2,7 @@
     <div>
         <v-container>
         <h2 class="board_title">글쓰기</h2>
+        <!-- <free-board-register-form :boardNo="saveBoardNo"/> -->
         <free-board-register-form/>
         </v-container>
     </div>
@@ -14,7 +15,12 @@ export default {
     name: 'FreeBoardRegisterPage',
     components: {
         FreeBoardRegisterForm
-    }
+    },
+    // methos : {
+    //     saveBoardNo(data) {
+    //         this.$emit("BoardNo", data)
+    //     }
+    // }
 }
 </script>
 

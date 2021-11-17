@@ -14,7 +14,7 @@ export default {
           { title: '내 학습', to: '/myLecture'},
           { title: '강의노트', to: '/'},
           { title: '멘토링', to: '/'},
-          { title: '작성한 게시글', to: '/'},
+          { title: '작성한 게시글', to: '/myPostList'},
           { title: '수강전 문의', to: '/'},
       ]},
       { title: '수강신청관리', items:[
@@ -42,6 +42,9 @@ export default {
   isAuth: true, // 임시
   isAuth2: 'true',
   boardNo: null,
+  selectMenu: 1,
+  selctedComp: 'BoardListPage',
+  title: '자유 주제 게시판',
   //공지사항
   notices: [],
   notice: null,
