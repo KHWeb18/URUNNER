@@ -59,4 +59,15 @@ public class LectureManageController {
 
         return lectureService.getWishList();
     }
+
+    @GetMapping("/mainCartList")
+    public DtoWrapper mainCartList() {
+
+        return lectureService.mainCartList(0);
+    }
+    @GetMapping("/mainWishList")
+    public DtoWrapper mainWishList() {
+
+        return lectureService.mainWishList(0);
+    }
 }

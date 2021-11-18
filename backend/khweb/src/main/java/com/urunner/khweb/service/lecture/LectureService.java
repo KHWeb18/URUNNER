@@ -74,4 +74,7 @@ public interface LectureService {
 
     public DtoWrapper getWishList();
 
+    public DtoWrapper mainCartList(int page);
+
+    public DtoWrapper mainWishList(int page);
 }

@@ -345,7 +345,41 @@ public class LectureServiceImpl implements LectureService {
         return new DtoWrapper(videoInfo.map(l -> new LectureVideoDto(l.getTitle(), l.getDescription(), l.getDuration())));
     }
 
+    @Override
+    public DtoWrapper mainCartList(int page) {
 
+        String query = "select l from Lecture l join l.cartList cl join cl.myPage mp join mp.member m " +
+                "where m.email = :email";
+
+        List<Lecture> email = em.createQuery(query, Lecture.class)
+                .setParameter("email", authentication())
+                .setFirstResult(page)
+                .setMaxResults(5)
+                .getResultList();
+
+        List<LectureDto> lectureDtos = email.stream().map(l ->
+                new LectureDto(l.getLecture_id(), l.getWriter(), l.getTitle(), l.getPrice(), l.isDiscounted(), l.getThumb_path())).collect(Collectors.toList());
+
+        return new DtoWrapper(lectureDtos);
+    }
+
+    @Override
+    public DtoWrapper mainWishList(int page) {
+
+        String query = "select l from Lecture l join l.wishList cl join cl.myPage mp join mp.member m " +
+                "where m.email = :email";
+
+        List<Lecture> email = em.createQuery(query, Lecture.class)
+                .setParameter("email", authentication())
+                .setFirstResult(page)
+                .setMaxResults(5)
+                .getResultList();
+
+        List<LectureDto> lectureDtos = email.stream().map(l ->
+                new LectureDto(l.getLecture_id(), l.getWriter(), l.getTitle(), l.getPrice(), l.isDiscounted(), l.getThumb_path())).collect(Collectors.toList());
+
+        return new DtoWrapper(lectureDtos);
+    }
 
     @Override
     public List<LectureDto> getAllLectureList() {
@@ -442,7 +476,7 @@ public class LectureServiceImpl implements LectureService {
     @Override
     public DtoWrapper getCartList() {
 
-        String query = "select l from Lecture l join fetch l.cartList cl join fetch cl.myPage mp join fetch mp.member m " +
+        String query = "select l from Lecture l join l.cartList cl join cl.myPage mp join mp.member m " +
                 "where m.email = :email";
 
         List<Lecture> lectureList = em.createQuery(query, Lecture.class)
@@ -457,7 +491,7 @@ public class LectureServiceImpl implements LectureService {
 
     @Override
     public DtoWrapper getWishList() {
-        String query = "select l from Lecture l join fetch l.wishList cl join fetch cl.myPage mp join fetch mp.member m " +
+        String query = "select l from Lecture l join l.wishList cl join cl.myPage mp join mp.member m " +
                 "where m.email = :email";
 
         List<Lecture> lectureList = em.createQuery(query, Lecture.class)
