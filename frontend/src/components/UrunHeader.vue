@@ -22,7 +22,7 @@
                   </v-list>    
                   </v-card>
                 </v-menu>
-                <router-link :to="{ name: 'FreeBoardListPage' }">
+                <router-link :to="{ name: 'BoardCollectionPage' }">
                   <div class="mr-9 hidden-md-and-down">커뮤니티</div>
                 </router-link>
                 <div class="hidden-md-and-down">유러너</div>

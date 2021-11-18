@@ -1,6 +1,7 @@
 package com.urunner.khweb.entity.member;
 
 import com.urunner.khweb.controller.dto.MemberRes;
+import com.urunner.khweb.entity.mypage.MyPage;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -54,6 +55,9 @@ public class Member {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "member", orphanRemoval = true)
     private Collection<Role> roles = new ArrayList<>();
 
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "member", orphanRemoval = true)
+    private MyPage myPage;
+
     public void setEmail(String email) {
         this.email = email;
     }
@@ -85,4 +89,5 @@ public class Member {
     public void setProvider(AuthProvider provider) {
         this.provider = provider;
     }
+
 }

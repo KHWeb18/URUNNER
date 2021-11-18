@@ -8,6 +8,10 @@
                         <span>1:1 문의 게시판</span></h2>
                 </div>
             </div>
+            <div class="mr-9 hidden-md-and-up">
+                <div class="title_box2">
+                </div>
+            </div>
             <!-- 검색창 + complete 분류 -->
             <v-spacer class="forLine0 ">
                 <div class="forLine0sButton">
@@ -98,8 +102,8 @@
                                     </div>
                                 </router-link>
                                 <div class="post_name_box">
-                                    <div class="mr-9 hidden-sm-and-down"><div class="post_name">{{ mob.nickname }}</div>
-                                    <div class="post_name">{{ mob.writer }}</div>
+                                    <div class="mr-9 hidden-sm-and-down"><div v-show="mob.notice =='false'" class="post_name">{{ mob.nickname }}</div>
+                                    <div v-show="mob.notice =='false'" class="post_name">{{ mob.writer }}</div>
                                     </div>
                                 </div>
                             </div>
@@ -183,7 +187,7 @@
                                     </div>
                                 </router-link>
                                 <div class="post_name_box">
-                                    <div class="mr-9 hidden-sm-and-down"><div class="post_name">{{ mob.nickname }}</div>
+                                    <div class="mr-9 hidden-sm-and-down"><div v-show="mob.notice =='false'" class="post_name">{{ mob.nickname }}</div>
                                     </div>
                                 </div>
                             </div>
@@ -473,7 +477,7 @@ export default {
     justify-content: space-between;
     align-items: center;
     height: 40px;
-    padding-left: 2vw;
+    padding: 0vw 2vw;
 }
 .forLine0sButton {
     display: flex;
@@ -485,7 +489,8 @@ export default {
     height: 40px;
     border-top: 1px solid #BDBDBD;
     border-bottom: 1px solid #BDBDBD;
-    padding-left: 2vw;
+    margin: 0vw 1vw;
+    padding: 0vw 1vw;
     display: flex;
     justify-content: start;
     align-items: center;
@@ -506,6 +511,9 @@ export default {
 .title_box {
     margin-top: 100px;
     margin-bottom: 100px;
+}
+.title_box2 {
+    margin-top: 10px;
 }
 .title_box span {
     font-size: 55px;
@@ -681,6 +689,7 @@ input:focus {
     color: #2b2b2b;
     max-width: 55vw;
     min-width: 450px;
+    margin-top: 8px;
 
     overflow: hidden;
     text-overflow: ellipsis;

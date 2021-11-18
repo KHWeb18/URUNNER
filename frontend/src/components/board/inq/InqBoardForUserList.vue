@@ -8,6 +8,10 @@
                         <span>1:1 문의 게시판 for user</span></h2>
                 </div>
             </div>
+            <div class="mr-9 hidden-md-and-up">
+                <div class="title_box2">
+                </div>
+            </div>
             <!-- 검색창 + complete 분류 -->
             <v-spacer class="forLine0">
                 <div class="forLine0sButton">
@@ -95,8 +99,8 @@
                                     </div>
                                 </router-link>
                                 <div class="post_name_box">
-                                    <div class="mr-9 hidden-sm-and-down"><div class="post_name">{{ mob.nickname }}</div>
-                                    <div class="post_name">{{ mob.writer }}</div>
+                                    <div class="mr-9 hidden-sm-and-down"><div v-show="mob.notice =='false'" class="post_name">{{ mob.nickname }}</div>
+                                    <div v-show="mob.notice =='false'" class="post_name">{{ mob.writer }}</div>
                                     </div>
                                 </div>
                             </div>
@@ -180,7 +184,7 @@
                                     </div>
                                 </router-link>
                                 <div class="post_name_box">
-                                    <div class="mr-9 hidden-sm-and-down"><div class="post_name">{{ mob.nickname }}</div>
+                                    <div class="mr-9 hidden-sm-and-down"><div v-show="mob.notice =='false'" class="post_name">{{ mob.nickname }}</div>
                                     </div>
                                 </div>
                             </div>
@@ -505,6 +509,9 @@ export default {
 .title_box {
     margin-top: 100px;
     margin-bottom: 100px;
+}
+.title_box2 {
+    margin-top: 10px;
 }
 .title_box span {
     font-size: 55px;
