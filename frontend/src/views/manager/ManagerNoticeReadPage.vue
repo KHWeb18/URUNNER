@@ -1,38 +1,40 @@
 <template>
     <div align="center">
-        <notice-read v-if="notice" :notice="notice"/>
+        <manager-menu/>
+        <manager-notice-read v-if="notice" :notice="notice"/>
         <p v-else>로딩중 ...... </p>
-<!--
+
         <div class="버튼" style="padding:20px;">
             <router-link style="text-decoration: none; color:black" 
             :to="{ name: 'NoticeModifyPage', params: { noticeNo } }">
-                <v-btn text color="black" rounded x-large
+                <v-btn v-if="this.$cookies.get('ROLES') !='ROLE_USER'" text color="black" rounded x-large
                         style="padding: 10px; width: 90px;">
                     수정하기
                 </v-btn>
             </router-link>
 
 
-            <v-btn text color="black" rounded x-large
+            <v-btn v-if="this.$cookies.get('ROLES') !='ROLE_USER'" text color="black" rounded x-large
                 style="padding: 10px; width: 90px;" 
                 @click="onDelete">
                     삭제하기
             </v-btn>
--->
+
             <br>
 
             <router-link style="text-decoration: none; color:black"
-            :to="{ name: 'NoticeListPage' }">
+            :to="{ name: 'ManagerNoticeListPage' }">
                 <v-btn text color="black" rounded x-large
                         style="padding: 10px; width: 90px;">
                 목록으로
                 </v-btn>
             </router-link>
-        <!--</div>-->
+        </div>
     </div>
 </template>
 <script>
-import NoticeRead from '@/components/notice/NoticeRead.vue'
+import ManagerMenu from '../../components/manager/ManagerMenu.vue'
+import ManagerNoticeRead from '@/components/manager/ManagerNoticeRead.vue'
 import { mapState, mapActions } from 'vuex'
 import axios from 'axios'
 export default {
@@ -44,7 +46,8 @@ export default {
         }
     },
     components: {
-        NoticeRead
+        ManagerNoticeRead,
+        ManagerMenu,
     },
     computed: {
         ...mapState(['notice'])
@@ -65,7 +68,7 @@ export default {
                 axios.delete(`http://localhost:7777/notice/${noticeNo}`)
                         .then(() => {
                             alert('삭제 되었습니다.')
-                            this.$router.push({ name: 'NoticeListPage' })
+                            this.$router.push({ name: 'ManagerNoticeListPage' })
                         })
                         //.catch(err => {
                         //    alert(err.response.data.message)

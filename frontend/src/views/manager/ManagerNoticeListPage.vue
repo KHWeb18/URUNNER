@@ -1,28 +1,30 @@
 <template>
     <div id="notice" align=center>
+        <manager-menu/>
         <h3 style="padding:30px 0px 0px 0px; font-weight:bold">유러너 공지사항</h3>
     <div class="게시물목록">
-        <notice-list :notices="notices"/>
+        <manager-notice-list :notices="notices"/>
     </div>
-        <!--<router-link :to="{ name: 'ManagerNoticeRegister' }" style="text-decoration: none;">
+        <router-link :to="{ name: 'ManagerNoticeRegisterPage' }" style="text-decoration: none;">
             <v-btn text color="black" rounded x-large
                 style="padding: 10px; width: 90px;">
             글쓰기
             </v-btn>
-        </router-link>-->
+        </router-link>
     </div>
 </template>
 
 <script>
-
-import NoticeList from '@/components/notice/NoticeList.vue'
+import ManagerMenu from '../../components/manager/ManagerMenu.vue'
+//import NoticeListPage from '../../views/notice/NoticeListPage.vue'
+import ManagerNoticeList from '@/components/manager/ManagerNoticeList.vue'
 import { mapState, mapActions } from 'vuex'
 
 export default {
-    name: 'NoticeListPage',
     components: {
-        NoticeList
-    },
+        ManagerMenu, 
+        ManagerNoticeList
+        },
     computed: {
         ...mapState(['notices'])
     },
