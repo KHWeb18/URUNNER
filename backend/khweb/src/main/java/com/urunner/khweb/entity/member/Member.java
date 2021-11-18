@@ -1,5 +1,6 @@
 package com.urunner.khweb.entity.member;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.urunner.khweb.controller.dto.MemberRes;
 import com.urunner.khweb.entity.lecture.PurchasedLecture;
 import com.urunner.khweb.entity.mypage.MyPage;
@@ -63,10 +64,11 @@ public class Member {
         this.introduce = introduce;
 
     }
-
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "member", orphanRemoval = true)
     private Collection<Role> roles = new ArrayList<>();
 
+    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "member", orphanRemoval = true)
     private MyPage myPage;
 

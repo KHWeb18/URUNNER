@@ -37,7 +37,7 @@
                 <br>
 
                 <router-link style="text-decoration: none; color:black"
-                :to="{ name: 'NoticeReadPage', params: { noticeNo: notice.noticeNo.toString() } }">
+                :to="{ name: 'ManagerNoticeReadPage', params: { noticeNo: notice.noticeNo.toString() } }">
                     <v-btn text color="black" rounded x-large
                         style="padding: 10px; width: 90px;">
                     취소

@@ -18,7 +18,8 @@
             <b-form-input
                 type="text" 
                 placeholder="" 
-                v-model="writer">
+                v-model="writer"
+                disabled>
             </b-form-input>
 
             <br>
@@ -37,7 +38,7 @@
 
                 <br>
 
-                <router-link style="text-decoration: none; color:black" :to="{ name: 'NoticeListPage' }">
+                <router-link style="text-decoration: none; color:black" :to="{ name: 'ManagerNoticeListPage' }">
                     <v-btn text color="black" rounded x-large
                         style="padding: 10px; width: 90px;" type="submit">목록으로
                     </v-btn>
@@ -55,7 +56,7 @@ export default {
     data () {
         return {
             title: '',
-            writer: '',
+            writer: '관리자',
             content: ''
         }
     },
