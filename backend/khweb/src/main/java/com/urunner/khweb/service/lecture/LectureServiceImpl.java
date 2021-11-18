@@ -7,6 +7,8 @@ import com.urunner.khweb.entity.lecture.LectureList;
 import com.urunner.khweb.entity.lecture.LectureVideo;
 import com.urunner.khweb.entity.member.Member;
 import com.urunner.khweb.entity.mypage.Cart;
+
+import com.urunner.khweb.entity.mypage.WishList;
 import com.urunner.khweb.entity.sort.Category;
 import com.urunner.khweb.entity.sort.CategoryLecture;
 import com.urunner.khweb.repository.lecture.*;
@@ -381,7 +383,23 @@ public class LectureServiceImpl implements LectureService {
             log.info("로그인 되있지않은 사용자");
         } else {
             Member member = memberRepository.findByEmail(username);
+
+//            시간되면 fetch join으로 가져오기
             List<Cart> carts = new ArrayList<>(member.getMyPage().getCartList());
+
+            List<WishList> wishLists = new ArrayList<>(member.getMyPage().getWishLists());
+
+            if (wishLists.size() != 0) {
+                for (int i = 0; i < lectureDtos.getContent().size(); i++) {
+                    for (int j = 0; j < wishLists.size(); j++) {
+                        boolean exist = lectureDtos.getContent().get(i).getId().equals(wishLists.get(j).getLecture().getLecture_id());
+                        System.out.println("매칭 여부 확인 : " + exist);
+                        if (exist) {
+                            lectureDtos.getContent().get(i).setWishList(true);
+                        }
+                    }
+                }
+            }
 
             if (carts.size() != 0) {
                 for (int i = 0; i < lectureDtos.getContent().size(); i++) {

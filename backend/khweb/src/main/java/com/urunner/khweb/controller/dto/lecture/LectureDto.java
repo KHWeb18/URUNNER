@@ -27,6 +27,8 @@ public class LectureDto {
     private List<Category> category;
     private boolean cart;
 
+    private boolean wishList;
+
     public LectureDto(Long id, String writer, String title, String desc, Long price, boolean inProgress, boolean discounted, String thumbPath, String detailPath, String content, String grade, List<Category> category) {
         this.id = id;
         this.writer = writer;
