@@ -55,6 +55,11 @@ import ManagerNoticeRegisterPage from '@/views/manager/ManagerNoticeRegisterPage
 import ManagerNoticeReadPage from '@/views/manager/ManagerNoticeReadPage.vue'
 import ManagerMemberList from '@/views/manager/ManagerMemberList'
 
+
+// 강의 판매 리스트
+import ForSaleLecturePage from '@/views/ForSale/ForSaleLecturePage.vue'
+
+
 Vue.use(VueRouter)
 
 export default new VueRouter({
@@ -433,6 +438,13 @@ export default new VueRouter({
         name: 'ManagerMemberList',
         components: {
           default: ManagerMemberList
+        }
+      },
+      {
+        path: '/forSale/lectureList',
+        name: 'ForSaleLecturePage',
+        components: {
+          default: ForSaleLecturePage
         }
       },
       {

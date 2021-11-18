@@ -10,8 +10,8 @@ import {
     FETCH_NOTICE,
     // 스터디
     FETCH_STUDY_MEMBER_LIST,
-    // 내학습
-    FETCH_MY_LECTURE_LIST,
+    // 강의 리스트
+    FETCH_LECTURE_LIST,
     // 회원 관리
     FETCH_MEMBER_LIST,
 
@@ -204,7 +204,7 @@ export default {
     fetchMyLectureList ({ commit }) {
         return axios.get('http://localhost:7777/mypage/myLecturelist')
                 .then((res) => {
-                    commit(FETCH_MY_LECTURE_LIST, res.data)
+                    commit(FETCH_LECTURE_LIST, res.data)
                 })
     },
     fetchMemberList({ commit }) {
@@ -213,5 +213,21 @@ export default {
             console.log(res.data)
             commit(FETCH_MEMBER_LIST, res.data)
         }).catch(err=>{alert(err.response.data.message)})
+    },
+    // 판매중인 수강 리스트
+    fetchCallLectureList({ commit }) {
+        return axios.get('http://localhost:7777/callLecture/lists')
+        .then( (res) => {
+            console.log(res.data)
+            commit(FETCH_LECTURE_LIST, res.data)
+        }).catch(err=>{alert(err.response.data.message)})
+    },
+    fetchCallLectureListWithCategory({ commit }, categoryId) {
+        return axios.get(`http://localhost:7777/callLecture/lists/${categoryId}`)
+        .then( (res) => {
+            console.log(res.data)
+            commit(FETCH_LECTURE_LIST, res.data)
+        }).catch(err=>{alert(err.response.data.message)})
     }
+    
 }
