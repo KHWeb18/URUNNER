@@ -264,7 +264,11 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
             return false;
         }
     }
-
+    // 회원 조회
+    @Override
+    public List<Member> memberList() throws Exception {
+        return memberRepository.findAll();
+    }
 }
 
 

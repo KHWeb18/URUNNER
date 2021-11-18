@@ -12,7 +12,9 @@ import {
     // 스터디
     FETCH_STUDY_MEMBER_LIST,
     // 내학습
-    FETCH_MY_LECTURE_LIST
+    FETCH_MY_LECTURE_LIST,
+    // 회원 관리
+    FETCH_MEMBER_LIST,
 
 } from './mutation-types'
 
@@ -57,6 +59,9 @@ export default {
     },
     saveVideoList(state, data) {
         state.lectureVideoList = data;
+    },
+    [FETCH_MEMBER_LIST] (state,memberLists) {
+        state.memberLists = memberLists
     },
 
 }

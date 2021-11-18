@@ -45,6 +45,16 @@ import InqBoardListForUserPage from '@/views/board/inq/InqBoardListForUserPage.v
 import InqBoardReadPage from '@/views/board/inq/InqBoardReadPage.vue'
 import InqBoardModifyPage from '@/views/board/inq/InqBoardModifyPage.vue'
 
+// 홈페이지 소개
+import IntroducePage from '@/views/urunner/IntroducePage.vue'
+
+// 관리자 페이지
+import ManagerPage from '@/views/manager/ManagerPage.vue'
+import ManagerNoticeListPage from '@/views/manager/ManagerNoticeListPage.vue'
+import ManagerNoticeRegisterPage from '@/views/manager/ManagerNoticeRegisterPage.vue'
+import ManagerNoticeReadPage from '@/views/manager/ManagerNoticeReadPage.vue'
+import ManagerMemberList from '@/views/manager/ManagerMemberList'
+
 Vue.use(VueRouter)
 
 export default new VueRouter({
@@ -379,10 +389,56 @@ export default new VueRouter({
           default: true
         }
       },
+      //홈페이지 소개
+      {
+        path: '/intro',
+        name: 'IntroducePage',
+        components: {
+          default: IntroducePage
+        }
+      },
+      {
+        path: '/manager',
+        name: 'ManagerPage',
+        components: {
+          default: ManagerPage
+        }
+      },
+      {
+        path: '/ManagerNoticeListPage',
+        name: 'ManagerNoticeListPage',
+        components: {
+          default: ManagerNoticeListPage
+        }
+      },
+      {
+        path: '/ManagerNoticeRegister',
+        name: 'ManagerNoticeRegisterPage',
+        components: {
+          default: ManagerNoticeRegisterPage
+        }
+      },
+      {
+        path: '/manager/:noticeNo',
+        name: 'ManagerNoticeReadPage',
+        components: {
+          default: ManagerNoticeReadPage
+        },
+        props: {
+          default: true
+        }
+      },
+      {
+        path: '/ManagerMemberList',
+        name: 'ManagerMemberList',
+        components: {
+          default: ManagerMemberList
+        }
+      },
       {
         path: '/*',
         component: () => import( "../util/Oauth")
-      }
+      },
   ]
 })
 

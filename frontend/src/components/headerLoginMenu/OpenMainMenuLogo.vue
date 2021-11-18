@@ -44,6 +44,9 @@
             <v-list-item-subtitle @click="clickLogoutBtn">
               <p>로그아웃</p>
             </v-list-item-subtitle>
+            <v-list-item-subtitle v-if="this.$cookies.get('ROLES') !='ROLE_USER'" @click="clickManager">
+              <p>관리자 메뉴</p>
+            </v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -68,6 +71,9 @@ export default {
   methods: {
     clickLogoutBtn() {
       this.$emit('clickLogoutBtn')
+    },
+    clickManager () {
+      this.$router.push('/manager')
     }
   }
 

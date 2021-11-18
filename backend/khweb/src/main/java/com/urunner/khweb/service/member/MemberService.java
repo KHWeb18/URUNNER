@@ -4,6 +4,8 @@ import com.urunner.khweb.controller.dto.MemberRes;
 import com.urunner.khweb.controller.dto.lecture.JoinInstructorDto;
 import com.urunner.khweb.entity.member.Member;
 
+import java.util.List;
+
 public interface MemberService {
 
     public boolean registerMember(MemberRes memberRes) throws Exception;
@@ -22,5 +24,7 @@ public interface MemberService {
     public void getManager (String email) throws  Exception ;
 
     public boolean joinInstructor(JoinInstructorDto joinInstructorDto);
+    // 회원 조회
+    public List<Member> memberList() throws Exception;
 
 }
