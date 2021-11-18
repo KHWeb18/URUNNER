@@ -7,6 +7,7 @@ import com.urunner.khweb.entity.lecture.LectureList;
 import com.urunner.khweb.entity.lecture.LectureVideo;
 import com.urunner.khweb.entity.member.Member;
 import com.urunner.khweb.entity.mypage.Cart;
+
 import com.urunner.khweb.entity.mypage.WishList;
 import com.urunner.khweb.entity.sort.Category;
 import com.urunner.khweb.entity.sort.CategoryLecture;
@@ -382,6 +383,7 @@ public class LectureServiceImpl implements LectureService {
             log.info("로그인 되있지않은 사용자");
         } else {
             Member member = memberRepository.findByEmail(username);
+
 //            시간되면 fetch join으로 가져오기
             List<Cart> carts = new ArrayList<>(member.getMyPage().getCartList());
 
