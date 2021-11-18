@@ -22,7 +22,7 @@ export default {
                     .then(() => {
                         alert('등록되었습니다.')
 
-                        this.$router.push({ name: 'NoticeListPage' })
+                        this.$router.push({ name: 'ManagerNoticeListPage' })
                     })
                     // .catch(res => {
                     //     alert(res.response.data.message)
