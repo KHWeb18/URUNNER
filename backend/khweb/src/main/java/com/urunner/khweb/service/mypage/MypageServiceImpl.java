@@ -31,10 +31,15 @@ public class MypageServiceImpl implements MypageService{
     private MemberRepository memberRepository;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     @Autowired
     private WishListRepository wishListRepository;
 
 =======
+>>>>>>> upstream/main
+=======
+    private WishListRepository wishListRepository;
+
 >>>>>>> upstream/main
 
 
@@ -73,6 +78,9 @@ public class MypageServiceImpl implements MypageService{
         return member.getMyPage().getPoint();
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> upstream/main
 
 
 
@@ -91,6 +99,9 @@ public class MypageServiceImpl implements MypageService{
     private Authentication getAuthentication() {
         return SecurityContextHolder.getContext().getAuthentication();
     }
+<<<<<<< HEAD
+=======
+>>>>>>> upstream/main
 =======
 >>>>>>> upstream/main
 }

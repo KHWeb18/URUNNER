@@ -13,9 +13,14 @@ public interface MypageService {
     public Long getPoint();
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     public boolean lectureAddToCart(Long lectureId);
 
 
 =======
+>>>>>>> upstream/main
+=======
+    public boolean lectureAddToCart(Long lectureId);
+
 >>>>>>> upstream/main
 }

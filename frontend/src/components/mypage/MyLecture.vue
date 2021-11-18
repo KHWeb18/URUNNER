@@ -5,8 +5,7 @@
             <div class="mr-9 hidden-sm-and-down">
                 <div class="title_box">
                     <h2 class="page_title">
-                        <h3>{{ isAuth }}</h3>
-                        <span>질문답변 게시판</span></h2>
+                        <span>내 학습</span></h2>
                 </div>
             </div>
             <!-- 검색창 + complete 분류 -->
@@ -37,21 +36,20 @@
                 <li class="tag_button" :class="{ on : tagSelect3 }" @click="tagSelect3 = !tagSelect3, searchingTag('Python')">Python</li>&nbsp;&nbsp;&nbsp;
             </v-spacer>
             <!-- 리스트 -->
-            <v-container class="lecture01">
+            <v-container class="lecture01 mr-9 hidden-sm-and-down">
                 <div v-show="!searchinOn">
                     <v-container class="lecture_box">
                         <div v-for="mob in paginatedData2" :key="mob.boardNo" class="item">
                             <v-card class="mx-auto">
                                 <v-img :src="ImgRequest(mob.boardNo)" height="200px"></v-img>
                                 <div class="btn-plus"><span draggable="false"><v-icon color="white">mdi-arrow-right</v-icon></span></div>
-                                <v-dialog width="700px">
-                                    <template v-slot:activator="{ on }">
-                                        <div class="btn-plus2" v-on="on"><span draggable="false"></span></div>
-                                    </template>
-                                    <v-card>
-                                        <v-img :src="ImgRequest(mob.boardNo)"></v-img>
-                                    </v-card>
-                                </v-dialog>
+                                <div class="btn-plus2"><span draggable="false"></span></div>
+                                <div class="btn-plus3"><span draggable="false"><v-icon color="#E0E0E0" @click="info()">mdi-alert-circle-outline</v-icon></span></div>
+                                <div class="btn-plus4"><span draggable="false"><v-rating
+                                    v-model="rating"
+                                    background-color="orange lighten-3" small
+                                    color="orange" large readonly></v-rating></span></div>
+                                
                                 <v-card-title class="temp">
                                     {{mob.title}}
                                 </v-card-title>
@@ -61,7 +59,7 @@
                                 </v-card-title>
                                 <div class="card_text">
                                     <div>
-                                        전체 진도율 : 15% | <v-icon size="15" style="cursoer:pointer" @click="info()">mdi-alert-circle-outline</v-icon>
+                                        전체 진도율 : 15% |
                                     </div>
                                     <div></div><div></div><div></div>
                                     <div>
@@ -79,7 +77,50 @@
                         </v-container>
                     </v-container>
                 </div>
-            </v-container>            
+            </v-container>
+            <!-- 모바일 리스트 -->
+            <v-container class="lecture01 mr-9 hidden-md-and-up">
+                <div v-show="!searchinOn">
+                    <v-container class="lecture_box">
+                        <div v-for="mob in paginatedData2" :key="mob.boardNo" class="item_m">
+                            <v-card class="mx-auto">
+                                <v-img :src="ImgRequest(mob.boardNo)" height="200px"></v-img>
+                                <div class="btn-plus_m"><span draggable="false"><v-icon color="white">mdi-arrow-right</v-icon></span></div>
+                                <div class="btn-plus2_m"><span draggable="false"></span></div>
+                                <div class="btn-plus3_m"><span draggable="false"><v-icon color="#E0E0E0" @click="info()">mdi-alert-circle-outline</v-icon></span></div>
+                                <div class="btn-plus4_m"><span draggable="false"><v-rating
+                                    v-model="rating"
+                                    background-color="orange lighten-3" small
+                                    color="orange" large readonly></v-rating></span></div>
+                                
+                                <v-card-title class="temp">
+                                    {{mob.title}}
+                                </v-card-title>
+                                 <v-card-title class="temp2">
+                                    <v-progress-linear
+                                        v-model="valueDeterminate" color="indigo darken-2"></v-progress-linear>
+                                </v-card-title>
+                                <div class="card_text">
+                                    <div>
+                                        전체 진도율 : 15% |
+                                    </div>
+                                    <div></div><div></div><div></div>
+                                    <div>
+                                        {{ mob.grade }} | {{ mob.nickname }}
+                                    </div>
+                                </div>
+                                <v-card-actions>
+                                </v-card-actions>
+                            </v-card>
+                        </div>
+                        <v-container style="margin-top:20px;">
+                        <div class="text-center">
+                            <v-pagination class="btn_pagination" v-model="pageNum2" :length="pageCount2"></v-pagination>
+                        </div>
+                        </v-container>
+                    </v-container>
+                </div>
+            </v-container>
         </div>
     </div>
 </template>
@@ -94,7 +135,7 @@
             pageSize2: {
                 type: Number,
                 required: false,
-                default: 10
+                default: 6
             }
         },
         data() {
@@ -160,6 +201,9 @@
                 if (this.word == '') {
                     this.searchinOn = false
                 }
+            },
+            info() {
+                alert('강의 소개 페이지로 링크')
             }
             
         },
@@ -200,13 +244,13 @@
     max-width: 1300px;
 }
 .lecture_box {
-    position: relative;
-    margin: 0;
+    margin: 15px;
     padding: 0;
     width: 100vw;
+    max-width: 900px;
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: start;
 }
 .btn_pagination {
     background-color: transparent;
@@ -313,6 +357,32 @@ p {
   opacity:1;
   transform:scale(1);
 }
+.mx-auto:hover .btn-plus3 {
+  opacity:1;
+  transform:scale(1);
+}
+.mx-auto:hover .btn-plus4 {
+  opacity:1;
+  transform:scale(1);
+}
+.mx-auto:hover .btn-plus_m {
+  opacity:1;
+  transform:scale(1);
+}
+.mx-auto:hover .btn-plus2_m {
+  opacity:1;
+  transform:scale(1);
+}
+.mx-auto:hover .btn-plus3_m {
+  opacity:1;
+  transform:scale(1);
+}
+.mx-auto:hover .btn-plus4_m {
+  opacity:1;
+  transform:scale(1);
+}
+
+
 .btn_pagination {
     background-color: transparent;
     box-shadow: none;
@@ -326,6 +396,12 @@ p {
 .item {
     margin: 10px;
     width: 250px;
+    cursor: pointer;
+}
+.item_m {
+    margin: 10px;
+    width: 200px;
+    cursor: pointer;
 }
 .btn-plus {
   position:absolute;
@@ -350,7 +426,7 @@ p {
   /* hover시 사진 어둡게 */
   position:absolute;
   top:0.001px;
-  background:rgba(0, 0, 0, 0.2);
+  background:rgba(0, 0, 0, 0.5);
   width:250px;
   height:200px;
   text-align:center;
@@ -364,7 +440,131 @@ p {
   color:#ffffff;
   user-select:none;
 }
-
+.btn-plus2_m {
+  /* hover시 사진 어둡게 */
+  position:absolute;
+  top:0.001px;
+  background:rgba(0, 0, 0, 0.2);
+  width:250px;
+  height:200px;
+  text-align:center;
+  border-radius: 6px 6px 0px 0px;
+  cursor: pointer;
+  /* 추가된 부분 */
+  opacity:0;
+  transition:all .6s linear;
+}.btn-plus2_m span {
+  font-size:2.3em;
+  color:#ffffff;
+  user-select:none;
+}
+.btn-plus3 {
+  /* hover시 사진 어둡게 */
+  position:absolute;
+  top:155px;
+  width:470px;
+  height:400px;
+  text-align:center;
+  border-radius: 6px 6px 0px 0px;
+  cursor: pointer;
+  /* 추가된 부분 */
+  opacity:0;
+  transition:all .6s linear;
+}.btn-plus3 span {
+  font-size:2.3em;
+  color:#ffffff;
+  user-select:none;
+}
+.btn-plus4 {
+  /* hover시 사진 어둡게 */
+  position:absolute;
+  top:155px;
+  width:160px;
+  height:400px;
+  text-align:center;
+  border-radius: 6px 6px 0px 0px;
+  cursor: pointer;
+  /* 추가된 부분 */
+  opacity:0;
+  transition:all .6s linear;
+}.btn-plus4 span {
+  width: 10px;
+  font-size:2.3em;
+  color:#ffffff;
+  user-select:none;
+}
+.btn-plus_m {
+  position:absolute;
+  top:77.5px;
+  left:77.5px;
+  background:rgb(65, 84, 192, 0.8);
+  width:55px;
+  height:55px;
+  border-radius:50%;
+  text-align:center;
+  /* 추가된 부분 */
+  opacity:0;
+  transform:scale(2);
+  transition:all .3s linear;
+}
+.btn-plus_m span {
+  font-size:2.3em;
+  color:#ffffff;
+  user-select:none;
+}
+.btn-plus2_m {
+  /* hover시 사진 어둡게 */
+  position:absolute;
+  top:0.001px;
+  background:rgba(0, 0, 0, 0.5);
+  width:200px;
+  height:200px;
+  text-align:center;
+  border-radius: 6px 6px 0px 0px;
+  cursor: pointer;
+  /* 추가된 부분 */
+  opacity:0;
+  transition:all .6s linear;
+}.btn-plus2_m span {
+  font-size:2.3em;
+  color:#ffffff;
+  user-select:none;
+}
+.btn-plus3_m {
+  /* hover시 사진 어둡게 */
+  position:absolute;
+  top:155px;
+  width:370px;
+  height:400px;
+  text-align:center;
+  border-radius: 6px 6px 0px 0px;
+  cursor: pointer;
+  /* 추가된 부분 */
+  opacity:0;
+  transition:all .6s linear;
+}.btn-plus3_m span {
+  font-size:2.3em;
+  color:#ffffff;
+  user-select:none;
+}
+.btn-plus4_m {
+  /* hover시 사진 어둡게 */
+  position:absolute;
+  top:155px;
+  width:160px;
+  height:400px;
+  text-align:center;
+  border-radius: 6px 6px 0px 0px;
+  cursor: pointer;
+  /* 추가된 부분 */
+  opacity:0;
+  transition:all .6s linear;
+}.btn-plus4_m span {
+  width: 10px;
+  font-size:2.3em;
+  color:#ffffff;
+  user-select:none;
+}
 
 
 .tag_button {
