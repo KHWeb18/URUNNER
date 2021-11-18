@@ -14,6 +14,7 @@ import java.util.Optional;
 public interface LectureRepository extends JpaRepository<Lecture, Long> {
 
     public List<Lecture> findByWriter(String writer);
+    public Lecture findByTitle(String title);
 
 //    @Query("select l from Lecture l join fetch l.lectureLists where l.lecture_id =: id")
 //    public Optional<Lecture> letureAll(Long id);

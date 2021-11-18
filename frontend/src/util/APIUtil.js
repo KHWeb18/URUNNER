@@ -16,6 +16,17 @@ import {
 } from '../constants/index'
 import state from '../store/webState'
 
+function createdPaymentRandomNumber(){
+    var result = ''
+    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < 12; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    
+    return result;
+}
+
 // 로그인 프로세스
 function loginProcess(loginfo) {
 
@@ -103,5 +114,6 @@ export {
     loginProcess,
     PasingInfor,
     logout,
+    createdPaymentRandomNumber
     // refreshToken
 }

@@ -4,14 +4,26 @@ package com.urunner.khweb.service.payment;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.urunner.khweb.controller.dto.payment.PaymentCancelDto;
 import com.urunner.khweb.controller.dto.payment.PaymentDto;
+import com.urunner.khweb.entity.lecture.Lecture;
+import com.urunner.khweb.entity.lecture.PurchasedLecture;
+import com.urunner.khweb.entity.member.Member;
+import com.urunner.khweb.repository.lecture.LectureRepository;
+import com.urunner.khweb.repository.lecture.PurchasedLectureRepository;
+import com.urunner.khweb.repository.member.MemberRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -22,8 +34,25 @@ public class PaymentServiceImpl implements PaymentService{
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+
+
+    @Autowired
+    PurchasedLectureRepository purchasedLectureRepository;
+
+    @Autowired
+    LectureRepository lectureRepository;
+
+    @Autowired
+    MemberRepository memberRepository;
+
+
+
+    @Transactional
     @Override
-    public String successCheck(PaymentDto paymentDto) throws JsonProcessingException {
+    public String successCheck(PaymentDto paymentDto, List<String> lectureList,String email) throws JsonProcessingException {
+
+
+        Member member = memberRepository.findByEmail(email);
         String paymentKey = paymentDto.getPaymentKey();
         String orderId = paymentDto.getOrderId();
         int amount = paymentDto.getAmount();
@@ -42,23 +71,83 @@ public class PaymentServiceImpl implements PaymentService{
         ResponseEntity<JsonNode> responseEntity = restTemplate.postForEntity(
                 "https://api.tosspayments.com/v1/payments/" + paymentKey, request, JsonNode.class);
 
+
         if (responseEntity.getStatusCode() == HttpStatus.OK) {
             JsonNode successNode = responseEntity.getBody();
             log.info(successNode.toString());
             log.info("success");
-            //successNode.get("orderId").asText()
-            //String secret = successNode.get("secret").asText(); // 가상계좌사용시 활성화
-            /*
-            성공시 구매한강의 추가로직 작성
-             */
+            log.info("강의구매합니다");
+
+            //강의 구매 로직 부분
+
+            for(int i = 0; i<lectureList.size();i++){
+                String title = lectureList.get(i);
+                //lecture_id 할당부분 테이블직접연결시수정필요
+                Lecture lecture = lectureRepository.findByTitle(title);
+                Long lecture_id = lecture.getLecture_id();
+                //
+                log.info(title);
+                log.info("memberNo:"+member.getMemberNo());
+                if(lecture != null ){
+                    PurchasedLecture purchasedLecture = new PurchasedLecture();
+                    purchasedLecture.setTitle(title);
+                    purchasedLecture.setLecture_id(lecture_id);
+                    member.addPurchasedLecture(purchasedLecture);
+                    log.info("멤버 저장합니다");
+                    memberRepository.save(member);
+                    //마이페이지 구매강의 접근시 purchasedLectureRepository.getTitle() 로 강의
+                    // 이름 불러온후 lectureRepository에서find로강의 불러오기
+
+                }
+                else{
+                    log.info("해당강의가 존재 하지 않습니다");
+                }
+
+            }
+            log.info(member.getPurchasedLectureList().get(1).getTitle());
             return "success";
         } else {
             JsonNode failNode = responseEntity.getBody();
             log.info(failNode.get("message").asText());
             log.info("fail");
-            //failNode.get("message").asText();
-            //failNode.get("code").asText();
+
             return "fail";
         }
     }
+
+    //결제취소 메소드
+    @Override
+    public String paymentCancel(PaymentCancelDto paymentCancelDto) throws Exception {
+        String paymentKey = paymentCancelDto.getPaymentKey();
+        String result = paymentCancelDto.getResult();
+
+
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Basic " + Base64.getEncoder().encodeToString((SECRET_KEY + ":").getBytes()));
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        Map<String, String> payloadMap = new HashMap<>();
+        payloadMap.put("result", result);
+
+        HttpEntity<String> request = new HttpEntity<>(objectMapper.writeValueAsString(payloadMap), headers);
+
+        ResponseEntity<JsonNode> responseEntity = restTemplate.postForEntity(
+                "https://api.tosspayments.com/v1/payments/" + paymentKey+"/cancel", request, JsonNode.class);
+
+
+        if (responseEntity.getStatusCode() == HttpStatus.OK) {
+            JsonNode successNode = responseEntity.getBody();
+            log.info(successNode.toString());
+            log.info("결제취소완료");
+            return "success";
+        } else {
+            JsonNode failNode = responseEntity.getBody();
+            log.info(failNode.get("message").asText());
+            log.info("결제취소 실패");
+            return "fail";
+        }
+    }
+
+
 }

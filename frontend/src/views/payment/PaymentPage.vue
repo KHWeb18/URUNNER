@@ -1,24 +1,31 @@
 <template>
     <div>
-        <payment-card></payment-card>
-        <payment-toss></payment-toss>
+        <payment-box v-bind:lectureInfo="lectureInfo"></payment-box>
     </div>
 </template>
 
 <script>
 
 
-import PaymentCard from'@/components/payment/PaymentCard.vue'
-import PaymentToss from '../../components/payment/PaymentToss.vue'
+import PaymentBox from '../../components/payment/PaymentBox.vue'
+
 
 
 
 export default {
     name:'PaymentPage',
     components:{
-        PaymentCard,
-        PaymentToss
+        PaymentBox
     },
+    data(){
+        return{
+            //데이터담기는 부분
+            lectureInfo:{
+                //데이터 추가시 이쪽에 추가
+                lectureList:['강의5','강의2','강의3','강의4',]
+            }
+        }
+    }
 }
 
 
