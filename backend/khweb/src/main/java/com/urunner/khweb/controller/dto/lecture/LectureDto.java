@@ -44,6 +44,12 @@ public class LectureDto {
         this.grade = grade;
     }
 
-
-
+    public LectureDto(Long id, String writer, String title, Long price, boolean discounted, String thumbPath) {
+        this.id = id;
+        this.writer = writer;
+        this.title = title;
+        this.price = price;
+        this.discounted = discounted;
+        this.thumbPath = thumbPath;
+    }
 }

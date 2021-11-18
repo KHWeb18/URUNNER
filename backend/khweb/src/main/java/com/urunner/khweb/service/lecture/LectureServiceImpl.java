@@ -7,6 +7,7 @@ import com.urunner.khweb.entity.lecture.LectureList;
 import com.urunner.khweb.entity.lecture.LectureVideo;
 import com.urunner.khweb.entity.member.Member;
 import com.urunner.khweb.entity.mypage.Cart;
+
 import com.urunner.khweb.entity.mypage.WishList;
 import com.urunner.khweb.entity.sort.Category;
 import com.urunner.khweb.entity.sort.CategoryLecture;
@@ -344,7 +345,41 @@ public class LectureServiceImpl implements LectureService {
         return new DtoWrapper(videoInfo.map(l -> new LectureVideoDto(l.getTitle(), l.getDescription(), l.getDuration())));
     }
 
+    @Override
+    public DtoWrapper mainCartList(int page) {
 
+        String query = "select l from Lecture l join l.cartList cl join cl.myPage mp join mp.member m " +
+                "where m.email = :email";
+
+        List<Lecture> email = em.createQuery(query, Lecture.class)
+                .setParameter("email", authentication())
+                .setFirstResult(page)
+                .setMaxResults(5)
+                .getResultList();
+
+        List<LectureDto> lectureDtos = email.stream().map(l ->
+                new LectureDto(l.getLecture_id(), l.getWriter(), l.getTitle(), l.getPrice(), l.isDiscounted(), l.getThumb_path())).collect(Collectors.toList());
+
+        return new DtoWrapper(lectureDtos);
+    }
+
+    @Override
+    public DtoWrapper mainWishList(int page) {
+
+        String query = "select l from Lecture l join l.wishList cl join cl.myPage mp join mp.member m " +
+                "where m.email = :email";
+
+        List<Lecture> email = em.createQuery(query, Lecture.class)
+                .setParameter("email", authentication())
+                .setFirstResult(page)
+                .setMaxResults(5)
+                .getResultList();
+
+        List<LectureDto> lectureDtos = email.stream().map(l ->
+                new LectureDto(l.getLecture_id(), l.getWriter(), l.getTitle(), l.getPrice(), l.isDiscounted(), l.getThumb_path())).collect(Collectors.toList());
+
+        return new DtoWrapper(lectureDtos);
+    }
 
     @Override
     public List<LectureDto> getAllLectureList() {
@@ -438,6 +473,36 @@ public class LectureServiceImpl implements LectureService {
         return new DtoWrapper(lectureDtos);
     }
 
+    @Override
+    public DtoWrapper getCartList() {
+
+        String query = "select l from Lecture l join l.cartList cl join cl.myPage mp join mp.member m " +
+                "where m.email = :email";
+
+        List<Lecture> lectureList = em.createQuery(query, Lecture.class)
+                .setParameter("email", authentication())
+                .getResultList();
+
+        List<LectureDto> lectureDtos = lectureList.stream().map(l ->
+                new LectureDto(l.getLecture_id(), l.getWriter(), l.getTitle(), l.getPrice(), l.isDiscounted(), l.getThumb_path())).collect(Collectors.toList());
+
+        return new DtoWrapper(lectureDtos);
+    }
+
+    @Override
+    public DtoWrapper getWishList() {
+        String query = "select l from Lecture l join l.wishList cl join cl.myPage mp join mp.member m " +
+                "where m.email = :email";
+
+        List<Lecture> lectureList = em.createQuery(query, Lecture.class)
+                .setParameter("email", authentication())
+                .getResultList();
+
+        List<LectureDto> lectureDtos = lectureList.stream().map(l ->
+                new LectureDto(l.getLecture_id(), l.getWriter(), l.getTitle(), l.getPrice(), l.isDiscounted(), l.getThumb_path())).collect(Collectors.toList());
+
+        return new DtoWrapper(lectureDtos);
+    }
 
     //   심각하게 잘못된 쿼리
     @Transactional(readOnly = true)
