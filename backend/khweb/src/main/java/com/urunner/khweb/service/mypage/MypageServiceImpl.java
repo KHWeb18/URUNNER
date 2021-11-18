@@ -30,12 +30,8 @@ public class MypageServiceImpl implements MypageService{
     @Autowired
     private MemberRepository memberRepository;
 
-<<<<<<< HEAD
-    @Autowired
     private WishListRepository wishListRepository;
 
-=======
->>>>>>> upstream/main
 
 
     @Override
@@ -63,16 +59,11 @@ public class MypageServiceImpl implements MypageService{
 
     @Override
     public Long getPoint() {
-<<<<<<< HEAD
-        Authentication authentication = getAuthentication();
-=======
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
->>>>>>> upstream/main
 //      두번조회
         Member member = memberRepository.findByEmail(authentication.getName());
         return member.getMyPage().getPoint();
     }
-<<<<<<< HEAD
 
 
 
@@ -91,6 +82,4 @@ public class MypageServiceImpl implements MypageService{
     private Authentication getAuthentication() {
         return SecurityContextHolder.getContext().getAuthentication();
     }
-=======
->>>>>>> upstream/main
 }
