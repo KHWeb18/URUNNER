@@ -1,10 +1,13 @@
 package com.urunner.khweb.service.member;
 
 import com.urunner.khweb.controller.dto.MemberRes;
+import com.urunner.khweb.controller.dto.lecture.JoinInstructorDto;
+import com.urunner.khweb.entity.lecture.Instructor;
 import com.urunner.khweb.entity.member.AuthProvider;
 import com.urunner.khweb.entity.member.Member;
 import com.urunner.khweb.entity.member.Role;
 import com.urunner.khweb.entity.mypage.MyPage;
+import com.urunner.khweb.repository.lecture.InstructorRepository;
 import com.urunner.khweb.repository.member.MemberRepository;
 import com.urunner.khweb.repository.member.RoleRepository;
 import com.urunner.khweb.repository.mypage.MyPageRepository;
@@ -14,7 +17,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 //import org.springframework.mail.javamail.JavaMailSender;
 //import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -42,6 +48,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final MyPageRepository myPageRepository;
+    private final InstructorRepository instructorRepository;
 
     @Override
     public boolean registerMember(MemberRes memberRes) throws Exception {
@@ -224,6 +231,40 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
 
         }
     }
+    @Override
+    public boolean joinInstructor(JoinInstructorDto joinInstructorDto) {
+
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+            Role role = new Role();
+            Instructor instructor = Instructor.builder()
+                    .description(joinInstructorDto.getDescription())
+                    .tags(joinInstructorDto.getTags())
+                    .build();
+            Member member = memberRepository.findByEmail(authentication.getName());
+
+
+            if (member.getRoles().stream().anyMatch(r -> r.getName().equals("ROLE_ADMIN"))) {
+                log.info("이미등록된강의자");
+                throw new DuplicateKeyException("이미 등록된 강의자");
+            }
+
+            role.setName("ROLE_ADMIN");
+            role.setMember(member);
+            instructor.setRole(role);
+
+
+
+            roleRepository.save(role);
+            instructorRepository.save(instructor);
+
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 }
 
 

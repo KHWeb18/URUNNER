@@ -1,6 +1,7 @@
 package com.urunner.khweb.service.member;
 
 import com.urunner.khweb.controller.dto.MemberRes;
+import com.urunner.khweb.controller.dto.lecture.JoinInstructorDto;
 import com.urunner.khweb.entity.member.Member;
 
 public interface MemberService {
@@ -19,5 +20,7 @@ public interface MemberService {
     void changePw(Member member, MemberRes memberRes) throws Exception;
     //관리자 설정
     public void getManager (String email) throws  Exception ;
+
+    public boolean joinInstructor(JoinInstructorDto joinInstructorDto);
 
 }

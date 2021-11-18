@@ -5,9 +5,12 @@ import com.urunner.khweb.entity.lecture.Lecture;
 //import com.urunner.khweb.entity.lecture.LectureImage;
 import com.urunner.khweb.entity.lecture.LectureList;
 import com.urunner.khweb.entity.lecture.LectureVideo;
+import com.urunner.khweb.entity.member.Member;
+import com.urunner.khweb.entity.mypage.Cart;
 import com.urunner.khweb.entity.sort.Category;
 import com.urunner.khweb.entity.sort.CategoryLecture;
 import com.urunner.khweb.repository.lecture.*;
+import com.urunner.khweb.repository.member.MemberRepository;
 import com.urunner.khweb.repository.mypage.WishListRepository;
 import com.urunner.khweb.utility.LectureUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +25,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.naming.AuthenticationException;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -50,6 +54,9 @@ public class LectureServiceImpl implements LectureService {
 
     @Autowired
     private LectureRepository lectureRepository;
+
+    @Autowired
+    private MemberRepository memberRepository;
 
 //    @Autowired
 //    private LectureImageRepository LectureImageRepository;
@@ -336,6 +343,8 @@ public class LectureServiceImpl implements LectureService {
         return new DtoWrapper(videoInfo.map(l -> new LectureVideoDto(l.getTitle(), l.getDescription(), l.getDuration())));
     }
 
+
+
     @Override
     public List<LectureDto> getAllLectureList() {
         List<Lecture> findAllLectureList = lectureRepository.findAll();
@@ -366,6 +375,46 @@ public class LectureServiceImpl implements LectureService {
                         l.isDiscounted(), l.getThumb_path(), l.getDetail_path(), l.getContent(), l.getGrade(),
                         l.getCategoryList().stream().map(CategoryLecture::getCategory).collect(Collectors.toList())
                 ));
+
+        String username = authentication();
+        if (username.equals("anonymousUser")) {
+            log.info("로그인 되있지않은 사용자");
+        } else {
+            Member member = memberRepository.findByEmail(username);
+            List<Cart> carts = new ArrayList<>(member.getMyPage().getCartList());
+
+            if (carts.size() != 0) {
+                for (int i = 0; i < lectureDtos.getContent().size(); i++) {
+                    for (int j = 0; j < carts.size(); j++) {
+                        boolean exist = lectureDtos.getContent().get(i).getId().equals(carts.get(j).getLecture().getLecture_id());
+                        System.out.println("매칭 여부 확인 : " + exist);
+                        if (exist) {
+                            lectureDtos.getContent().get(i).setCart(true);
+                        }
+                    }
+                }
+            }
+
+//            for (int i = 0; i < lectureDtos.getSize(); i++) {
+//                System.out.println("강의 dto 사이즈 " +lectureDtos.getSize());
+//                for (int j = 0; j < carts.size(); j++) {
+//                    System.out.println("카트 사이즈" + carts.size());
+//                    int z = i;
+//                    System.out.println("임시 카운트 : " + z);
+//            for (int i = 0; i < lectureDtos.getSize(); i++) {
+//                int j = i;
+////                boolean b = carts.stream().anyMatch(cart -> cart.getLecture().getLecture_id().equals(lectureDtos.get.get(j).getId()));
+//                boolean b = lectureDtos.stream().anyMatch(lectureDto -> lectureDto.getId().equals(carts.get(j).getId()));
+//                System.out.println("매칭 여부 " + b);
+//            }
+//                }
+//            }
+
+
+
+        }
+
+
 
         log.info(findAllLecture.get().findFirst().get().getCategoryList().toString());
 
