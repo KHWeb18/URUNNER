@@ -1,7 +1,9 @@
 package com.urunner.khweb.controller.lecture;
 
 
+import com.urunner.khweb.controller.dto.lecture.DtoWrapper;
 import com.urunner.khweb.controller.dto.lecture.JoinInstructorDto;
+import com.urunner.khweb.service.lecture.LectureService;
 import com.urunner.khweb.service.member.MemberService;
 import com.urunner.khweb.service.mypage.MypageService;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +25,9 @@ public class LectureManageController {
     @Autowired
     private MypageService mypageService;
 
+    @Autowired
+    private LectureService lectureService;
+
     @PostMapping("/joinLecturer")
     public ResponseEntity<Boolean> joinLecturer(@RequestBody JoinInstructorDto joinInstructorDto) {
 
@@ -43,6 +48,15 @@ public class LectureManageController {
 
     }
 
+    @GetMapping("/getCartList")
+    public DtoWrapper getCartList() {
 
+        return lectureService.getCartList();
+    }
 
+    @GetMapping("/getWishList")
+    public DtoWrapper getWishList() {
+
+        return lectureService.getWishList();
+    }
 }

@@ -437,6 +437,36 @@ public class LectureServiceImpl implements LectureService {
         return new DtoWrapper(lectureDtos);
     }
 
+    @Override
+    public DtoWrapper getCartList() {
+
+        String query = "select l from Lecture l join fetch l.cartList cl join fetch cl.myPage mp join fetch mp.member m " +
+                "where m.email = :email";
+
+        List<Lecture> lectureList = em.createQuery(query, Lecture.class)
+                .setParameter("email", authentication())
+                .getResultList();
+
+        List<LectureDto> lectureDtos = lectureList.stream().map(l ->
+                new LectureDto(l.getLecture_id(), l.getWriter(), l.getTitle(), l.getPrice(), l.isDiscounted(), l.getThumb_path())).collect(Collectors.toList());
+
+        return new DtoWrapper(lectureDtos);
+    }
+
+    @Override
+    public DtoWrapper getWishList() {
+        String query = "select l from Lecture l join fetch l.wishList cl join fetch cl.myPage mp join fetch mp.member m " +
+                "where m.email = :email";
+
+        List<Lecture> lectureList = em.createQuery(query, Lecture.class)
+                .setParameter("email", authentication())
+                .getResultList();
+
+        List<LectureDto> lectureDtos = lectureList.stream().map(l ->
+                new LectureDto(l.getLecture_id(), l.getWriter(), l.getTitle(), l.getPrice(), l.isDiscounted(), l.getThumb_path())).collect(Collectors.toList());
+
+        return new DtoWrapper(lectureDtos);
+    }
 
     //   심각하게 잘못된 쿼리
     @Transactional(readOnly = true)

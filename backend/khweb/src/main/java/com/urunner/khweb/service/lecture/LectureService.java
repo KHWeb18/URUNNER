@@ -70,5 +70,8 @@ public interface LectureService {
 
     public DtoWrapper getVideoInfoDetail(Long id);
 
+    public DtoWrapper getCartList();
+
+    public DtoWrapper getWishList();
 
 }
