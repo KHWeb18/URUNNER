@@ -71,5 +71,4 @@ public interface LectureService {
     public DtoWrapper getVideoInfoDetail(Long id);
 
 
-
 }

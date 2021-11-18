@@ -1,14 +1,15 @@
 package com.urunner.khweb.service.mypage;
 
 
+import com.urunner.khweb.entity.lecture.Lecture;
 import com.urunner.khweb.entity.member.Member;
+import com.urunner.khweb.entity.mypage.Cart;
 import com.urunner.khweb.entity.mypage.MyNote;
 import com.urunner.khweb.entity.mypage.TempLecture;
+import com.urunner.khweb.entity.mypage.WishList;
+import com.urunner.khweb.repository.lecture.LectureRepository;
 import com.urunner.khweb.repository.member.MemberRepository;
-import com.urunner.khweb.repository.mypage.MyNoteRepository;
-import com.urunner.khweb.repository.mypage.MyPageRepository;
-import com.urunner.khweb.repository.mypage.TempLectureRepository;
-import com.urunner.khweb.repository.mypage.WishListRepository;
+import com.urunner.khweb.repository.mypage.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -16,6 +17,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import javax.naming.AuthenticationException;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+@Transactional
 @Service
 @Slf4j
 public class MypageServiceImpl implements MypageService{
@@ -30,8 +40,17 @@ public class MypageServiceImpl implements MypageService{
     @Autowired
     private MemberRepository memberRepository;
 
+    @Autowired
     private WishListRepository wishListRepository;
 
+    @Autowired
+    private LectureRepository lectureRepository;
+
+    @Autowired
+    private CartRepository cartRepository;
+
+    @PersistenceContext
+    private EntityManager em;
 
 
     @Override
@@ -59,7 +78,7 @@ public class MypageServiceImpl implements MypageService{
 
     @Override
     public Long getPoint() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Authentication authentication = getAuthentication();
 //      두번조회
         Member member = memberRepository.findByEmail(authentication.getName());
         return member.getMyPage().getPoint();
@@ -68,15 +87,82 @@ public class MypageServiceImpl implements MypageService{
 
 
     @Override
-    public boolean lectureAddToCart(Long lectureId) {
+    public boolean lectureAddToWish(Long lectureId) throws AuthenticationException {
+
+        boolean exist = false;
 
         Authentication authentication = getAuthentication();
 
-//        le
-//
-//        wishListRepository.
+        if (authentication.getName().equals("anonymousUser")) {
+            log.info("로그인 되있지않은 사용자");
+            throw new AuthenticationException("로그인 되있지않은 사용자");
+        }
 
-        return false;
+        Member member = memberRepository.findByEmail(authentication.getName());
+
+        List<WishList> collect = new ArrayList<>(member.getMyPage().getWishLists());
+
+        for (WishList list : collect) {
+            if (Objects.equals(list.getLecture().getLecture_id(), lectureId)) {
+                member.getMyPage().getWishLists().removeIf(w -> w.getWishListId().equals(list.getWishListId()));
+                wishListRepository.deleteById(list.getWishListId());
+                log.info("이미 등록된 위시리스트" + lectureId.toString());
+                exist = true;
+            }
+        }
+
+        if (!exist) {
+            Lecture lecture = em.find(Lecture.class, lectureId);
+
+            WishList wishList = new WishList();
+
+            wishList.setLecture(lecture);
+            wishList.setMyPage(member.getMyPage());
+
+            wishListRepository.save(wishList);
+        }
+
+        return !exist;
+    }
+
+
+    @Override
+    public Boolean lectureAddCart(Long lectureId) throws AuthenticationException {
+
+        boolean exist = false;
+
+        Authentication authentication = getAuthentication();
+
+        if (authentication.getName().equals("anonymousUser")) {
+            log.info("로그인 되있지않은 사용자");
+            throw new AuthenticationException("로그인 되있지않은 사용자");
+        }
+
+        Member member = memberRepository.findByEmail(authentication.getName());
+
+        List<Cart> collect = new ArrayList<>(member.getMyPage().getCartList());
+
+        for (Cart list : collect) {
+            if (Objects.equals(list.getLecture().getLecture_id(), lectureId)) {
+                member.getMyPage().getCartList().removeIf(w -> w.getId().equals(list.getId()));
+                cartRepository.deleteById(list.getId());
+                log.info("이미 담긴 강의" + lectureId.toString());
+                exist = true;
+            }
+        }
+
+        if (!exist) {
+            Lecture lecture = em.find(Lecture.class, lectureId);
+
+            Cart cart = new Cart();
+
+            cart.setLecture(lecture);
+            cart.setMyPage(member.getMyPage());
+
+            cartRepository.save(cart);
+        }
+
+        return !exist;
     }
 
     private Authentication getAuthentication() {

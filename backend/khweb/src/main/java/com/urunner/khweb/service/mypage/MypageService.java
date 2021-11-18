@@ -3,6 +3,8 @@ package com.urunner.khweb.service.mypage;
 import com.urunner.khweb.entity.mypage.MyNote;
 import com.urunner.khweb.entity.mypage.TempLecture;
 
+import javax.naming.AuthenticationException;
+
 public interface MypageService {
 
     public MyNote latestNote() throws Exception;
@@ -12,6 +14,8 @@ public interface MypageService {
 
     public Long getPoint();
 
-    public boolean lectureAddToCart(Long lectureId);
+    public boolean lectureAddToWish(Long lectureId) throws AuthenticationException;
+
+    public Boolean lectureAddCart(Long lectureId) throws AuthenticationException;
 
 }

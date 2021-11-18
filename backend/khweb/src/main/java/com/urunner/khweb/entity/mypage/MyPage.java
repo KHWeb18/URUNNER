@@ -31,6 +31,9 @@ public class MyPage {
     @JoinColumn(name = "member_no")
     private Member member;
 
+    @OneToMany(mappedBy = "myPage", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<WishList> wishLists = new ArrayList<>();
+
     @Builder
     public MyPage(Long point) {
         this.point = point;
