@@ -193,7 +193,6 @@ export default {
                 })
     },
     fetchInqBoardListWithFilter ({ commit }, complete) {
-        console.log(complete)
         return axios.get(`http://localhost:7777/inqboard/lists/${complete}`)
                 .then((res) => {
                     const reverse = [...res.data].reverse();
@@ -205,7 +204,7 @@ export default {
         return axios.get('http://localhost:7777/mypage/myLecturelist')
                 .then((res) => {
                     commit(FETCH_LECTURE_LIST, res.data)
-                })
+        }).catch(err=>{alert(err.response.data.message)})
     },
     fetchMemberList({ commit }) {
         return axios.get('http://localhost:7777/memberManagement/memberList')
@@ -228,6 +227,13 @@ export default {
             console.log(res.data)
             commit(FETCH_LECTURE_LIST, res.data)
         }).catch(err=>{alert(err.response.data.message)})
+    },
+    fetchCallLectureListWithFilter ({ commit }, word) {
+        alert(word)
+        return axios.get(`http://localhost:7777/callLecture/lists/search/${word}`)
+                .then((res) => {
+                    console.log(res.data)
+                    commit(FETCH_LECTURE_LIST, res.data)
+        }).catch(err=>{alert(err.response.data.message)})
     }
-    
 }

@@ -1,7 +1,7 @@
 <template>
     <div id="board_padding">        
         <v-container class="main">
-            <for-sale-lecture-list :callLecturelist="callLecturelist"/>
+            <for-sale-lecture-list :callLecturelist="callLecturelist" @callAll="fetchCallLectureList"/>
         </v-container>
     </div>
 </template>
@@ -23,8 +23,7 @@ export default {
         this.fetchCallLectureList()
     },
     methods: {
-        ...mapActions(['fetchCallLectureList'])
-        
+        ...mapActions(['fetchCallLectureList'])        
     }
 }
 

@@ -4,6 +4,7 @@
         <div class="sideBar hidden-sm-and-down">
             <v-card class="mx-auto0" max-width="500">
                 <v-list>
+                    <div class="title" @click="callAll(), path=''">전체 보기</div>
                     <v-list-group
                         v-for="item in items"
                         :key="item.title"
@@ -15,10 +16,10 @@
                                 <v-list-item-title v-text="item.title"></v-list-item-title>
                             </v-list-item-content>
                         </template>
-
                         <v-list-item v-for="child in item.items" :key="child.title">
                             <v-list-item-content>
-                                <v-list-item-title v-text="child.title" @click="selectCategory(child.value)"></v-list-item-title>
+                                <!-- <v-btn @click="selectCategory(child)" style="cursor:pointer">{{child.title}}</v-btn> -->
+                                <v-list-item-title class="child" v-text="child.title" @click="selectCategory(child)" style="cursor:pointer"></v-list-item-title>
                             </v-list-item-content>
                         </v-list-item>
                     </v-list-group>
@@ -27,13 +28,6 @@
         </div>
         <!-- 본문 -->
         <div class="main_box">
-            <!-- 제목
-            <div class="mr-9 hidden-sm-and-down">
-                <div class="title_box">
-                    <h2 class="page_title">
-                        <span>강의</span></h2>
-                </div>
-            </div> -->
             <!-- 검색창 + complete 분류 -->
             <v-spacer class="forLine0">
                 <div class="forLine0sButton">
@@ -43,7 +37,7 @@
                         <div class="searching" >
                             <span>
                                 <input type="text" placeholder="검색어를 입력해주세요" v-model="word"
-                                @keyup.enter="searching(word)">
+                                @keyup.enter="searchingWord(word)">
                             </span>
                                <v-icon class="searching_icon" @click="searching(word)">mdi-magnify</v-icon>
                         </div>
@@ -52,11 +46,9 @@
             </v-spacer>
             <!-- 분류창 -->
             <v-spacer class="forLine">
-                <h class="tag_button" @click="word = ''">ALL</h>&nbsp;&nbsp;&nbsp;
-                <h> > </h>
-                <h class="tag_button" @click="searchingTag('Java')">Java</h>&nbsp;&nbsp;&nbsp;
-                <h> > </h>
-                <h class="tag_button" @click="searchingTag('Spring')">Spring</h>&nbsp;&nbsp;&nbsp;
+                <h class="tag_button" @click="callAll(), word = '', path = '' ">ALL</h>&nbsp;&nbsp;&nbsp;
+                <h> > </h>&nbsp;&nbsp;&nbsp;
+                <h class="tag_button">{{ path }}</h>
             </v-spacer>
             <!-- 리스트 -->
             <v-container class="lecture01 mr-9 hidden-sm-and-down">
@@ -64,7 +56,7 @@
                     <v-container class="lecture_box">
                         <div v-for="mob in paginatedData2" :key="mob.boardNo" class="item">
                             <v-card class="mx-auto">
-                                <v-img :src="`http://localhost:7777/lecture/image/${mob.thumb_path}/${mob.writer}`" height="200px"></v-img>
+                                <v-img :src="`http://localhost:7777/lecture/image/${mob[4]}/${mob[5]}`" height="200px"></v-img>
                                 <!-- <div class="btn-plus"><span draggable="false"><v-icon color="white">mdi-arrow-right</v-icon></span></div> -->
                                 <div class="btn-plus2"><span draggable="false"></span></div>
                                 <div class="btn-plus3"><span draggable="false"><v-icon color="#E0E0E0" @click="info()">mdi-alert-circle-outline</v-icon></span></div>
@@ -73,27 +65,30 @@
                                     background-color="orange lighten-3" small
                                     color="orange" large readonly></v-rating></span></div>                                
                                 <v-card-title class="temp">
-                                    {{mob.title}}
+                                    <!-- title -->
+                                    {{mob[0]}}
                                 </v-card-title>
                                 <div class="forLine4"></div>
                                 <div class="card_text">
-                                    <div>
-                                        {{ mob.writer }} |
+                                    <div class="nickname_txt">
+                                        <!-- nickname -->
+                                        {{ mob[3] }}
                                     </div>
-                                    <div></div><div></div><div></div>
-                                    <div>
-                                        {{ mob.grade }}
+                                    <div></div><div></div>
+                                    <div v-show="path != ''" class="category_txt">
+                                        {{ path }}
+                                    </div>
+                                    <div class="grade_txt">
+                                        <!-- grade -->
+                                        {{ mob[2] }}
                                     </div>
                                 </div>
                                 <div class="card_text2">
                                     <div>
-                                        ￦{{ mob.price }}
+                                        <!-- price -->
+                                        ￦{{ mob[1]  | comma }}
                                     </div>
                                 </div>
-
-                                <div class="forLine4"></div>
-                                <v-card-actions>
-                                </v-card-actions>
                             </v-card>
                         </div>
                         <v-container style="margin-top:20px;">
@@ -108,36 +103,40 @@
             <v-container class="lecture01 mr-9 hidden-md-and-up">
                 <div v-show="!searchinOn">
                     <v-container class="lecture_box">
-                        <div v-for="mob in paginatedData2" :key="mob.boardNo" class="item_m">
-                            <v-card class="mx-auto">
-                                <v-img :src="ImgRequest(mob.boardNo)" height="200px"></v-img>
-                                <div class="btn-plus_m"><span draggable="false"><v-icon color="white">mdi-arrow-right</v-icon></span></div>
-                                <div class="btn-plus2_m"><span draggable="false"></span></div>
-                                <div class="btn-plus3_m"><span draggable="false"><v-icon color="#E0E0E0" @click="info()">mdi-alert-circle-outline</v-icon></span></div>
-                                <div class="btn-plus4_m"><span draggable="false"><v-rating
-                                    v-model="rating"
-                                    background-color="orange lighten-3" small
-                                    color="orange" large readonly></v-rating></span></div>
-                                
-                                <v-card-title class="temp">
-                                    {{mob.title}}
-                                </v-card-title>
-                                <v-card-title class="temp2">
-                                    <v-progress-linear
-                                        v-model="valueDeterminate" color="indigo darken-2"></v-progress-linear>
-                                </v-card-title>
-                                <div class="card_text">
-                                    <div>
-                                        전체 진도율 : 15% |
+                        <div v-for="mob in paginatedData2" :key="mob.boardNo">
+                            <div class="mx-auto2">
+                                <div>
+                                    <v-img :src="`http://localhost:7777/lecture/image/${mob[4]}/${mob[5]}`" height="200px" width="200px"></v-img>
+                                </div>
+                                <!-- <div class="btn-plus"><span draggable="false"><v-icon color="white">mdi-arrow-right</v-icon></span></div> -->
+                                <div class="btn-plus2_m"><span draggable="false"></span></div>                                
+                                <div class="card_info">    
+                                    <div style="height:66px;"><!-- title -->
+                                        {{mob[0]}}
                                     </div>
-                                    <div></div><div></div><div></div>
-                                    <div>
-                                        {{ mob.grade }} | {{ mob.nickname }}
+                                    <div class="forLine4"></div>
+                                    <div class="card_text">
+                                        <div class="nickname_txt">
+                                            <!-- nickname -->
+                                            {{ mob[3] }}
+                                        </div>
+                                        <div></div><div></div>
+                                        <div v-show="path != ''" class="category_txt">
+                                            {{ path }}
+                                        </div>
+                                        <div class="grade_txt">
+                                            <!-- grade -->
+                                            {{ mob[2] }}
+                                        </div>
+                                    </div>
+                                    <div class="card_text2">
+                                        <div>
+                                            <!-- price -->
+                                            ￦{{ mob[1]  | comma }}
+                                        </div>
                                     </div>
                                 </div>
-                                <v-card-actions>
-                                </v-card-actions>
-                            </v-card>
+                            </div>
                         </div>
                         <v-container style="margin-top:20px;">
                         <div class="text-center">
@@ -253,7 +252,8 @@ export default {
         headers: [
         ],
         valueDeterminate: 15,
-        rating: 5
+        rating: 5,
+        path: '',
     }),
     watch: {
         word(newVal) {
@@ -306,9 +306,18 @@ export default {
             alert('강의 소개 페이지로 링크')
         },
         selectCategory(data) {
-            this.fetchCallLectureListWithCategory(data)
+            this.fetchCallLectureListWithCategory(data.value)
+            this.path = data.title
         },
-        ...mapActions(['fetchCallLectureListWithCategory'])
+        callAll() {
+            this.$emit("callAll", {})
+        },
+        searchingWord(data) {
+            this.fetchCallLectureListWithFilter(data)
+            this.path = ''            
+        },
+        ...mapActions(['fetchCallLectureListWithCategory']),
+        ...mapActions(['fetchCallLectureListWithFilter'])
         
     },
     computed: {
@@ -329,6 +338,11 @@ export default {
         ...mapState ({
         lists: state => state.lists
         })
+    },
+    filters : {
+        comma(val){
+            return String(val).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
     }
 }
     
@@ -343,10 +357,16 @@ export default {
     margin: 30px 30px 0px 10vw;
 }
 .mx-auto0.v-card.v-sheet.theme--light {
-    width: 230px;
+    width: 200px;
 }
 .v-list-item.theme--light {
     padding-left:30px!important;
+    border-top: 1px solid #EEEEEE;
+    background-color: white;
+    font-weight: 500;
+}
+.v-list-group.v-list-group--no-action {
+    background-color: #f8f8f8 !important;
 }
 
 
@@ -690,11 +710,11 @@ p {
 
 
 .tag_button {
-    color: #BDBDBD;
+    color: black;
     cursor: pointer;
 }
 .tag_button.on {
-    color: black;
+    color: #F9A825;
 }
 .tag_button.on2 {
     color: rgb(53, 53, 53);
@@ -709,7 +729,7 @@ p {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 40px;
+    height: 40px !important;
     padding-left: 2vw;
 }
 .forLine0sButton {
@@ -718,7 +738,7 @@ p {
     align-items: center;
 }
 .forLine {
-    height: 40px;
+    height: 40px !important;
     border-top: 1px solid #BDBDBD;
     border-bottom: 1px solid #BDBDBD;
     padding-left: 2vw;
@@ -767,7 +787,6 @@ input:focus {
     outline:none;
 }
 .main_box {
-    display: flex;
     justify-content: center;
     flex-direction: column;
     
@@ -780,6 +799,7 @@ input:focus {
     font-weight: bold;
     color: #424242;
     padding: 5px 10px 5px 10px;
+    margin-top: 10px;
     height: 50px;
 
     overflow: hidden;
@@ -806,7 +826,7 @@ input:focus {
 .card_text2 {
     display: flex;
     justify-content: start;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 700;
     color:black;
     margin:5px 5px 0px 5px;
@@ -815,12 +835,95 @@ input:focus {
     border-bottom:1px solid #ececec
 }
 .v-sheet.v-card:not(.v-sheet--outlined) {
-    box-shadow: 0 1px 1px -1px rgb(0 0 0 / 10%), 0 2px 2px 0 rgb(0 0 0 / 4%), 0 1px 5px 0 rgb(0 0 0 / 6%) !important;
+    box-shadow: none !important;
 
 }
 .forLine4 {    
     margin:5px 5px 0px 5px;
     padding-bottom:5px;
     border-bottom:1px solid #ececec
+}
+.nickname_txt {
+    margin-top: 5px;
+    font-size: 13px;
+    font-weight: bold;
+    color: #757575;
+}
+.grade_txt {
+    margin-top: 5px;
+    background-color: #C2185B;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 20px;
+    padding: 0 4px 0 4px;
+    font-size: 11px;
+    font-weight: bold;
+}
+.category_txt {
+    margin-top: 5px;
+    background-color: #F9A825;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 20px;
+    padding: 0 4px 0 4px;
+    font-size: 11px;
+    font-weight: bold;
+}
+.title {
+    padding: 10px 16px !important;
+    font-size: 12px !important;
+    cursor: pointer;
+    border: 1px solid #EEEEEE;
+}
+.title:hover {
+    background-color: rgb(246, 246, 246);
+}
+.v-application .title {
+    font-size: 1rem !important;
+}
+.v-list-item__title {
+    font-size: 0.9rem;
+}
+.v-list-item__title.child {
+    font-size: 0.8rem !important;
+}
+/* 사이드바 타이틀 */
+.v-application .primary--text {
+    color: black !important;
+    font-weight: bold;
+    caret-color: #BDBDBD !important;
+}
+.v-list-group.v-list-group--no-action {
+    font-size: 5px !important;
+    border-bottom: 1px solid #EEEEEE;
+    border-left: 1px solid #EEEEEE;
+    border-right: 1px solid #EEEEEE;
+    background-color: white;
+}
+.mx-auto2 {
+    display:flex;
+    justify-content: start;
+    flex-direction: row;
+
+    width: 90vw;
+    margin: 10px 0px;
+}
+.card_info {
+    display:flex;
+    justify-content: start;
+    flex-direction: column;
+    padding: 5px 5px;
+    width: inherit;
+    font-size: 15px;
+    font-weight: bold;
+    color: #424242;
+
+}
+.v-list-group__items {
+    background-color: white;
 }
 </style>

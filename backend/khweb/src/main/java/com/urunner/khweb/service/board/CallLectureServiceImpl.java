@@ -16,12 +16,16 @@ public class CallLectureServiceImpl implements CallLectureService {
     @Autowired
     private CallLectureRepository repository;
 
-    public List<Lecture> selectLectureList() {
+    public List<Object[]> selectLectureList() {
         return repository.selectLectureList();
     }
 
-    public List<Lecture> selectLectureListWithTag(Long categoryId){
+    public List<Object[]> selectLectureListWithTag(Long categoryId){
         return repository.selectLectureListWithTag(categoryId);
+    }
+
+    public List<Object[]> selectLectureListWithWord(String word) {
+        return repository.selectLectureListWithWord(word);
     }
 
 

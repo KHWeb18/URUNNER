@@ -26,16 +26,22 @@ public class CallLectureList {
     private CallLectureService service;
 
     @GetMapping("/lists")
-    public ResponseEntity<List<Lecture>> getLists () throws Exception {
+    public ResponseEntity<List<Object[]>> getLists () throws Exception {
         log.info("getStudyLists() ");
 
         return new ResponseEntity<>(service.selectLectureList(), HttpStatus.OK);
     }
 
     @GetMapping("/lists/{categoryId}")
-    public ResponseEntity<List<Lecture>> getLists (@PathVariable("categoryId") Long categoryId) throws Exception {
+    public ResponseEntity<List<Object[]>> getLists (@PathVariable("categoryId") Long categoryId) throws Exception {
 
         return new ResponseEntity<>(service.selectLectureListWithTag(categoryId), HttpStatus.OK);
+    }
+
+    @GetMapping("/lists/search/{word}")
+    public ResponseEntity<List<Object[]>> getLists (@PathVariable("word") String word) throws Exception {
+
+        return new ResponseEntity<>(service.selectLectureListWithWord(word), HttpStatus.OK);
     }
 
 }
