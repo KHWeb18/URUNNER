@@ -43,5 +43,4 @@ public class CallLectureList {
 
         return new ResponseEntity<>(service.selectLectureListWithWord(word), HttpStatus.OK);
     }
-
 }
