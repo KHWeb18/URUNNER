@@ -28,8 +28,13 @@
         </div>
         <!-- 본문 -->
         <div class="main_box">
+            <!-- 공백(추후 배너창 이용) -->
+            <div class="temp22 hidden-sm-and-down">
+            </div>
+
             <!-- 검색창 + complete 분류 -->
             <v-spacer class="forLine0">
+
                 <div class="forLine0sButton">
                 </div>
                 <div class="searching_box_top">
@@ -55,41 +60,42 @@
                 <div v-show="!searchinOn">
                     <v-container class="lecture_box">
                         <div v-for="mob in paginatedData2" :key="mob.boardNo" class="item">
-                            <v-card class="mx-auto">
-                                <v-img :src="`http://localhost:7777/lecture/image/${mob[4]}/${mob[5]}`" height="200px"></v-img>
-                                <!-- <div class="btn-plus"><span draggable="false"><v-icon color="white">mdi-arrow-right</v-icon></span></div> -->
-                                <div class="btn-plus2"><span draggable="false"></span></div>
-                                <div class="btn-plus3"><span draggable="false"><v-icon color="#E0E0E0" @click="info()">mdi-alert-circle-outline</v-icon></span></div>
-                                <div class="btn-plus4"><span draggable="false"><v-rating
-                                    v-model="mob.rating"
-                                    background-color="orange lighten-3" small
-                                    color="orange" large readonly></v-rating></span></div>                                
-                                <v-card-title class="temp">
-                                    <!-- title -->
-                                    {{mob[0]}}
-                                </v-card-title>
-                                <div class="forLine4"></div>
-                                <div class="card_text">
-                                    <div class="nickname_txt">
-                                        <!-- nickname -->
-                                        {{ mob[3] }}
+                            <div class="lecture_card">
+                                <div class="card_img">
+                                    <v-img :src="`http://localhost:7777/lecture/image/${mob[4]}/${mob[5]}`" height="200px" width="300px"></v-img>
+                                </div>
+                                <!-- description
+                                <div class="cardhover">
+                                    {{ mob[6] }}
+                                </div> -->
+                                <div class="btn-plus"><span draggable="false"><v-icon color="white">mdi-cart</v-icon></span></div>
+                                <!-- title -->
+                                <div class="card_text01">
+                                    {{ mob[0] }}
+                                </div>
+                                <!-- nickname -->
+                                <div class="card_text02">
+                                    {{ mob[3] }}
+                                </div>
+                                <div class="card_text_gropu01">
+                                    <!-- rating -->
+                                    <div class="card_text03">
+                                        <v-rating
+                                        v-model="mob.rating"
+                                        background-color="orange lighten-3" small dense
+                                        color="orange" large readonly></v-rating>
                                     </div>
-                                    <div></div><div></div>
-                                    <div v-show="path != ''" class="category_txt">
-                                        {{ path }}
-                                    </div>
-                                    <div class="grade_txt">
-                                        <!-- grade -->
+                                    <!-- grade -->
+                                    <div class="card_text04">
                                         {{ mob[2] }}
                                     </div>
                                 </div>
-                                <div class="card_text2">
-                                    <div>
-                                        <!-- price -->
-                                        ￦{{ mob[1]  | comma }}
-                                    </div>
+                                <div class="forLine4"></div>
+                                <!-- price -->
+                                <div class="card_text05">
+                                    {{ mob[1]  | comma }}원
                                 </div>
-                            </v-card>
+                            </div>
                         </div>
                         <v-container style="margin-top:20px;">
                         <div class="text-center">
@@ -106,10 +112,8 @@
                         <div v-for="mob in paginatedData2" :key="mob.boardNo">
                             <div class="mx-auto2">
                                 <div>
-                                    <v-img :src="`http://localhost:7777/lecture/image/${mob[4]}/${mob[5]}`" height="200px" width="200px"></v-img>
+                                    <v-img :src="`http://localhost:7777/lecture/image/${mob[4]}/${mob[5]}`" height="160px" width="160px"></v-img>
                                 </div>
-                                <!-- <div class="btn-plus"><span draggable="false"><v-icon color="white">mdi-arrow-right</v-icon></span></div> -->
-                                <div class="btn-plus2_m"><span draggable="false"></span></div>                                
                                 <div class="card_info">    
                                     <div style="height:66px;"><!-- title -->
                                         {{mob[0]}}
@@ -173,67 +177,80 @@ export default {
             // 인공지능', '딥러닝', '데이터베이스', 'SQL', 'MongoDB', '보안', '모바일 앱 개발', 'Swift', '안드로이드', 'Kotlin', '코딩테스트', '기타'
                 items: [
                     {
-                        title: '4번 카테고리', value: 4
-                    }
-                ],
-                title: '개발 프로그래밍'
-            }, {
-                items: [
-                    {
-                        title: '14번 카테고리', value: 14
+                        title: 'JAVA', value: 1
                     }, {
-                        title: '2번 카테고리', value: 2
+                        title: '개발 프로그래밍', value: 2
                     }, {
-                        title: '1번 카테고리', value: 1
+                        title: '프론트엔드', value: 3
+                    }, {
+                        title: '백엔드', value: 3
+                    }, {
+                        title: 'Vue', value: 4
+                    }, {
+                        title: 'React', value: 5
+                    }, {
+                        title: 'Html Css', value: 6
+                    }, {
+                        title: 'JavaScript Css', value: 9
+                    }, {
+                        title: '게임 개발', value: 10
+                    }, {
+                        title: 'Golang', value: 11
+                    }, {
+                        title: 'Python', value: 13
+                    }, {
+                        title: 'Golang', value: 11
+                    }, {
+                        title: 'Golang', value: 11
                     }
                 ],
-                title: '게임 개발'
+                title: '프로그래밍'
             }, {
                 items: [
                     {
-                        title: 'List Item'
-                    }
-                ],
-                title: '프론트엔드'
-            }, {
-                items: [
-                    {
-                        title: 'List Item'
+                        title: '보안', value: 19
                     }
                 ],
                 title: '보안'
             }, {
                 items: [
                     {
-                        title: 'List Item'
+                        title: '인공지능', value: 14
+                    }, {
+                        title: '딥러닝', value: 15
                     }
                 ],
-                title: '딥러닝'
+                title: '머신러닝'
             }, {
                 items: [
                     {
-                        title: 'List Item'
-                    }
-                ],
-                title: '인공지능'
-            }, {
-                items: [
-                    {
-                        title: 'List Item'
+                        title: '데이터베이스', value: 16
+                    }, {
+                        title: 'SQL', value: 17
+                    }, {
+                        title: 'MongoDB', value: 18
                     }
                 ],
                 title: '데이터베이스'
             }, {
                 items: [
                     {
-                        title: 'List Item'
+                        title: '모바일 앱 개발', value: 20
+                    }, {
+                        title: 'Swift', value: 21
+                    }, {
+                        title: '안드로이드', value: 22
+                    }, {
+                        title: 'Kotlin', value: 23
                     }
                 ],
-                title: '코딩테스트'
+                title: '모바일'
             }, {
                 items: [
                     {
-                        title: 'List Item'
+                        title: '코딩테스트', value: 24
+                    }, {
+                        title: '기타', value: 25
                     }
                 ],
                 title: '기타'
@@ -354,16 +371,20 @@ export default {
     justify-content: start;
 }
 .sideBar {
-    margin: 30px 30px 0px 10vw;
+    margin: 60px 60px 0px 10vw;
 }
 .mx-auto0.v-card.v-sheet.theme--light {
     width: 200px;
 }
+/* 사이드바 차일드 박스 */
 .v-list-item.theme--light {
     padding-left:30px!important;
     border-top: 1px solid #EEEEEE;
     background-color: white;
     font-weight: 500;
+}
+.v-list-item.theme--light:hover {
+    background-color: #FAFAFA;
 }
 .v-list-group.v-list-group--no-action {
     background-color: #f8f8f8 !important;
@@ -537,32 +558,13 @@ p {
 }
 .item {
     margin: 10px;
-    width: 250px;
+    width: 270px;
     cursor: pointer;
 }
 .item_m {
     margin: 10px;
     width: 200px;
     cursor: pointer;
-}
-.btn-plus {
-  position:absolute;
-  top:77.5px;
-  left:102.5px;
-  background:rgb(65, 84, 192, 0.8);
-  width:55px;
-  height:55px;
-  border-radius:50%;
-  text-align:center;
-  /* 추가된 부분 */
-  opacity:0;
-  transform:scale(2);
-  transition:all .3s linear;
-}
-.btn-plus span {
-  font-size:2.3em;
-  color:#ffffff;
-  user-select:none;
 }
 .btn-plus2 {
   /* hover시 사진 어둡게 */
@@ -723,7 +725,7 @@ p {
 .tag_button:hover {
     color: rgb(63, 63, 63);
     cursor: pointer;
-    transition: all 0.5s ease;
+    transition: all 0.f5s ease;
 }
 .forLine0 {
     display: flex;
@@ -745,6 +747,7 @@ p {
     display: flex;
     justify-content: start;
     align-items: center;
+    margin-top: 10px;
 }
 .searching {
     display: flex;
@@ -791,7 +794,6 @@ input:focus {
     flex-direction: column;
     
     color: #424242;
-    margin-top: 30px;
     max-width:900px;
 }
 .temp {
@@ -838,8 +840,7 @@ input:focus {
     box-shadow: none !important;
 
 }
-.forLine4 {    
-    margin:5px 5px 0px 5px;
+.forLine4 {
     padding-bottom:5px;
     border-bottom:1px solid #ececec
 }
@@ -888,6 +889,7 @@ input:focus {
 .v-list-item__title {
     font-size: 0.9rem;
 }
+/* 사이드바 차일드 텍스트 */
 .v-list-item__title.child {
     font-size: 0.8rem !important;
 }
@@ -925,5 +927,121 @@ input:focus {
 }
 .v-list-group__items {
     background-color: white;
+}
+
+
+
+
+
+
+.v-image.v-responsive.theme--light {
+  border-radius: 3px;
+}
+.lecture_card:hover .cardhover {
+  opacity:1;
+  transform:scale(1);
+  transition: all 0.5s ease;
+}
+.lecture_card {
+  z-index: 0;
+  width:inherit;
+  height:inherit;
+}
+.lecture_card:hover {
+    transform: translate3d(0px, 0px, 0px);
+}
+.lecture_card:hover .btn-plus {
+  opacity:1;
+  transform:scale(1);
+  transition: all 0.5s ease;
+}
+.btn-plus {
+  position:absolute;
+  top:70px;
+  left:105px;
+  background:rgb(65, 84, 192, 0.8);
+  width:60px;
+  height:60px;
+  border-radius:50%;
+  text-align:center;
+  /* 추가된 부분 */
+  opacity:0;
+  transform:scale(2);
+}
+.btn-plus span {
+  font-size:2.3em;
+  color:#ffffff;
+  user-select:none;
+}
+
+.cardhover {
+    position:absolute;
+    top:0px;
+    padding: 10px;
+    background:rgba(0, 0, 0, 0.5);
+    width:270px;
+    height:200px;
+    text-align:center;
+    color: white;
+    border-radius: 3px;
+    cursor: pointer;
+    opacity: 0;
+}
+.card_text01 {    
+    display:flex;
+    justify-content: start;
+    margin: 5px 0px;
+    font-size: 14px;
+    padding-left: 3px;
+    height: 44px;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    line-height: 22px;
+    -webkit-line-clamp: 2; /* 표시하고자 하는 라인 수 */
+    -webkit-box-orient: vertical;
+}
+.card_text02 {
+    display:flex;
+    justify-content: start;
+    margin: 8px 0px 0px 0px;
+    font-size: 13px;
+    font-weight: bold;
+    padding-left: 3px;
+}
+.card_text_gropu01 {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+}
+.card_text03 {
+    display:flex;
+    justify-content: start;
+    margin: 0px 0px;
+    font-size: 14px;
+}
+.card_text04 {
+    margin-top: 5px;
+    background-color: #C2185B;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 20px;
+    padding: 0 4px 0 4px;
+    font-size: 11px;
+    font-weight: bold;
+}
+.card_text05 {
+    display:flex;
+    justify-content: start;
+    margin: 0px 0px;
+    font-size: 14px;
+    font-weight: 900;
+    padding-left: 3px;
+}
+.temp22 {
+    margin-top:90px;
 }
 </style>

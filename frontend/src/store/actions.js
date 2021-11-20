@@ -229,7 +229,6 @@ export default {
         }).catch(err=>{alert(err.response.data.message)})
     },
     fetchCallLectureListWithFilter ({ commit }, word) {
-        alert(word)
         return axios.get(`http://localhost:7777/callLecture/lists/search/${word}`)
                 .then((res) => {
                     console.log(res.data)
