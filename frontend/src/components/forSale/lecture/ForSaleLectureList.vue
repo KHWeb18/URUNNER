@@ -513,6 +513,10 @@ p {
   opacity:1;
   transform:scale(1);
 }
+.btn_pagination {
+    background-color: transparent;
+    box-shadow: none;
+}
 .nothing {
     width: 290px;
 }
