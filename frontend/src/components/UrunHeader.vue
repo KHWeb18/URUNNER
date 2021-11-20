@@ -25,16 +25,7 @@
                 <router-link :to="{ name: 'BoardCollectionPage' }">
                   <div class="mr-9 hidden-md-and-down">커뮤니티</div>
                 </router-link>
-                <v-menu offset-y open-on-hover>
-                  <template v-slot:activator="{ on, attrs }">
-                     <div class="mr-9 hidden-md-and-down" v-on="on" v-bind="attrs" >유러너</div>
-                  </template>
-                    <v-list>
-                        <v-list-item v-for="(urunner, index) in urunners" :key="index" :to="urunner.route">
-                            <v-list-item-title>{{ urunner.title }}</v-list-item-title>
-                        </v-list-item>
-                    </v-list>
-                </v-menu>
+                <div class="hidden-md-and-down">유러너</div>
             </div>
             <div class="end d-flex">
                 <div class="search hidden-md-and-down mr-6">
@@ -62,7 +53,8 @@
                           <template v-slot:activator="{ on, attrs }">
                             <v-icon color="primary" v-on="on" v-bind="attrs" class="mr-3">mdi-run-fast</v-icon>
                           </template>
-                          <open-main-menu-logo @clickLogoutBtn="clickLogoutBtn"/>
+                          <open-main-menu-logo @clickLogoutBtn="clickLogoutBtn"
+                                                @openRegInstructor="openRegInstructor"/>
                         </v-menu>
                     </div>
                     <div v-else class="d-flex">
@@ -112,11 +104,7 @@ import OpenMainMenuLogo from '../components/headerLoginMenu/OpenMainMenuLogo.vue
       },
       data: () => ({
             drawer: false,
-            isLogin: Vue.$cookies.get("ACCESS_TOKEN"),
-            urunners: [
-              { title: '유러너 소개', route: '/intro'},
-              { title: '공지사항', route: '/notice' },
-            ]
+            isLogin: Vue.$cookies.get("ACCESS_TOKEN")
         }),
       created: function() {
          EventBus.$on('isLogin', (isLogin) => this.isLogin = isLogin)
@@ -135,6 +123,9 @@ import OpenMainMenuLogo from '../components/headerLoginMenu/OpenMainMenuLogo.vue
         },
         clickLogoutBtn() {
           this.$emit('clickLogoutBtn')
+        },
+        openRegInstructor() {
+          this.$emit('openRegInstructor')
         } 
       }
     }

@@ -98,7 +98,7 @@
                             </div>
                         </div>
                         <v-container style="margin-top:20px;">
-                        <div class="text-center">
+                        <div>
                             <v-pagination class="btn_pagination" v-model="pageNum2" :length="pageCount2"></v-pagination>
                         </div>
                         </v-container>
@@ -111,9 +111,6 @@
                     <v-container class="lecture_box">
                         <div v-for="mob in paginatedData2" :key="mob.boardNo">
                             <div class="mx-auto2">
-                                <div>
-                                    <v-img :src="`http://localhost:7777/lecture/image/${mob[4]}/${mob[5]}`" height="160px" width="160px"></v-img>
-                                </div>
                                 <div class="card_info">    
                                     <div style="height:66px;"><!-- title -->
                                         {{mob[0]}}
@@ -142,12 +139,12 @@
                                 </div>
                             </div>
                         </div>
-                        <v-container style="margin-top:20px;">
-                        <div class="text-center">
-                            <v-pagination class="btn_pagination" v-model="pageNum2" :length="pageCount2"></v-pagination>
-                        </div>
-                        </v-container>
                     </v-container>
+                    <div style="margin-top:20px;">
+                    <div class="text-center">
+                        <v-pagination class="btn_pagination" v-model="pageNum2" :length="pageCount2"></v-pagination>
+                    </div>
+                    </div>
                 </div>
             </v-container>
         </div>
@@ -853,5 +850,8 @@ input:focus {
 }
 .temp22 {
     margin-top:90px;
+}
+.text-center {
+    width: 95vw;
 }
 </style>

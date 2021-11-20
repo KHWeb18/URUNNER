@@ -42,9 +42,18 @@
             <div class="ma-1">
               <strong>{{ lecture.desc }}</strong>
               <br>
+              <br>
               <span v-for="category in lecture.category" :key="category.category_id">
                  # {{ category.categoryName }}
               </span>
+              <div class="ma-2 align-right" >
+                <v-icon :color="wish ? 'red' : null" class="d-block pa-1" @click.prevent="toggleHeartBtn(lecture.id)">
+                  mdi-cards-heart
+                </v-icon>
+                <v-icon :color="cart ? 'primary' : null" class="d-block pa-1" @click.prevent="toggleCartBtn(lecture.id)">
+                  mdi-cart
+                </v-icon>
+              </div>
             </div>
           </v-overlay>
         </v-fade-transition>
@@ -54,6 +63,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+import { API_BASE_URL } from '@/constants/index'
 export default {
   props: {
     lecture: {
@@ -61,10 +72,33 @@ export default {
       require: true,
     }
   },
+  data() {
+    return {
+      wish: null,
+      cart: null,
+    }
+  },
+  created() {
+    this.wish = this.lecture.wishList
+    this.cart = this.lecture.cart
+  },
   methods: {
     getCurrencyFormat(value) {
       return this.$currencyFormat(value);
     },
+    toggleHeartBtn(lectureId) {
+     axios.get(`${API_BASE_URL}/manageLecture/addToWish/${lectureId}`)
+            .then(({ data }) => {
+               this.wish = data
+               
+            })
+    },
+    toggleCartBtn(lectureId) {
+      axios.get(`${API_BASE_URL}/manageLecture/addToCart/${lectureId}`)
+            .then(({ data }) => {
+               this.cart = data
+            })
+    }
   },
 }
 </script>

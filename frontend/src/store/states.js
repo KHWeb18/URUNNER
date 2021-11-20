@@ -4,6 +4,7 @@ export default {
   email: null,
   name: null,
   introduce: null,
+  profiles: null,
   items: [
       { title: 'Home', to: '/home', items:[
           { title: '대시보드', to: '/'},
@@ -25,7 +26,7 @@ export default {
           { title: '구매내역', to: '/orders'},
       ]},
       { title: '설정', items:[
-          { title: '프로필', to: '/'},
+          { title: '프로필', to: '/memberProfile'},
           { title: '알림설정', to: '/'},
       ]},
   ],
@@ -50,8 +51,6 @@ export default {
   notice: null,
   //스터디
   studyMembers: [],
-  // 내 학습 리스트
-  myLecturelist: [],
   // 판매중인 강의 리스트
   callLecturelist: [],
   //커리큘럼 관리
