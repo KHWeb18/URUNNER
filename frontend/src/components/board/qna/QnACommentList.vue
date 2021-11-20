@@ -11,7 +11,10 @@
                             <!-- 섬네일 -->
                             <div class="thumbnail">
                                 <v-avatar color="black" size="48" >
-                                    <span><img :src="ImgRequest(mob.writer)" style="width:60px;height:60px;object-fit: cover"></span></v-avatar>
+                                    <span>
+                                        <!-- <img :src="ImgRequest(mob.writer)" style="width:60px;height:60px;object-fit: cover"> -->
+                                        <v-img :src="`http://localhost:7777/lecture/image/${mob.thumb_path}/${mob.writer}`" height="60px" width="60px"></v-img>
+                                        </span></v-avatar>
                             </div>
                             <!-- 댓글 박스 -->
                             <div class="post_box"  @click="temp00(mob)">

@@ -105,6 +105,7 @@ export default new VueRouter({
      //강의 상세 페이지
      {
         path: '/course/:lectureId',
+        name: 'LectureDetailPage',
         component: () => import ('../views/lecture_detail/LectureDetailPage.vue'),
      },
      //강의 영상 재생 페이지

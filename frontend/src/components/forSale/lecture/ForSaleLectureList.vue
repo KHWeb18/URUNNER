@@ -31,7 +31,6 @@
             <!-- 공백(추후 배너창 이용) -->
             <div class="temp22 hidden-sm-and-down">
             </div>
-
             <!-- 검색창 + complete 분류 -->
             <v-spacer class="forLine0">
 
@@ -59,42 +58,44 @@
             <v-container class="lecture01 mr-9 hidden-sm-and-down">
                 <div v-show="!searchinOn">
                     <v-container class="lecture_box">
-                        <div v-for="mob in paginatedData2" :key="mob.boardNo" class="item">
+                        <div v-for="mob in paginatedData2" :key="mob[6]" class="item">
                             <div class="lecture_card">
-                                <div class="card_img">
+                                <div class="card_img" @click="goPage(mob[6])">
                                     <v-img :src="`http://localhost:7777/lecture/image/${mob[4]}/${mob[5]}`" height="200px" width="300px"></v-img>
                                 </div>
                                 <!-- description
                                 <div class="cardhover">
                                     {{ mob[6] }}
                                 </div> -->
-                                <div class="btn-plus"><span draggable="false"><v-icon color="white">mdi-cart</v-icon></span></div>
-                                <!-- title -->
-                                <div class="card_text01">
-                                    {{ mob[0] }}
-                                </div>
-                                <!-- nickname -->
-                                <div class="card_text02">
-                                    {{ mob[3] }}
-                                </div>
-                                <div class="card_text_gropu01">
-                                    <!-- rating -->
-                                    <div class="card_text03">
-                                        <v-rating
-                                        v-model="mob.rating"
-                                        background-color="orange lighten-3" small dense
-                                        color="orange" large readonly></v-rating>
+                                <div class="btn-plus"><span draggable="false"><v-icon color="white"  @click="toggleCartBtn(mob[6])">mdi-cart</v-icon></span></div>
+                                <h @click="goPage(mob[6])">    
+                                    <!-- title -->
+                                    <div class="card_text01">
+                                        {{ mob[0] }}
                                     </div>
-                                    <!-- grade -->
-                                    <div class="card_text04">
-                                        {{ mob[2] }}
+                                    <!-- nickname -->
+                                    <div class="card_text02">
+                                        {{ mob[3] }}
                                     </div>
-                                </div>
-                                <div class="forLine4"></div>
-                                <!-- price -->
-                                <div class="card_text05">
-                                    {{ mob[1]  | comma }}원
-                                </div>
+                                    <div class="card_text_gropu01">
+                                        <!-- rating -->
+                                        <div class="card_text03">
+                                            <v-rating
+                                            v-model="mob.rating"
+                                            background-color="orange lighten-3" small dense
+                                            color="orange" large readonly></v-rating>
+                                        </div>
+                                        <!-- grade -->
+                                        <div class="card_text04">
+                                            {{ mob[2] }}
+                                        </div>
+                                    </div>
+                                    <div class="forLine4"></div>
+                                    <!-- price -->
+                                    <div class="card_text05">
+                                        {{ mob[1]  | comma }}원
+                                    </div>
+                                </h>
                             </div>
                         </div>
                         <v-container style="margin-top:20px;">
@@ -110,8 +111,11 @@
                 <div v-show="!searchinOn">
                     <v-container class="lecture_box">
                         <div v-for="mob in paginatedData2" :key="mob.boardNo">
-                            <div class="mx-auto2">
-                                <div class="card_info">    
+                            <div class="mx-auto2" @click="goPage(mob[6])">
+                                <div class="card_img" @click="goPage(mob[6])">
+                                    <v-img :src="`http://localhost:7777/lecture/image/${mob[4]}/${mob[5]}`" height="150px" width="150px"></v-img>
+                                </div>
+                                <div class="card_info">                                    
                                     <div style="height:66px;"><!-- title -->
                                         {{mob[0]}}
                                     </div>
@@ -153,6 +157,7 @@
 <script>
 
 import { mapState, mapActions } from 'vuex'
+import axios from 'axios';
 
 export default {
     name: 'ForSaleLectureList',
@@ -268,6 +273,7 @@ export default {
         valueDeterminate: 15,
         rating: 5,
         path: '',
+        cart: null,
     }),
     watch: {
         word(newVal) {
@@ -329,6 +335,20 @@ export default {
         searchingWord(data) {
             this.fetchCallLectureListWithFilter(data)
             this.path = ''            
+        },
+        goPage(data) {
+            this.$router.push( { name: 'LectureDetailPage', params: { lectureId: data.toString() } } )
+        },
+        toggleCartBtn(data) {
+        axios.get(`http://localhost:7777/manageLecture/addToCart/${data}`)
+                .then(({ data }) => {
+                this.cart = data
+                if (data == true) {
+                    alert('장바구니에 담겼습니다.')
+                } else {
+                    alert('장바구니에서 제외됐습니다.')
+                }
+                })
         },
         ...mapActions(['fetchCallLectureListWithCategory']),
         ...mapActions(['fetchCallLectureListWithFilter'])
@@ -731,7 +751,6 @@ input:focus {
     font-size: 15px;
     font-weight: bold;
     color: #424242;
-
 }
 .v-list-group__items {
     background-color: white;
@@ -746,9 +765,9 @@ input:focus {
   border-radius: 3px;
 }
 .lecture_card:hover .cardhover {
-  opacity:1;
-  transform:scale(1);
-  transition: all 0.5s ease;
+    opacity:1;
+    transform:scale(1);
+    transition: all 0.5s ease;  
 }
 .lecture_card {
   z-index: 0;
@@ -855,4 +874,7 @@ input:focus {
 .text-center {
     width: 95vw;
 }
+a { text-decoration:none !important }
+a:hover { text-decoration:none !important }
+
 </style>
