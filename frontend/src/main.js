@@ -6,10 +6,16 @@ import vuetify from './plugins/vuetify'
 import VueCookies from 'vue-cookies'
 import vueMoment from 'vue-moment' //날짜 출력
 import mixin from './mixin'
+import VuePlyr from 'vue-plyr'
+import 'vue-plyr/dist/vue-plyr.css'
 
 import { TiptapVuetifyPlugin } from 'tiptap-vuetify'
 import 'tiptap-vuetify/dist/main.css'
 import 'vuetify/dist/vuetify.min.css'
+
+Vue.use(VuePlyr, {
+  plyr: {}
+})
 
 // bootstrap
 import BootstrapVue from 'bootstrap-vue'

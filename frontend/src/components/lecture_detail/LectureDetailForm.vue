@@ -67,7 +67,7 @@
 
                   <v-list-item
                     v-for="video in section.lectureVideoList"
-                    :key="video.id" link
+                    :key="video.id" link :to="`/lecture/${video.id}/${lectureDetailInfo.id}`"
                   >
                     <v-list-item-icon>
                       <v-icon>mdi-play-circle-outline</v-icon>

@@ -2,7 +2,7 @@
   <div>
     <main-banner></main-banner>
     <main-search-box></main-search-box>
-    <main-lecture-list :allLectureList="allLectureList"></main-lecture-list>
+    <main-lecture-list :allLectureList="allLectureList"/>
   </div>  
 </template>
 
@@ -21,6 +21,8 @@ export default {
   data() {
     return {
       allLectureList: [],
+      wish: null,
+      cart: null
     }
   },
   created() {
@@ -30,11 +32,10 @@ export default {
     fetchAllLecture() {
       axios.get(`${API_BASE_URL}/lecture/getLectureBanner/0`)
             .then(({ data }) => {
-              console.log(data)
-              //  console.log(JSON.stringify(data))
-              //  this.allLectureList = data;
+               console.log(data)
+               this.allLectureList = data.data.content;
             })
-    }
+    },
   },
 
 }
