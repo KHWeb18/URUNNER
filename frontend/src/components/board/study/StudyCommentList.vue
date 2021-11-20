@@ -74,13 +74,14 @@
 <script>
 
 import axios from 'axios'
+import Vue from 'vue'
 
 export default {
     name: 'CommentList',
     data () {
         return {
             content: '',
-            writer: this.$store.state.moduleA.email,
+            writer: Vue.$cookies.get("USER_NAME"),
             nickname: this.$store.state.moduleA.nickname,
             boardNo: '',
             refresh: 1,

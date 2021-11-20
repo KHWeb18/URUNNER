@@ -11,11 +11,14 @@
                             <!-- 섬네일 -->
                             <div class="thumbnail">
                                 <v-avatar color="black" size="48" >
-                                    <span><img :src="ImgRequest(mob.writer)" style="width:60px;height:60px;object-fit: cover"></span></v-avatar>
+                                    <span>
+                                        <!-- <img :src="ImgRequest(mob.writer)" style="width:60px;height:60px;object-fit: cover"> -->
+                                        <v-img :src="`http://localhost:7777/lecture/image/${mob.thumb_path}/${mob.writer}`" height="50px" width="50px"></v-img>
+                                        </span></v-avatar>
                             </div>
                             <!-- 댓글 박스 -->
                             <div class="post_box"  @click="temp00(mob)">
-                                <div class="post_title">{{ mob.nickname }}</div>
+                                <div class="post_title">{{ mob.nickname }} | {{mob.thumb_path}}/{{mob.writer}}</div>
                                 <div class="post_reg_date">{{ $moment(mob.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}</div>
                                 <div class="post_content">{{ mob.content }}</div>
                                 <!-- <div class="post_reg_date">commentNO: {{ mob[0] }}</div>
@@ -68,19 +71,21 @@
         <!-- 하단 밑줄용 -->
         <v-container class="button_container"></v-container>
         </div>
+        <v-btn @click="test()">테스트버튼</v-btn>
     </div>
 </template>
 
 <script>
 
 import axios from 'axios'
+import Vue from 'vue'
 
 export default {
     name: 'CommentList',
     data () {
         return {
             content: '',
-            writer: this.$store.state.moduleA.email,
+            writer: Vue.$cookies.get("USER_NAME"),
             nickname: this.$store.state.moduleA.nickname,
             boardNo: '',
             refresh: 1,
@@ -122,6 +127,9 @@ export default {
         }
     },
     methods: {
+        // test() {
+        //     console.log(Vue.$cookies.get("USER_NAME"))
+        // },
         submit () {
             console.log('저장하는 순간 store boardNo 값 : ' + this.$store.state.boardNo)
             if(this.layer==1) {

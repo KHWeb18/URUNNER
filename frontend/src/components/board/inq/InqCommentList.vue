@@ -71,6 +71,7 @@
 
 import axios from 'axios'
 import EditorForComment from '@/components/board/EditorForComment.vue'
+import Vue from 'vue'
 
 export default {
     name: 'CommentList',
@@ -80,7 +81,7 @@ export default {
     data () {
         return {
             content: '',
-            writer: this.$store.state.moduleA.email,
+            writer: Vue.$cookies.get("USER_NAME"),
             nickname: this.$store.state.moduleA.nickname,
             boardNo: '',
             refresh: 1,

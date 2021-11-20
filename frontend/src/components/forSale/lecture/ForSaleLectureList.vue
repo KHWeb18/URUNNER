@@ -369,6 +369,7 @@ export default {
 }
 .sideBar {
     margin: 60px 60px 0px 10vw;
+    cursor: pointer;
 }
 .mx-auto0.v-card.v-sheet.theme--light {
     width: 200px;

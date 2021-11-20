@@ -42,7 +42,7 @@ export default {
                     .then(res => {
                         this.$store.state.boardNo = res.data.boardNo.toString()
                         this.$router.push({
-                            name: 'QnABoardListPage'
+                            name: 'BoardCollectionPage'
                         })
                     })
                     .catch(res => {
