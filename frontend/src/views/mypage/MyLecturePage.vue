@@ -9,27 +9,22 @@
 <script>
 
 import MyLecture from '@/components/mypage/MyLecture.vue'
-// import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'MyLecturePage',
   components: {
     MyLecture
   },
-  data () {
-    return {
-      lectures : this.$store.state.myLecturelist
-    }
+  computed: {
+    ...mapState(['callLecturelist'])
+  },
+  mounted () {
+    this.fetchMyLectureList()
+  },
+  methods: {
+    ...mapActions(['fetchMyLectureList'])
   }
-  // computed: {
-  //   ...mapState(['lectures'])
-  // },
-  // mounted () {
-  //   this.fetchMyLectureList()
-  // },
-  // methods: {
-  //   ...mapActions(['fetchMyLectureList'])
-  // }
 }
 </script>
 

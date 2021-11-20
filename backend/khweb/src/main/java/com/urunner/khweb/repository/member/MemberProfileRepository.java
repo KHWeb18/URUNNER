@@ -1,5 +1,6 @@
 package com.urunner.khweb.repository.member;
 
+import com.urunner.khweb.controller.dto.mypage.ProfileRes;
 import com.urunner.khweb.entity.member.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -7,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MemberProfileRepository extends JpaRepository<Member, Long> {
 
@@ -34,4 +36,10 @@ public interface MemberProfileRepository extends JpaRepository<Member, Long> {
 
     @Query(value = "select introduce from member where email = :email", nativeQuery = true)
     String findMyIntroduce(String email);
+
+    @Query(value = "select member_no from member where email = :email", nativeQuery = true)
+    Long findMyMemberNo(String email);
+
+    @Query(value = "select member_no, introduce, thumb_path, nickname from member where email = :email", nativeQuery = true)
+    List<ProfileRes> findMyProfile(String email);
 }

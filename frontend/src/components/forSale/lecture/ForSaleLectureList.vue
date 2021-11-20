@@ -98,7 +98,7 @@
                             </div>
                         </div>
                         <v-container style="margin-top:20px;">
-                        <div class="text-center">
+                        <div>
                             <v-pagination class="btn_pagination" v-model="pageNum2" :length="pageCount2"></v-pagination>
                         </div>
                         </v-container>
@@ -111,9 +111,6 @@
                     <v-container class="lecture_box">
                         <div v-for="mob in paginatedData2" :key="mob.boardNo">
                             <div class="mx-auto2">
-                                <div>
-                                    <v-img :src="`http://localhost:7777/lecture/image/${mob[4]}/${mob[5]}`" height="160px" width="160px"></v-img>
-                                </div>
                                 <div class="card_info">    
                                     <div style="height:66px;"><!-- title -->
                                         {{mob[0]}}
@@ -142,12 +139,12 @@
                                 </div>
                             </div>
                         </div>
-                        <v-container style="margin-top:20px;">
-                        <div class="text-center">
-                            <v-pagination class="btn_pagination" v-model="pageNum2" :length="pageCount2"></v-pagination>
-                        </div>
-                        </v-container>
                     </v-container>
+                    <div style="margin-top:20px;">
+                    <div class="text-center">
+                        <v-pagination class="btn_pagination" v-model="pageNum2" :length="pageCount2"></v-pagination>
+                    </div>
+                    </div>
                 </div>
             </v-container>
         </div>
@@ -516,40 +513,6 @@ p {
   opacity:1;
   transform:scale(1);
 }
-.mx-auto:hover .btn-plus2 {
-  opacity:1;
-  transform:scale(1);
-}
-.mx-auto:hover .btn-plus3 {
-  opacity:1;
-  transform:scale(1);
-}
-.mx-auto:hover .btn-plus4 {
-  opacity:1;
-  transform:scale(1);
-}
-.mx-auto:hover .btn-plus_m {
-  opacity:1;
-  transform:scale(1);
-}
-.mx-auto:hover .btn-plus2_m {
-  opacity:1;
-  transform:scale(1);
-}
-.mx-auto:hover .btn-plus3_m {
-  opacity:1;
-  transform:scale(1);
-}
-.mx-auto:hover .btn-plus4_m {
-  opacity:1;
-  transform:scale(1);
-}
-
-
-.btn_pagination {
-    background-color: transparent;
-    box-shadow: none;
-}
 .nothing {
     width: 290px;
 }
@@ -566,151 +529,6 @@ p {
     width: 200px;
     cursor: pointer;
 }
-.btn-plus2 {
-  /* hover시 사진 어둡게 */
-  position:absolute;
-  top:0.001px;
-  background:rgba(0, 0, 0, 0.5);
-  width:250px;
-  height:200px;
-  text-align:center;
-  border-radius: 6px 6px 0px 0px;
-  cursor: pointer;
-  /* 추가된 부분 */
-  opacity:0;
-  transition:all .6s linear;
-}.btn-plus2 span {
-  font-size:2.3em;
-  color:#ffffff;
-  user-select:none;
-}
-.btn-plus2_m {
-  /* hover시 사진 어둡게 */
-  position:absolute;
-  top:0.001px;
-  background:rgba(0, 0, 0, 0.2);
-  width:250px;
-  height:200px;
-  text-align:center;
-  border-radius: 6px 6px 0px 0px;
-  cursor: pointer;
-  /* 추가된 부분 */
-  opacity:0;
-  transition:all .6s linear;
-}.btn-plus2_m span {
-  font-size:2.3em;
-  color:#ffffff;
-  user-select:none;
-}
-.btn-plus3 {
-  /* hover시 사진 어둡게 */
-  position:absolute;
-  top:155px;
-  width:470px;
-  height:400px;
-  text-align:center;
-  border-radius: 6px 6px 0px 0px;
-  cursor: pointer;
-  /* 추가된 부분 */
-  opacity:0;
-  transition:all .6s linear;
-}.btn-plus3 span {
-  font-size:2.3em;
-  color:#ffffff;
-  user-select:none;
-}
-.btn-plus4 {
-  /* hover시 사진 어둡게 */
-  position:absolute;
-  top:155px;
-  width:160px;
-  height:400px;
-  text-align:center;
-  border-radius: 6px 6px 0px 0px;
-  cursor: pointer;
-  /* 추가된 부분 */
-  opacity:0;
-  transition:all .6s linear;
-}.btn-plus4 span {
-  width: 10px;
-  font-size:2.3em;
-  color:#ffffff;
-  user-select:none;
-}
-.btn-plus_m {
-  position:absolute;
-  top:77.5px;
-  left:77.5px;
-  background:rgb(65, 84, 192, 0.8);
-  width:55px;
-  height:55px;
-  border-radius:50%;
-  text-align:center;
-  /* 추가된 부분 */
-  opacity:0;
-  transform:scale(2);
-  transition:all .3s linear;
-}
-.btn-plus_m span {
-  font-size:2.3em;
-  color:#ffffff;
-  user-select:none;
-}
-.btn-plus2_m {
-  /* hover시 사진 어둡게 */
-  position:absolute;
-  top:0.001px;
-  background:rgba(0, 0, 0, 0.5);
-  width:200px;
-  height:200px;
-  text-align:center;
-  border-radius: 6px 6px 0px 0px;
-  cursor: pointer;
-  /* 추가된 부분 */
-  opacity:0;
-  transition:all .6s linear;
-}.btn-plus2_m span {
-  font-size:2.3em;
-  color:#ffffff;
-  user-select:none;
-}
-.btn-plus3_m {
-  /* hover시 사진 어둡게 */
-  position:absolute;
-  top:155px;
-  width:370px;
-  height:400px;
-  text-align:center;
-  border-radius: 6px 6px 0px 0px;
-  cursor: pointer;
-  /* 추가된 부분 */
-  opacity:0;
-  transition:all .6s linear;
-}.btn-plus3_m span {
-  font-size:2.3em;
-  color:#ffffff;
-  user-select:none;
-}
-.btn-plus4_m {
-  /* hover시 사진 어둡게 */
-  position:absolute;
-  top:155px;
-  width:160px;
-  height:400px;
-  text-align:center;
-  border-radius: 6px 6px 0px 0px;
-  cursor: pointer;
-  /* 추가된 부분 */
-  opacity:0;
-  transition:all .6s linear;
-}.btn-plus4_m span {
-  width: 10px;
-  font-size:2.3em;
-  color:#ffffff;
-  user-select:none;
-}
-
-
 .tag_button {
     color: black;
     cursor: pointer;
@@ -795,21 +613,6 @@ input:focus {
     
     color: #424242;
     max-width:900px;
-}
-.temp {
-    font-size: 15px;
-    font-weight: bold;
-    color: #424242;
-    padding: 5px 10px 5px 10px;
-    margin-top: 10px;
-    height: 50px;
-
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    line-height: 25px;
-    -webkit-line-clamp: 2; /* 표시하고자 하는 라인 수 */
-    -webkit-box-orient: vertical;
 }
 .temp2 {
     font-size: 15px;
@@ -1043,5 +846,8 @@ input:focus {
 }
 .temp22 {
     margin-top:90px;
+}
+.text-center {
+    width: 95vw;
 }
 </style>

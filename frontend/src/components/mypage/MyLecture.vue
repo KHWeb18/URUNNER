@@ -129,7 +129,7 @@
     export default {
         name: 'MyLecture',
         props: {
-            myLecturelist: {
+            callLecturelist: {
                 type: Array
             },
             pageSize2: {
@@ -186,7 +186,7 @@
                 }
             },
             searching () {
-                var lists = this.myLecturelist
+                var lists = this.myLeccallLecturelistturelist
 
                 this.searchingResult = []
                 for(var i = 0; i < lists.length; i++){
@@ -209,7 +209,7 @@
         },
         computed: {
             pageCount2() {
-                let listLength = this.$store.state.myLecturelist.length, // 길이
+                let listLength = this.$store.state.callLecturelist.length, // 길이
                     listSize = this.pageSize2,
                     page = Math.floor(listLength / listSize);
                 if (listLength % listSize > 0) 
@@ -219,7 +219,7 @@
             paginatedData2() {
                 // const start = (this.pageNum2 - 1) * this.pageSize2,
                 //     end = start + this.pageSize2;
-                return this.$store.state.myLecturelist.slice(0, 10);
+                return this.$store.state.callLecturelist.slice(0, 10);
             },
         }
     }

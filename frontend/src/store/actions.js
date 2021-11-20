@@ -28,11 +28,10 @@ export default {
     },
     fetchMyIntroduce ({ commit }, userId) {
         return axios.get(`http://localhost:7777/profile/introduce/${userId}`)
-                .then((res) => {
-                    commit(FETCH_MY_INTRODUCE, res.data)
+                .then((res) => {                    
                     console.log('res데이타는')
                     console.log(res.data)
-                    this.$store.state.introduce = res.data
+                    commit(FETCH_MY_INTRODUCE, res.data)
                 })
     },
     // 공지사항
@@ -67,6 +66,7 @@ export default {
         return axios.get(`http://localhost:7777/freeboard/comment/${No}`)
                 .then((res) => {
                     commit(FETCH_COMMENT_LIST, res.data)
+                    console.log(res.data)
                 })
 
     },

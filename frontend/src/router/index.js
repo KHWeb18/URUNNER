@@ -72,10 +72,6 @@ export default new VueRouter({
       }, {
           path: '/memberRegister',
           component: () => import ('../views/MemberRegisterPage.vue')
-      }, {
-          path: '/memberProfile',
-          name: 'memberProfile',
-          component: () => import ('../views/MemberProfilePage.vue')
       },
       // 강의 관리 페이지 (강의 등록 시스템)
       {
@@ -163,6 +159,10 @@ export default new VueRouter({
             {
               path: '/myPostList',
               component: () => import("../components/mypage/MyPostList.vue")
+            },
+            {
+              path: '/memberProfile',
+              component: () => import("../views/MemberProfilePage.vue")
             }
           ]
       },

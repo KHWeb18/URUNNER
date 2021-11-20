@@ -22,8 +22,8 @@ export default {
     [FETCH_MEMBER] (state, member) {
         state.member = member
     },
-    [FETCH_MY_INTRODUCE] (state, introduce) {
-        state.introduce = introduce
+    [FETCH_MY_INTRODUCE] (state, profile) {
+        state.profile = profile
     },
     // 게시판
     [FETCH_BOARD_LIST] (state, boards) {
