@@ -2,7 +2,7 @@
     <div align="center">
         <notice-read v-if="notice" :notice="notice"/>
         <p v-else>로딩중 ...... </p>
-
+<!--
         <div class="버튼" style="padding:20px;">
             <router-link style="text-decoration: none; color:black" 
             :to="{ name: 'NoticeModifyPage', params: { noticeNo } }">
@@ -18,7 +18,7 @@
                 @click="onDelete">
                     삭제하기
             </v-btn>
-
+-->
             <br>
 
             <router-link style="text-decoration: none; color:black"
@@ -28,7 +28,7 @@
                 목록으로
                 </v-btn>
             </router-link>
-        </div>
+        <!--</div>-->
     </div>
 </template>
 <script>

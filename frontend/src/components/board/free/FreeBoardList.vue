@@ -1,13 +1,6 @@
 <template>
     <div class="main">
         <div class="main_box">
-            <!-- 제목 -->
-            <div class="mr-9 hidden-sm-and-down">
-                <div class="title_box">
-                    <h2 class="page_title">
-                        <span>자유 게시판</span></h2>
-                </div>
-            </div>
             <!-- 검색창 + complete 분류 -->
             <v-spacer class="forLine0">
                 <div class="forLine0sButton">
@@ -100,7 +93,7 @@
                                     </div>
                                 </router-link>
                                 <div class="post_name_box">
-                                    <div class="mr-9 hidden-sm-and-down"><div class="post_name">{{ mob.nickname }}</div>
+                                    <div class="mr-9 hidden-sm-and-down"><div v-show="mob.notice =='false'" class="post_name">{{ mob.nickname }}</div>
                                     </div>
                                 </div>
                             </div>
@@ -201,7 +194,7 @@
                                     </div>
                                 </router-link>
                                 <div class="post_name_box">
-                                    <div class="mr-9 hidden-sm-and-down"><div class="post_name">{{ mob.nickname }}</div>
+                                    <div class="mr-9 hidden-sm-and-down"><div v-show="mob.notice =='false'" class="post_name">{{ mob.nickname }}</div>
                                     </div>
                                 </div>
                             </div>
@@ -276,7 +269,7 @@ export default {
         pageSize: {
             type: Number,
             required: false,
-            default: 10
+            default: 20
         }
     },
     data() {
@@ -524,6 +517,15 @@ export default {
     font-size: 55px;
     font-weight: bold;
 }
+.title_box2 {
+    margin: 10px;
+    padding: 0px;
+    text-align: center;
+}
+.title_box2 span {
+    font-weight: bold;
+    color: #424242;
+}
 .option_box {
     display: flex;
     justify-content: flex-end;
@@ -558,7 +560,7 @@ export default {
 .searching:hover {
     display: flex;
     justify-content: space-between;
-    height: 43px; 
+    height: 43px;
     width: 350px;
     padding-left: 10px;
     max-width: 955px;
@@ -585,6 +587,18 @@ export default {
 input:focus {
     outline:none;
 }
+/* 
+input::placeholder {
+    transition: all 0.5s ease;
+}
+input:focus::placeholder {
+    color: #FFD54F;
+    transition: all 0.5s ease;
+}
+input:hover::placeholder {
+    color: #FFD54F;
+    transition: all 0.5s ease;
+} */
 .searching_message_box {
     display:flex;
     justify-content: center;
@@ -694,6 +708,7 @@ input:focus {
     color: #2b2b2b;
     max-width: 55vw;
     min-width: 450px;
+    margin-top: 8px;
 
     overflow: hidden;
     text-overflow: ellipsis;

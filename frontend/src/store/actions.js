@@ -11,7 +11,9 @@ import {
     // 스터디
     FETCH_STUDY_MEMBER_LIST,
     // 내학습
-    FETCH_MY_LECTURE_LIST
+    FETCH_MY_LECTURE_LIST,
+    // 회원 관리
+    FETCH_MEMBER_LIST,
 
 } from './mutation-types'
 
@@ -204,5 +206,12 @@ export default {
                 .then((res) => {
                     commit(FETCH_MY_LECTURE_LIST, res.data)
                 })
+    },
+    fetchMemberList({ commit }) {
+        return axios.get('http://localhost:7777/memberManagement/memberList')
+        .then( (res) => {
+            console.log(res.data)
+            commit(FETCH_MEMBER_LIST, res.data)
+        }).catch(err=>{alert(err.response.data.message)})
     }
 }

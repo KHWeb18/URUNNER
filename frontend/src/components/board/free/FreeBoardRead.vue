@@ -9,10 +9,10 @@
                             <div style="margin-top:20px;"><b>{{board.title}}</b></div>
                             <div class="post_tag">
                                 <div v-for="tag in classifyTag(board.tags)" :key="tag">
-                                        <btn class="tag_box_button">#{{ tag.text }}&nbsp;</btn>
+                                    <h v-show="board.notice == 'false'"><btn class="tag_box_button">#{{ tag.text }}&nbsp;</btn></h>
                                 </div>
-                                <div v-show="board.tags != '#'" class="post_tag_either">/&nbsp;</div>
-                                <div class="post_tag_either">{{board.nickname}} / 
+                                <div v-show="board.tags != '#'" class="post_tag_either"></div>
+                                <div class="post_tag_either"><h v-show="board.notice =='false'">&nbsp;/&nbsp;{{board.nickname}}&nbsp;/</h>
                                     {{ $moment(board.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}&nbsp;/&nbsp;
                                     <v-icon size="18px" color="#E57373" @click="appl(board.boardNo)">mdi-heart</v-icon> {{ board.currentNum}}</div>
                             </div>
@@ -113,7 +113,7 @@ export default {
     display: flex;
     justify-content: center;
     flex-direction: column;
-    width:100vw;
+    width:95vw;
     max-width: 1000px;
     margin: 0px;
 }
@@ -152,7 +152,7 @@ export default {
     border-style: none !important;
 }
 .searching_message_box {
-    width:100vw;
+    width:95vw;
     max-width: 1000px;
     display:flex;
     justify-content: center;

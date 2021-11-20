@@ -25,6 +25,9 @@ public class LectureDto {
     private String content;
     private String grade;
     private List<Category> category;
+    private boolean cart;
+
+    private boolean wishList;
 
     public LectureDto(Long id, String writer, String title, String desc, Long price, boolean inProgress, boolean discounted, String thumbPath, String detailPath, String content, String grade, List<Category> category) {
         this.id = id;
@@ -39,5 +42,14 @@ public class LectureDto {
         this.category = category;
         this.content = content;
         this.grade = grade;
+    }
+
+    public LectureDto(Long id, String writer, String title, Long price, boolean discounted, String thumbPath) {
+        this.id = id;
+        this.writer = writer;
+        this.title = title;
+        this.price = price;
+        this.discounted = discounted;
+        this.thumbPath = thumbPath;
     }
 }

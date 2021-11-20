@@ -4,7 +4,6 @@ package com.urunner.khweb.entity.lecture;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.urunner.khweb.entity.mypage.Cart;
 import com.urunner.khweb.entity.mypage.WishList;
-import com.urunner.khweb.entity.sort.Category;
 import com.urunner.khweb.entity.sort.CategoryLecture;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,10 +22,13 @@ public class Lecture {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long lecture_id;
 
+
+
     private String writer;
 
     private String title;
 
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String description;
 
     private Long price;
@@ -35,9 +37,12 @@ public class Lecture {
 
     private boolean discounted;
 
+
     private String thumb_path;
 
+
     private String detail_path;
+
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;

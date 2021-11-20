@@ -65,4 +65,16 @@ public interface LectureService {
     public  List<LectureDto> getAllLectureList();
 
     public Optional<LectureVideoInfo> getVideoInfo(Long lectureId);
+
+    public DtoWrapper lectureBanner(int page);
+
+    public DtoWrapper getVideoInfoDetail(Long id);
+
+    public DtoWrapper getCartList();
+
+    public DtoWrapper getWishList();
+
+    public DtoWrapper mainCartList(int page);
+
+    public DtoWrapper mainWishList(int page);
 }

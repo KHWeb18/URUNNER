@@ -1,6 +1,7 @@
 package com.urunner.khweb.entity.mypage;
 
 
+import com.urunner.khweb.entity.member.Member;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,7 +26,14 @@ public class MyPage {
 
     @OneToMany(mappedBy = "myPage", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CouponMyPage> couponList = new ArrayList<>();
-//  회원가입시 맵핑
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_no")
+    private Member member;
+
+    @OneToMany(mappedBy = "myPage", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<WishList> wishLists = new ArrayList<>();
+
     @Builder
     public MyPage(Long point) {
         this.point = point;
@@ -35,4 +43,7 @@ public class MyPage {
         this.point = point;
     }
 
+    public void setMember(Member member) {
+        this.member = member;
+    }
 }

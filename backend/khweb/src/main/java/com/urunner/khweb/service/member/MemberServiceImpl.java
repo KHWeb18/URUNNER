@@ -1,18 +1,26 @@
 package com.urunner.khweb.service.member;
 
 import com.urunner.khweb.controller.dto.MemberRes;
+import com.urunner.khweb.controller.dto.lecture.JoinInstructorDto;
+import com.urunner.khweb.entity.lecture.Instructor;
 import com.urunner.khweb.entity.member.AuthProvider;
 import com.urunner.khweb.entity.member.Member;
 import com.urunner.khweb.entity.member.Role;
+import com.urunner.khweb.entity.mypage.MyPage;
+import com.urunner.khweb.repository.lecture.InstructorRepository;
 import com.urunner.khweb.repository.member.MemberRepository;
 import com.urunner.khweb.repository.member.RoleRepository;
+import com.urunner.khweb.repository.mypage.MyPageRepository;
 import com.urunner.khweb.utility.PythonRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 //import org.springframework.mail.javamail.JavaMailSender;
 //import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -39,11 +47,14 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     private final MemberRepository memberRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final MyPageRepository myPageRepository;
+    private final InstructorRepository instructorRepository;
 
     @Override
     public boolean registerMember(MemberRes memberRes) throws Exception {
         Member member = new Member();
         Role role = new Role();
+        MyPage myPage = new MyPage(0L);
 
         //아이디 중복확인
         String memberEmail = memberRes.getEmail();
@@ -60,9 +71,10 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
             member.setProvider(AuthProvider.local);
             role.setName("ROLE_USER");
             role.setMember(member);
+            myPage.setMember(member);
 
             roleRepository.save(role);
-
+            myPageRepository.save(myPage);
             memberRepository.save(member);
 
             log.info("가입성공");
@@ -195,6 +207,67 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
         member.changePassword(memberRes);
 
         memberRepository.save(member);
+    }
+
+    @Override
+    public void getManager(String email) throws Exception {
+
+        Role role = new Role();
+
+        Member member1 = memberRepository.findByEmail(email);
+        if (member1 != null) {
+
+            log.info("아이디 찾았습니다!");
+
+            role.setName("ROLE_MANAGER");
+            role.setMember(member1);
+
+            roleRepository.save(role);
+
+
+
+            log.info("관리자 변경 성공");
+
+
+        }
+    }
+    @Override
+    public boolean joinInstructor(JoinInstructorDto joinInstructorDto) {
+
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+            Role role = new Role();
+            Instructor instructor = Instructor.builder()
+                    .description(joinInstructorDto.getDescription())
+                    .tags(joinInstructorDto.getTags())
+                    .build();
+            Member member = memberRepository.findByEmail(authentication.getName());
+
+
+            if (member.getRoles().stream().anyMatch(r -> r.getName().equals("ROLE_ADMIN"))) {
+                log.info("이미등록된강의자");
+                throw new DuplicateKeyException("이미 등록된 강의자");
+            }
+
+            role.setName("ROLE_ADMIN");
+            role.setMember(member);
+            instructor.setRole(role);
+
+
+
+            roleRepository.save(role);
+            instructorRepository.save(instructor);
+
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    // 회원 조회
+    @Override
+    public List<Member> memberList() throws Exception {
+        return memberRepository.findAll();
     }
 }
 

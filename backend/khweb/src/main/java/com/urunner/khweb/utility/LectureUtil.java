@@ -10,6 +10,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -35,6 +36,7 @@ public class LectureUtil {
     @Autowired
     LectureRepository lectureRepository;
 
+    @Transactional
     public void deleteUtil(String form, String delPath){
 
         ClassPathResource resource;
@@ -50,6 +52,7 @@ public class LectureUtil {
         try {
             Path path = Paths.get(resource.getURI());
             String dirPath = path.toString() + "/" + authentication() + "/" + delPath;
+            System.out.println("위치 디렉토리 : " + dirPath);
 
             File file = new File(dirPath);
 
@@ -59,6 +62,7 @@ public class LectureUtil {
 //                원본파일이 잡혀있어서 삭제가 안되는경우
 //                file.delete();
                 System.gc();
+                System.runFinalization();
                 boolean delete = file.delete();
                 System.out.println("삭제여부" + delete);
             }else {

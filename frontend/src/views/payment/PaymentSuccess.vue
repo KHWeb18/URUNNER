@@ -14,7 +14,9 @@ export default {
         return{
             amount:'',
             oderId:'',
-            paymentKey:''
+            paymentKey:'',
+            orderName:'',
+            customerName:''
         }
     },
     mounted(){

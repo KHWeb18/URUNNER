@@ -5,9 +5,15 @@ import com.urunner.khweb.entity.lecture.Lecture;
 //import com.urunner.khweb.entity.lecture.LectureImage;
 import com.urunner.khweb.entity.lecture.LectureList;
 import com.urunner.khweb.entity.lecture.LectureVideo;
+import com.urunner.khweb.entity.member.Member;
+import com.urunner.khweb.entity.mypage.Cart;
+
+import com.urunner.khweb.entity.mypage.WishList;
 import com.urunner.khweb.entity.sort.Category;
 import com.urunner.khweb.entity.sort.CategoryLecture;
 import com.urunner.khweb.repository.lecture.*;
+import com.urunner.khweb.repository.member.MemberRepository;
+import com.urunner.khweb.repository.mypage.WishListRepository;
 import com.urunner.khweb.utility.LectureUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +27,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.naming.AuthenticationException;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
 import java.io.File;
@@ -49,6 +57,9 @@ public class LectureServiceImpl implements LectureService {
     @Autowired
     private LectureRepository lectureRepository;
 
+    @Autowired
+    private MemberRepository memberRepository;
+
 //    @Autowired
 //    private LectureImageRepository LectureImageRepository;
 
@@ -60,7 +71,6 @@ public class LectureServiceImpl implements LectureService {
 
     @Autowired
     private LectureUtil lectureUtil;
-
 
 //    @Override
 //    public void lectureVideo(LectureVideo lectureVideo, EnrollLectureVideoDto enrollLectureVideoDto) {
@@ -100,10 +110,15 @@ public class LectureServiceImpl implements LectureService {
 //        lectureImage.setLecture(lecture);
 //
 //        System.out.println(lectureImage.getThumb_path());
-
-        lecture.setLectureThumb(thum);
-
-        lecture.setLectureDetail(detail);
+        try {
+            if (lecture.getThumb_path() != null && lecture.getDetail_path() != null) {
+                lectureUtil.deleteUtil("image", lecture.getThumb_path());
+                lectureUtil.deleteUtil("image", lecture.getDetail_path());
+            }
+        } finally {
+            lecture.setLectureThumb(thum);
+            lecture.setLectureDetail(detail);
+        }
 
         lectureRepository.save(lecture);
     }
@@ -323,6 +338,50 @@ public class LectureServiceImpl implements LectureService {
     }
 
     @Override
+    public DtoWrapper getVideoInfoDetail(Long id) {
+
+        Optional<LectureVideo> videoInfo = lectureVideoRepository.findById(id);
+
+        return new DtoWrapper(videoInfo.map(l -> new LectureVideoDto(l.getTitle(), l.getDescription(), l.getDuration())));
+    }
+
+    @Override
+    public DtoWrapper mainCartList(int page) {
+
+        String query = "select l from Lecture l join l.cartList cl join cl.myPage mp join mp.member m " +
+                "where m.email = :email";
+
+        List<Lecture> email = em.createQuery(query, Lecture.class)
+                .setParameter("email", authentication())
+                .setFirstResult(page)
+                .setMaxResults(5)
+                .getResultList();
+
+        List<LectureDto> lectureDtos = email.stream().map(l ->
+                new LectureDto(l.getLecture_id(), l.getWriter(), l.getTitle(), l.getPrice(), l.isDiscounted(), l.getThumb_path())).collect(Collectors.toList());
+
+        return new DtoWrapper(lectureDtos);
+    }
+
+    @Override
+    public DtoWrapper mainWishList(int page) {
+
+        String query = "select l from Lecture l join l.wishList cl join cl.myPage mp join mp.member m " +
+                "where m.email = :email";
+
+        List<Lecture> email = em.createQuery(query, Lecture.class)
+                .setParameter("email", authentication())
+                .setFirstResult(page)
+                .setMaxResults(5)
+                .getResultList();
+
+        List<LectureDto> lectureDtos = email.stream().map(l ->
+                new LectureDto(l.getLecture_id(), l.getWriter(), l.getTitle(), l.getPrice(), l.isDiscounted(), l.getThumb_path())).collect(Collectors.toList());
+
+        return new DtoWrapper(lectureDtos);
+    }
+
+    @Override
     public List<LectureDto> getAllLectureList() {
         List<Lecture> findAllLectureList = lectureRepository.findAll();
 
@@ -338,23 +397,132 @@ public class LectureServiceImpl implements LectureService {
                                 getResultList()
                 )).collect(Collectors.toList());
     }
+    //  옳게 된 쿼리
+    @Override
+    public DtoWrapper lectureBanner(int page) {
 
+        PageRequest pageRequest = PageRequest.of(page, 4);
+
+        Page<Lecture> findAllLecture = lectureRepository.findByInProgressTrue(true, pageRequest);
+
+        Page<LectureDto> lectureDtos = findAllLecture.map(l ->
+                new LectureDto(l.getLecture_id(), l.getWriter(), l.getTitle(),
+                        l.getDescription(), l.getPrice(), l.isInProgress(),
+                        l.isDiscounted(), l.getThumb_path(), l.getDetail_path(), l.getContent(), l.getGrade(),
+                        l.getCategoryList().stream().map(CategoryLecture::getCategory).collect(Collectors.toList())
+                ));
+
+        String username = authentication();
+        if (username.equals("anonymousUser")) {
+            log.info("로그인 되있지않은 사용자");
+        } else {
+            Member member = memberRepository.findByEmail(username);
+
+//            시간되면 fetch join으로 가져오기
+            List<Cart> carts = new ArrayList<>(member.getMyPage().getCartList());
+
+            List<WishList> wishLists = new ArrayList<>(member.getMyPage().getWishLists());
+
+            if (wishLists.size() != 0) {
+                for (int i = 0; i < lectureDtos.getContent().size(); i++) {
+                    for (int j = 0; j < wishLists.size(); j++) {
+                        boolean exist = lectureDtos.getContent().get(i).getId().equals(wishLists.get(j).getLecture().getLecture_id());
+                        System.out.println("매칭 여부 확인 : " + exist);
+                        if (exist) {
+                            lectureDtos.getContent().get(i).setWishList(true);
+                        }
+                    }
+                }
+            }
+
+            if (carts.size() != 0) {
+                for (int i = 0; i < lectureDtos.getContent().size(); i++) {
+                    for (int j = 0; j < carts.size(); j++) {
+                        boolean exist = lectureDtos.getContent().get(i).getId().equals(carts.get(j).getLecture().getLecture_id());
+                        System.out.println("매칭 여부 확인 : " + exist);
+                        if (exist) {
+                            lectureDtos.getContent().get(i).setCart(true);
+                        }
+                    }
+                }
+            }
+
+//            for (int i = 0; i < lectureDtos.getSize(); i++) {
+//                System.out.println("강의 dto 사이즈 " +lectureDtos.getSize());
+//                for (int j = 0; j < carts.size(); j++) {
+//                    System.out.println("카트 사이즈" + carts.size());
+//                    int z = i;
+//                    System.out.println("임시 카운트 : " + z);
+//            for (int i = 0; i < lectureDtos.getSize(); i++) {
+//                int j = i;
+////                boolean b = carts.stream().anyMatch(cart -> cart.getLecture().getLecture_id().equals(lectureDtos.get.get(j).getId()));
+//                boolean b = lectureDtos.stream().anyMatch(lectureDto -> lectureDto.getId().equals(carts.get(j).getId()));
+//                System.out.println("매칭 여부 " + b);
+//            }
+//                }
+//            }
+
+
+
+        }
+
+
+
+        log.info(findAllLecture.get().findFirst().get().getCategoryList().toString());
+
+        return new DtoWrapper(lectureDtos);
+    }
+
+    @Override
+    public DtoWrapper getCartList() {
+
+        String query = "select l from Lecture l join l.cartList cl join cl.myPage mp join mp.member m " +
+                "where m.email = :email";
+
+        List<Lecture> lectureList = em.createQuery(query, Lecture.class)
+                .setParameter("email", authentication())
+                .getResultList();
+
+        List<LectureDto> lectureDtos = lectureList.stream().map(l ->
+                new LectureDto(l.getLecture_id(), l.getWriter(), l.getTitle(), l.getPrice(), l.isDiscounted(), l.getThumb_path())).collect(Collectors.toList());
+
+        return new DtoWrapper(lectureDtos);
+    }
+
+    @Override
+    public DtoWrapper getWishList() {
+        String query = "select l from Lecture l join l.wishList cl join cl.myPage mp join mp.member m " +
+                "where m.email = :email";
+
+        List<Lecture> lectureList = em.createQuery(query, Lecture.class)
+                .setParameter("email", authentication())
+                .getResultList();
+
+        List<LectureDto> lectureDtos = lectureList.stream().map(l ->
+                new LectureDto(l.getLecture_id(), l.getWriter(), l.getTitle(), l.getPrice(), l.isDiscounted(), l.getThumb_path())).collect(Collectors.toList());
+
+        return new DtoWrapper(lectureDtos);
+    }
+
+    //   심각하게 잘못된 쿼리
     @Transactional(readOnly = true)
     @Override
     public List<LectureDto> getLectureList(String writer) {
 
         List<Lecture> findAllLecture = lectureRepository.findByWriter(writer);
-//      적합한 쿼리
+//      부적합한 쿼리 N + 1
         String query = "select c from Category c join CategoryLecture cl on cl.category = c " +
                 "join Lecture l on l = cl.lecture where l.id = :lectureId";
-//      부적합한 쿼리
+//      부적합한 쿼리 N + 1
 //        String query = "select c from Category c join fetch c.lectureList cl " +
 //                "join fetch cl.lecture l where l.id = :lectureId";
+
+//        fetch join을 위에서 사용해야됨
 
         return findAllLecture.stream().map(l ->
                 new LectureDto(l.getLecture_id(), l.getWriter(), l.getTitle(),
                         l.getDescription(), l.getPrice(), l.isInProgress(),
-                        l.isDiscounted(), l.getThumb_path(), l.getDetail_path(),  l.getContent(), l.getGrade(),
+                        l.isDiscounted(), l.getThumb_path(), l.getDetail_path(), l.getContent(), l.getGrade(),
                         em.createQuery(query, Category.class)
                                 .setParameter("lectureId", l.getLecture_id()).
                                 getResultList()
@@ -441,18 +609,41 @@ public class LectureServiceImpl implements LectureService {
 
     @Override
     public void deleteLecture(Long lectureId) {
-        Optional<Lecture> lecture = lectureRepository.findById(lectureId);
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        try {
+            String query = "select l from Lecture l join l.lectureLists li join li.lectureVideos where l.lecture_id = :id";
 
-        lecture.orElseThrow(() -> new NoSuchElementException());
-//        ispresnet ifpresent 구분 주의
-        lecture.filter(l -> authentication.getName().equals(l.getWriter()))
-                .ifPresent(l -> {
-                    l.setLectureDetail(null);
-                    lectureRepository.deleteById(l.getLecture_id());
-                });
-//        파일 삭제 아직 미구현
+            Lecture lecture1 = em.createQuery(query, Lecture.class)
+                    .setParameter("id", lectureId)
+                    .getSingleResult();
+
+            List<LectureList> lectureLists = lecture1.getLectureLists();
+
+            if (lecture1.getThumb_path() != null && lecture1.getDetail_path() != null) {
+                lectureUtil.deleteUtil("image", lecture1.getThumb_path());
+                lectureUtil.deleteUtil("image", lecture1.getDetail_path());
+            }
+
+            for (int i = 0; i < lectureLists.size(); i++) {
+                for (int j = 0; j < lectureLists.get(i).getLectureVideos().size(); j++) {
+                    lectureUtil.deleteUtil("video", lectureLists.get(i).getLectureVideos().get(j).getVideoPath());
+                }
+            }
+
+        } catch (NoResultException re) {
+            log.info("error");
+        } finally {
+
+            Optional<Lecture> lecture = lectureRepository.findById(lectureId);
+
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+            lecture.filter(l -> authentication.getName().equals(l.getWriter()))
+                    .ifPresent(l -> {
+                        l.setLectureDetail(null);
+                        lectureRepository.deleteById(l.getLecture_id());
+                    });
+        }
     }
 
     @Override

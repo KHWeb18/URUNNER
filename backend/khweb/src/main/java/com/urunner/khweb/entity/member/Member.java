@@ -1,12 +1,16 @@
 package com.urunner.khweb.entity.member;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.urunner.khweb.controller.dto.MemberRes;
+import com.urunner.khweb.entity.lecture.PurchasedLecture;
+import com.urunner.khweb.entity.mypage.MyPage;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,6 +35,8 @@ public class Member {
     private String introduce;
     private String nickname;
 
+
+
     @CreationTimestamp
     private Date regDate;
 
@@ -40,6 +46,14 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private AuthProvider provider;
 
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @JoinColumn(name = "member_no")
+    private List<PurchasedLecture> purchasedLectureList = new ArrayList<>();
+
+    public void addPurchasedLecture(PurchasedLecture purchasedLecture){
+        purchasedLecture.setMemberNo(this.memberNo);
+        purchasedLectureList.add(purchasedLecture);
+    }
 
     public Member(String email, String password, String name, String introduce,String nickname) {
 
@@ -50,9 +64,13 @@ public class Member {
         this.introduce = introduce;
 
     }
-
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "member", orphanRemoval = true)
     private Collection<Role> roles = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "member", orphanRemoval = true)
+    private MyPage myPage;
 
     public void setEmail(String email) {
         this.email = email;
@@ -85,4 +103,5 @@ public class Member {
     public void setProvider(AuthProvider provider) {
         this.provider = provider;
     }
+
 }

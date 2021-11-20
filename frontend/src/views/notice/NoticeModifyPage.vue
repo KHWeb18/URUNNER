@@ -33,7 +33,7 @@ export default {
                     .then(() => {
                         alert('수정 되었습니다.')
                         this.$router.push({
-                            name: 'NoticeReadPage'
+                            name: 'ManagerNoticeReadPage'
                         })
                     })
         }

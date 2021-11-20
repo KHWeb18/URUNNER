@@ -4,12 +4,12 @@
     <div class="게시물목록">
         <notice-list :notices="notices"/>
     </div>
-        <router-link :to="{ name: 'NoticeRegisterPage' }" style="text-decoration: none;">
+        <!--<router-link :to="{ name: 'ManagerNoticeRegister' }" style="text-decoration: none;">
             <v-btn text color="black" rounded x-large
                 style="padding: 10px; width: 90px;">
             글쓰기
             </v-btn>
-        </router-link>
+        </router-link>-->
     </div>
 </template>
 

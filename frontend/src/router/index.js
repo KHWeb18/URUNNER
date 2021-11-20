@@ -7,6 +7,8 @@ import LeaveMemberPage from '@/views/member/LeaveMemberPage.vue'
 //마이 페이지
 import MyPageStatus from '@/views/mypage/MyPageStatus.vue'
 
+
+import BoardCollectionPage from '@/views/board/BoardCollectionPage.vue'
 // 게시판
 import FreeBoardListPage from '@/views/board/free/BoardListPage.vue'
 import FreeBoardRegisterPage from '@/views/board/free/BoardRegisterPage.vue'
@@ -43,8 +45,15 @@ import InqBoardListForUserPage from '@/views/board/inq/InqBoardListForUserPage.v
 import InqBoardReadPage from '@/views/board/inq/InqBoardReadPage.vue'
 import InqBoardModifyPage from '@/views/board/inq/InqBoardModifyPage.vue'
 
-// 내학습
-import MyLecturePage from '@/views/mypage/MyLecturePage.vue'
+// 홈페이지 소개
+import IntroducePage from '@/views/urunner/IntroducePage.vue'
+
+// 관리자 페이지
+import ManagerPage from '@/views/manager/ManagerPage.vue'
+import ManagerNoticeListPage from '@/views/manager/ManagerNoticeListPage.vue'
+import ManagerNoticeRegisterPage from '@/views/manager/ManagerNoticeRegisterPage.vue'
+import ManagerNoticeReadPage from '@/views/manager/ManagerNoticeReadPage.vue'
+import ManagerMemberList from '@/views/manager/ManagerMemberList'
 
 Vue.use(VueRouter)
 
@@ -97,6 +106,12 @@ export default new VueRouter({
         path: '/course/:lectureId',
         component: () => import ('../views/lecture_detail/LectureDetailPage.vue'),
      },
+      //강의 영상 재생 페이지
+      {
+        path: '/lecture/:videoId/:lectureId',
+        component: () => import ('../views/lecture_detail/play/LectureVideoPlayPage.vue'),
+        props: true
+      },
       // 회원 탈퇴
       {
           path: '/leave-member',
@@ -133,7 +148,6 @@ export default new VueRouter({
               }, {
                 path: '/changepw',
                 component: () => import ("../components/ChangePasswordForm.vue")
-
             },
             {
               path: '/coupons',
@@ -142,6 +156,14 @@ export default new VueRouter({
             {
               path: '/my-points',
               component: () => import("../components/enrolment/Mypoints.vue")
+            },
+            {
+              path: '/myLecture',
+              component: () => import("../components/mypage/MyLecture.vue")
+            },
+            {
+              path: '/myPostList',
+              component: () => import("../components/mypage/MyPostList.vue")
             }
           ]
       },
@@ -152,6 +174,13 @@ export default new VueRouter({
       {
         path: '/orders',
         component: () => import("../components/enrolment/Orders.vue")
+      },
+      {
+        path: '/boardCol',
+        name: 'BoardCollectionPage',
+        components: {
+          default: BoardCollectionPage
+        }
       },
       {
         path: '/freeBoard',
@@ -366,18 +395,56 @@ export default new VueRouter({
           default: true
         }
       },
-      // Mypage MyLecture(내학습)
+      //홈페이지 소개
       {
-        path: '/mypage/myLecture',
-        name: 'MyLecturePage',
+        path: '/intro',
+        name: 'IntroducePage',
         components: {
-          default: MyLecturePage
+          default: IntroducePage
+        }
+      },
+      {
+        path: '/manager',
+        name: 'ManagerPage',
+        components: {
+          default: ManagerPage
+        }
+      },
+      {
+        path: '/ManagerNoticeListPage',
+        name: 'ManagerNoticeListPage',
+        components: {
+          default: ManagerNoticeListPage
+        }
+      },
+      {
+        path: '/ManagerNoticeRegister',
+        name: 'ManagerNoticeRegisterPage',
+        components: {
+          default: ManagerNoticeRegisterPage
+        }
+      },
+      {
+        path: '/manager/:noticeNo',
+        name: 'ManagerNoticeReadPage',
+        components: {
+          default: ManagerNoticeReadPage
+        },
+        props: {
+          default: true
+        }
+      },
+      {
+        path: '/ManagerMemberList',
+        name: 'ManagerMemberList',
+        components: {
+          default: ManagerMemberList
         }
       },
       {
         path: '/*',
         component: () => import( "../util/Oauth")
-      }
+      },
   ]
 })
 
