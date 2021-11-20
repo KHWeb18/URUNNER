@@ -15,7 +15,7 @@ public class CallLectureServiceImpl implements CallLectureService {
 
     @Autowired
     private CallLectureRepository repository;
-
+  
     public List<Object[]> selectLectureList() {
         return repository.selectLectureList();
     }
@@ -27,6 +27,4 @@ public class CallLectureServiceImpl implements CallLectureService {
     public List<Object[]> selectLectureListWithWord(String word) {
         return repository.selectLectureListWithWord(word);
     }
-
-
 }

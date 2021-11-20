@@ -23,7 +23,7 @@ export default {
         this.fetchCallLectureList()
     },
     methods: {
-        ...mapActions(['fetchCallLectureList'])        
+        ...mapActions(['fetchCallLectureList'])
     }
 }
 
