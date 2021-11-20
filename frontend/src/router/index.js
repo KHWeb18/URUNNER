@@ -107,6 +107,12 @@ export default new VueRouter({
         path: '/course/:lectureId',
         component: () => import ('../views/lecture_detail/LectureDetailPage.vue'),
      },
+     //강의 영상 재생 페이지
+     {
+       path: '/lecture/:videoId/:lectureId',
+       component: () => import ('../views/lecture_detail/play/LectureVideoPlayPage.vue'),
+       props: true
+     },
       // 회원 탈퇴
       {
           path: '/leave-member',
