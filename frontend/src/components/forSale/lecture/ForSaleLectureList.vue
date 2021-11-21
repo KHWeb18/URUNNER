@@ -25,6 +25,39 @@
                     </v-list-group>
                 </v-list>
             </v-card>
+            <div class="side_bar_option">
+                <div class="forCheckBox">
+                    <span style="padding-left:2px;">난이도 선택</span>
+                    <div class="ratingLineAll" @click="difValue=null">전체 선택</div>
+                    <div class="priceLine" :class="{ on : difValue=='중급 이상' }" @click="difValue='중급 이상'">중급 이상</div>
+                    <div class="priceLine" :class="{ on : difValue=='초급' }" @click="difValue='초급'">초급</div>
+                    <div class="priceLine" :class="{ on : difValue=='입문' }" @click="difValue='입문'">입문</div>
+                </div>
+                <div class="forCheckBox">
+                    <span style="padding-left:2px;">별점 선택</span>
+                        <div class="ratingLineAll" @click="ratingValue=null">전체 선택</div>
+                        <div class="ratingLine" :class="{ on : ratingValue==4 }" @click="ratingValue=4">
+                            <div><v-rating v-model="temp04" background-color="orange lighten-3" 
+                        small dense color="orange" large readonly></v-rating></div><div class="ratingLineText">4점 이상</div></div>
+                        <div class="ratingLine" :class="{ on : ratingValue==3 }" @click="ratingValue=3">
+                            <div><v-rating v-model="temp03" background-color="orange lighten-3" 
+                        small dense color="orange" large readonly></v-rating></div><div class="ratingLineText">3점 이상</div></div>
+                        <div class="ratingLine" :class="{ on : ratingValue==2 }" @click="ratingValue=2">
+                            <div><v-rating v-model="temp02" background-color="orange lighten-3" 
+                        small dense color="orange" large readonly></v-rating></div><div class="ratingLineText">2점 이상</div></div>
+                        <div class="ratingLine" :class="{ on : ratingValue==1 }" @click="ratingValue=1">
+                            <div><v-rating v-model="temp01" background-color="orange lighten-3" 
+                        small dense color="orange" large readonly></v-rating></div><div class="ratingLineText">1점 이상</div></div>
+                </div>
+                <div class="forCheckBox">
+                    <span style="padding-left:2px;">가격</span>
+                    <div class="ratingLineAll" @click="priceValue=null">전체 선택</div>
+                    <div class="priceLine" :class="{ on : priceValue==50000 }" @click="priceValue=50000">5만원 이하</div>
+                    <div class="priceLine" :class="{ on : priceValue==100000 }" @click="priceValue=100000">10만원 이하</div>
+                    <div class="priceLine" :class="{ on : priceValue==200000 }" @click="priceValue=200000">20만원 이하</div>
+                    <div class="priceLine" :class="{ on : priceValue==400000 }" @click="priceValue=400000">40만원 이하</div>
+                </div>
+            </div>
         </div>
         <!-- 본문 -->
         <div class="main_box">
@@ -50,9 +83,9 @@
             </v-spacer>
             <!-- 분류창 -->
             <v-spacer class="forLine">
-                <h class="tag_button" @click="callAll(), word = '', path = '' ">ALL</h>&nbsp;&nbsp;&nbsp;
-                <h> > </h>&nbsp;&nbsp;&nbsp;
-                <h class="tag_button">{{ path }}</h>
+                <b class="tag_button" @click="callAll(), word = '', path = '' ">ALL</b>&nbsp;&nbsp;&nbsp;
+                <b> ＞ </b>&nbsp;&nbsp;&nbsp;
+                <b class="tag_button">{{ path }}</b>
             </v-spacer>
             <!-- 리스트 -->
             <v-container class="lecture01 mr-9 hidden-sm-and-down">
@@ -68,7 +101,7 @@
                                     {{ mob[6] }}
                                 </div> -->
                                 <div class="btn-plus"><span draggable="false"><v-icon color="white"  @click="toggleCartBtn(mob[6])">mdi-cart</v-icon></span></div>
-                                <h @click="goPage(mob[6])">    
+                                <b @click="goPage(mob[6])">    
                                     <!-- title -->
                                     <div class="card_text01">
                                         {{ mob[0] }}
@@ -95,7 +128,7 @@
                                     <div class="card_text05">
                                         {{ mob[1]  | comma }}원
                                     </div>
-                                </h>
+                                </b>
                             </div>
                         </div>
                         <v-container style="margin-top:20px;">
@@ -274,13 +307,51 @@ export default {
         rating: 5,
         path: '',
         cart: null,
+        difValue: null,
+        priceValue: null,
+        ratingValue: 0,
+        temp04: 4,
+        temp03: 3,
+        temp02: 2,
+        temp01: 1,
+        copiedList: [],
+        refreshCheck: 1
     }),
+    created () {
+        this.copiedList = this.callLecturelist
+    },
     watch: {
         word(newVal) {
             if(newVal == '') {
                 setTimeout(() => {
                     this.searchinOn = false
                     }, 200)
+            }
+        },
+        difValue() {
+            this.sideBarFilter()
+        },
+        priceValue() {
+            console.log('watchedStep:) this.priceValue : ' + this.priceValue)
+            this.sideBarFilter()
+        },
+        tempValue() {
+            switch(this.tempValue) {
+                case null:
+                    this.$emit("callAll", {})
+                    console.log('watch감지, 전체 리스트를 불러옵니다.')
+                    break;
+                case '중급 이상':
+                    console.log('watch감지, 중급 이상 리스트를 불러옵니다.')
+                    break;
+                case '초급':
+                    console.log('watch감지, 초급 리스트를 불러옵니다.')
+                    break;
+                case '입문':
+                    console.log('watch감지, 입문 리스트를 불러옵니다.')
+                    break;
+                default:
+                    break;
             }
         }
     },
@@ -327,6 +398,9 @@ export default {
         },
         selectCategory(data) {
             this.fetchCallLectureListWithCategory(data.value)
+            .then(() => {
+                this.copiedList = this.callLecturelist
+                })
             this.path = data.title
         },
         callAll() {
@@ -350,13 +424,78 @@ export default {
                 }
                 })
         },
+        sideBarFilter() {
+            console.log('변동감지')
+            '일단 각 변수값 체크하고 굴리자 null이면 ㄴ 값이 있으면 ㄱ'
+            // 초기화
+            var tempLists = this.copiedList            
+            var searchingResult = []
+            var searchingResult2 = []
+
+            if(this.difValue !== null) {
+                for(var i = 0; i < tempLists.length; i++){                    
+                    const regex = new RegExp(this.difValue, "gi");
+                    const comparison = regex.test(tempLists[i][2])
+                    if(comparison){
+                        searchingResult.push(tempLists[i])
+                    }
+                }
+            } else if (this.difValue == null) {
+                console.log('this.difValue == null')
+                searchingResult = tempLists
+            }
+
+
+            if(this.priceValue !== null) {
+                console.log('searchingResult.length : ' + searchingResult.length)
+                for(var j = 0; j < searchingResult.length; j++){
+                    if(searchingResult[j][1] < this.priceValue) {
+                        console.log('true')
+                        console.log('searchingResult[j][2] : ' + searchingResult[j][1])
+                        console.log(' <= ')
+                        console.log('this.priceValue : ' + this.priceValue)
+                        searchingResult2.push(searchingResult[j])
+                    }
+                }
+            } else if (this.priceValue == null) {
+                console.log('this.priceValue == null')
+                searchingResult2 = searchingResult
+            }
+
+            // if(this.priceValue == null && this.difValue == null) {
+            //     searchingResult2 = tempLists
+            // }
+            // if(this.priceValue !== null) {
+            //     for(var j = 0; j < tempLists.length; j++){                    
+            //         const regex = new RegExp(this.priceValue, "gi");
+            //         const comparison = regex.test(tempLists[j][1])
+            //         if(comparison){
+            //             searchingResult.push(tempLists[j])
+            //         }
+            //     }
+            // }
+            // if(this.ratingValue !== null) {
+            //     for(var k = 0; k < tempLists.length; k++){                    
+            //         const regex = new RegExp(this.ratingValue, "gi");
+            //         const comparison = regex.test(tempLists[k][7])
+            //         if(comparison){
+            //             searchingResult.push(tempLists[k])
+            //         }
+            //     }
+            // }
+
+            this.callLecturelist = searchingResult2
+            console.log('태그 결과')
+            console.log(this.callLecturelist)
+            this.refreshCheck = 2
+        },
         ...mapActions(['fetchCallLectureListWithCategory']),
         ...mapActions(['fetchCallLectureListWithFilter'])
         
     },
     computed: {
         pageCount2() {
-            let listLength = this.$store.state.callLecturelist.length, // 길이
+            let listLength = this.callLecturelist.length, // 길이
                 listSize = this.pageSize2,
                 page = Math.floor(listLength / listSize);
             if (listLength % listSize > 0) 
@@ -364,10 +503,8 @@ export default {
                 return page;
         },
         paginatedData2() {
-            // const start = (this.pageNum2 - 1) * this.pageSize2,
-            //     end = start + this.pageSize2;
-            console.log(this.$store.state.callLecturelist)
-            return this.$store.state.callLecturelist.slice(0, 10);
+            console.log(this.callLecturelist)
+            return this.callLecturelist.slice(0, 10);
         },
         ...mapState ({
         lists: state => state.lists
@@ -394,6 +531,8 @@ export default {
 .mx-auto0.v-card.v-sheet.theme--light {
     width: 200px;
 }
+
+
 /* 사이드바 차일드 박스 */
 .v-list-item.theme--light {
     padding-left:30px!important;
@@ -407,6 +546,82 @@ export default {
 .v-list-group.v-list-group--no-action {
     background-color: #f8f8f8 !important;
 }
+
+
+/* 사이드바 옵션 박스*/
+.side_bar_option {
+    font-size: 14px;
+    font-weight: bold;
+    border-top: 1px solid #BDBDBD;
+}
+.forCheckBox {
+    display: flex;
+    justify-content: start;
+    flex-direction: column;
+    border-bottom: 1px solid #BDBDBD;
+    padding: 15px 5px;
+}
+.v-input.v-input--hide-details.theme--light.v-input--selection-controls.v-input--checkbox {
+    margin: 0px;
+}
+.v-input.v-input--hide-details.theme--light.v-input--selection-controls.v-input--checkbox:hover {
+    background-color: #f8f8f8 !important;
+}
+.ratingLineAll {
+    display:flex;
+    justify-content: start;
+    font-size: 12px;
+    font-weight: bold;
+    padding-left: 3px;
+    margin-top: 5px;
+}
+.ratingLine {
+    display:flex;
+    justify-content: start;
+    font-size: 12px;
+    font-weight: 500;    
+}
+.ratingLine:hover {
+    background-color: #f8f8f8 !important;
+}
+.ratingLine.on {
+    background-color: #f8f8f8 !important;
+    font-weight: bold;
+    font-size: 12px;
+    color: #01579B;
+}
+.ratingLineText {
+    padding-top: 2px;
+    margin-left: 3px;
+}
+.priceLine:hover {
+    background-color: #f8f8f8 !important;
+}
+.priceLine.on {
+    background-color: #f8f8f8 !important;
+    font-weight: bold;
+    font-size: 13px;
+    color: #01579B;
+}
+.priceLine {
+    display:flex;
+    justify-content: start;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 3px 1px;
+    margin-left:2px;   
+}
+.priceLine:hover {
+    background-color: #f8f8f8 !important;
+}
+.priceLine.on {
+    background-color: #f8f8f8 !important;
+    font-weight: bold;
+    font-size: 13px;
+    color: #01579B;
+}
+
+
 
 
 .mx-auto:hover {
@@ -876,5 +1091,6 @@ input:focus {
 }
 a { text-decoration:none !important }
 a:hover { text-decoration:none !important }
+
 
 </style>
