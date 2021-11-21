@@ -241,19 +241,6 @@
                 <v-icon dark>mdi-plus</v-icon>
             </v-btn>
         </router-link>
-        링크용
-        <router-link :to="{ name: 'StudyBoardListPage' }">
-            <v-btn>스터디 게시판</v-btn>
-        </router-link>
-        <router-link :to="{ name: 'QnABoardListPage' }">
-            <v-btn>QnA 게시판</v-btn>
-        </router-link>
-        <router-link :to="{ name: 'InqBoardListPage' }">
-            <v-btn>문의 게시판</v-btn>
-        </router-link>
-        <router-link :to="{ name: 'InqBoardListForUserPage' }">
-            <v-btn>문의 for user 게시판</v-btn>
-        </router-link>
     </div>
 </template>
 

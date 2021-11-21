@@ -4,96 +4,83 @@
             <v-container class="box0">
                 <div class="register_box_content">
                     <!-- 프로필 사진 -->
-                    <div style="text-slign:center;">
-                        
-                    <v-avatar color="black" size="100" v-if="preview == ''">
-                        <span class="white--text text-h5"><img :src="ImgRequest()" style="width:110px;height:110px;object-fit: cover"></span>
-                    </v-avatar>
-                    <v-avatar color="black" size="100" v-if="preview !== ''">
-                        <span class="white--text text-h5"><img :src="preview" style="width:110px;height:110px;object-fit: cover"></span>
-                    </v-avatar><br>
+                    <div>                        
+                        <v-avatar color="black" size="100" v-if="preview == ''">
+                            <div>
+                                <v-img :src="`http://localhost:7777/lecture/image/${thumb_path}/${userId}`" height="110px" width="110px"></v-img>
+                            </div>
+                        </v-avatar>
+                    </div>                    
                     <label style="cursor:pointer" class="profile_change">프로필 변경
-                    <input v-show="false"
-                        type="file"
-                        class="files"
-                        id="files"
-                        ref="files"
-                        multiple="multiple"
-                        v-on:change="handleFileUpload()"
-                        style="pointer:cursor">
-                    </label>
-                    </div>
-                <fieldset class="box1">
-                    <!-- 닉네임 -->
-                    <div class="box2">
-                        <v-text-field class="int" v-model="nickname" 
-                        placeholder="닉네임" maxlength="10" @input="searchChangeFunc4($event)"></v-text-field>
-                        <span class="validation2" style="left: 85%">
-                            <div v-show='toggle4' class="validation_with_length">
-                                <div class="count_nickname">
-                                {{ count_nickname }}/10
+                        <v-file-input v-show="false" label="upload tumbnail image" id="thumb" @change="thumbFile" 
+                        accept="image/png, image/jpeg, image/jpg" v-on:change="Filesubmit()"></v-file-input>
+                    </label>  
+                    <fieldset class="box1">
+                        <!-- 닉네임 -->
+                        <div class="box2">
+                            <v-text-field class="int" v-model="nickname" 
+                            placeholder="닉네임" maxlength="10" @input="searchChangeFunc4($event)"></v-text-field>
+                            <span class="validation2" style="left: 85%">
+                                <div v-show='toggle4' class="validation_with_length">
+                                    <div class="count_nickname">
+                                    {{ count_nickname }}/10
+                                    </div>
+                                    <div>
+                                    <v-icon class="delete_all_btn" @click="deleteContent4" tabindex="-1">mdi-close-circle-outline</v-icon>
+                                    </div>
                                 </div>
-                                <div>
-                                <v-icon class="delete_all_btn" @click="deleteContent4" tabindex="-1">mdi-close-circle-outline</v-icon>
-                                </div>
+                            </span>
+                            <div class="profile_row_title">닉네임 변경</div>
+                        </div>
+                        <!-- 비밀번호 -->
+                        <div class="box2" style="margin-bottom:10px">
+                            <v-text-field type="password" class="int" v-model="password" placeholder="변경하실 비밀번호를 입력해주세요" 
+                                maxlength="32" @input="searchChangeFunc2($event)"
+                                ></v-text-field>
+                            <span class="validation">
+                                <v-icon v-show='toggle2' class="delete_all_btn" @click="deleteContent2" tabindex="-1">mdi-close-circle-outline</v-icon>
+                            </span>                        
+                        </div>
+                        <span class="guide_messgage2">
+                            <div v-show='toggle_friend2' class="error_line">
+                                <div class="error_message">✘ 8자 이상 입력</div>                            
+                            </div>
+                            <div v-show='toggle_friend_check2' class="error_line_none">
+                                <div class="pass_message" style="top:30px">✔ 8자 이상 입력</div>
+                            </div>
+                            <div v-show='toggle_friend2_1' class="error_line" style="top:-10px">    
+                                <div class="error_message" style="top:30px">✘ 영문/숫자/특수문자만 허용하며, 특수문자를 포함하여 입력</div>
+                            </div>
+                            <div v-show='toggle_friend_check2_1' class="error_line_none" style="top:-147px">    
+                                <div class="pass_message" style="top:170px">✔ 영문/숫자/특수문자만 허용하며, 특수문자를 포함하여 입력</div>
                             </div>
                         </span>
-                        <div class="profile_row_title">닉네임 변경</div>
-                    </div>
-                    <!-- 비밀번호 -->
-                    <div class="box2" style="margin-bottom:10px">
-                        <v-text-field type="password" class="int" v-model="password" placeholder="변경하실 비밀번호를 입력해주세요" 
-                            maxlength="32" @input="searchChangeFunc2($event)"
-                            ></v-text-field>
-                        <span class="validation">
-                            <v-icon v-show='toggle2' class="delete_all_btn" @click="deleteContent2" tabindex="-1">mdi-close-circle-outline</v-icon>
-                        </span>                        
-                    </div>
-                    <span class="guide_messgage2">
-                        <div v-show='toggle_friend2' class="error_line">
-                            <div class="error_message">✘ 8자 이상 입력</div>                            
+                        <!-- 자기소개 -->
+                        <fieldset class="box3">
+                            <textarea style="height:140px;width:300px;border:1px solid;" cols="80" rows="20" maxlength="155" v-model="introduce" placeholder="자기소개(160자 이내)"></textarea>
+                        </fieldset>                    
+                        
+                        <div class="button_box" style="margin-bottom: 15px">
+                            <v-btn v-show="onLoginBtn"
+                            color="light-blue lighten-1 text center" @click="profileSubmit()" class="item" >
+                                변경
+                            </v-btn>
+                            <v-btn  v-show="!onLoginBtn"
+                            disabled 
+                            depressed
+                            color="light-blue lighten-1 text center" @click="profileSubmit()" class="item" >
+                                변경
+                            </v-btn>
                         </div>
-                        <div v-show='toggle_friend_check2' class="error_line_none">
-                            <div class="pass_message" style="top:30px">✔ 8자 이상 입력</div>
+                        <div class="button_box" style="margin-top: 0px;">
+                            <router-link to="/">
+                            <v-btn color="transparent" class="item" style="color: #29B6F6;">
+                                취소
+                            </v-btn>
+                            </router-link>
                         </div>
-                        <div v-show='toggle_friend2_1' class="error_line" style="top:-10px">    
-                            <div class="error_message" style="top:30px">✘ 영문/숫자/특수문자만 허용하며, 특수문자를 포함하여 입력</div>
-                        </div>
-                        <div v-show='toggle_friend_check2_1' class="error_line_none" style="top:-147px">    
-                            <div class="pass_message" style="top:170px">✔ 영문/숫자/특수문자만 허용하며, 특수문자를 포함하여 입력</div>
-                        </div>
-                    </span>
-                    <!-- 자기소개 -->
-                    <fieldset class="box3">
-                        <textarea style="height:140px;width:300px;border:1px solid;" cols="80" rows="20" maxlength="155" v-model="introduce" placeholder="자기소개(160자 이내)"></textarea>
-                    </fieldset>                    
-                    
-                    <div class="button_box" style="margin-bottom: 15px">
-                        <v-btn v-show="onLoginBtn"
-                        color="light-blue lighten-1 text center" @click="profileSubmit()" class="item" >
-                            변경
-                        </v-btn>
-                        <v-btn  v-show="!onLoginBtn"
-                        disabled 
-                        depressed
-                        color="light-blue lighten-1 text center" @click="profileSubmit()" class="item" >
-                            변경
-                        </v-btn>
-                    </div>
-                    <div class="button_box" style="margin-top: 0px;">
-                        <router-link to="/">
-                        <v-btn color="transparent" class="item" style="color: #29B6F6;">
-                            취소
-                        </v-btn>
-                        </router-link>
-                    </div>
-                    <div class="button_box" style="margin-top: 0px;">
-                        <v-btn color="transparent" class="item" @click="test()" style="color: #29B6F6;">
-                            test
-                        </v-btn>
-                    </div>
-                </fieldset>
-            </div>
+                    </fieldset>
+                </div>
             </v-container>
         </form>
     </v-container>
@@ -102,17 +89,26 @@
 <script>
 
 import axios from 'axios'
-import { mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
 export default {
     name: 'MemberProfileForm',
+    computed: {
+        ...mapState(['profile'])
+    },
+    mounted () {
+        this.fetchMyIntroduce(this.$store.state.moduleA.email)
+    },
     data () {
         return {
             name: '',
             nickname: this.$store.state.moduleA.nickname,
             userId: this.$store.state.moduleA.email,
             password: '',
-            introduce: this.$store.state.introduce,
+            introduce: this.$store.state.profile.introduce,
+            memberNo: this.$store.state.profile.member_no,
+            thumb_path: this.$store.state.profile.thumb_path,
+            profileNo: this.$store.state.profile.profile_no,
             //파일전송용
             files: '',
             preview: '', 
@@ -128,25 +124,45 @@ export default {
             check2: false,
             check0: true, // 비밀번호를 한 번이라도 건드렸는지 확인
             onLoginBtn: false, // 제출 버튼 활성화용,
-            
+
+            thumbnailImage: "",
+            show: null,
+            refrechCheck: 1            
+        }
+    },
+    watch: {
+        refrechCheck() {
+                this.fetchMyIntroduce(this.userId)
+                this.refrechCheck = 1
+        },
+        introduce() {            
+            this.onLoginBtn = true
         }
     },
     created () {
-            console.log('this.$store.state.moduleA.email : ' + this.$store.state.moduleA.email)
-            console.log('this.$store.state.moduleA.nickname : ' + this.$store.state.moduleA.nickname)
-            console.log('this.$store.state.email : ' + this.$store.state.email)
-            console.log('this.$store.state.nickname : ' + this.$store.state.nickname)
-        this.fetchMyIntroduce(this.userId) 
-        setTimeout(() => {
-            this.introduce = this.$store.state.introduce // data 갱신용 왜 fetch로 값 받아오면 갱신이 안 되네
-            }, 100)
+        this.fetchMyIntroduce(this.$store.state.moduleA.email)
+        console.log('this.$store.state.moduleA.email : ' + this.$store.state.moduleA.email)
+        console.log('this.$store.state.moduleA.nickname : ' + this.$store.state.moduleA.nickname)
+        console.log('this.$store.state.email : ' + this.$store.state.email)
+        console.log('this.$store.state.nickname : ' + this.$store.state.nickname)
+        console.log('this.$store.state.profile : ')
+        console.log(this.$store.state.profile)
+        console.log('props값 : ')
+        console.log(this.profile)
+        // this.fetchMyIntroduce(this.userId)
     },
     methods: {
         test() {
-            console.log('this.$store.state.moduleA.email : ' + this.$store.state.moduleA.email)
-            console.log('this.$store.state.moduleA.name : ' + this.$store.state.moduleA.name)
-            console.log('this.$store.state.email : ' + this.$store.state.email)
-            console.log('this.$store.state.name : ' + this.$store.state.name)
+            // console.log('this.$store.state.moduleA.email : ' + this.$store.state.moduleA.email)
+            // console.log('this.$store.state.moduleA.name : ' + this.$store.state.moduleA.name)
+            // console.log('this.$store.state.email : ' + this.$store.state.email)
+            // console.log('this.$store.state.name : ' + this.$store.state.name)
+            axios.get(`http://localhost:7777/lecture/image/${this.$store.state.profile.thumb_path}/${this.userId}`)
+            .then((res) => {
+                console.log('res데이터다 ㅇㅋ')
+                console.log(res)
+                return res.data
+                        })
         },
         profileSubmit () {
                 const { userId, nickname, password, introduce} = this
@@ -211,31 +227,40 @@ export default {
             this.count_nickname = this.nickname.length
             console.log(this.nickname)
         },
-        handleFileUpload () {
-                this.files = this.$refs.files.files
-                this.preview = URL.createObjectURL(this.files[0])
-                this.Filesubmit()
-        },
         Filesubmit () {
-            let formData = new FormData()
-            for (var idx = 0; idx < this.files.length; idx++) {
-                formData.append('fileList', this.files[idx])                
-            }
-            let ownerId = this.$store.state.moduleA.email
-            formData.append('id', ownerId)
-            axios.post('http://localhost:7777/image/uploadImg_Profile', formData, {
+            const lectureId = this.memberNo
+            const formData = new FormData();
+            formData.append("thumbnailImage", this.thumbnailImage);
+            formData.append("lectureId", lectureId);
+            console.log('image 등록')    
+            console.log(formData);
+            console.log(this.thumbnailImage);
+
+            axios.delete(`http://localhost:7777/profile/upload/image/thumbnail/delete/${this.$store.state.profile.profile_no}`)
+
+            axios.post("http://localhost:7777/profile/upload/image/thumbnail", formData,
+            {
                 headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-                
+                "Content-Type": "multipart/form-data",
+                },
+            }
+            )
+            .then(() => {
+                this.fetchMyIntroduce(this.userId)
+                this.refrechCheck = 2
+                this.$router.push('/memberProfile')
+                alert('프로필 사진 변경 완료')
             })
-            .then (res => {
-                this.response = res.data
+            .catch(err => {
+            console.log(err);
             })
-            .catch (res => {
-                this.response = res.message
-            }) 
-            alert('프로필 변경 완료')
+        },
+        // 파일 변경 시 이벤트 핸들러
+        thumbFile(file) {
+        this.thumbnailImage = file;
+        },
+        detailFile(file) {
+        this.detailImage = file;
         },
         fileDeleteButton () {
             this.files = '',
@@ -414,7 +439,7 @@ a {
     text-decoration: none;
 }
 .profile_change {
-    font-size: 9px;
+    font-size: 11px;
     color: #757575;
 }
 .box3 {

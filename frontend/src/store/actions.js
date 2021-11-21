@@ -10,8 +10,8 @@ import {
     FETCH_NOTICE,
     // 스터디
     FETCH_STUDY_MEMBER_LIST,
-    // 내학습
-    FETCH_MY_LECTURE_LIST,
+    // 강의 리스트
+    FETCH_LECTURE_LIST,
     // 회원 관리
     FETCH_MEMBER_LIST,
 
@@ -28,11 +28,10 @@ export default {
     },
     fetchMyIntroduce ({ commit }, userId) {
         return axios.get(`http://localhost:7777/profile/introduce/${userId}`)
-                .then((res) => {
-                    commit(FETCH_MY_INTRODUCE, res.data)
+                .then((res) => {                    
                     console.log('res데이타는')
                     console.log(res.data)
-                    this.$store.state.introduce = res.data
+                    commit(FETCH_MY_INTRODUCE, res.data)
                 })
     },
     // 공지사항
@@ -67,6 +66,7 @@ export default {
         return axios.get(`http://localhost:7777/freeboard/comment/${No}`)
                 .then((res) => {
                     commit(FETCH_COMMENT_LIST, res.data)
+                    console.log(res.data)
                 })
 
     },
@@ -193,7 +193,6 @@ export default {
                 })
     },
     fetchInqBoardListWithFilter ({ commit }, complete) {
-        console.log(complete)
         return axios.get(`http://localhost:7777/inqboard/lists/${complete}`)
                 .then((res) => {
                     const reverse = [...res.data].reverse();
@@ -204,14 +203,36 @@ export default {
     fetchMyLectureList ({ commit }) {
         return axios.get('http://localhost:7777/mypage/myLecturelist')
                 .then((res) => {
-                    commit(FETCH_MY_LECTURE_LIST, res.data)
-                })
+                    commit(FETCH_LECTURE_LIST, res.data)
+        }).catch(err=>{alert(err.response.data.message)})
     },
     fetchMemberList({ commit }) {
         return axios.get('http://localhost:7777/memberManagement/memberList')
         .then( (res) => {
             console.log(res.data)
             commit(FETCH_MEMBER_LIST, res.data)
+        }).catch(err=>{alert(err.response.data.message)})
+    },
+    // 판매중인 수강 리스트
+    fetchCallLectureList({ commit }) {
+        return axios.get('http://localhost:7777/callLecture/lists')
+        .then( (res) => {
+            console.log(res.data)
+            commit(FETCH_LECTURE_LIST, res.data)
+        }).catch(err=>{alert(err.response.data.message)})
+    },
+    fetchCallLectureListWithCategory({ commit }, categoryId) {
+        return axios.get(`http://localhost:7777/callLecture/lists/${categoryId}`)
+        .then( (res) => {
+            console.log(res.data)
+            commit(FETCH_LECTURE_LIST, res.data)
+        }).catch(err=>{alert(err.response.data.message)})
+    },
+    fetchCallLectureListWithFilter ({ commit }, word) {
+        return axios.get(`http://localhost:7777/callLecture/lists/search/${word}`)
+                .then((res) => {
+                    console.log(res.data)
+                    commit(FETCH_LECTURE_LIST, res.data)
         }).catch(err=>{alert(err.response.data.message)})
     }
 }

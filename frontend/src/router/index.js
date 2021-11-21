@@ -55,6 +55,11 @@ import ManagerNoticeRegisterPage from '@/views/manager/ManagerNoticeRegisterPage
 import ManagerNoticeReadPage from '@/views/manager/ManagerNoticeReadPage.vue'
 import ManagerMemberList from '@/views/manager/ManagerMemberList'
 
+
+// 강의 판매 리스트
+import ForSaleLecturePage from '@/views/ForSale/ForSaleLecturePage.vue'
+
+
 Vue.use(VueRouter)
 
 export default new VueRouter({
@@ -67,10 +72,6 @@ export default new VueRouter({
       }, {
           path: '/memberRegister',
           component: () => import ('../views/MemberRegisterPage.vue')
-      }, {
-          path: '/memberProfile',
-          name: 'memberProfile',
-          component: () => import ('../views/MemberProfilePage.vue')
       },
       // 강의 관리 페이지 (강의 등록 시스템)
       {
@@ -105,6 +106,12 @@ export default new VueRouter({
      {
         path: '/course/:lectureId',
         component: () => import ('../views/lecture_detail/LectureDetailPage.vue'),
+     },
+     //강의 영상 재생 페이지
+     {
+       path: '/lecture/:videoId/:lectureId',
+       component: () => import ('../views/lecture_detail/play/LectureVideoPlayPage.vue'),
+       props: true
      },
       // 회원 탈퇴
       {
@@ -158,6 +165,10 @@ export default new VueRouter({
             {
               path: '/myPostList',
               component: () => import("../components/mypage/MyPostList.vue")
+            },
+            {
+              path: '/memberProfile',
+              component: () => import("../views/MemberProfilePage.vue")
             }
           ]
       },
@@ -433,6 +444,13 @@ export default new VueRouter({
         name: 'ManagerMemberList',
         components: {
           default: ManagerMemberList
+        }
+      },
+      {
+        path: '/forSale/lectureList',
+        name: 'ForSaleLecturePage',
+        components: {
+          default: ForSaleLecturePage
         }
       },
       {

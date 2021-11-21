@@ -1,10 +1,5 @@
 <template>
     <div style="position: relative;min-height:900px;">
-        <v-spacer style="background-color: black;height: 90px;"></v-spacer>
-        <div class="box0">
-            <div class="title_image">
-                <img src="@/assets/logo.png" width="100" class="item"></div>
-            </div>
         <member-profile-form @submit="profileSubmit"/>
         <v-spacer></v-spacer>        
     </div>
@@ -47,7 +42,7 @@ export default {
                         alert(res.response.data.message)
                         alert('잘못된 접근! 로그인부터 해주세요')
                     })
-        }
+            },
     }
 }
 </script>
