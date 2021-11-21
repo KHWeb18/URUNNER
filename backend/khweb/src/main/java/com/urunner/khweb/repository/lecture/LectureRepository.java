@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface LectureRepository extends JpaRepository<Lecture, Long> {
+public interface LectureRepository extends JpaRepository<Lecture, Long>, LectureRepositoryCustom {
 
     public List<Lecture> findByWriter(String writer);
     public Lecture findByTitle(String title);
