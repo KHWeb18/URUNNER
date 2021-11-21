@@ -10,8 +10,10 @@
                 <div class="mr-9 hidden-md-and-down">로드맵</div>
                 <v-menu offset-y open-on-hover>
                   <template v-slot:activator="{ on, attrs }">
-                     <div class="mr-9 hidden-md-and-down" v-on="on" v-bind="attrs">강의</div>
-                  </template>
+                    <router-link :to="{ name: 'ForSaleLecturePage' }">
+                      <div class="mr-9 hidden-md-and-down" v-on="on" v-bind="attrs">강의</div>         
+                    </router-link>
+                  </template>           
                   <v-card width="400" max-height="500">
                     <v-list dense="dense" nav="nav">
                       <v-list-item v-for="item in category" :key="item" link="link">

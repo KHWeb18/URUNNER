@@ -51,7 +51,7 @@ export default {
                     console.log(res.data)
                     this.$store.state.boardNo = res.data.boardNo.toString()
                     this.$router.push({
-                        name: 'StudyBoardListPage'
+                        name: 'BoardCollectionPage'
                     })
                 })
                 .catch(res => {

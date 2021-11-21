@@ -42,9 +42,8 @@ export default {
                     .then(res => {
                         this.$store.state.boardNo = res.data.boardNo.toString()
                         this.$router.push({
-                            name: 'FreeBoardListPage'
+                            name: 'BoardCollectionPage'
                         })
-                        // this.$emit("BoardNo", res.data.boardNo.toString())
                     })
                     .catch(res => {
                         alert(res.response.data.message)

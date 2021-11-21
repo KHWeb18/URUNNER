@@ -27,6 +27,8 @@ export default {
                 })
     },
     fetchMyIntroduce ({ commit }, userId) {
+        console.log('여기 에러 뜨는 거야? userId값은?')
+        console.log(userId)
         return axios.get(`http://localhost:7777/profile/introduce/${userId}`)
                 .then((res) => {                    
                     console.log('res데이타는')

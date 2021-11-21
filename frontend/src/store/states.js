@@ -10,6 +10,7 @@ export default {
           { title: '대시보드', to: '/'},
           { title: '블로그', to: '/'},
           { title: '알림', to: '/'},
+          { title: '문의하기', to: '/inqforuser'},
       ]},
       { title: '학습관리', items:[
           { title: '내 학습', to: '/myLecture'},
@@ -45,7 +46,7 @@ export default {
   boardNo: null,
   selectMenu: 1,
   selctedComp: 'BoardListPage',
-  title: '자유 주제',
+  title: '자유 주제 게시판',
   //공지사항
   notices: [],
   notice: null,
