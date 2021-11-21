@@ -3,11 +3,15 @@
         <form @submit.prevent="onSubmit">
             <v-container class="box0">
                 <div class="register_box_content">
+                    당신의 userID : {{userId}}<br>
+                    당신의 토큰 id : {{userIdInToken}}<br>
+                    당신의 thumb_path : {{thumb_path}}<br>
+                    당신의 memberNo : {{memberNo}}
                     <!-- 프로필 사진 -->
                     <div>                        
                         <v-avatar color="black" size="100" v-if="preview == ''">
                             <div>
-                                <v-img :src="`http://localhost:7777/lecture/image/${thumb_path}/${userId}`" height="110px" width="110px"></v-img>
+                                <v-img :src="`http://localhost:7777/lecture/image/${thumb_path}/${userIdInToken}`" height="110px" width="110px"></v-img>
                             </div>
                         </v-avatar>
                     </div>                    
@@ -81,6 +85,7 @@
                         </div>
                     </fieldset>
                 </div>
+                <v-btn @click="test()">테스트</v-btn>
             </v-container>
         </form>
     </v-container>
@@ -90,6 +95,8 @@
 
 import axios from 'axios'
 import { mapState, mapActions } from 'vuex'
+import Vue from 'vue'
+
 
 export default {
     name: 'MemberProfileForm',
@@ -97,13 +104,14 @@ export default {
         ...mapState(['profile'])
     },
     mounted () {
-        this.fetchMyIntroduce(this.$store.state.moduleA.email)
+        // this.fetchMyIntroduce(this.userIdInToken)
     },
     data () {
         return {
             name: '',
             nickname: this.$store.state.moduleA.nickname,
             userId: this.$store.state.moduleA.email,
+            userIdInToken: Vue.$cookies.get("USER_NAME"),
             password: '',
             introduce: this.$store.state.profile.introduce,
             memberNo: this.$store.state.profile.member_no,
@@ -131,42 +139,24 @@ export default {
         }
     },
     watch: {
-        refrechCheck() {
-                this.fetchMyIntroduce(this.userId)
-                this.refrechCheck = 1
-        },
         introduce() {            
             this.onLoginBtn = true
         }
     },
     created () {
-        this.fetchMyIntroduce(this.$store.state.moduleA.email)
-        console.log('this.$store.state.moduleA.email : ' + this.$store.state.moduleA.email)
-        console.log('this.$store.state.moduleA.nickname : ' + this.$store.state.moduleA.nickname)
-        console.log('this.$store.state.email : ' + this.$store.state.email)
-        console.log('this.$store.state.nickname : ' + this.$store.state.nickname)
-        console.log('this.$store.state.profile : ')
-        console.log(this.$store.state.profile)
-        console.log('props값 : ')
-        console.log(this.profile)
+        this.fetchMyIntroduce(Vue.$cookies.get("USER_NAME"))
         // this.fetchMyIntroduce(this.userId)
     },
     methods: {
         test() {
-            // console.log('this.$store.state.moduleA.email : ' + this.$store.state.moduleA.email)
-            // console.log('this.$store.state.moduleA.name : ' + this.$store.state.moduleA.name)
-            // console.log('this.$store.state.email : ' + this.$store.state.email)
-            // console.log('this.$store.state.name : ' + this.$store.state.name)
-            axios.get(`http://localhost:7777/lecture/image/${this.$store.state.profile.thumb_path}/${this.userId}`)
-            .then((res) => {
-                console.log('res데이터다 ㅇㅋ')
-                console.log(res)
-                return res.data
-                        })
+            console.log('this.$store.state.moduleA.email : ' + this.$store.state.moduleA.email)
+            console.log('this.$store.state.moduleA.name : ' + this.$store.state.moduleA.name)
+            console.log('this.$store.state.email : ' + this.$store.state.email)
+            console.log('this.$store.state.name : ' + this.$store.state.name)
         },
         profileSubmit () {
-                const { userId, nickname, password, introduce} = this
-                this.$emit('submit', { userId, nickname, password, introduce })
+                const { userIdInToken, nickname, password, introduce} = this
+                this.$emit('submit', { userIdInToken, nickname, password, introduce })
         },
         deleteContent4 () {
             this.toggle4 = false
@@ -246,8 +236,7 @@ export default {
             }
             )
             .then(() => {
-                this.fetchMyIntroduce(this.userId)
-                this.refrechCheck = 2
+                this.fetchMyIntroduce(this.userIdInToken)
                 this.$router.push('/memberProfile')
                 alert('프로필 사진 변경 완료')
             })

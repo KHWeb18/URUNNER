@@ -9,9 +9,6 @@
                         <span>{{ title }}</span></h2>
                 </div>
             </div>
-            <router-link :to="{ name: 'ForSaleLecturePage' }">
-                <v-btn>강의 판매 리스트 가기</v-btn>
-            </router-link>
             <div class="mr-9 hidden-md-and-up">
                 <div class="title_box2">
                 </div>

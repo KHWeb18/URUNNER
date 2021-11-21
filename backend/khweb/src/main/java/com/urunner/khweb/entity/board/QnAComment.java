@@ -38,14 +38,16 @@ public class QnAComment {
     @CreationTimestamp
     private Date regDate;
 
-    public QnAComment(Long boardNo, String content, String writer, String nickname, Long layer, Long groupNo) {
+    @Column(length = 100)
+    private String thumb_path; // 대댓글이 달리는 코멘트 번호
+
+    public QnAComment(Long boardNo, String content, String writer, String nickname, Long layer, Long groupNo, String thumb_path) {
         this.boardNo = boardNo;
         this.content = content;
         this.writer = writer;
         this.nickname = nickname;
         this.layer = layer;
         this.groupNo = groupNo;
+        this.thumb_path = thumb_path;
     }
-
-
 }

@@ -10,6 +10,7 @@ export default {
           { title: '대시보드', to: '/'},
           { title: '블로그', to: '/'},
           { title: '알림', to: '/'},
+          { title: '문의하기', to: '/inqforuser'},
       ]},
       { title: '학습관리', items:[
           { title: '내 학습', to: '/myLecture'},

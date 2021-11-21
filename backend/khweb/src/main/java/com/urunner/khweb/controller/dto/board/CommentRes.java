@@ -17,4 +17,5 @@ public class CommentRes {
     private Long layer;
     private Long groupNo;
     private Date regDate;
+    private String thumb_path;
 }

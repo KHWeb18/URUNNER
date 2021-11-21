@@ -24,7 +24,7 @@ public class QnACommentServiceImpl implements QnACommentService {
     public QnAComment register(CommentRes commentRes) throws Exception {
 
         QnAComment commentEntity = new QnAComment(commentRes.getBoardNo(), commentRes.getContent(), commentRes.getWriter(),
-                                            commentRes.getNickname(), commentRes.getLayer(), commentRes.getGroupNo());
+                                            commentRes.getNickname(), commentRes.getLayer(), commentRes.getGroupNo(), commentRes.getThumb_path());
 
         repository.save(commentEntity);
 

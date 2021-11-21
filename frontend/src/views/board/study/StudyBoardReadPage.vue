@@ -4,7 +4,7 @@
             <study-board-read v-if="board" :board="board" @submit="onSubmit"/>
             <p v-else>로딩중 ......</p>
             <v-container class="middle_btn_box">
-                <router-link :to="{ name: 'StudyBoardListPage' }">
+                <router-link :to="{ name: 'BoardCollectionPage' }">
                         목록
                 </router-link>                
                 <b v-show="board.writer == this.$store.state.moduleA.email || this.$store.state.isAuth">
@@ -98,7 +98,7 @@ export default {
                         const { boardNo } = this.board
                         axios.delete(`http://localhost:7777/studyboard/${boardNo}`)
                         .then(() => {
-                            this.$router.push({ name: 'StudyBoardListPage' })
+                            this.$router.push({ name: 'BoardCollectionPage' })
                         })
                         .catch(err => {
                             alert(err.response.data.message)

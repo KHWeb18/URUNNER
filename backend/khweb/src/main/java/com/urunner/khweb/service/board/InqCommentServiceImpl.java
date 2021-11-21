@@ -22,7 +22,7 @@ public class InqCommentServiceImpl implements InqCommentService {
     public InqComment register(CommentRes commentRes) throws Exception {
 
         InqComment commentEntity = new InqComment(commentRes.getBoardNo(), commentRes.getContent(), commentRes.getWriter(),
-                                            commentRes.getNickname(), commentRes.getLayer(), commentRes.getGroupNo());
+                                            commentRes.getNickname(), commentRes.getLayer(), commentRes.getGroupNo(), commentRes.getThumb_path());
 
         repository.save(commentEntity);
 
