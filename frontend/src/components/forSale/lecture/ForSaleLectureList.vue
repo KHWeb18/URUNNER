@@ -318,7 +318,9 @@ export default {
         refreshCheck: 1
     }),
     created () {
-        this.copiedList = this.callLecturelist
+        setTimeout(() => {
+            this.copiedList = this.callLecturelist
+            }, 1000)
     },
     watch: {
         word(newVal) {
@@ -334,25 +336,6 @@ export default {
         priceValue() {
             console.log('watchedStep:) this.priceValue : ' + this.priceValue)
             this.sideBarFilter()
-        },
-        tempValue() {
-            switch(this.tempValue) {
-                case null:
-                    this.$emit("callAll", {})
-                    console.log('watch감지, 전체 리스트를 불러옵니다.')
-                    break;
-                case '중급 이상':
-                    console.log('watch감지, 중급 이상 리스트를 불러옵니다.')
-                    break;
-                case '초급':
-                    console.log('watch감지, 초급 리스트를 불러옵니다.')
-                    break;
-                case '입문':
-                    console.log('watch감지, 입문 리스트를 불러옵니다.')
-                    break;
-                default:
-                    break;
-            }
         }
     },
     methods: {
@@ -503,7 +486,6 @@ export default {
                 return page;
         },
         paginatedData2() {
-            console.log(this.callLecturelist)
             return this.callLecturelist.slice(0, 10);
         },
         ...mapState ({
