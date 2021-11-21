@@ -6,10 +6,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class UserPrincipal implements OAuth2User, UserDetails {
     private Long id;
@@ -26,8 +23,20 @@ public class UserPrincipal implements OAuth2User, UserDetails {
     }
 
     public static UserPrincipal create(Member user) {
-        List<GrantedAuthority> authorities = Collections.
-                singletonList(new SimpleGrantedAuthority("ROLE_USER"));
+        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+//        List<GrantedAuthority> authorities = Collections.
+//                singletonList(new SimpleGrantedAuthority("ROLE_USER"));
+        System.out.println(" 유저 불러오는 DB방향 ");
+        
+//        처음 회원가입시 권한을 가져오지않음 가입되기
+        if (user.getRoles().size() == 0) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        }
+
+        user.getRoles().forEach(role -> {
+            System.out.println("정보 가져오기" + role.getName());
+            authorities.add(new SimpleGrantedAuthority(role.getName()));
+        });
 
         return new UserPrincipal(
                 user.getMemberNo(),
