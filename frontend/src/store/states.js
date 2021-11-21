@@ -46,7 +46,7 @@ export default {
   boardNo: null,
   selectMenu: 1,
   selctedComp: 'BoardListPage',
-  title: '자유 주제',
+  title: '자유 주제 게시판',
   //공지사항
   notices: [],
   notice: null,
