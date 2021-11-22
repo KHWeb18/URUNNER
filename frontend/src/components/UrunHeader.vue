@@ -27,7 +27,16 @@
                 <router-link :to="{ name: 'BoardCollectionPage' }">
                   <div class="mr-9 hidden-md-and-down">커뮤니티</div>
                 </router-link>
-                <div class="hidden-md-and-down">유러너</div>
+                <v-menu offset-y open-on-hover>
+                  <template v-slot:activator="{ on, attrs }">
+                     <div class="mr-9 hidden-md-and-down" v-on="on" v-bind="attrs" >유러너</div>
+                  </template>
+                    <v-list>
+                        <v-list-item v-for="(urunner, index) in urunners" :key="index" :to="urunner.route">
+                            <v-list-item-title>{{ urunner.title }}</v-list-item-title>
+                        </v-list-item>
+                    </v-list>
+                </v-menu>
             </div>
             <div class="end d-flex">
                 <div class="search hidden-md-and-down mr-6">
@@ -106,7 +115,11 @@ import OpenMainMenuLogo from '../components/headerLoginMenu/OpenMainMenuLogo.vue
       },
       data: () => ({
             drawer: false,
-            isLogin: Vue.$cookies.get("ACCESS_TOKEN")
+            isLogin: Vue.$cookies.get("ACCESS_TOKEN"),
+            urunners: [
+              { title: '유러너 소개', route: '/intro'},
+              { title: '공지사항', route: '/notice' },
+            ]
         }),
       created: function() {
          EventBus.$on('isLogin', (isLogin) => this.isLogin = isLogin)

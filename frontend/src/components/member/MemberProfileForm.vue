@@ -3,15 +3,15 @@
         <form @submit.prevent="onSubmit">
             <v-container class="box0">
                 <div class="register_box_content">
-                    당신의 userID : {{userId}}<br>
+                    <!-- 당신의 userID : {{userId}}<br>
                     당신의 토큰 id : {{userIdInToken}}<br>
                     당신의 thumb_path : {{thumb_path}}<br>
-                    당신의 memberNo : {{memberNo}}
+                    당신의 memberNo : {{memberNo}} -->
                     <!-- 프로필 사진 -->
                     <div>                        
                         <v-avatar color="black" size="100" v-if="preview == ''">
                             <div>
-                                <v-img :src="`http://localhost:7777/lecture/image/${thumb_path}/${userIdInToken}`" height="110px" width="110px"></v-img>
+                                <v-img :src="test00()" height="110px" width="110px"></v-img>
                             </div>
                         </v-avatar>
                     </div>                    
@@ -85,7 +85,6 @@
                         </div>
                     </fieldset>
                 </div>
-                <v-btn @click="test()">테스트</v-btn>
             </v-container>
         </form>
     </v-container>
@@ -97,19 +96,18 @@ import axios from 'axios'
 import { mapState, mapActions } from 'vuex'
 import Vue from 'vue'
 
-
 export default {
     name: 'MemberProfileForm',
     computed: {
         ...mapState(['profile'])
     },
     mounted () {
-        // this.fetchMyIntroduce(this.userIdInToken)
+        this.fetchMyIntroduce(this.userIdInToken)
     },
     data () {
         return {
             name: '',
-            nickname: this.$store.state.moduleA.nickname,
+            nickname: Vue.$cookies.get("NICKNAME"),
             userId: this.$store.state.moduleA.email,
             userIdInToken: Vue.$cookies.get("USER_NAME"),
             password: '',
@@ -141,18 +139,26 @@ export default {
     watch: {
         introduce() {            
             this.onLoginBtn = true
+            alert('변경감지')
         }
     },
     created () {
-        this.fetchMyIntroduce(Vue.$cookies.get("USER_NAME"))
-        // this.fetchMyIntroduce(this.userId)
+        this.nickname= Vue.$cookies.get("NICKNAME"),
+        this.userId= this.$store.state.moduleA.email,
+        this.userIdInToken= Vue.$cookies.get("USER_NAME")
     },
     methods: {
         test() {
-            console.log('this.$store.state.moduleA.email : ' + this.$store.state.moduleA.email)
-            console.log('this.$store.state.moduleA.name : ' + this.$store.state.moduleA.name)
-            console.log('this.$store.state.email : ' + this.$store.state.email)
-            console.log('this.$store.state.name : ' + this.$store.state.name)
+            console.log('this.profile : ' + this.profile)
+            console.log('this.$store.state.profile : ' + this.$store.state.profile)
+            this.profile.email = 'test'
+            console.log('this.thumb_path : ' + this.thumb_path)
+        },
+        test00() {
+            var path = this.$store.state.profile.thumb_path
+            var id = Vue.$cookies.get("USER_NAME")
+                var temp = `http://localhost:7777/lecture/image/${path}/${id}`
+                return temp
         },
         profileSubmit () {
                 const { userIdInToken, nickname, password, introduce} = this
@@ -183,7 +189,6 @@ export default {
             var checkPassword = this.password,
             exp = /[~!@#$%^&*()_+|<>?:{}]/;
             var resultCheckPassword= exp.test(checkPassword);
-            console.log(resultCheckPassword)
             if (checkPassword.length >= 8) {
                 this.toggle_friend2 = false
                 this.toggle_friend_check2 = true                
@@ -199,7 +204,6 @@ export default {
             }
             if (this.toggle_friend_check2 & this.toggle_friend_check2_1 == true) {
                 this.check02 = true
-                console.log('두번째 체크도 통과')
                 this.onLoginBtn = true
             }else {
                 this.check02 = false
@@ -215,16 +219,12 @@ export default {
                 this.onLoginBtn = true
             }
             this.count_nickname = this.nickname.length
-            console.log(this.nickname)
         },
         Filesubmit () {
             const lectureId = this.memberNo
             const formData = new FormData();
             formData.append("thumbnailImage", this.thumbnailImage);
             formData.append("lectureId", lectureId);
-            console.log('image 등록')    
-            console.log(formData);
-            console.log(this.thumbnailImage);
 
             axios.delete(`http://localhost:7777/profile/upload/image/thumbnail/delete/${this.$store.state.profile.profile_no}`)
 
@@ -241,7 +241,7 @@ export default {
                 alert('프로필 사진 변경 완료')
             })
             .catch(err => {
-            console.log(err);
+            alert(err);
             })
         },
         // 파일 변경 시 이벤트 핸들러
@@ -255,21 +255,6 @@ export default {
             this.files = '',
             this.preview = ''
         },
-        ImgRequest() {
-            try {
-                var cutId = this.userId.substring(0, this.userId.length-4); // email 뒤 .com 삭제
-                console.log(cutId)
-                return require(`../../../../backend/khweb/images/profiles/${cutId}.gif`)
-            } catch (e) {
-                return require(`@/assets/logo.png`)
-            }
-        },
-        // fusion () {
-        //     setTimeout(() => {
-        //         this.Filesubmit()
-        //         }, 1000)
-        //     this.profileSubmit()
-        // }
         ...mapActions(['fetchMyIntroduce'])
     }
 }
