@@ -45,6 +45,9 @@
               <v-list-item-subtitle @click="clickLogoutBtn">
                 <p>로그아웃</p>
               </v-list-item-subtitle>
+              <v-list-item-subtitle v-if="this.$cookies.get('ROLES') !='ROLE_USER'" @click="clickManager">
+              <p>관리자 메뉴</p>
+            </v-list-item-subtitle>
             </v-list-item-content>
             <v-list-item-action>
             <v-tooltip bottom  v-if="isInstructor == 'ROLE_ADMIN,ROLE_USER'">
@@ -108,6 +111,9 @@ export default {
     },
     openRegInstructor() {
       this.$emit('openRegInstructor')
+    },
+    clickManager () {
+      this.$router.push('/manager')
     }
   }
 

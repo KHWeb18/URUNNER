@@ -317,6 +317,14 @@ public class LectureServiceImpl implements LectureService {
                                 .getResultList()
                 )).collect(Collectors.toList());
 
+        String query3 = "select count(w.wishListId) from WishList w where w.lecture.lecture_id = :id";
+
+        Long wishListCount = em.createQuery(query3, Long.class)
+                .setParameter("id", lecture.get().getLecture_id())
+                .getSingleResult();
+
+
+
         String username = authentication();
         if (username.equals("anonymousUser")) {
             log.info("로그인 되있지않은 사용자");
@@ -355,7 +363,9 @@ public class LectureServiceImpl implements LectureService {
 //       1. 네이티브쿼리로 dsl로
 //       2. OneToMany부분 fetch 조인 set으로 바꾸기
 //       3. queryDsl쓰기...
-        return new DtoWrapper2(lectureDto, Optional.of(list));
+        DtoWrapper2 dtoWrapper = new DtoWrapper2(lectureDto, Optional.of(list));
+        dtoWrapper.setWishListCount(wishListCount);
+        return dtoWrapper;
     }
 
     @Override
