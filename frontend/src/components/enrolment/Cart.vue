@@ -88,12 +88,15 @@
             <v-card-title class="d-flex justify-space-between">
               <h2 class="secondary--text">총계</h2>
               <h2 class="secondary--text">
-                ₩ {{ getCurrencyFormat(totalPrice) }}
+                ₩ {{ getCurrencyFormat(lectureInfo.totalPrice) }}
               </h2>
             </v-card-title>
-            <v-card-actions class="pa-3">
+              <div> 
+                <payment-box v-bind:lectureInfo="lectureInfo"></payment-box>
+              </div>
+              <!--<v-card-actions class="pa-3">
               <v-btn class="primary font-weight-bold" x-large block>결제하기</v-btn>
-            </v-card-actions>
+            </v-card-actions>-->
           </v-card>
         </v-container>
       </v-col>
@@ -119,15 +122,31 @@
 <script>
 import axios from 'axios'
 import { API_BASE_URL } from '@/constants/index'
+import PaymentBox from '../../components/payment/PaymentBox.vue'
 export default {
+  
+    components:{
+        PaymentBox
+    },
     data: () => ({
         lecture: null,
         cartList: [],
-        totalPrice: 0
+        lectureInfo:{
+                lectureList:[],
+                totalPrice: 0,    
+            }
     }),
     created() {
       this.getCartList()
     },
+    /*
+    mounted(){
+      this.cartList.filter(c=>{
+        this.lectureInfo.lectureList.push(c.title)
+        alert(this.lectureInfo.lectureList)
+      })
+
+    },*/
     methods: {
       getCartList() {
         axios.get(`${API_BASE_URL}/manageLecture/getCartList`)
@@ -135,7 +154,8 @@ export default {
                 this.cartList = data.data
               }).then(() => {
                 this.cartList.filter(c => {
-                  this.totalPrice += c.price
+                  this.lectureInfo.totalPrice += c.price
+                  this.lectureInfo.lectureList.push(c.title)
                 })
               }) 
       },

@@ -2,7 +2,6 @@
     <div>
         <v-container>
             <inq-board-read v-if="board" :board="board" @submit="onSubmit"/>
-            <p v-else>로딩중 ......</p>
             <v-container class="middle_btn_box">
                 <router-link :to="{ name: 'InqBoardListPage' }">
                         목록

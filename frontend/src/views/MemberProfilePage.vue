@@ -16,16 +16,9 @@ export default {
     components: {
         MemberProfileForm
     },
-    data () {
-        return {            
-        }
-    },
     methods: {
         profileSubmit (payload) {            
             const { userIdInToken, nickname, password, introduce } = payload
-            console.log("제출하기 전 const 상태는 ") 
-            console.log(payload)
-            console.log('-----------------------------------------------')
             axios.put(`http://localhost:7777/profile/${userIdInToken}`, { userIdInToken, nickname, password, introduce })
                     .then(res => {
                         if (res.data != "") {
