@@ -529,6 +529,7 @@ public class LectureServiceImpl implements LectureService {
         Review review = Review.builder()
                 .rating(reviewDto.getRating())
                 .content(reviewDto.getContent())
+                .writer(authentication())
                 .build();
 
         review.setLecture(lecture);

@@ -17,10 +17,13 @@ public class Review {
 
     private String content;
 
+    private String writer;
+
     @Builder
-    public Review(Long rating, String content) {
+    public Review(Long rating, String content, String writer) {
         this.rating = rating;
         this.content = content;
+        this.writer = writer;
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
