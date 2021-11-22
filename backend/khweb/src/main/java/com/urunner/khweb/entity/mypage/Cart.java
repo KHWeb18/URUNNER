@@ -22,6 +22,8 @@ public class Cart {
     @JoinColumn(name = "lecture_id")
     private Lecture lecture;
 
+    private boolean isExist = true;
+
     public void setMyPage(MyPage myPage) {
         this.myPage = myPage;
     }

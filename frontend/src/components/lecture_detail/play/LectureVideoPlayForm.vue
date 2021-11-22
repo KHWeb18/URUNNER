@@ -1,8 +1,14 @@
 <template style="height: 100vh">
   <div style="">
     <div>
-      <header class="my-2">
+      <header class="my-2 d-flex justify-space-between">
        <h2 class="text-h7 text-md-h4 font-weight-bold pa-3">Topic : {{ videoInfo.title }}</h2>
+       <div class="mt-3 mr-4">
+         <v-btn color="primary" dark @click="openStudentComment = !openStudentComment">
+           <v-icon>mdi-star</v-icon>
+           수강평남기기
+         </v-btn>
+       </div>
       </header>
 
         <vue-plyr ref="plyr">
@@ -106,10 +112,42 @@
         </div>
       </footer>
     </div>
+    <v-dialog v-model="openStudentComment" width="500">
+      <v-card>
+        <v-card-title>
+          <p>힘이 되는 수강평을 남겨주세요!</p>
+        </v-card-title>
+        <v-card-actions>
+           <v-rating
+                v-model="rating"
+                :length="length"
+                color="yellow"
+                background-color="grey lighten-1"
+                large/>
+        </v-card-actions>
+        <v-card-text>
+           <v-textarea
+            filled
+            auto-grow
+            placeholder="좋은 수강평을 남겨주시면 지식공유자와 이후 배우는 사람들에게 큰 도움이 됩니다! 포인트도 드려요! (5자 이상)"
+            rows="4"
+            row-height="30"
+            shaped
+            v-model="content"
+          ></v-textarea>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn @click="cancel" color="warning">취소</v-btn>
+          <v-btn @click="regStudentComment(lectureDetailInfo.id)" color="primary">제출하기</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
 <script>
+import axios from 'axios'
+import { API_BASE_URL } from '@/constants/index'
 export default {
   props: {
     lectureVideoList: {
@@ -131,8 +169,10 @@ export default {
       player: null,
       id: null,
       sheet: false,
-      // mdi-format-list-bulleted-square
-      // mdi-message-processing
+      openStudentComment: false,
+      rating: 0,
+      length: 5,
+      content: '',
     };
   },
   components: {},
@@ -160,6 +200,31 @@ export default {
       this.$router.push(`/lecture/${videoId}/${lectureId}`)
       this.$emit('getInfo', videoId)
       this.id = videoId
+    },
+    regStudentComment(lectureId) {
+      // 테이블 구상 student_comment {id, writer(토큰값에 해당하는 사용자 아이디), lectureId(int), rating(int), content(string)}
+      // 테이블에 저장하는 메서드 
+      axios.post(`${API_BASE_URL}/manageLecture/regStudentComment`, {
+        lectureId: lectureId,
+        rating: this.rating,
+        content: this.content
+      })
+      .then(() => {
+        alert('수강평 제출을 완료했습니다!')
+        this.openStudentComment = !this.openStudentComment
+        this.refreshData();
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+    },
+    cancel() {
+      this.openStudentComment = !this.openStudentComment
+      this.refreshData()
+    },
+    refreshData() {
+      this.rating = 0
+      this.content = ''
     }
   }
 };

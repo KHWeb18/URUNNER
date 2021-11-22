@@ -3,6 +3,8 @@ package com.urunner.khweb.controller.lecture;
 
 import com.urunner.khweb.controller.dto.lecture.DtoWrapper;
 import com.urunner.khweb.controller.dto.lecture.JoinInstructorDto;
+import com.urunner.khweb.controller.dto.lecture.SearchCondition;
+import com.urunner.khweb.repository.lecture.LectureRepository;
 import com.urunner.khweb.service.lecture.LectureService;
 import com.urunner.khweb.service.member.MemberService;
 import com.urunner.khweb.service.mypage.MypageService;
@@ -27,6 +29,9 @@ public class LectureManageController {
 
     @Autowired
     private LectureService lectureService;
+
+    @Autowired
+    private LectureRepository lectureRepository;
 
     @PostMapping("/joinLecturer")
     public ResponseEntity<Boolean> joinLecturer(@RequestBody JoinInstructorDto joinInstructorDto) {
@@ -69,5 +74,11 @@ public class LectureManageController {
     public DtoWrapper mainWishList() {
 
         return lectureService.mainWishList(0);
+    }
+
+    @PostMapping("/mainSearch")
+    public DtoWrapper mainSearch(@RequestBody SearchCondition searchCondition) {
+
+        return new DtoWrapper(lectureRepository.searchPage(searchCondition, searchCondition.getPage()));
     }
 }

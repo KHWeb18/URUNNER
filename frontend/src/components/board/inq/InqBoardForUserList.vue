@@ -7,6 +7,11 @@
                     <h2 class="page_title">
                         <span>1:1 문의 게시판 for user</span></h2>
                 </div>
+
+            <router-link :to="{ name: 'InqBoardListPage' }">
+                <v-btn>1:1문의 게시판(운영자)</v-btn>
+            </router-link>
+
             </div>
             <div class="mr-9 hidden-md-and-up">
                 <div class="title_box2">
@@ -507,7 +512,7 @@ export default {
     color: #424242;
 }
 .title_box {
-    margin-top: 100px;
+    margin-top: 30px;
     margin-bottom: 100px;
 }
 .title_box2 {

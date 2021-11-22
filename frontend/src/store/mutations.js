@@ -11,8 +11,8 @@ import {
     FETCH_NOTICE,
     // 스터디
     FETCH_STUDY_MEMBER_LIST,
-    // 내학습
-    FETCH_MY_LECTURE_LIST,
+    // 판매중인 강의 리스트
+    FETCH_LECTURE_LIST,
     // 회원 관리
     FETCH_MEMBER_LIST,
 
@@ -22,8 +22,8 @@ export default {
     [FETCH_MEMBER] (state, member) {
         state.member = member
     },
-    [FETCH_MY_INTRODUCE] (state, introduce) {
-        state.introduce = introduce
+    [FETCH_MY_INTRODUCE] (state, profile) {
+        state.profile = profile
     },
     // 게시판
     [FETCH_BOARD_LIST] (state, boards) {
@@ -49,9 +49,9 @@ export default {
     [FETCH_STUDY_MEMBER_LIST] (state, studyMembers) {
         state.studyMembers = studyMembers
     },
-    // 내학습
-    [FETCH_MY_LECTURE_LIST] (state, myLecturelist) {
-        state.myLecturelist = myLecturelist
+    // 판매중인 강의 리스트
+    [FETCH_LECTURE_LIST] (state, callLecturelist) {
+        state.callLecturelist = callLecturelist
     },
     // 커리큘럼 관리
     saveSectionList(state, data) {

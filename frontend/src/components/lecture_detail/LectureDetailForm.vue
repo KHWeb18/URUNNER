@@ -119,8 +119,8 @@
           </v-card>
           <v-alert type="info">
             <div class="d-flex justify-space-between align-center">
-              <h4>수강 전 궁굼한 점이 있나요?</h4>
-              <v-btn icon><v-icon>mdi-chevron-right</v-icon></v-btn>
+              <h4 class="text-h5 font-weight-bold">수강 전 궁굼한 점이 있나요?</h4>
+              <v-btn icon to="/inqforuser"><v-icon>mdi-chevron-right</v-icon></v-btn>
             </div>
           </v-alert>
         </v-container>

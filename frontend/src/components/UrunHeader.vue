@@ -3,15 +3,18 @@
         <div class="d-flex justify-space-between align-center" style="width: 100%;">
             <v-app-bar-nav-icon class="hidden-lg-and-up" @click="drawer = !drawer"></v-app-bar-nav-icon>
             <div class="d-flex" id="logo">
-                <v-icon color="black">mdi-run-fast</v-icon>
-                <p class="d-inline text-h6 ma-0 text-decoration-underline">URUNNER</p>
+                <router-link to="/">
+                  <v-icon color="black">mdi-run-fast</v-icon>
+                  <p class="d-inline text-h6 ma-0 text-decoration-underline">URUNNER</p>
+                </router-link>
             </div>
             <div class="category d-flex text-h6 grey--text text--darken-2">
-                <div class="mr-9 hidden-md-and-down">로드맵</div>
                 <v-menu offset-y open-on-hover>
                   <template v-slot:activator="{ on, attrs }">
-                     <div class="mr-9 hidden-md-and-down" v-on="on" v-bind="attrs">강의</div>
-                  </template>
+                    <router-link :to="{ name: 'ForSaleLecturePage' }">
+                      <div class="mr-9 hidden-md-and-down" v-on="on" v-bind="attrs">강의</div>         
+                    </router-link>
+                  </template>           
                   <v-card width="400" max-height="500">
                     <v-list dense="dense" nav="nav">
                       <v-list-item v-for="item in category" :key="item" link="link">
@@ -22,10 +25,12 @@
                   </v-list>    
                   </v-card>
                 </v-menu>
-                <router-link :to="{ name: 'FreeBoardListPage' }">
+                <router-link :to="{ name: 'BoardCollectionPage' }">
                   <div class="mr-9 hidden-md-and-down">커뮤니티</div>
                 </router-link>
-                <div class="hidden-md-and-down">유러너</div>
+                <router-link to="/intro">
+                  <div class="mr-9 hidden-md-and-down">유러너</div>
+                </router-link>
             </div>
             <div class="end d-flex">
                 <div class="search hidden-md-and-down mr-6">
@@ -54,7 +59,7 @@
                             <v-icon color="primary" v-on="on" v-bind="attrs" class="mr-3">mdi-run-fast</v-icon>
                           </template>
                           <open-main-menu-logo @clickLogoutBtn="clickLogoutBtn"
-                                                @openRegInstructor="openRegInstructor"/>
+                                              @openRegInstructor="openRegInstructor"/>
                         </v-menu>
                     </div>
                     <div v-else class="d-flex">
@@ -140,5 +145,13 @@ import OpenMainMenuLogo from '../components/headerLoginMenu/OpenMainMenuLogo.vue
      border: 1px solid transparent;
      padding: 3px;
      box-shadow: none;
+  }
+  .v-application a {
+    text-decoration: none;
+    color: #5f5f5f;
+  }
+  .v-application a:hover {
+    text-decoration: none;
+    color: #1a76d2;
   }
 </style>

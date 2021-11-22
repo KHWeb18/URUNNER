@@ -23,6 +23,9 @@ import RegInstructorDialog from '../src/components/common/RegInstructorDialog.vu
 
 import { logout } from '@/util/APIUtil'
 
+import { mapActions } from 'vuex'
+import Vue from 'vue'
+
 export default {
   name: 'App',
   components: {
@@ -38,6 +41,9 @@ export default {
       openRegDialog: false
 
     }
+  },
+    mounted () {
+        this.fetchMyIntroduce(Vue.$cookies.get("USER_NAME"))
   },
   methods: {
     clickLoginBtn() {
@@ -58,7 +64,8 @@ export default {
     },
     closeDialog() {
       this.openRegDialog = !this.openRegDialog
-    }
+    },
+    ...mapActions(['fetchMyIntroduce'])
   }
 };
 </script>

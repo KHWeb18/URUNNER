@@ -317,6 +317,39 @@ public class LectureServiceImpl implements LectureService {
                                 .getResultList()
                 )).collect(Collectors.toList());
 
+        String username = authentication();
+        if (username.equals("anonymousUser")) {
+            log.info("로그인 되있지않은 사용자");
+        } else {
+            Member member = memberRepository.findByEmail(username);
+
+//            시간되면 fetch join으로 가져오기
+            List<Cart> carts = new ArrayList<>(member.getMyPage().getCartList());
+
+            List<WishList> wishLists = new ArrayList<>(member.getMyPage().getWishLists());
+
+            if (wishLists.size() != 0) {
+                for (int j = 0; j < wishLists.size(); j++) {
+                    boolean exist = lecture.get().getLecture_id().equals(wishLists.get(j).getLecture().getLecture_id());
+                    System.out.println("매칭 여부 확인 : " + exist);
+                    if (exist) {
+                        lectureDto.ifPresent(l -> l.setWishList(true));
+                    }
+                }
+            }
+
+            if (carts.size() != 0) {
+                for (int j = 0; j < carts.size(); j++) {
+                    boolean exist = lecture.get().getLecture_id().equals(carts.get(j).getLecture().getLecture_id());
+                    System.out.println("매칭 여부 확인 : " + exist);
+                    if (exist) {
+                        lectureDto.ifPresent(l -> l.setCart(true));
+                    }
+                }
+            }
+        }
+
+
 //      현재는 4방쿼리
 //        한방쿼리만드는법
 //       1. 네이티브쿼리로 dsl로

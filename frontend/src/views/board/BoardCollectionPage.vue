@@ -8,7 +8,7 @@
                         <h3>{{ isAuth }}</h3>
                         <span>{{ title }}</span></h2>
                 </div>
-            </div>            
+            </div>
             <div class="mr-9 hidden-md-and-up">
                 <div class="title_box2">
                 </div>

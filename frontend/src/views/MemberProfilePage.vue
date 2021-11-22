@@ -1,10 +1,5 @@
 <template>
     <div style="position: relative;min-height:900px;">
-        <v-spacer style="background-color: black;height: 90px;"></v-spacer>
-        <div class="box0">
-            <div class="title_image">
-                <img src="@/assets/logo.png" width="100" class="item"></div>
-            </div>
         <member-profile-form @submit="profileSubmit"/>
         <v-spacer></v-spacer>        
     </div>
@@ -21,20 +16,13 @@ export default {
     components: {
         MemberProfileForm
     },
-    data () {
-        return {            
-        }
-    },
     methods: {
         profileSubmit (payload) {            
-            const { userId, nickname, password, introduce } = payload
-            console.log("제출하기 전 const 상태는 ") 
-            console.log(payload)
-            console.log('-----------------------------------------------')
-            axios.put(`http://localhost:7777/profile/${this.$store.state.moduleA.email}`, { userId, nickname, password, introduce })
+            const { userIdInToken, nickname, password, introduce } = payload
+            axios.put(`http://localhost:7777/profile/${userIdInToken}`, { userIdInToken, nickname, password, introduce })
                     .then(res => {
                         if (res.data != "") {
-                            console.log(userId)
+                            console.log(userIdInToken)
                             console.log(this.$store.state.moduleA.email)
                             alert('변경 성공! - ' + res.data)
                             console.log(res.data)
@@ -47,7 +35,7 @@ export default {
                         alert(res.response.data.message)
                         alert('잘못된 접근! 로그인부터 해주세요')
                     })
-        }
+            },
     }
 }
 </script>

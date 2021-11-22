@@ -77,7 +77,10 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         List<String> authority = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
 
+        System.out.println("권한 설정 여부 " + authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
+
         Algorithm algorithm = Algorithm.HMAC256("urunner".getBytes());
+
         String access_token = JWT.create()
                 .withSubject(name)
                 .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 10000)) // 10^-3 초

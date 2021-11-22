@@ -10,8 +10,8 @@ import {
     FETCH_NOTICE,
     // 스터디
     FETCH_STUDY_MEMBER_LIST,
-    // 내학습
-    FETCH_MY_LECTURE_LIST,
+    // 강의 리스트
+    FETCH_LECTURE_LIST,
     // 회원 관리
     FETCH_MEMBER_LIST,
 
@@ -28,11 +28,8 @@ export default {
     },
     fetchMyIntroduce ({ commit }, userId) {
         return axios.get(`http://localhost:7777/profile/introduce/${userId}`)
-                .then((res) => {
+                .then((res) => {                    
                     commit(FETCH_MY_INTRODUCE, res.data)
-                    console.log('res데이타는')
-                    console.log(res.data)
-                    this.$store.state.introduce = res.data
                 })
     },
     // 공지사항
@@ -63,7 +60,6 @@ export default {
                 })
     },
     fetchFreeCommentList ({ commit }, No) {
-        console.log('fetchFreeCommentList 작동중 받은 No(stated의 boardNo) 값은 : ' + No)
         return axios.get(`http://localhost:7777/freeboard/comment/${No}`)
                 .then((res) => {
                     commit(FETCH_COMMENT_LIST, res.data)
@@ -71,7 +67,6 @@ export default {
 
     },
     fetchFreeBoardListWithFilter ({ commit }, complete) {
-        console.log(complete)
         return axios.get(`http://localhost:7777/freeboard/lists/${complete}`)
                 .then((res) => {
                     const reverse = [...res.data].reverse();
@@ -93,7 +88,6 @@ export default {
                 })
     },
     fetchStudyCommentList ({ commit }, No) {
-        console.log('fetchStudyCommentList 작동중 받은 No(stated의 boardNo) 값은 : ' + No)
         return axios.get(`http://localhost:7777/studyboard/comment/${No}`)
                 .then((res) => {
                     commit(FETCH_COMMENT_LIST, res.data)
@@ -103,13 +97,10 @@ export default {
     fetchStudyMemberList ({ commit }, boardNo) {
         return axios.get(`http://localhost:7777/studyboard/memberList/${boardNo}`)
                 .then((res) => {
-                    console.log('fetchStudyMemberList DATA')
-                    console.log(res.data)
                     commit(FETCH_STUDY_MEMBER_LIST, res.data)
                 })
     },
     fetchStudyBoardListWithFilter ({ commit }, complete) {
-        console.log(complete)
         return axios.get(`http://localhost:7777/studyboard/lists/${complete}`)
                 .then((res) => {
                     const reverse = [...res.data].reverse();
@@ -131,7 +122,6 @@ export default {
                 })
     },
     fetchQnACommentList ({ commit }, No) {
-        console.log('fetchQnACommentList 작동중 받은 No(stated의 boardNo) 값은 : ' + No)
         return axios.get(`http://localhost:7777/qnaboard/comment/${No}`)
                 .then((res) => {
                     commit(FETCH_COMMENT_LIST, res.data)
@@ -141,13 +131,10 @@ export default {
     fetchQnAMemberList ({ commit }, boardNo) {
         return axios.get(`http://localhost:7777/qnaboard/memberList/${boardNo}`)
                 .then((res) => {
-                    console.log('fetchQnAMemberList DATA')
-                    console.log(res.data)
                     commit(FETCH_STUDY_MEMBER_LIST, res.data)
                 })
     },
     fetchQnABoardListWithFilter ({ commit }, complete) {
-        console.log(complete)
         return axios.get(`http://localhost:7777/qnaboard/lists/${complete}`)
                 .then((res) => {
                     const reverse = [...res.data].reverse();
@@ -164,8 +151,6 @@ export default {
     },
     fetchInqBoardForUserList ({ commit }, userId) {
         // var userId = 'start132@naver.com'
-        console.log('state emial 값 왜 못받아? :')
-        console.log(userId)
         return axios.get(`http://localhost:7777/inqboard/lists/1/${userId}`)
                 .then((res) => {
                     const reverse = [...res.data].reverse();
@@ -188,12 +173,10 @@ export default {
     fetchInqMemberList ({ commit }, boardNo) {
         return axios.get(`http://localhost:7777/inqboard/memberList/${boardNo}`)
                 .then((res) => {
-                    console.log(res.data)
                     commit(FETCH_STUDY_MEMBER_LIST, res.data)
                 })
     },
     fetchInqBoardListWithFilter ({ commit }, complete) {
-        console.log(complete)
         return axios.get(`http://localhost:7777/inqboard/lists/${complete}`)
                 .then((res) => {
                     const reverse = [...res.data].reverse();
@@ -204,14 +187,32 @@ export default {
     fetchMyLectureList ({ commit }) {
         return axios.get('http://localhost:7777/mypage/myLecturelist')
                 .then((res) => {
-                    commit(FETCH_MY_LECTURE_LIST, res.data)
-                })
+                    commit(FETCH_LECTURE_LIST, res.data)
+        }).catch(err=>{alert(err.response.data.message)})
     },
     fetchMemberList({ commit }) {
         return axios.get('http://localhost:7777/memberManagement/memberList')
         .then( (res) => {
-            console.log(res.data)
             commit(FETCH_MEMBER_LIST, res.data)
+        }).catch(err=>{alert(err.response.data.message)})
+    },
+    // 판매중인 수강 리스트
+    fetchCallLectureList({ commit }) {
+        return axios.get('http://localhost:7777/callLecture/lists')
+        .then( (res) => {
+            commit(FETCH_LECTURE_LIST, res.data)
+        }).catch(err=>{alert(err.response.data.message)})
+    },
+    fetchCallLectureListWithCategory({ commit }, categoryId) {
+        return axios.get(`http://localhost:7777/callLecture/lists/${categoryId}`)
+        .then( (res) => {
+            commit(FETCH_LECTURE_LIST, res.data)
+        }).catch(err=>{alert(err.response.data.message)})
+    },
+    fetchCallLectureListWithFilter ({ commit }, word) {
+        return axios.get(`http://localhost:7777/callLecture/lists/search/${word}`)
+                .then((res) => {
+                    commit(FETCH_LECTURE_LIST, res.data)
         }).catch(err=>{alert(err.response.data.message)})
     }
 }
