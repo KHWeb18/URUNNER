@@ -10,7 +10,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     public Member findByEmail(String email);
 
-    public Member findByName(String username);
+    public Member findByNickname(String nickname);
 
     public void deleteByEmail(String email);
 
