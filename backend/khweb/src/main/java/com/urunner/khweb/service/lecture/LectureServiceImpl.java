@@ -5,6 +5,7 @@ import com.urunner.khweb.entity.lecture.Lecture;
 //import com.urunner.khweb.entity.lecture.LectureImage;
 import com.urunner.khweb.entity.lecture.LectureList;
 import com.urunner.khweb.entity.lecture.LectureVideo;
+import com.urunner.khweb.entity.lecture.Review;
 import com.urunner.khweb.entity.member.Member;
 import com.urunner.khweb.entity.mypage.Cart;
 
@@ -514,6 +515,27 @@ public class LectureServiceImpl implements LectureService {
         log.info(findAllLecture.get().findFirst().get().getCategoryList().toString());
 
         return new DtoWrapper(lectureDtos);
+    }
+
+    @Autowired
+    private ReviewRepository reviewRepository;
+
+    @Override
+    public Boolean regStudentComment(ReviewDto reviewDto) {
+
+//        구매한사람인지 체크하는 메서드 ( 구입 테이블에서 로드하는 로직)
+        Lecture lecture = em.find(Lecture.class, reviewDto.getLectureId());
+
+        Review review = Review.builder()
+                .rating(reviewDto.getRating())
+                .content(reviewDto.getContent())
+                .build();
+
+        review.setLecture(lecture);
+
+        reviewRepository.save(review);
+
+        return true;
     }
 
     @Override
