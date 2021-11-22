@@ -80,6 +80,8 @@ export default {
   },
   created() {
     this.wish = this.lecture.wishList
+    console.log('this.lecture')
+    console.log(this.lecture)
     this.cart = this.lecture.cart
   },
   methods: {

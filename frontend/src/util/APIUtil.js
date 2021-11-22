@@ -15,6 +15,7 @@ import {
     NICKNAME
 } from '../constants/index'
 import state from '../store/webState'
+import { Base64 } from 'js-base64';
 
 function createdPaymentRandomNumber(){
     var result = ''
@@ -46,10 +47,9 @@ function loginProcess(loginfo) {
 // Jwt payload부분을 base64 디코딩한부분
 function PasingInfor(giveMeToken) {
     
-
     const accessToken = giveMeToken.access_token.split(".")
 
-     let base64Encoded = atob(accessToken[1])
+     let base64Encoded = Base64.decode(accessToken[1])
 
      let result = JSON.parse(base64Encoded.toString())
      let username = result.sub
@@ -59,6 +59,8 @@ function PasingInfor(giveMeToken) {
      let roles = result.roles
 
      let name = result.name
+
+     console.log(name)
 
      let nickname = result.nickname
 
