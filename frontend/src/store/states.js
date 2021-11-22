@@ -54,6 +54,7 @@ export default {
   studyMembers: [],
   // 판매중인 강의 리스트
   callLecturelist: [],
+  tempCate: null,
   //커리큘럼 관리
   sectionList: [],
   lectureVideoList: [],

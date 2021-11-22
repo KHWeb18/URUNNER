@@ -22,11 +22,10 @@ export default {
             axios.put(`http://localhost:7777/profile/${userIdInToken}`, { userIdInToken, nickname, password, introduce })
                     .then(res => {
                         if (res.data != "") {
-                            console.log(userIdInToken)
-                            console.log(this.$store.state.moduleA.email)
-                            alert('변경 성공! - ' + res.data)
+                            alert('변경 완료')
                             console.log(res.data)
                             this.$store.state.moduleA.nickname = res.data.nickname
+                            this.$store.state.profile.introduce = res.data.introduce
                         } else {
                             alert('변경 실패! - ' + res.data)                            
                         }

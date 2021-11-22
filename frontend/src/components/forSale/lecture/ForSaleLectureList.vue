@@ -16,7 +16,7 @@
                                 <v-list-item-title v-text="item.title"></v-list-item-title>
                             </v-list-item-content>
                         </template>
-                        <v-list-item v-for="child in item.items" :key="child.title">
+                        <v-list-item v-for="child in item.items" :key="child.value">
                             <v-list-item-content>
                                 <!-- <v-btn @click="selectCategory(child)" style="cursor:pointer">{{child.title}}</v-btn> -->
                                 <v-list-item-title class="child" v-text="child.title" @click="selectCategory(child)" style="cursor:pointer"></v-list-item-title>
@@ -84,7 +84,8 @@
             <!-- 분류창 -->
             <v-spacer class="forLine">
                 <v-icon>mdi-animation-outline</v-icon>
-                <b class="tag_button" @click="callAll()">&nbsp;&nbsp;ALL</b>&nbsp;
+                <b class="tag_button hidden-sm-and-down" @click="callAll()">&nbsp;&nbsp;ALL</b>&nbsp;
+                <b class="tag_button hidden-md-and-up" @click="callAll()">&nbsp;&nbsp;전체 보기</b>&nbsp;
                 <!-- <b> ＞ </b>&nbsp;&nbsp;&nbsp; -->
                 <b class="tag_button" v-show="path !== ''">＞{{ path }}</b>
                 <b v-show="difValue !== null">&nbsp;＞&nbsp;{{ difValue }}</b>
@@ -168,7 +169,7 @@
                         <div v-for="mob in paginatedData2" :key="mob.boardNo">
                             <div class="mx-auto2" @click="goPage(mob.id)">
                                 <div class="card_img" @click="goPage(mob.id)">
-                                    <v-img :src="`http://localhost:7777/lecture/image/${mob.thumbPate}/${mob.writer}`" height="150px" width="150px"></v-img>
+                                    <v-img :src="`http://localhost:7777/lecture/image/${mob.thumbPath}/${mob.writer}`" height="150px" width="150px"></v-img>
                                 </div>
                                 <div class="card_info">                                    
                                     <div style="height:66px;"><!-- title -->
@@ -206,6 +207,38 @@
                     </div>
                 </div>
             </v-container>
+
+            <!-- 모바일 사이즈 때 나타나는 글쓰기 버튼 -->
+            <v-row justify="center">
+                <v-dialog v-model="dialog" scrollable max-width="300px">
+                <template v-slot:activator="{ on, attrs }">
+                    <v-btn color="primary" fab dark v-bind="attrs" v-on="on" fixed right style="top:650px;left:410px;" class="hidden-md-and-up">
+                        <v-icon dark>mdi-plus</v-icon>
+                    </v-btn>
+                </template>
+                <v-card>
+                    <div class="title2" @click="callAll()">전체 보기</div>
+                    <v-list-group
+                        v-for="item in items"
+                        :key="item.title"
+                        v-model="item.active"
+                        :prepend-icon="item.action"
+                        no-action="no-action">
+                        <template v-slot:activator>
+                            <v-list-item-content>
+                                <v-list-item-title v-text="item.title"></v-list-item-title>
+                            </v-list-item-content>
+                        </template>
+                        <v-list-item v-for="child in item.items" :key="child.value">
+                            <v-list-item-content>
+                                <!-- <v-btn @click="selectCategory(child)" style="cursor:pointer">{{child.title}}</v-btn> -->
+                                <v-list-item-title class="child" v-text="child.title" @click="selectCategory(child)" style="cursor:pointer"></v-list-item-title>
+                            </v-list-item-content>
+                        </v-list-item>
+                    </v-list-group>
+                </v-card>
+                </v-dialog>
+            </v-row>
         </div>
     </div>
 </template>
@@ -234,7 +267,7 @@ export default {
             // 인공지능', '딥러닝', '데이터베이스', 'SQL', 'MongoDB', '보안', '모바일 앱 개발', 'Swift', '안드로이드', 'Kotlin', '코딩테스트', '기타'
                 items: [
                     {
-                        title: 'JAVA', value: 1
+                        title: '자바', value: 1
                     }, {
                         title: '개발 프로그래밍', value: 2
                     }, {
@@ -248,7 +281,7 @@ export default {
                     }, {
                         title: 'Html Css', value: 6
                     }, {
-                        title: 'JavaScript Css', value: 9
+                        title: 'JavaScript', value: 9
                     }, {
                         title: '게임 개발', value: 10
                     }, {
@@ -338,12 +371,20 @@ export default {
         copiedList: [],
         refreshCheck: 1,
         cart: null,
-        wish: null
+        wish: null,
+        dialog: false    
     }),
     created () {
+        this.temp000 = this.$store.state.tempCate
         setTimeout(() => {
             this.copiedList = this.callLecturelist
-            }, 1000)
+            this.wish = this.callLecturelist.wishList
+            console.log('this.$store.state.tempCate : ' + this.$store.state.tempCate)
+            if(this.$store.state.tempCate !== null) {
+                this.fetchCallLectureListWithCategory(this.$store.state.tempCate)
+                this.$store.state.tempCate = null
+            }
+            }, 300)
     },
     watch: {
         word(newVal) {
@@ -408,11 +449,13 @@ export default {
                 this.copiedList = this.callLecturelist
                 })
             this.path = data.title
+            this.dialog = false
         },
         callAll() {
             this.$emit("callAll", {})
             this.word = '', this.path = '',
             this.priceValue = null, this.difValue = null, this.ratingValue = null
+            this.dialog = false
         },
         searchingWord(data) {
             this.fetchCallLectureListWithFilter(data)
@@ -424,6 +467,7 @@ export default {
         toggleHeartBtn(lectureId) {
         axios.get(`http://localhost:7777/manageLecture/addToWish/${lectureId}`)
                 .then(({ data }) => {
+                    console.log(data)
                 this.wish = data
                 })
         },
@@ -746,6 +790,40 @@ p {
     color: #0288D1;
     font-weight: 700;
 }
+.title2 {
+    display: flex;
+    align-items: center;
+    font-size: 15px;
+    font-weight: 700;
+    background-color: rgb(246, 246, 246);
+    height: 45px;
+    border-bottom: 1px solid #EEEEEE;
+    padding-left: 15px;
+    cursor: pointer;
+}
+.title2:hover {
+    background-color: #eeeeee;
+}
+
+
+.v-list-item.theme--light {
+    padding-left:30px!important;
+    border-top: 1px solid #EEEEEE;
+    background-color: white;
+    font-weight: 500;
+}
+.v-list-group.v-list-group--no-action {
+    background-color: #f8f8f8 !important;
+}
+
+
+
+
+
+
+
+
+
 
 
 .mx-auto {
@@ -757,9 +835,9 @@ p {
   opacity:1;
   transform:scale(1);
 }
-.lecture_card:hover .btn-plus2 {
+/* .lecture_card:hover .btn-plus2 {
   opacity:1;
-}
+} */
 .btn_pagination {
     background-color: transparent;
     box-shadow: none;
@@ -1037,8 +1115,6 @@ input:focus {
   padding: 5px;
   text-align:center;
   border-radius: 6px;
-  
-  /* 추가된 부분 */
   opacity:0;
 }
 .btn-plus2 span {
@@ -1049,6 +1125,9 @@ input:focus {
     color: #ffffff;
     user-select: none;
     opacity:0.8;
+}
+.btn-plus2:hover {
+    opacity:1;
 }
 
 
