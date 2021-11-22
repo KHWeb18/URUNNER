@@ -22,7 +22,6 @@ public class PurchasedLecture {
 
     private String title;
 
-
     private Long lecture_id;
 
     @Column(name = "member_no")

@@ -40,6 +40,7 @@
 <script>
 import axios from 'axios'
 import {createdPaymentRandomNumber} from '@/util/APIUtil.js'
+//import Vue from 'vue'
 
 export default {
     name:'PaymentBox',
@@ -55,35 +56,39 @@ export default {
             clientKey:'test_ck_JQbgMGZzorzQGM6Nxm7Vl5E1em4d',
             lectureList:'',
             orderName:'',
-            orderId:''
+            orderId:'',
+            customerName:'',
+            amount:''
         }
     },
     mounted(){
-        
         this.orderId = createdPaymentRandomNumber();
         alert(this.orderId);
-        this.lectureList = this.lectureInfo.lectureList
-        alert(this.lectureList)
-        if(this.lectureList.length>1){
-            this.orderName = this.lectureList[0] + " 외 "+(this.lectureList.length-1) +" 건"
-        }
-        alert(this.orderName)
+        this.customerName = this.$cookies.get("USER_NAME")
     },
     methods:{
         openPayment(){
             this.open = !this.open
+            this.lectureList = this.lectureInfo.lectureList
+            this.amount = this.lectureInfo.totalPrice
+            alert(this.lectureList)
+            if(this.lectureList.length>1){
+                this.orderName = this.lectureList[0] + " 외 "+(this.lectureList.length-1) +" 건"
+            }
+            alert(this.orderName)
+            alert(this.customerName)
+            alert(this.amount)
+        
         },
         onPaymentCard(){ 
-            const{lectureList} =this    
-            const {orderName} = this
-            const {orderId} = this
+            const{lectureList,orderName,orderId,customerName,amount} =this    
             axios.post('http://localhost:7777/payment/pay-ready',{lectureList})
             const tossPayments = window.TossPayments(this.clientKey)
             tossPayments.requestPayment('카드', {
-                amount: 100,  //lectureInfo의 price
+                amount: amount,  //lectureInfo의 price
                 orderId: orderId,   //프론트에서 처리할 메소드 구현
                 orderName: orderName,    //lectureInfo의 title
-                customerName: '박토스', //cookies의 userId ( 백엔드에서 토큰으로 처리)
+                customerName: customerName, //cookies의 userId ( 백엔드에서 토큰으로 처리)
                 successUrl: window.location.origin + '/payment/success/',
                 failUrl: window.location.origin + '/payment/fail',
             })
@@ -94,16 +99,14 @@ export default {
             })
         },
         onPaymentToss(){
-            const{lectureList} =this    
-            const {orderName} = this
-            const {orderId} = this
+            const{lectureList,orderName,orderId,customerName,amount} =this   
             axios.post('http://localhost:7777/payment/pay-ready',{lectureList})
             const tossPayments = window.TossPayments(this.clientKey)
             tossPayments.requestPayment('토스결제', {
-                amount: 100,
+                amount: amount,
                 orderId: orderId,
                 orderName: orderName,
-                customerName: '박토스',
+                customerName: customerName,
                 successUrl: window.location.origin+'/payment/success',
                 failUrl: window.location.origin+'/payment/fail',
             })
