@@ -100,7 +100,9 @@
             </v-card-actions>
             <v-card-subtitle>
               <div class="d-flex justify-space-around text-h7 mb-3">
+
                 <span><v-icon :color="lectureDetailInfo.wishList ? 'red' : null" @click="addWishList(lectureDetailInfo.id)">mdi-cards-heart-outline</v-icon> {{ wishListCount }}</span> |
+
                 <span><v-icon>mdi-share-variant-outline</v-icon> 공유</span>
               </div>
             </v-card-subtitle>
@@ -168,6 +170,7 @@ export default {
         .then(res => {
           this.wishListCount = res.data.wishListCount
           this.lectureDetailInfo.wishList = res.data.exist
+
       }
       )
 

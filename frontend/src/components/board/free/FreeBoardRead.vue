@@ -24,7 +24,7 @@
                 </div>
                 <div v-show="board.notice == 'false'" class="complete_btn_align">
                     <v-btn v-show="this.$store.state.moduleA.email = board.writer" @click="endRecruit(board.boardNo)">질문 완료</v-btn>
-                </div>
+                </div>                
                 <div class="complete_btn_align">
                     <v-icon size="38px" color="#E57373" @click="appl(board.boardNo)">mdi-heart</v-icon>
                 </div>

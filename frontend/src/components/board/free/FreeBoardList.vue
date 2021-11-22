@@ -753,7 +753,7 @@ input:hover::placeholder {
     box-shadow: none;
 }
 .button_box {
-    max-width: 1140px;
+    max-width: 1270px;
     margin-top: 10px;
     display: flex;
     justify-content: flex-end;
