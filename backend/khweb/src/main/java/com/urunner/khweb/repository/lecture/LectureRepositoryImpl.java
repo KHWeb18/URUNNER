@@ -1,15 +1,20 @@
 package com.urunner.khweb.repository.lecture;
 
+import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.urunner.khweb.controller.dto.lecture.CategoryName;
 import com.urunner.khweb.controller.dto.lecture.LectureSearchDto;
 import com.urunner.khweb.controller.dto.lecture.QLectureSearchDto;
 import com.urunner.khweb.controller.dto.lecture.SearchCondition;
+import com.urunner.khweb.entity.lecture.QLecture;
 import com.urunner.khweb.entity.member.Member;
 import com.urunner.khweb.entity.mypage.Cart;
 import com.urunner.khweb.entity.mypage.WishList;
+import com.urunner.khweb.entity.sort.QCategory;
+import com.urunner.khweb.entity.sort.QCategoryLecture;
 import com.urunner.khweb.repository.member.MemberRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +32,8 @@ import java.util.List;
 
 import static com.urunner.khweb.entity.lecture.QLecture.*;
 import static com.urunner.khweb.entity.mypage.QCart.*;
+import static com.urunner.khweb.entity.sort.QCategory.*;
+import static com.urunner.khweb.entity.sort.QCategoryLecture.*;
 
 @Slf4j
 @Transactional
@@ -44,7 +51,7 @@ public class LectureRepositoryImpl implements LectureRepositoryCustom {
     @Override
     public Page<LectureSearchDto> searchPage(SearchCondition condition, int page) {
 
-        PageRequest pageRequest = PageRequest.of(page, 4);
+        PageRequest pageRequest = PageRequest.of(page, 12);
 
         List<LectureSearchDto> content = queryFactory.select(
                         new QLectureSearchDto(
@@ -58,8 +65,11 @@ public class LectureRepositoryImpl implements LectureRepositoryCustom {
                                 lecture.thumb_path,
                                 lecture.detail_path,
                                 lecture.grade
-                        ))
+                        )
+                        )
                 .from(lecture)
+//                .join(lecture.categoryList, categoryLecture)
+//                .join(categoryLecture.category, category)
                 .where(titleNameEq(condition.getName()),
                         categoryEq(condition.getCategoryName()),
                         lecture.inProgress.eq(true)
@@ -67,6 +77,7 @@ public class LectureRepositoryImpl implements LectureRepositoryCustom {
                 .offset(pageRequest.getOffset())
                 .limit(pageRequest.getPageSize())
                 .fetch();
+
 
         JPAQuery<LectureSearchDto> countQuery = queryFactory.select(
                         new QLectureSearchDto(
