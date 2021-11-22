@@ -9,7 +9,7 @@
           required
         ></v-text-field>
         <v-text-field
-          v-model="name"
+          v-model="nickname"
           label="Name"
           required
         ></v-text-field>
@@ -32,13 +32,13 @@ export default {
   data() {
     return {
       email: '',
-      name: ''
+      nickname: ''
     }
   },
   methods: {
     handleSubmit() {
-      const{email, name} = this
-      this.$emit('submit', { email, name })
+      const{email, nickname} = this
+      this.$emit('submit', { email, nickname })
     }
   }
 }
