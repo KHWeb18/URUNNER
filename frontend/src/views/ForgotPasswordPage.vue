@@ -13,8 +13,8 @@ export default {
   },
   methods: {
     onSubmit (payload) {
-      const { email, name } = payload
-      axios.post('http://localhost:7777/memberManagement/findingpw', { email, name })
+      const { email, nickname } = payload
+      axios.post('http://localhost:7777/memberManagement/findingpw', { email, nickname })
           .then(res => {
           if (res.data == 'success') {
           alert('고객님의 메일로 관련 링크를 전달 드렸습니다.')

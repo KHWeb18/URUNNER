@@ -172,9 +172,9 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
             log.info("not find user");
             return "NotFindUser";
         } else {
-            name = member.getName();
+            name = member.getNickname();
 
-            if (!name.equals(memberRes.getName())) {
+            if (!name.equals(member.getNickname())) {
                 log.info("not match id");
                 return "NotMatchId";
             }
@@ -189,7 +189,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     // 비밀번호 재설정 메일이후 링크를 통해 아이디로 회원 검색 (없을 시 null 반환)
     @Override
     public Member findByName(String name) throws Exception {
-        Member member = memberRepository.findByName(name);
+        Member member = memberRepository.findByNickname(name);
 
         if (member == null) {
             log.info("login(): 그런 사람 없다.");
