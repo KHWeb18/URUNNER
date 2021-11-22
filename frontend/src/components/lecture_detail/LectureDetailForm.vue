@@ -100,7 +100,7 @@
             </v-card-actions>
             <v-card-subtitle>
               <div class="d-flex justify-space-around text-h7 mb-3">
-                <span><v-icon>mdi-cards-heart-outline</v-icon> 326</span> |
+                <span><v-icon @click="addWishList(lectureDetailInfo.id)">mdi-cards-heart-outline</v-icon> {{ wishListCount }}</span> |
                 <span><v-icon>mdi-share-variant-outline</v-icon> 공유</span>
               </div>
             </v-card-subtitle>
@@ -130,7 +130,11 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
+  data:() => ({
+    wish : null
+  }),
   props: {
     lectureVideoList: {
       type: Array,
@@ -138,6 +142,10 @@ export default {
     },
     lectureDetailInfo: {
       type: Object,
+      require: true
+    },
+    wishListCount: {
+      type: Number,
       require: true
     }
   },
@@ -155,6 +163,17 @@ export default {
      getCurrencyFormat(value) {
       return this.$currencyFormat(value);
     },
+    addWishList(value) {
+      axios.get(`http://localhost:7777/manageLecture/addToWishInLecture/${value}`)
+      .then(res => {
+        console.log(res.data)
+        this.wishListCount = res.data.wishListCount
+        console.log(res.data.wishListCount)
+        console.log(res.data.exist)
+      }
+      )
+
+    }
   }
 
 }
