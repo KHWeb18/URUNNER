@@ -10,6 +10,7 @@
 
 import MemberProfileForm from '@/components/member/MemberProfileForm.vue'
 import axios from 'axios'
+import Vue from 'vue'
 
 export default {
     name: 'MemberProfilePage',
@@ -26,6 +27,8 @@ export default {
                             console.log(res.data)
                             this.$store.state.moduleA.nickname = res.data.nickname
                             this.$store.state.profile.introduce = res.data.introduce
+                            Vue.$cookies.set("NICKNAME", res.data.nickname)
+                            console.log('바뀐 아이디 값은 : ' + Vue.$cookies.get("NICKNAME"))
                         } else {
                             alert('변경 실패! - ' + res.data)                            
                         }
