@@ -30,7 +30,50 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="12" md="8" >
+      <v-col cols="12" md="4">
+        <v-container>
+          <v-card class="mx-auto" shaped>
+            <v-card-title>
+              <h2 class="secondary--text">
+                {{ getCurrencyFormat(lectureDetailInfo.price) }}원
+              </h2>
+            </v-card-title>
+            <v-card-actions class="pa-3">
+              <v-btn v-if="lectureDetailInfo.cart" class="primary" x-large block to="/cart">결제하기</v-btn>
+              <v-btn v-else class="primary" x-large block @click="addToCart(lectureDetailInfo.id)">수강하기</v-btn>
+            </v-card-actions>
+            <v-card-subtitle>
+              <div class="d-flex justify-space-around text-h7 mb-3">
+                <span>
+                  <v-icon :color="lectureDetailInfo.wishList ? 'red' : null" @click="addWishList(lectureDetailInfo.id)"> 
+                    mdi-cards-heart
+                  </v-icon>{{ wishListCount }}
+                </span> |
+                <span @click="share" class="share_btn"><v-icon>mdi-share-variant-outline</v-icon> 공유</span>
+              </div>
+            </v-card-subtitle>
+            <v-alert
+              border="left"
+              colored-border
+              color="info"
+            >
+            <div class="text-h7 secondary--text">
+              <p>+ 지식공유자 : {{ lectureDetailInfo.writer }}</p>
+              <p>+ 평생 무제한 수강</p>
+              <p>+ 수료증 발급 강의</p>
+              <p>+ <span :class="grade == '입문' ? 'font-weight-bold' : ''">입문</span> 〉 <span :class="grade == '초급' ? 'font-weight-bold' : ''">초급</span> 〉 <span :class="grade == '중급 이상' ? 'font-weight-bold' : ''">중급 이상</span></p>
+            </div>
+            </v-alert>
+          </v-card>
+          <v-alert type="info">
+            <div class="d-flex justify-space-between align-center">
+              <h4 class="text-h5 font-weight-bold">수강 전 궁굼한 점이 있나요?</h4>
+              <v-btn icon to="/inqforuser"><v-icon>mdi-chevron-right</v-icon></v-btn>
+            </div>
+          </v-alert>
+        </v-container>
+      </v-col>
+      <v-col cols="12" md="8" class="order-md-first">
         <v-container>
           <div>
             <h4 class="text-sm-h5 font-weight-bold mb-2">강의 소개</h4>
@@ -87,52 +130,13 @@
           </div>
         </v-container>
       </v-col>
-      <v-col sm="4" class="hidden-sm-and-down">
-        <v-container>
-          <v-card class="mx-auto" shaped>
-            <v-card-title>
-              <h2 class="secondary--text">
-                {{ getCurrencyFormat(lectureDetailInfo.price) }}원
-              </h2>
-            </v-card-title>
-            <v-card-actions class="pa-3">
-              <v-btn class="primary" x-large block>수강하기</v-btn>
-            </v-card-actions>
-            <v-card-subtitle>
-              <div class="d-flex justify-space-around text-h7 mb-3">
-
-                <span><v-icon :color="lectureDetailInfo.wishList ? 'red' : null" @click="addWishList(lectureDetailInfo.id)">mdi-cards-heart-outline</v-icon> {{ wishListCount }}</span> |
-
-                <span><v-icon>mdi-share-variant-outline</v-icon> 공유</span>
-              </div>
-            </v-card-subtitle>
-            <v-alert
-              border="left"
-              colored-border
-              color="info"
-            >
-            <div class="text-h7 secondary--text">
-              <p>+ 지식공유자 : {{ lectureDetailInfo.writer }}</p>
-              <p>+ 평생 무제한 수강</p>
-              <p>+ 수료증 발급 강의</p>
-              <p>+ <span :class="grade == '입문' ? 'font-weight-bold' : ''">입문</span> 〉 <span :class="grade == '초급' ? 'font-weight-bold' : ''">초급</span> 〉 <span :class="grade == '중급 이상' ? 'font-weight-bold' : ''">중급 이상</span></p>
-            </div>
-            </v-alert>
-          </v-card>
-          <v-alert type="info">
-            <div class="d-flex justify-space-between align-center">
-              <h4 class="text-h5 font-weight-bold">수강 전 궁굼한 점이 있나요?</h4>
-              <v-btn icon to="/inqforuser"><v-icon>mdi-chevron-right</v-icon></v-btn>
-            </div>
-          </v-alert>
-        </v-container>
-      </v-col>
     </v-row>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
+import { API_BASE_URL } from '../../constants/index'
 export default {
   data:() => ({
     wish : null
@@ -154,7 +158,7 @@ export default {
   computed: {
     grade() {
       return this.lectureDetailInfo.grade
-    }
+    },
   },
   methods: {
     calcDuration(value) {
@@ -165,21 +169,60 @@ export default {
      getCurrencyFormat(value) {
       return this.$currencyFormat(value);
     },
-    addWishList(value) {
-        axios.get(`http://localhost:7777/manageLecture/addToWishInLecture/${value}`)
+    addWishList(lectureId) {
+        axios.get(`${API_BASE_URL}/manageLecture/addToWishInLecture/${lectureId}`)
         .then(res => {
+          console.log(res.data);
           this.wishListCount = res.data.wishListCount
           this.lectureDetailInfo.wishList = res.data.exist
-
-      }
-      )
-
+      })
+    },
+    addToCart(lectureId) {
+      axios.get(`${API_BASE_URL}/manageLecture/addToCart/${lectureId}`)
+            .then(({ data }) => {
+                this.lectureDetailInfo.cart = data
+            })
+    },
+    share() {
+        window.Kakao.Link.sendDefault({
+          objectType: 'feed',
+          content: {
+            title: `${this.lectureDetailInfo.title}`,
+            description: `${this.lectureDetailInfo.desc}`,
+            imageUrl: 'https://k.kakaocdn.net/14/dn/btrlY4ARapd/pC9AWPdkF3YgU6s8pd0xx0/o.jpg',
+            link: {
+              mobileWebUrl: `http://localhost:8080/course/${this.lectureDetailInfo.id}`,
+              webUrl: `http://localhost:8080/course/${this.lectureDetailInfo.id}`,
+            },
+          },
+          social: {
+            likeCount: this.wishListCount
+          },
+          buttons: [
+            {
+              title: '웹으로 보기',
+              link: {
+                mobileWebUrl: `http://localhost:8080/course/${this.lectureDetailInfo.id}`,
+                webUrl: `http://localhost:8080/course/${this.lectureDetailInfo.id}`,
+              },
+            },
+            {
+              title: '앱으로 보기',
+              link: {
+                mobileWebUrl: `http://localhost:8080/course/${this.lectureDetailInfo.id}`,
+                webUrl: `http://localhost:8080/course/${this.lectureDetailInfo.id}`,
+              },
+            },
+          ],
+      })
     }
   }
 
 }
 </script>
 
-<style>
-
+<style scoped>
+.share_btn {
+  cursor: pointer;
+}
 </style>

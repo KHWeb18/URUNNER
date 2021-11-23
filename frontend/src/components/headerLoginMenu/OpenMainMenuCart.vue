@@ -1,6 +1,6 @@
 <template>
   <v-card color="primary" width="500">
-    <v-tabs fixed-tabs slider-color="primary" >
+    <v-tabs fixed-tabs slider-color="primary">
       <v-tab v-for="(item, index) in items" :key="index">
         {{ item }}
       </v-tab>

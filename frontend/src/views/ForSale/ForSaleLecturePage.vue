@@ -20,10 +20,11 @@ export default {
         ...mapState(['callLecturelist'])
     },
     mounted () {
-        this.fetchCallLectureList()
+        console.log(this.$store.state.searchName)
+        this.fetchCallLectureListWithCategory(this.$store.state.cateName, this.$store.state.searchName)
     },
     methods: {
-        ...mapActions(['fetchCallLectureList'])
+        ...mapActions(['fetchCallLectureListWithCategory','fetchCallLectureList'])
     }
 }
 
