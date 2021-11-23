@@ -22,7 +22,7 @@
                     <div v-html="board.content">{{ board.content }}</div>
                 </div>
                 <div v-show="board.notice == 'false'" class="complete_btn_align">
-                    <v-btn v-show="this.$store.state.isAuth = 'true'" @click="endRecruit(board.boardNo)">답변 완료</v-btn>
+                    <v-btn v-show="role == 'ROLE_USER,ROLE_ADMIN'" @click="endRecruit(board.boardNo)">답변 완료</v-btn>
                 </div>
             </div>
         </div>        
@@ -30,9 +30,8 @@
 </template>
 
 <script>
-
 import axios from 'axios'
-
+import Vue from 'vue'
 export default {
     name: 'InqBoardRead',
     data () {
@@ -43,6 +42,7 @@ export default {
             refresh: 1,
             members: this.$store.state.qnaMembers,
             complete: '',
+            role: Vue.$cookies.get("ROLES")
         }
     },
     props: {
@@ -141,7 +141,7 @@ export default {
     display: flex;
     justify-content: center;
     flex-direction: column;
-    width:100vw;
+    width:95vw;
     max-width: 900px;
     border-top: 1px solid #BDBDBD;
     border-bottom: 1px solid #BDBDBD;

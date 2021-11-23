@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="display:flex;justify-content:center;margin:0px;">
         <v-container>
             <study-board-read v-if="board" :board="board" @submit="onSubmit"/>
             <p v-else>로딩중 ......</p>
@@ -7,12 +7,12 @@
                 <router-link :to="{ name: 'BoardCollectionPage' }">
                         목록
                 </router-link>                
-                <b v-show="board.writer == this.$store.state.moduleA.email || this.$store.state.isAuth">
+                <b v-show="board.writer == email || role == 'ROLE_USER,ROLE_ADMIN'">
                     <router-link :to="{ name: 'StudyBoardModifyPage', params: { boardNo } }">
                         |수정
                     </router-link>
                 </b>                
-                <b v-show="board.writer == this.$store.state.moduleA.email || this.$store.state.isAuth" @click="snackbar = true" class="item">
+                <b v-show="board.writer == email || role == 'ROLE_USER,ROLE_ADMIN'" @click="snackbar = true" class="item">
                     |삭제
                 </b>
                  <!-- 게시물 삭제 클릭시 알림창 -->
@@ -40,6 +40,7 @@ import StudyBoardRead from '@/components/board/study/StudyBoardRead.vue'
 import StudyCommentList from '@/components/board/study/StudyCommentList.vue'
 import { mapState, mapActions } from 'vuex'
 import axios from 'axios'
+import Vue from 'vue'
 export default {
     name: 'StudyBoardReadPage',
     props: {
@@ -52,7 +53,9 @@ export default {
     data () {
         return {
             refreshCheck: 1,
-            snackbar: false
+            snackbar: false,        
+            email: Vue.$cookies.get("USER_NAME"),
+            role :Vue.$cookies.get("ROLES")
         }
     },
     components: {

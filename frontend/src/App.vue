@@ -11,6 +11,7 @@
                              @openLoginDialog="dialogOff"
                              @logout="clickLogoutBtn"/>
     </v-main>
+    <main-footer></main-footer>
     <urun-footer></urun-footer>
   </v-app>
 </template>
@@ -20,6 +21,7 @@ import UrunHeader from '../src/components/UrunHeader.vue'
 import UrunFooter from '../src/components/UrunFooter.vue'
 import LoginDialog from '../src/components/LoginDialog.vue'
 import RegInstructorDialog from '../src/components/common/RegInstructorDialog.vue'
+import MainFooter from '@/components/MainFooter';
 
 import { logout } from '@/util/APIUtil'
 
@@ -32,7 +34,8 @@ export default {
     UrunHeader,
     UrunFooter,
     LoginDialog,
-    RegInstructorDialog
+    RegInstructorDialog,
+    MainFooter
   },
   data() {
     return {

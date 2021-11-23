@@ -21,7 +21,7 @@
                     <div v-html="board.content">{{ board.content }}</div>
                 </div>
                 <div v-show="board.notice == 'false'" class="complete_btn_align">
-                    <v-btn v-show="this.$store.state.moduleA.email = board.writer" @click="endRecruit(board.boardNo)">질문 완료</v-btn>
+                    <v-btn v-show="email = board.writer" @click="endRecruit(board.boardNo)">질문 완료</v-btn>
                 </div>
             </div>
         </div>        
@@ -31,13 +31,14 @@
 <script>
 
 import axios from 'axios'
+import Vue from 'vue'
 
 export default {
     name: 'QnABoardRead',
     data () {
         return {
-            nickname: '',
-            email: '',
+            nickname: Vue.$cookies.get("NICKNAME"),
+            email: Vue.$cookies.get("USER_NAME"),
             introduce: 'HELLO WORLD!',
             refresh: 1,
             members: this.$store.state.qnaMembers,
@@ -92,7 +93,7 @@ export default {
     display: flex;
     justify-content: center;
     flex-direction: column;
-    width:95vw;
+    width:88vw;
     max-width: 1000px;
     margin: 0px;
 }
@@ -100,35 +101,6 @@ export default {
     color: #424242;
 }
 .title_box {   
-}
-.title_box span {
-    font-size: 25px;
-    font-weight: bold;
-}
-.page_title {
-}
-.option_box {
-    display: flex;
-    justify-content: flex-end;
-    width: 70vw;    
-    max-width: 1000px;
-}
-.searching_box {    
-    height: 50px;
-}
-.searching_bar {
-    display: flex;
-    justify-content: row;
-    height: 40px;
-    width:70vw;
-    max-width: 1000px;
-    border: 1px solid #BDBDBD;
-}
-.searching {
-    height: 38px !important; 
-    width:60vw !important;
-    max-width: 955px;
-    border-style: none !important;
 }
 .searching_message_box {
     width:95vw;
@@ -140,7 +112,7 @@ export default {
     display: flex;
     justify-content: center;
     flex-direction: column;
-    width:100vw;
+    width:78vw;
     max-width: 900px;
     border-top: 1px solid #BDBDBD;
     border-bottom: 1px solid #BDBDBD;
@@ -158,12 +130,7 @@ export default {
 .searching_message p {    
     font-size: 13px;
     color: #757575;
-
 }
-
-
-
-
 .post_align {
     display: flex;
     justify-content: center;

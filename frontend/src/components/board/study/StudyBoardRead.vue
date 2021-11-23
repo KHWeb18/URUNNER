@@ -22,31 +22,31 @@
                     <div v-html="board.content">{{ board.content }}</div>
                 </div>
                 <div class="complete_btn_align">
-                    <v-btn v-show="this.$store.state.moduleA.email = board.writer" @click="appl(board.boardNo)" style="margin-right:10px">지원하기</v-btn>
-                    <v-btn v-show="this.$store.state.moduleA.email = board.writer" @click="endRecruit(board.boardNo)">모집 마감</v-btn>
+                    <v-btn v-show="board.complete !== 'true'" @click="appl(board.boardNo)" style="margin-right:10px">지원하기</v-btn>
+                    <v-btn v-show="writer = board.writer" @click="endRecruit(board.boardNo)">모집 마감</v-btn>
                 </div>
                 <!-- 지원자 목록 -->
                 <div class="member_list">
-                    <v-row justify="center">
-                    <v-subheader>지원자 목록</v-subheader>
-                        <v-expansion-panels popout>
-                            <v-expansion-panel
-                            v-for="(member, i) in this.$store.state.studyMembers"
-                            :key="i" hide-actions>
-                            <v-expansion-panel-header>
-                                <v-row align="center" class="spacer" no-gutters>
-                                    <v-col class="hidden-xs-only" sm="5" md="3">
-                                        <strong v-html="member.nickname"></strong>
-                                    </v-col>
-                                </v-row>
-                            </v-expansion-panel-header>
-                            <v-expansion-panel-content>
-                                <v-divider></v-divider>
-                                <v-card-text v-text="member.introduce"></v-card-text>
-                            </v-expansion-panel-content>
-                        </v-expansion-panel>
-                    </v-expansion-panels>
-                    </v-row>
+                    <div>
+                        <v-subheader>지원자 목록</v-subheader>
+                            <v-expansion-panels popout>
+                                <v-expansion-panel
+                                v-for="(member, i) in this.$store.state.studyMembers"
+                                :key="i" hide-actions>
+                                <v-expansion-panel-header>
+                                    <v-row align="center" class="spacer" no-gutters>
+                                        <v-col class="hidden-xs-only" sm="5" md="3">
+                                            <strong v-html="member.nickname"></strong>
+                                        </v-col>
+                                    </v-row>
+                                </v-expansion-panel-header>
+                                <v-expansion-panel-content>
+                                    <v-divider></v-divider>
+                                    <v-card-text v-text="member.introduce"></v-card-text>
+                                </v-expansion-panel-content>
+                            </v-expansion-panel>
+                        </v-expansion-panels>
+                    </div>
                     <br>
                 </div>
             </div>            
@@ -57,11 +57,13 @@
 <script>
 
 import axios from 'axios'
+import Vue from 'vue'
 
 export default {
     name: 'StudyBoardRead',
     data () {
         return {
+            writer: Vue.$cookies.get("USER_NAME"),
             nickname: '',
             email: '',
             introduce: 'HELLO WORLD!',
@@ -77,17 +79,9 @@ export default {
         }
     },
     methods : {
-        ImgRequest() {
-            try {
-                return require(`../../../../../backend/khweb/images/study/${this.board.writer}_${this.board.boardNo}.gif`
-                )
-            } catch (e) {
-                return require(`@/assets/logo.png`)
-            }
-        },
         appl(data) {
-            this.nickname = this.$store.state.moduleA.nickname
-            this.email = this.$store.state.moduleA.email
+            this.nickname = Vue.$cookies.get("NICKNAME")
+            this.email = Vue.$cookies.get("USER_NAME")
             const { nickname, email, introduce } = this
             axios.put(`http://localhost:7777/studyboard/apply/${data}`, { nickname, email, introduce })
                     .then(res => {
@@ -102,6 +96,7 @@ export default {
 
         },
         endRecruit(data) {
+            console.log('endRecruit에서 날아온 data(boardNo)값은 : ' + data)
             if(this.board.complete) {
                 this.board.complete = false
             } else {
@@ -141,37 +136,6 @@ export default {
 .main_box {
     color: #424242;
 }
-.title_box {   
-}
-.title_box span {
-    font-size: 25px;
-    font-weight: bold;
-}
-.page_title {
-}
-.option_box {
-    display: flex;
-    justify-content: flex-end;
-    width: 70vw;    
-    max-width: 1000px;
-}
-.searching_box {    
-    height: 50px;
-}
-.searching_bar {
-    display: flex;
-    justify-content: row;
-    height: 40px;
-    width:70vw;
-    max-width: 1000px;
-    border: 1px solid #BDBDBD;
-}
-.searching {
-    height: 38px !important; 
-    width:60vw !important;
-    max-width: 955px;
-    border-style: none !important;
-}
 .searching_message_box {
     width:95vw;
     max-width: 1000px;
@@ -182,7 +146,7 @@ export default {
     display: flex;
     justify-content: center;
     flex-direction: column;
-    width:100vw;
+    width:78vw;
     max-width: 900px;
     border-top: 1px solid #BDBDBD;
     border-bottom: 1px solid #BDBDBD;
@@ -200,7 +164,6 @@ export default {
 .searching_message p {    
     font-size: 13px;
     color: #757575;
-
 }
 
 
@@ -338,9 +301,16 @@ a:hover { text-decoration:none !important }
 }
 .member_list {
     display: flex;
-    justify-self: center;
+    justify-content: center;
     align-self: center;
     width: 300px;
     margin: 30px;
+}
+.v-item-group.theme--light.v-expansion-panels.v-expansion-panels--popout {
+    width: 300px;
+}
+.v-subheader.theme--light {
+    display: flex;
+    justify-content: center;        
 }
 </style>

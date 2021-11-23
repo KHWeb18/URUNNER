@@ -10,6 +10,7 @@
 
 import MemberProfileForm from '@/components/member/MemberProfileForm.vue'
 import axios from 'axios'
+import Vue from 'vue'
 
 export default {
     name: 'MemberProfilePage',
@@ -22,13 +23,11 @@ export default {
             axios.put(`http://localhost:7777/profile/${userIdInToken}`, { userIdInToken, nickname, password, introduce })
                     .then(res => {
                         if (res.data != "") {
-                            console.log(userIdInToken)
-                            console.log(this.$store.state.moduleA.email)
-                            alert('변경 성공! - ' + res.data)
-                            console.log(res.data)
-                            this.$store.state.moduleA.nickname = res.data.nickname
+                            alert('프로필 변경 완료')
+                            this.$store.state.profile.introduce = res.data.introduce
+                            Vue.$cookies.set("NICKNAME", res.data.nickname)
                         } else {
-                            alert('변경 실패! - ' + res.data)                            
+                            alert('프로필 변경 실패 - ' + res.data)                            
                         }
                     })
                     .catch(res => {
