@@ -62,7 +62,7 @@
             <!-- 댓글 입력창 -->
             <div class="comment_area" @click="temp = false, groupNo = 0, layer = 0, commentNo = 0">
                 <textarea class="comment_register_box"
-                v-model="content" placeholder="댓글을 입력해주세요" style="width:95vw;"></textarea>
+                v-model="content" placeholder="댓글을 입력해주세요"></textarea>
                 <div class="comment_register_btn">
                     <v-btn color="blue-grey darken-1 white-text" @click="submit" style="margin-right:30px">댓글 등록</v-btn>
                 </div>
@@ -209,7 +209,7 @@ export default {
 
 <style scoped>
 .comment_list {
-    width:9vw;
+    width:inherit;
     max-width: 1050px;
     margin-top: 10px;
     border-top: #BDBDBD solid 1px;
@@ -282,7 +282,7 @@ export default {
 }
 .comment_register_box {
     height:150px;
-    width:65vw;
+    width:87vw;
     max-width: 1040px;
     border: 1px solid #BDBDBD;    
     padding: 10px;

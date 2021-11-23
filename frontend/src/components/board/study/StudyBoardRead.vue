@@ -136,37 +136,6 @@ export default {
 .main_box {
     color: #424242;
 }
-.title_box {   
-}
-.title_box span {
-    font-size: 25px;
-    font-weight: bold;
-}
-.page_title {
-}
-.option_box {
-    display: flex;
-    justify-content: flex-end;
-    width: 70vw;    
-    max-width: 1000px;
-}
-.searching_box {    
-    height: 50px;
-}
-.searching_bar {
-    display: flex;
-    justify-content: row;
-    height: 40px;
-    width:70vw;
-    max-width: 1000px;
-    border: 1px solid #BDBDBD;
-}
-.searching {
-    height: 38px !important; 
-    width:60vw !important;
-    max-width: 955px;
-    border-style: none !important;
-}
 .searching_message_box {
     width:95vw;
     max-width: 1000px;
@@ -177,7 +146,7 @@ export default {
     display: flex;
     justify-content: center;
     flex-direction: column;
-    width:100vw;
+    width:78vw;
     max-width: 900px;
     border-top: 1px solid #BDBDBD;
     border-bottom: 1px solid #BDBDBD;
@@ -195,7 +164,6 @@ export default {
 .searching_message p {    
     font-size: 13px;
     color: #757575;
-
 }
 
 

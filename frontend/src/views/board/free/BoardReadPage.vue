@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <v-container>
+    <div style="display:flex;justify-content:center;margin:0px;">
+        <v-container style="margin:0px;">
             <free-board-read v-if="board" :board="board" @submit="onSubmit"/>
             <p v-else>로딩중 ......</p>
             <v-container class="middle_btn_box">

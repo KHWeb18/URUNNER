@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="display:flex;justify-content:center;margin:0px;">
         <v-container>
             <qna-board-read v-if="board" :board="board" @submit="onSubmit"/>
             <p v-else>로딩중 ......</p>

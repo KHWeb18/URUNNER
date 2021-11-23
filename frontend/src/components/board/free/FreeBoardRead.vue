@@ -12,10 +12,10 @@
                                     <h v-show="board.notice == 'false'"><btn class="tag_box_button">#{{ tag.text }}&nbsp;</btn></h>
                                 </div>
                                 <div v-show="board.tags != '#'" class="post_tag_either"></div>
-                                <div class="post_tag_either"><h v-show="board.notice =='false'">&nbsp;/&nbsp;{{board.nickname}}&nbsp;/</h>
+                            </div>
+                            <div class="post_tag_either"><h v-show="board.notice =='false'">&nbsp;/&nbsp;{{board.nickname}}&nbsp;/</h>
                                     {{ $moment(board.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}&nbsp;/&nbsp;
                                     <v-icon size="18px" color="#E57373" @click="appl(board.boardNo)">mdi-heart</v-icon> {{ board.currentNum}}</div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -113,7 +113,7 @@ export default {
     display: flex;
     justify-content: center;
     flex-direction: column;
-    width:95vw;
+    width:88vw;
     max-width: 1000px;
     margin: 0px;
 }
@@ -126,31 +126,6 @@ export default {
     font-size: 25px;
     font-weight: bold;
 }
-.page_title {
-}
-.option_box {
-    display: flex;
-    justify-content: flex-end;
-    width: 70vw;    
-    max-width: 1000px;
-}
-.searching_box {    
-    height: 50px;
-}
-.searching_bar {
-    display: flex;
-    justify-content: row;
-    height: 40px;
-    width:70vw;
-    max-width: 1000px;
-    border: 1px solid #BDBDBD;
-}
-.searching {
-    height: 38px !important; 
-    width:60vw !important;
-    max-width: 955px;
-    border-style: none !important;
-}
 .searching_message_box {
     width:95vw;
     max-width: 1000px;
@@ -161,7 +136,7 @@ export default {
     display: flex;
     justify-content: center;
     flex-direction: column;
-    width:100vw;
+    width:78vw;
     max-width: 900px;
     border-top: 1px solid #BDBDBD;
     border-bottom: 1px solid #BDBDBD;
@@ -204,9 +179,6 @@ export default {
     height: 150px;
     border-bottom: 1px solid #BDBDBD;
 }
-.post_card_box {
-
-}
 .thumbnail {
     margin-right: 20px;
     height: 140px !important; 
@@ -231,14 +203,16 @@ export default {
     font-weight: bold;
     font-size: 16px !important;    
     letter-spacing: 0px !important;
-    margin-bottom: 20px;
 }
 .post_tag_either {
     display: flex;
     justify-self: center;
     align-self: center;
-    font-size: 15px !important;
+    font-size: 15px !important;  
+    font-weight: bold;  
+    letter-spacing: 0px !important;
     color: #757575;
+    margin-bottom: 20px;
 }
 .post_title {
     margin: 0 0 0 0px;

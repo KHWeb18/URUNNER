@@ -100,7 +100,22 @@
                             <div class="lecture_card">
                                 <div class="card_img" @click="goPage(mob.id)">
                                     <v-img :src="`http://localhost:7777/lecture/image/${mob.thumbPath}/${mob.writer}`" height="200px" width="300px"></v-img>
-                                </div>                                
+                                </div>
+                                <div class="btn-plus2">
+                                    <span draggable="false">
+                                        <b @click="goPage(mob.id)"> 
+                                            <div style="font-size:13px;text-align:center">{{ mob.desc }} 대부분 LEFT OUTER JOIN을 많이 사용하지만 상황에 따라서 RIGHT OUTER JOIN을 사용할 수 있으니 개념을 꼭 이해하고 있어야 한다.</div>
+                                        </b>
+                                        <div class="align-right" >
+                                            <v-icon :color="wish[index] ? 'red' : 'white'" class="d-block pa-1" @click.prevent="toggleHeartBtn(mob, index)">
+                                            mdi-cards-heart
+                                            </v-icon>
+                                            <v-icon :color="cart[index] ? 'blue' : 'white'" class="d-block pa-1" @click.prevent="toggleCartBtn(mob, index)">
+                                            mdi-cart
+                                            </v-icon>
+                                        </div>
+                                    </span>
+                                </div>
                                 <b @click="goPage(mob.id)">    
                                     <!-- title -->
                                     <div class="card_text01">
@@ -129,23 +144,6 @@
                                         {{ mob.price  | comma }}원
                                     </div>
                                 </b>
-                                <div style="width:1px;height:1px;">
-                                    <div class="btn-plus2">
-                                        <span draggable="false">
-                                            <b @click="goPage(mob.id)"> 
-                                                <div style="font-size:13px;text-align:center">{{ mob.desc }} 대부분 LEFT OUTER JOIN을 많이 사용하지만 상황에 따라서 RIGHT OUTER JOIN을 사용할 수 있으니 개념을 꼭 이해하고 있어야 한다.</div>
-                                            </b>
-                                            <div class="align-right" >
-                                                <v-icon :color="wish[index] ? 'red' : 'white'" class="d-block pa-1" @click.prevent="toggleHeartBtn(mob, index)">
-                                                mdi-cards-heart
-                                                </v-icon>
-                                                <v-icon :color="cart[index] ? 'blue' : 'white'" class="d-block pa-1" @click.prevent="toggleCartBtn(mob, index)">
-                                                mdi-cart
-                                                </v-icon>
-                                            </div>
-                                        </span>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                         <v-container style="margin-top:20px;">
@@ -155,6 +153,8 @@
                         </v-container>
                     </v-container>
                 </div>
+
+
             </v-container>
             <!-- 모바일 리스트 -->
             <v-container class="lecture01 mr-9 hidden-md-and-up">
@@ -205,7 +205,7 @@
             <v-row justify="center">
                 <v-dialog v-model="dialog" scrollable max-width="300px">
                 <template v-slot:activator="{ on, attrs }">
-                    <v-btn color="primary" fab dark v-bind="attrs" v-on="on" fixed right style="top:650px;left:410px;" class="hidden-md-and-up">
+                    <v-btn color="primary" fab dark v-bind="attrs" v-on="on" fixed right style="top:84vh;left:87vw;" class="hidden-md-and-up">
                         <v-icon dark>mdi-plus</v-icon>
                     </v-btn>
                 </template>
@@ -792,6 +792,8 @@ p {
     align-items: center;
 }
 .forLine {
+    min-width: 560px;
+    margin-left:10px;
     height: 40px !important;
     border-top: 1px solid #BDBDBD;
     border-bottom: 1px solid #BDBDBD;
@@ -842,10 +844,8 @@ input:focus {
 }
 .main_box {
     justify-content: center;
-    flex-direction: column;
-    
+    flex-direction: column;    
     color: #424242;
-    max-width:900px;
 }
 .temp2 {
     font-size: 15px;
@@ -978,12 +978,12 @@ input:focus {
     transition: all 0.5s ease;  
 }
 .lecture_card {
-  /* z-index: 0;
+  z-index: 0;
   width:inherit;
-  height:inherit; */
+  height:inherit;
 }
 .lecture_card:hover {
-    /* transform: translate3d(0px, 0px, 0px); */
+    transform: translate3d(0px, 0px, 0px);
 }
 .lecture_card:hover .btn-plus {
   opacity:1;
@@ -1011,16 +1011,16 @@ input:focus {
 .btn-plus2 {
     display: flex;
     align-items: flex-end;  
-    /* hover시 사진 어둡게 */
-    position: relative;
-    top:-328px;
-    background:rgba(0, 0, 0, 0.815);
-    width:270px;
-    height:200px;
-    padding: 5px;
-    text-align:center;
-    border-radius: 6px;
-    opacity:0;
+  /* hover시 사진 어둡게 */
+  position:absolute;
+  top:0px;
+  background:rgba(0, 0, 0, 0.815);
+  width:270px;
+  height:200px;
+  padding: 5px;
+  text-align:center;
+  border-radius: 6px;
+  opacity:0;
 }
 .btn-plus2 span {
     display: flex;
@@ -1112,16 +1112,4 @@ input:focus {
 a { text-decoration:none !important }
 a:hover { text-decoration:none !important }
 
-
-.box {
-  width: 300px;
-  height: 200px;
-  overflow: hidden;
-}
-
-.box>a:hover img {
-  transform: scale(1.5);
-  transition: transform 1s;
-  filter: brightness(70%);
-}
 </style>
