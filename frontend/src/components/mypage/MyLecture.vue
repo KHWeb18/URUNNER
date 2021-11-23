@@ -29,19 +29,14 @@
                 </div>
             </v-spacer>
             <!-- 분류창 -->
-            <v-spacer class="forLine">
-                <li class="tag_button" @click="word = ''">ALL</li>&nbsp;&nbsp;&nbsp;
-                <li class="tag_button" :class="{ on : tagSelect1 }" @click="tagSelect1 = !tagSelect1, searchingTag('Java')">Java</li>&nbsp;&nbsp;&nbsp;
-                <li class="tag_button" :class="{ on : tagSelect2 }" @click="tagSelect2 = !tagSelect2, searchingTag('Spring')">Spring</li>&nbsp;&nbsp;&nbsp;
-                <li class="tag_button" :class="{ on : tagSelect3 }" @click="tagSelect3 = !tagSelect3, searchingTag('Python')">Python</li>&nbsp;&nbsp;&nbsp;
-            </v-spacer>
+            <v-spacer></v-spacer>
             <!-- 리스트 -->
             <v-container class="lecture01 mr-9 hidden-sm-and-down">
                 <div v-show="!searchinOn">
                     <v-container class="lecture_box">
                         <div v-for="mob in paginatedData2" :key="mob.boardNo" class="item">
                             <v-card class="mx-auto">
-                                <v-img :src="ImgRequest(mob.boardNo)" height="200px"></v-img>
+                                <v-img :src="`http://localhost:7777/lecture/image/${mob[3]}/${mob[4]}`" height="200px"></v-img>
                                 <div class="btn-plus"><span draggable="false"><v-icon color="white">mdi-arrow-right</v-icon></span></div>
                                 <div class="btn-plus2"><span draggable="false"></span></div>
                                 <div class="btn-plus3"><span draggable="false"><v-icon color="#E0E0E0" @click="info()">mdi-alert-circle-outline</v-icon></span></div>
@@ -51,7 +46,7 @@
                                     color="orange" large readonly></v-rating></span></div>
                                 
                                 <v-card-title class="temp">
-                                    {{mob.title}}
+                                    {{mob[0]}}
                                 </v-card-title>
                                  <v-card-title class="temp2">
                                     <v-progress-linear
@@ -63,7 +58,8 @@
                                     </div>
                                     <div></div><div></div><div></div>
                                     <div>
-                                        {{ mob.grade }} | {{ mob.nickname }}
+                                        <!-- grade | writer -->
+                                        {{ mob[4] }} | {{ mob[2] }}
                                     </div>
                                 </div>
                                 <v-card-actions>
@@ -84,7 +80,7 @@
                     <v-container class="lecture_box">
                         <div v-for="mob in paginatedData2" :key="mob.boardNo" class="item_m">
                             <v-card class="mx-auto">
-                                <v-img :src="ImgRequest(mob.boardNo)" height="200px"></v-img>
+                                <v-img :src="`http://localhost:7777/lecture/image/${mob[3]}/${mob[4]}`" height="200px"></v-img>
                                 <div class="btn-plus_m"><span draggable="false"><v-icon color="white">mdi-arrow-right</v-icon></span></div>
                                 <div class="btn-plus2_m"><span draggable="false"></span></div>
                                 <div class="btn-plus3_m"><span draggable="false"><v-icon color="#E0E0E0" @click="info()">mdi-alert-circle-outline</v-icon></span></div>
@@ -94,7 +90,7 @@
                                     color="orange" large readonly></v-rating></span></div>
                                 
                                 <v-card-title class="temp">
-                                    {{mob.title}}
+                                    {{mob[0]}}
                                 </v-card-title>
                                  <v-card-title class="temp2">
                                     <v-progress-linear
@@ -106,7 +102,7 @@
                                     </div>
                                     <div></div><div></div><div></div>
                                     <div>
-                                        {{ mob.grade }} | {{ mob.nickname }}
+                                        {{ mob[4] }} | {{ mob[2] }}
                                     </div>
                                 </div>
                                 <v-card-actions>
@@ -177,14 +173,6 @@
             prevPageS() {
                 this.pageNumS -= 1;
             },
-            ImgRequest(boardNo) {
-            try {
-                return require(`../../../../../Mini/Images/lecture/${boardNo}.gif`
-                )
-            } catch (e) {
-                return require(`@/assets/temp.png`)
-                }
-            },
             searching () {
                 var lists = this.myLeccallLecturelistturelist
 
@@ -217,8 +205,6 @@
                     return page;
             },
             paginatedData2() {
-                // const start = (this.pageNum2 - 1) * this.pageSize2,
-                //     end = start + this.pageSize2;
                 return this.$store.state.callLecturelist.slice(0, 10);
             },
         }
@@ -244,7 +230,7 @@
     max-width: 1300px;
 }
 .lecture_box {
-    margin: 15px;
+    margin: 5px;
     padding: 0;
     width: 100vw;
     max-width: 900px;
@@ -400,7 +386,7 @@ p {
 }
 .item_m {
     margin: 10px;
-    width: 200px;
+    width: 212px;
     cursor: pointer;
 }
 .btn-plus {
@@ -517,7 +503,7 @@ p {
   position:absolute;
   top:0.001px;
   background:rgba(0, 0, 0, 0.5);
-  width:200px;
+  width:212px;
   height:200px;
   text-align:center;
   border-radius: 6px 6px 0px 0px;
@@ -589,6 +575,7 @@ p {
     align-items: center;
     height: 40px;
     padding-left: 2vw;
+    border-bottom: 1px solid #BDBDBD;
 }
 .forLine0sButton {
     display: flex;
@@ -671,6 +658,7 @@ input:focus {
 .card_text {
     display: flex;
     justify-content: space-around;
+    flex-direction: column;
     font-size:11px;
     font-weight: 00;
     color:#424242;

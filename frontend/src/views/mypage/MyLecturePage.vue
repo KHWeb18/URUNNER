@@ -1,8 +1,6 @@
 <template>
     <div id="board_padding">
-        <v-container>
-            <my-lecture :lectures="lectures"/>
-        </v-container>
+      <my-lecture :callLecturelist="callLecturelist"/>
     </div>
 </template>
 
@@ -16,11 +14,13 @@ export default {
   components: {
     MyLecture
   },
+  created() {
+  },
   computed: {
     ...mapState(['callLecturelist'])
   },
   mounted () {
-    this.fetchMyLectureList()
+    this.fetchMyLectureList(this.$store.state.profile.member_no)
   },
   methods: {
     ...mapActions(['fetchMyLectureList'])

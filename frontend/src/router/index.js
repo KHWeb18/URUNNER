@@ -160,7 +160,7 @@ export default new VueRouter({
             },
             {
               path: '/myLecture',
-              component: () => import("../components/mypage/MyLecture.vue")
+              component: () => import("../views/mypage/MyLecturePage.vue")
             },
             {
               path: '/myPostList',

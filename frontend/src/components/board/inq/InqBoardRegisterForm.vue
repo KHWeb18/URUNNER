@@ -9,6 +9,7 @@
 
 import axios from 'axios'
 import EditorForInq from '@/components/board/EditorForInq.vue'
+import Vue from 'vue'
 
 export default {
     name: 'InqBoardRegisterForm',
@@ -19,10 +20,10 @@ export default {
         return {
             //초기값 세팅
             title: '',
-            writer: this.$store.state.moduleA.email,
+            writer: Vue.$cookies.get("USER_NAME"),
             files: '',
             preview: '',
-            nickname: this.$store.state.moduleA.nickname,
+            nickname: Vue.$cookies.get("NICKNAME"),
             content: '',
             complete: false,
             currentNum: 1,
@@ -41,16 +42,9 @@ export default {
             axios.post('http://localhost:7777/inqboard/register', { title, writer, content, nickname, complete, currentNum, views, comments, tags, notice } )
                     .then(res => {
                         this.$store.state.boardNo = res.data.boardNo.toString()
-
-                        if (this.$store.state.isAuth == 'true') {
                             this.$router.push({
-                                name: 'InqBoardListPage'
+                                path: '/inqforuser'
                             })
-                        } else {
-                            this.$router.push({
-                                name: 'InqBoardListForUserPage'
-                            })
-                        }
                     })
                     .catch(res => {
                         alert(res.response.data.message)

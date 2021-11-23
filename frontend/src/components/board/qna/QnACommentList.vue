@@ -20,7 +20,7 @@
                             <div class="post_box"  @click="temp00(mob)">
                                 <div class="post_title">{{ mob.nickname }}</div>
                                 <div class="post_reg_date">{{ $moment(mob.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}</div>
-                                <div class="post_content">{{ mob.content }}</div>
+                                <div class="post_content" v-html="mob.content">{{ mob.content }}</div>
                                 <!-- <div class="post_reg_date">commentNO: {{ mob[0] }}</div>
                                 <div class="post_reg_date">groupNO: {{ mob[3] }}</div>
                                 <div class="post_reg_date">layer: {{ mob[4] }}</div> -->
@@ -62,7 +62,7 @@
             <!-- 댓글 입력창 -->
             <div class="comment_area" @click="temp = false, groupNo = 0, layer = 0, commentNo = 0">
                 <textarea class="comment_register_box"
-                v-model="content" placeholder="댓글을 입력해주세요" style="width:95vw;"></textarea>
+                v-model="content" placeholder="댓글을 입력해주세요"></textarea>
                 <div class="comment_register_btn">
                     <v-btn color="blue-grey darken-1 white-text" @click="submit" style="margin-right:30px">댓글 등록</v-btn>
                 </div>
@@ -75,17 +75,15 @@
 </template>
 
 <script>
-
 import axios from 'axios'
 import Vue from 'vue'
-
 export default {
     name: 'CommentList',
     data () {
         return {
             content: '',
             writer: Vue.$cookies.get("USER_NAME"),
-            nickname: this.$store.state.moduleA.nickname,
+            nickname: Vue.$cookies.get("NICKNAME"),
             boardNo: '',
             refresh: 1,
             pageNum: 1,
@@ -209,7 +207,7 @@ export default {
 
 <style scoped>
 .comment_list {
-    width:9vw;
+    width:inherit;
     max-width: 1050px;
     margin-top: 10px;
     border-top: #BDBDBD solid 1px;
@@ -282,7 +280,7 @@ export default {
 }
 .comment_register_box {
     height:150px;
-    width:65vw;
+    width:87vw;
     max-width: 1040px;
     border: 1px solid #BDBDBD;    
     padding: 10px;

@@ -4,12 +4,12 @@
         <v-list>
           <v-list-item>
             <v-list-item-avatar>
-              <v-img src="https://cdn.vuetifyjs.com/images/john.png"/>
+              <v-img :src="`http://localhost:7777/lecture/image/${thumb_path}/${email}`"></v-img>
             </v-list-item-avatar>
             <v-list-item-content>
-              <router-link :to="{ name: 'memberProfile' }">
+              <router-link :to="{ path: '/memberProfile' }">
                 <v-list-item-title class="text-h6">
-                  {{ this.$store.state.moduleA.name }}
+                  {{ nickanme }}
                 </v-list-item-title>
               </router-link>
               <v-list-item-subtitle>Student</v-list-item-subtitle>
@@ -86,6 +86,7 @@
 </template>
 
 <script>
+import Vue from 'vue'
 export default {
   data() {
     return {
@@ -98,6 +99,9 @@ export default {
         { text: '작성한 게시글', icon: 'mdi-view-dashboard-edit-outline' },
         { text: '더보기', icon: 'mdi-dots-horizontal' },
       ],
+      nickanme: Vue.$cookies.get("NICKNAME"),
+      thumb_path: this.$store.state.profile.thumb_path,
+      email: Vue.$cookies.get("USER_NAME")
     }
   },
   computed: {

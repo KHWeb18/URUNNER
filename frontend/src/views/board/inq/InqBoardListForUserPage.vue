@@ -1,7 +1,10 @@
 <template>
-    <div id="board_padding">        
-        <v-container>
+    <div style="display:flex;justify-content:center;margin:0px;">     
+        <v-container v-show="role == 'ROLE_USER'" style="padding:0px;">
             <inq-board-for-user-list :boards="boards"/>
+        </v-container>
+        <v-container v-show="role == 'ROLE_USER,ROLE_ADMIN'" style="padding:0px;">
+            <inq-board-list :boards="boards"/>
         </v-container>
     </div>
 </template>
@@ -9,37 +12,30 @@
 <script>
 
 import InqBoardForUserList from '@/components/board/inq/InqBoardForUserList.vue'
+import InqBoardList from '@/components/board/inq/InqBoardList.vue'
 import { mapState, mapActions } from 'vuex'
+import Vue from 'vue'
 
 export default {
-    name: 'InqBoardListForUserPage',
+    name: 'InqBoardListForUserPage',    
+    data() {
+        return {
+            role: Vue.$cookies.get("ROLES")
+        }
+    },
     components: {
-        InqBoardForUserList
+        InqBoardForUserList,
+        InqBoardList
     },
     computed: {
         ...mapState(['boards'])
     },
     mounted () {
-        this.fetchInqBoardForUserList(this.$store.state.moduleA.email)
+        this.fetchInqBoardForUserList(Vue.$cookies.get("USER_NAME"))
     },
     methods: {
         ...mapActions(['fetchInqBoardForUserList'])
         
     }
 }
-
 </script>
-
-<style scoped>
-.board_title {
-    font-size: 32px;
-    font-weight: 700;
-    line-height: 32px;
-    color: #333d4b;
-    margin-bottom: 60px;
-    margin-top: 70px;
-}
-.v-progress-circular {
-  margin: 1rem;
-}
-</style>

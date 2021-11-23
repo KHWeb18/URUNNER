@@ -18,7 +18,7 @@
                   <v-card width="400" max-height="500">
                     <v-list dense="dense" nav="nav">
                       <v-list-item v-for="item in category" :key="item" link="link">
-                        <v-list-item-content>
+                        <v-list-item-content @click="goLectureList(item)">
                           <v-list-item-title>{{ item }}</v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
@@ -142,7 +142,13 @@ import OpenMainMenuLogo from '../components/headerLoginMenu/OpenMainMenuLogo.vue
         },
         openRegInstructor() {
           this.$emit('openRegInstructor')
-        } 
+        },
+        goLectureList(data) {
+          this.$store.state.tempCate = data
+          this.$router.push('/forSale/lectureList').catch(()=>{
+            
+          });
+        }
       }
     }
 </script>

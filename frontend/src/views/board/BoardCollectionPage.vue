@@ -1,7 +1,7 @@
 <template>
     <div>
         <!-- 제목 -->
-        <v-container class="main hidden-sm-and-down">
+        <v-container class="main">
             <div class="mr-9 hidden-sm-and-down">
                 <div class="title_box">
                     <h2 class="page_title">
@@ -14,7 +14,7 @@
                 </div>
             </div>
             <!-- 게시판 분류 -->
-            <v-spacer class="forLine0 mr-9 hidden-sm-and-down">
+            <v-spacer class="forLine0 mr-9">
                 <div class="forLine0sButton">
                     <div class="tag_button" :class="{ on2 : selectMenu == 1 }" @click="changeComp('BoardListPage')">자유 게시판</div>&nbsp;&nbsp;&nbsp;
                     <div class="tag_button" :class="{ on2 : selectMenu == 2 }"  @click="changeComp('QnABoardListPage')">질문 게시판</div>&nbsp;&nbsp;&nbsp;
@@ -22,6 +22,7 @@
                 </div>
             </v-spacer>
         </v-container>
+        <v-spacer class="forLine001 hidden-md-and-up"></v-spacer>
         <v-spacer class="forLine00 hidden-sm-and-down"></v-spacer>
         <div class="tab-item">
             <component v-bind:is="selctedComp" @boardNo="saveBoardNo"/>
@@ -114,6 +115,10 @@ export default {
 }
 .forLine00 {
     margin: 0 5vw 40px 5vw;
+    border-bottom: 1px solid #BDBDBD;
+}
+.forLine001 {
+    margin: 0px;
     border-bottom: 1px solid #BDBDBD;
 }
 .tag_button {
