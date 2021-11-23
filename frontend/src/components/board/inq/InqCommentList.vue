@@ -85,7 +85,7 @@ export default {
         return {
             content: '',
             writer: Vue.$cookies.get("USER_NAME"),
-            nickname: this.$store.state.moduleA.nickname,
+            nickname: Vue.$cookies.get("NICKNAME"),
             boardNo: '',
             refresh: 1,
             pageNum: 1,

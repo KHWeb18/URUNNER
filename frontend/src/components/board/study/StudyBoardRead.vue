@@ -80,8 +80,8 @@ export default {
     },
     methods : {
         appl(data) {
-            this.nickname = this.$store.state.moduleA.nickname
-            this.email = this.$store.state.moduleA.email
+            this.nickname = Vue.$cookies.get("NICKNAME")
+            this.email = Vue.$cookies.get("USER_NAME")
             const { nickname, email, introduce } = this
             axios.put(`http://localhost:7777/studyboard/apply/${data}`, { nickname, email, introduce })
                     .then(res => {

@@ -9,6 +9,7 @@
 
 import axios from 'axios'
 import EditorForInq from '@/components/board/EditorForInq.vue'
+import Vue from 'vue'
 
 export default {
     name: 'InqBoardRegisterForm',
@@ -19,10 +20,10 @@ export default {
         return {
             //초기값 세팅
             title: '',
-            writer: this.$store.state.moduleA.email,
+            writer: Vue.$cookies.get("USER_NAME"),
             files: '',
             preview: '',
-            nickname: this.$store.state.moduleA.nickname,
+            nickname: Vue.$cookies.get("NICKNAME"),
             content: '',
             complete: false,
             currentNum: 1,

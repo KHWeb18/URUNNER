@@ -236,6 +236,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
+import Vue from 'vue'
 
 export default {
     name: 'InqBoardList',
@@ -270,7 +271,7 @@ export default {
             completeSelect2: false,
             completeSelect3: false,
 
-            email: this.$store.state.moduleA.email
+            email: Vue.$cookies.get("USER_NAME")
         }
     },
     beforeDestroy () {

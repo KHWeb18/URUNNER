@@ -23,7 +23,7 @@
                     <div v-html="board.content">{{ board.content }}</div>
                 </div>
                 <div v-show="board.notice == 'false'" class="complete_btn_align">
-                    <v-btn v-show="this.$store.state.moduleA.email = board.writer" @click="endRecruit(board.boardNo)">질문 완료</v-btn>
+                    <v-btn v-show="email = board.writer" @click="endRecruit(board.boardNo)">질문 완료</v-btn>
                 </div>                
                 <div class="complete_btn_align">
                     <v-icon size="38px" color="#E57373" @click="appl(board.boardNo)">mdi-heart</v-icon>
@@ -36,13 +36,14 @@
 <script>
 
 import axios from 'axios'
+import Vue from 'vue'
 
 export default {
     name: 'FreeBoardRead',
     data () {
         return {
             nickname: '',
-            email: '',
+            email: Vue.$cookies.get("USER_NAME"),
             introduce: 'HELLO WORLD!',
             refresh: 1,
             members: this.$store.state.freeMembers,
@@ -89,8 +90,8 @@ export default {
             return arr
         },
         appl(data) {
-            this.nickname = this.$store.state.moduleA.nickname
-            this.email = this.$store.state.moduleA.email
+            this.nickname = Vue.$cookies.get("NICKNAME")
+            this.email = Vue.$cookies.get("USER_NAME")
             const { nickname, email, introduce } = this
             axios.put(`http://localhost:7777/freeboard/apply/${data}`, { nickname, email, introduce })
                     .then(res => {

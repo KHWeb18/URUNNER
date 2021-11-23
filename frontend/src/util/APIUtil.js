@@ -14,7 +14,6 @@ import {
     NAME,
     NICKNAME
 } from '../constants/index'
-import state from '../store/webState'
 import { Base64 } from 'js-base64';
 
 function createdPaymentRandomNumber(){
@@ -68,11 +67,6 @@ function PasingInfor(giveMeToken) {
      Vue.$cookies.set(ROLES, roles, SAVE_COOKIE_ACCESS)
      Vue.$cookies.set(NAME, name, SAVE_COOKIE_ACCESS)
      Vue.$cookies.set(NICKNAME, nickname, SAVE_COOKIE_ACCESS)
-
-     state.state.name = name
-     state.state.email = username
-     state.state.nickname = nickname
-
      Vue.$cookies.set(ACCESS_TOKEN, BEARER + giveMeToken.access_token, SAVE_COOKIE_ACCESS)
      Vue.$cookies.set(REFRESH_TOKEN, BEARER + giveMeToken.refresh_token, SAVE_COOKIE_REFRESH)
      

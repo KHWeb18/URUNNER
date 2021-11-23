@@ -20,7 +20,7 @@
                             <div class="post_box"  @click="temp00(mob)">
                                 <div class="post_title">{{ mob.nickname }}</div>
                                 <div class="post_reg_date">{{ $moment(mob.regDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}</div>
-                                <div class="post_content">{{ mob.content }}</div>
+                                <div class="post_content" v-html="mob.content">{{ mob.content }}</div>
                                 <!-- <div class="post_reg_date">commentNO: {{ mob[0] }}</div>
                                 <div class="post_reg_date">groupNO: {{ mob[3] }}</div>
                                 <div class="post_reg_date">layer: {{ mob[4] }}</div> -->
@@ -75,17 +75,15 @@
 </template>
 
 <script>
-
 import axios from 'axios'
 import Vue from 'vue'
-
 export default {
     name: 'CommentList',
     data () {
         return {
             content: '',
             writer: Vue.$cookies.get("USER_NAME"),
-            nickname: this.$store.state.moduleA.nickname,
+            nickname: Vue.$cookies.get("NICKNAME"),
             boardNo: '',
             refresh: 1,
             pageNum: 1,

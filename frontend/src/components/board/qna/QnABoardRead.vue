@@ -21,7 +21,7 @@
                     <div v-html="board.content">{{ board.content }}</div>
                 </div>
                 <div v-show="board.notice == 'false'" class="complete_btn_align">
-                    <v-btn v-show="this.$store.state.moduleA.email = board.writer" @click="endRecruit(board.boardNo)">질문 완료</v-btn>
+                    <v-btn v-show="email = board.writer" @click="endRecruit(board.boardNo)">질문 완료</v-btn>
                 </div>
             </div>
         </div>        
@@ -31,13 +31,14 @@
 <script>
 
 import axios from 'axios'
+import Vue from 'vue'
 
 export default {
     name: 'QnABoardRead',
     data () {
         return {
-            nickname: '',
-            email: '',
+            nickname: Vue.$cookies.get("NICKNAME"),
+            email: Vue.$cookies.get("USER_NAME"),
             introduce: 'HELLO WORLD!',
             refresh: 1,
             members: this.$store.state.qnaMembers,
