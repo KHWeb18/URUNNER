@@ -11,7 +11,9 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @NoArgsConstructor
@@ -21,8 +23,6 @@ public class Lecture {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long lecture_id;
-
-
 
     private String writer;
 
@@ -68,6 +68,10 @@ public class Lecture {
     @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WishList> wishList = new ArrayList<>();
 
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Review> reviews = new HashSet<>();
+
     @Builder
     public Lecture(String writer, String title, String content, String grade,
                    String description, Long price, boolean inProgress, boolean discounted) {
@@ -79,6 +83,10 @@ public class Lecture {
         this.discounted = discounted;
         this.content = content;
         this.grade = grade;
+    }
+
+    public void setReviews(Review reviews) {
+        this.reviews.add(reviews);
     }
 
     public void setWriter(String writer) {
