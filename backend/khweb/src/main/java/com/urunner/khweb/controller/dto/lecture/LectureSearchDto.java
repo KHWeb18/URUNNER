@@ -23,6 +23,7 @@ public class LectureSearchDto {
     private String grade;
     private boolean cart;
     private boolean wishList;
+    private List<Category> categoryList;
 
 
     @QueryProjection

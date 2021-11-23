@@ -1,12 +1,12 @@
 <template>
     <div>
-        <payment-box v-bind:lectureInfo="lectureInfo"></payment-box>
+        <!--<payment-box v-bind:lectureInfo="lectureInfo"></payment-box>-->
     </div>
 </template>
 
 <script>
 
-
+/*
 import PaymentBox from '../../components/payment/PaymentBox.vue'
 
 
@@ -28,5 +28,5 @@ export default {
     }
 }
 
-
+*/
 </script>

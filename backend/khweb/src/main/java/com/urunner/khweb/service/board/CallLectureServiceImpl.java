@@ -27,4 +27,8 @@ public class CallLectureServiceImpl implements CallLectureService {
     public List<Object[]> selectLectureListWithWord(String word) {
         return repository.selectLectureListWithWord(word);
     }
+
+    public List<Object[]> selectMyLectureList(Long memberNo){
+        return repository.selectMyLectureList(memberNo);
+    }
 }

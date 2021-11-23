@@ -4,7 +4,7 @@
         <div class="sideBar hidden-sm-and-down">
             <v-card class="mx-auto0" max-width="500">
                 <v-list>
-                    <div class="title" @click="callAll(), path=''">전체 보기</div>
+                    <div class="title" @click="callAll()">전체 보기</div>
                     <v-list-group
                         v-for="item in items"
                         :key="item.title"
@@ -16,7 +16,7 @@
                                 <v-list-item-title v-text="item.title"></v-list-item-title>
                             </v-list-item-content>
                         </template>
-                        <v-list-item v-for="child in item.items" :key="child.title">
+                        <v-list-item v-for="child in item.items" :key="child.value">
                             <v-list-item-content>
                                 <!-- <v-btn @click="selectCategory(child)" style="cursor:pointer">{{child.title}}</v-btn> -->
                                 <v-list-item-title class="child" v-text="child.title" @click="selectCategory(child)" style="cursor:pointer"></v-list-item-title>
@@ -83,32 +83,47 @@
             </v-spacer>
             <!-- 분류창 -->
             <v-spacer class="forLine">
-                <b class="tag_button" @click="callAll(), word = '', path = '' ">ALL</b>&nbsp;&nbsp;&nbsp;
-                <b> ＞ </b>&nbsp;&nbsp;&nbsp;
-                <b class="tag_button">{{ path }}</b>
+                <v-icon>mdi-animation-outline</v-icon>
+                <b class="tag_button hidden-sm-and-down" @click="callAll()">&nbsp;&nbsp;ALL</b>&nbsp;
+                <b class="tag_button hidden-md-and-up" @click="callAll()">&nbsp;&nbsp;전체 보기</b>&nbsp;
+                <!-- <b> ＞ </b>&nbsp;&nbsp;&nbsp; -->
+                <b class="tag_button" v-show="path !== ''">＞{{ path }}</b>
+                <b v-show="difValue !== null">&nbsp;＞&nbsp;{{ difValue }}</b>
+                <b v-show="priceValue !== null">&nbsp;＞&nbsp;{{ priceValue }}원 이하</b>
+                <b v-show="ratingValue !== null">&nbsp;＞&nbsp;별 {{ ratingValue }}개</b>
             </v-spacer>
             <!-- 리스트 -->
             <v-container class="lecture01 mr-9 hidden-sm-and-down">
                 <div v-show="!searchinOn">
                     <v-container class="lecture_box">
-                        <div v-for="mob in paginatedData2" :key="mob[6]" class="item">
+                        <div v-for="(mob, index) in paginatedData2" :key="mob.id" class="item">
                             <div class="lecture_card">
-                                <div class="card_img" @click="goPage(mob[6])">
-                                    <v-img :src="`http://localhost:7777/lecture/image/${mob[4]}/${mob[5]}`" height="200px" width="300px"></v-img>
+                                <div class="card_img" @click="goPage(mob.id)">
+                                    <v-img :src="`http://localhost:7777/lecture/image/${mob.thumbPath}/${mob.writer}`" height="200px" width="300px"></v-img>
                                 </div>
-                                <!-- description
-                                <div class="cardhover">
-                                    {{ mob[6] }}
-                                </div> -->
-                                <div class="btn-plus"><span draggable="false"><v-icon color="white"  @click="toggleCartBtn(mob[6])">mdi-cart</v-icon></span></div>
-                                <b @click="goPage(mob[6])">    
+                                <div class="btn-plus2">
+                                    <span draggable="false">
+                                        <b @click="goPage(mob.id)"> 
+                                            <div style="font-size:13px;text-align:center">{{ mob.desc }} 대부분 LEFT OUTER JOIN을 많이 사용하지만 상황에 따라서 RIGHT OUTER JOIN을 사용할 수 있으니 개념을 꼭 이해하고 있어야 한다.</div>
+                                        </b>
+                                        <div class="align-right" >
+                                            <v-icon :color="wish[index] ? 'red' : 'white'" class="d-block pa-1" @click.prevent="toggleHeartBtn(mob, index)">
+                                            mdi-cards-heart
+                                            </v-icon>
+                                            <v-icon :color="cart[index] ? 'blue' : 'white'" class="d-block pa-1" @click.prevent="toggleCartBtn(mob, index)">
+                                            mdi-cart
+                                            </v-icon>
+                                        </div>
+                                    </span>
+                                </div>
+                                <b @click="goPage(mob.id)">    
                                     <!-- title -->
                                     <div class="card_text01">
-                                        {{ mob[0] }}
+                                        {{ mob.title }}
                                     </div>
                                     <!-- nickname -->
                                     <div class="card_text02">
-                                        {{ mob[3] }}
+                                        {{ mob.writer }}
                                     </div>
                                     <div class="card_text_gropu01">
                                         <!-- rating -->
@@ -120,13 +135,13 @@
                                         </div>
                                         <!-- grade -->
                                         <div class="card_text04">
-                                            {{ mob[2] }}
+                                            {{ mob.grade }}
                                         </div>
                                     </div>
                                     <div class="forLine4"></div>
                                     <!-- price -->
                                     <div class="card_text05">
-                                        {{ mob[1]  | comma }}원
+                                        {{ mob.price  | comma }}원
                                     </div>
                                 </b>
                             </div>
@@ -138,25 +153,27 @@
                         </v-container>
                     </v-container>
                 </div>
+
+
             </v-container>
             <!-- 모바일 리스트 -->
             <v-container class="lecture01 mr-9 hidden-md-and-up">
                 <div v-show="!searchinOn">
                     <v-container class="lecture_box">
                         <div v-for="mob in paginatedData2" :key="mob.boardNo">
-                            <div class="mx-auto2" @click="goPage(mob[6])">
-                                <div class="card_img" @click="goPage(mob[6])">
-                                    <v-img :src="`http://localhost:7777/lecture/image/${mob[4]}/${mob[5]}`" height="150px" width="150px"></v-img>
+                            <div class="mx-auto2" @click="goPage(mob.id)">
+                                <div class="card_img" @click="goPage(mob.id)">
+                                    <v-img :src="`http://localhost:7777/lecture/image/${mob.thumbPath}/${mob.writer}`" height="150px" width="150px"></v-img>
                                 </div>
                                 <div class="card_info">                                    
                                     <div style="height:66px;"><!-- title -->
-                                        {{mob[0]}}
+                                        {{mob.title}}
                                     </div>
                                     <div class="forLine4"></div>
                                     <div class="card_text">
                                         <div class="nickname_txt">
                                             <!-- nickname -->
-                                            {{ mob[3] }}
+                                            {{ mob.writer }}
                                         </div>
                                         <div></div><div></div>
                                         <div v-show="path != ''" class="category_txt">
@@ -164,13 +181,13 @@
                                         </div>
                                         <div class="grade_txt">
                                             <!-- grade -->
-                                            {{ mob[2] }}
+                                            {{ mob.grade }}
                                         </div>
                                     </div>
                                     <div class="card_text2">
                                         <div>
                                             <!-- price -->
-                                            ￦{{ mob[1]  | comma }}
+                                            ￦{{ mob.price  | comma }}
                                         </div>
                                     </div>
                                 </div>
@@ -184,6 +201,37 @@
                     </div>
                 </div>
             </v-container>
+            <!-- 모바일 사이즈 때 나타나는 글쓰기 버튼 -->
+            <v-row justify="center">
+                <v-dialog v-model="dialog" scrollable max-width="300px">
+                <template v-slot:activator="{ on, attrs }">
+                    <v-btn color="primary" fab dark v-bind="attrs" v-on="on" fixed right style="top:650px;left:410px;" class="hidden-md-and-up">
+                        <v-icon dark>mdi-plus</v-icon>
+                    </v-btn>
+                </template>
+                <v-card>
+                    <div class="title2" @click="callAll()">전체 보기</div>
+                    <v-list-group
+                        v-for="item in items"
+                        :key="item.title"
+                        v-model="item.active"
+                        :prepend-icon="item.action"
+                        no-action="no-action">
+                        <template v-slot:activator>
+                            <v-list-item-content>
+                                <v-list-item-title v-text="item.title"></v-list-item-title>
+                            </v-list-item-content>
+                        </template>
+                        <v-list-item v-for="child in item.items" :key="child.value">
+                            <v-list-item-content>
+                                <!-- <v-btn @click="selectCategory(child)" style="cursor:pointer">{{child.title}}</v-btn> -->
+                                <v-list-item-title class="child" v-text="child.title" @click="selectCategory(child)" style="cursor:pointer"></v-list-item-title>
+                            </v-list-item-content>
+                        </v-list-item>
+                    </v-list-group>
+                </v-card>
+                </v-dialog>
+            </v-row>
         </div>
     </div>
 </template>
@@ -205,122 +253,42 @@ export default {
         }
     },
     data: () => ({
-        items: [
-            {
-            //     '개발 프로그래밍', '자바', '프론트엔드', '백엔드', 'Vue', 'React', 'Html Css', 'docker', 'JavaScript',
-            //  '게임 개발', 'Golang', '데이터 사이언스', 'Python', '
-            // 인공지능', '딥러닝', '데이터베이스', 'SQL', 'MongoDB', '보안', '모바일 앱 개발', 'Swift', '안드로이드', 'Kotlin', '코딩테스트', '기타'
-                items: [
-                    {
-                        title: 'JAVA', value: 1
-                    }, {
-                        title: '개발 프로그래밍', value: 2
-                    }, {
-                        title: '프론트엔드', value: 3
-                    }, {
-                        title: '백엔드', value: 3
-                    }, {
-                        title: 'Vue', value: 4
-                    }, {
-                        title: 'React', value: 5
-                    }, {
-                        title: 'Html Css', value: 6
-                    }, {
-                        title: 'JavaScript Css', value: 9
-                    }, {
-                        title: '게임 개발', value: 10
-                    }, {
-                        title: 'Golang', value: 11
-                    }, {
-                        title: 'Python', value: 13
-                    }, {
-                        title: 'Golang', value: 11
-                    }, {
-                        title: 'Golang', value: 11
-                    }
-                ],
-                title: '프로그래밍'
-            }, {
-                items: [
-                    {
-                        title: '보안', value: 19
-                    }
-                ],
-                title: '보안'
-            }, {
-                items: [
-                    {
-                        title: '인공지능', value: 14
-                    }, {
-                        title: '딥러닝', value: 15
-                    }
-                ],
-                title: '머신러닝'
-            }, {
-                items: [
-                    {
-                        title: '데이터베이스', value: 16
-                    }, {
-                        title: 'SQL', value: 17
-                    }, {
-                        title: 'MongoDB', value: 18
-                    }
-                ],
-                title: '데이터베이스'
-            }, {
-                items: [
-                    {
-                        title: '모바일 앱 개발', value: 20
-                    }, {
-                        title: 'Swift', value: 21
-                    }, {
-                        title: '안드로이드', value: 22
-                    }, {
-                        title: 'Kotlin', value: 23
-                    }
-                ],
-                title: '모바일'
-            }, {
-                items: [
-                    {
-                        title: '코딩테스트', value: 24
-                    }, {
-                        title: '기타', value: 25
-                    }
-                ],
-                title: '기타'
-            }
-        ],
-        alert: true,
-        show: false,
         pageNum2: 1,                
         pageNumS: 1,
-        expanded: [],
-        singleExpand: false,
-        toggle_exclusive: [],
         searchingResult: [],
         searchinOn: false,
         word: '',
-        headers: [
-        ],
-        valueDeterminate: 15,
         rating: 5,
         path: '',
-        cart: null,
         difValue: null,
         priceValue: null,
-        ratingValue: 0,
+        ratingValue: null,
         temp04: 4,
         temp03: 3,
         temp02: 2,
         temp01: 1,
         copiedList: [],
-        refreshCheck: 1
+        refreshCheck: 1,
+        cart: [],
+        wish: [],
+        dialog: false    
     }),
     created () {
         setTimeout(() => {
             this.copiedList = this.callLecturelist
-            }, 1000)
+            if(this.$store.state.tempCate !== null) {
+                this.fetchCallLectureListWithCategory(this.$store.state.tempCate)
+                this.$store.state.tempCate = null
+            }
+            // 위시리스트 생성            
+            for (var i = 0; i < this.callLecturelist.length; i++) {
+                this.$set(this.wish, i, this.callLecturelist[i].wishList)
+            }
+            // 카트리스트 생성            
+            for (var j = 0; j < this.callLecturelist.length; j++) {
+                this.$set(this.cart, j, this.callLecturelist[j].cart)
+            }
+            }, 300)
     },
     watch: {
         word(newVal) {
@@ -376,18 +344,19 @@ export default {
                 this.searchinOn = false
             }
         },
-        info() {
-            alert('강의 소개 페이지로 링크')
-        },
         selectCategory(data) {
-            this.fetchCallLectureListWithCategory(data.value)
+            this.fetchCallLectureListWithCategory(data.title)
             .then(() => {
                 this.copiedList = this.callLecturelist
                 })
             this.path = data.title
+            this.dialog = false
         },
         callAll() {
             this.$emit("callAll", {})
+            this.word = '', this.path = '',
+            this.priceValue = null, this.difValue = null, this.ratingValue = null
+            this.dialog = false
         },
         searchingWord(data) {
             this.fetchCallLectureListWithFilter(data)
@@ -396,15 +365,18 @@ export default {
         goPage(data) {
             this.$router.push( { name: 'LectureDetailPage', params: { lectureId: data.toString() } } )
         },
-        toggleCartBtn(data) {
-        axios.get(`http://localhost:7777/manageLecture/addToCart/${data}`)
+        toggleHeartBtn(data, index) {
+            const temp = data
+        axios.get(`http://localhost:7777/manageLecture/addToWish/${temp.id}`)
                 .then(({ data }) => {
-                this.cart = data
-                if (data == true) {
-                    alert('장바구니에 담겼습니다.')
-                } else {
-                    alert('장바구니에서 제외됐습니다.')
-                }
+                this.$set(this.wish, index, data)
+                })
+        },
+        toggleCartBtn(data, index) {            
+            const temp = data
+        axios.get(`http://localhost:7777/manageLecture/addToCart/${temp.id}`)
+                .then(({ data }) => {
+                this.$set(this.cart, index, data)
                 })
         },
         sideBarFilter() {
@@ -418,7 +390,7 @@ export default {
             if(this.difValue !== null) {
                 for(var i = 0; i < tempLists.length; i++){                    
                     const regex = new RegExp(this.difValue, "gi");
-                    const comparison = regex.test(tempLists[i][2])
+                    const comparison = regex.test(tempLists[i].grade)
                     if(comparison){
                         searchingResult.push(tempLists[i])
                     }
@@ -432,9 +404,9 @@ export default {
             if(this.priceValue !== null) {
                 console.log('searchingResult.length : ' + searchingResult.length)
                 for(var j = 0; j < searchingResult.length; j++){
-                    if(searchingResult[j][1] < this.priceValue) {
+                    if(searchingResult[j].price < this.priceValue) {
                         console.log('true')
-                        console.log('searchingResult[j][2] : ' + searchingResult[j][1])
+                        console.log('searchingResult[j][2] : ' + searchingResult[j].price)
                         console.log(' <= ')
                         console.log('this.priceValue : ' + this.priceValue)
                         searchingResult2.push(searchingResult[j])
@@ -486,7 +458,10 @@ export default {
                 return page;
         },
         paginatedData2() {
-            return this.callLecturelist.slice(0, 10);
+            return this.callLecturelist;
+        },
+        items() {
+            return this.$store.state.category2
         },
         ...mapState ({
         lists: state => state.lists
@@ -720,6 +695,40 @@ p {
     color: #0288D1;
     font-weight: 700;
 }
+.title2 {
+    display: flex;
+    align-items: center;
+    font-size: 15px;
+    font-weight: 700;
+    background-color: rgb(246, 246, 246);
+    height: 45px;
+    border-bottom: 1px solid #EEEEEE;
+    padding-left: 15px;
+    cursor: pointer;
+}
+.title2:hover {
+    background-color: #eeeeee;
+}
+
+
+.v-list-item.theme--light {
+    padding-left:30px!important;
+    border-top: 1px solid #EEEEEE;
+    background-color: white;
+    font-weight: 500;
+}
+.v-list-group.v-list-group--no-action {
+    background-color: #f8f8f8 !important;
+}
+
+
+
+
+
+
+
+
+
 
 
 .mx-auto {
@@ -731,6 +740,9 @@ p {
   opacity:1;
   transform:scale(1);
 }
+/* .lecture_card:hover .btn-plus2 {
+  opacity:1;
+} */
 .btn_pagination {
     background-color: transparent;
     box-shadow: none;
@@ -783,7 +795,6 @@ p {
     height: 40px !important;
     border-top: 1px solid #BDBDBD;
     border-bottom: 1px solid #BDBDBD;
-    padding-left: 2vw;
     display: flex;
     justify-content: start;
     align-items: center;
@@ -997,6 +1008,33 @@ input:focus {
   color:#ffffff;
   user-select:none;
 }
+.btn-plus2 {
+    display: flex;
+    align-items: flex-end;  
+  /* hover시 사진 어둡게 */
+  position:absolute;
+  top:0px;
+  background:rgba(0, 0, 0, 0.815);
+  width:270px;
+  height:200px;
+  padding: 5px;
+  text-align:center;
+  border-radius: 6px;
+  opacity:0;
+}
+.btn-plus2 span {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    font-size: 2.3em;
+    color: #ffffff;
+    user-select: none;
+    opacity:0.8;
+}
+.btn-plus2:hover {
+    opacity:1;
+}
+
 
 .cardhover {
     position:absolute;
@@ -1073,6 +1111,5 @@ input:focus {
 }
 a { text-decoration:none !important }
 a:hover { text-decoration:none !important }
-
 
 </style>

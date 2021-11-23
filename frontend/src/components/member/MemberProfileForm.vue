@@ -60,9 +60,8 @@
                             </div>
                         </span>
                         <!-- 자기소개 -->
-                        <fieldset class="box3">
-                            <textarea style="height:140px;width:300px;border:1px solid;" cols="80" rows="20" maxlength="155" v-model="introduce" placeholder="자기소개(160자 이내)"></textarea>
-                        </fieldset>                    
+                            <div class="profile_row_title">자기 소개</div>
+                        <editor-for-profile placeholder="Write something …" :introduceForChild="introduceForChild" @fromEditor="contentRegist"/>
                         
                         <div class="button_box" style="margin-bottom: 15px">
                             <v-btn v-show="onLoginBtn"
@@ -95,14 +94,25 @@
 import axios from 'axios'
 import { mapState, mapActions } from 'vuex'
 import Vue from 'vue'
+import EditorForProfile from '@/components/board/EditorForProfile.vue'
 
 export default {
     name: 'MemberProfileForm',
+    components: {
+        EditorForProfile
+    },
     computed: {
         ...mapState(['profile'])
     },
+    created() {
+        this.nickname= Vue.$cookies.get("NICKNAME"),
+        this.userId= this.$store.state.moduleA.email,
+        this.userIdInToken= Vue.$cookies.get("USER_NAME")
+        this.introduce = this.$store.state.profile.introduce
+    },
     mounted () {
         this.fetchMyIntroduce(this.userIdInToken)
+        console.log('Vue.$cookies.get("NICKNAME") : ' + Vue.$cookies.get("NICKNAME"))
     },
     data () {
         return {
@@ -111,7 +121,8 @@ export default {
             userId: this.$store.state.moduleA.email,
             userIdInToken: Vue.$cookies.get("USER_NAME"),
             password: '',
-            introduce: this.$store.state.profile.introduce,
+            introduce: '',
+            introduceForChild: this.$store.state.profile.introduce,
             memberNo: this.$store.state.profile.member_no,
             thumb_path: this.$store.state.profile.thumb_path,
             profileNo: this.$store.state.profile.profile_no,
@@ -133,19 +144,13 @@ export default {
 
             thumbnailImage: "",
             show: null,
-            refrechCheck: 1            
+            refrechCheck: 1
         }
     },
     watch: {
         introduce() {            
             this.onLoginBtn = true
-            alert('변경감지')
         }
-    },
-    created () {
-        this.nickname= Vue.$cookies.get("NICKNAME"),
-        this.userId= this.$store.state.moduleA.email,
-        this.userIdInToken= Vue.$cookies.get("USER_NAME")
     },
     methods: {
         test() {
@@ -161,7 +166,7 @@ export default {
                 return temp
         },
         profileSubmit () {
-                const { userIdInToken, nickname, password, introduce} = this
+                const { userIdInToken, nickname, password, introduce } = this
                 this.$emit('submit', { userIdInToken, nickname, password, introduce })
         },
         deleteContent4 () {
@@ -255,6 +260,14 @@ export default {
             this.files = '',
             this.preview = ''
         },
+        contentRegist(data) {
+            console.log('받은 data값은')
+            console.log(data.introduce)
+            this.introduce = data.introduce
+            console.log('this,content')
+            console.log(this.introduce)
+
+        },
         ...mapActions(['fetchMyIntroduce'])
     }
 }
@@ -319,6 +332,7 @@ export default {
 }
 .box1 {
     border: 0px;
+    max-width: 400px;
 }
 .box2 {
     height: 43px;
@@ -369,11 +383,8 @@ export default {
 }
 .button_box {
     display: flex;
-    width: 310px;
-    margin: 50px;
-    margin-top: 50px;
-    margin-bottom: 30px;
-    justify-content:center;
+    justify-content: center;
+    margin-top: 20px;
 }
 .error_message {
     position:relative;

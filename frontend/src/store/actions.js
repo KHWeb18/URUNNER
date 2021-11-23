@@ -184,10 +184,11 @@ export default {
                 })
     },
     // 내학습 게시판
-    fetchMyLectureList ({ commit }) {
-        return axios.get('http://localhost:7777/mypage/myLecturelist')
+    fetchMyLectureList ({ commit }, memberNo) {
+        return axios.get(`http://localhost:7777/myPage/myLecturelist/${memberNo}`)
                 .then((res) => {
                     commit(FETCH_LECTURE_LIST, res.data)
+                    console.log(res.data)
         }).catch(err=>{alert(err.response.data.message)})
     },
     fetchMemberList({ commit }) {
@@ -197,16 +198,29 @@ export default {
         }).catch(err=>{alert(err.response.data.message)})
     },
     // 판매중인 수강 리스트
+    // fetchCallLectureList({ commit }) {
+    //     return axios.get('http://localhost:7777/callLecture/lists')
+    //     .then( (res) => {
+    //         commit(FETCH_LECTURE_LIST, res.data)
+    //     }).catch(err=>{alert(err.response.data.message)})
+    // },
     fetchCallLectureList({ commit }) {
-        return axios.get('http://localhost:7777/callLecture/lists')
+        let categoryName = new Object();
+        categoryName['category'] = null
+        return axios.post('http://localhost:7777/manageLecture/mainSearch', { page : 0, name: null, categoryName})
         .then( (res) => {
-            commit(FETCH_LECTURE_LIST, res.data)
+            commit(FETCH_LECTURE_LIST, res.data.data.content)
+            console.log(res)
         }).catch(err=>{alert(err.response.data.message)})
     },
-    fetchCallLectureListWithCategory({ commit }, categoryId) {
-        return axios.get(`http://localhost:7777/callLecture/lists/${categoryId}`)
+    fetchCallLectureListWithCategory({ commit }, cateName) {
+        let categoryName = new Object();
+        categoryName['category'] = cateName
+        console.log("cateName : " + cateName)
+        return axios.post('http://localhost:7777/manageLecture/mainSearch', { page : 0, name: null, categoryName})
         .then( (res) => {
-            commit(FETCH_LECTURE_LIST, res.data)
+            commit(FETCH_LECTURE_LIST, res.data.data.content)
+            console.log(res.data.data.content)
         }).catch(err=>{alert(err.response.data.message)})
     },
     fetchCallLectureListWithFilter ({ commit }, word) {

@@ -1,9 +1,7 @@
 package com.urunner.khweb.controller.lecture;
 
 
-import com.urunner.khweb.controller.dto.lecture.DtoWrapper;
-import com.urunner.khweb.controller.dto.lecture.JoinInstructorDto;
-import com.urunner.khweb.controller.dto.lecture.SearchCondition;
+import com.urunner.khweb.controller.dto.lecture.*;
 import com.urunner.khweb.repository.lecture.LectureRepository;
 import com.urunner.khweb.service.lecture.LectureService;
 import com.urunner.khweb.service.member.MemberService;
@@ -50,7 +48,12 @@ public class LectureManageController {
     public ResponseEntity<Boolean> addToCart(@PathVariable("lectureId") Long lectureId) throws AuthenticationException {
 
         return new ResponseEntity<Boolean>(mypageService.lectureAddCart(lectureId), HttpStatus.OK);
+    }
 
+    @GetMapping("/addToWishInLecture/{lectureId}")
+    public ResponseEntity<DtoWrapper3> addToWishInLecture(@PathVariable("lectureId") Long lectureId) throws AuthenticationException {
+
+        return new ResponseEntity<DtoWrapper3>(mypageService.addToWishInLecture(lectureId), HttpStatus.OK);
     }
 
     @GetMapping("/getCartList")
@@ -80,5 +83,11 @@ public class LectureManageController {
     public DtoWrapper mainSearch(@RequestBody SearchCondition searchCondition) {
 
         return new DtoWrapper(lectureRepository.searchPage(searchCondition, searchCondition.getPage()));
+    }
+
+    @PostMapping("/regStudentComment")
+    public ResponseEntity<Boolean> regStudentComment(@RequestBody ReviewDto reviewDto) {
+
+        return new ResponseEntity<Boolean>(lectureService.regStudentComment(reviewDto), HttpStatus.OK);
     }
 }

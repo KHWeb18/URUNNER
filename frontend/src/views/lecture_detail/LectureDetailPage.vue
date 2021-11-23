@@ -1,7 +1,8 @@
 <template>
  <lecture-detail-form
   :lectureDetailInfo="lectureDetailInfo"
-  :lectureVideoList="lectureVideoList"/>
+  :lectureVideoList="lectureVideoList"
+  :wishListCount="wishListCount"/>
 </template>
 
 <script>
@@ -16,6 +17,7 @@ export default {
     return {
       lectureDetailInfo: {},
       lectureVideoList: [],
+      wishListCount: null
     }
   },
   created() {
@@ -30,6 +32,7 @@ export default {
               console.log(data);
               this.lectureDetailInfo = data.opData
               this.lectureVideoList = data.opData2
+              this.wishListCount = data.wishListCount
             })
             .catch(err => { console.log(err); })
     }

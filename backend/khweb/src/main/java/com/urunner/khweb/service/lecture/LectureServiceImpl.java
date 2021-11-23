@@ -5,6 +5,7 @@ import com.urunner.khweb.entity.lecture.Lecture;
 //import com.urunner.khweb.entity.lecture.LectureImage;
 import com.urunner.khweb.entity.lecture.LectureList;
 import com.urunner.khweb.entity.lecture.LectureVideo;
+import com.urunner.khweb.entity.lecture.Review;
 import com.urunner.khweb.entity.member.Member;
 import com.urunner.khweb.entity.mypage.Cart;
 
@@ -317,6 +318,14 @@ public class LectureServiceImpl implements LectureService {
                                 .getResultList()
                 )).collect(Collectors.toList());
 
+        String query3 = "select count(w.wishListId) from WishList w where w.lecture.lecture_id = :id";
+
+        Long wishListCount = em.createQuery(query3, Long.class)
+                .setParameter("id", lecture.get().getLecture_id())
+                .getSingleResult();
+
+
+
         String username = authentication();
         if (username.equals("anonymousUser")) {
             log.info("로그인 되있지않은 사용자");
@@ -355,7 +364,9 @@ public class LectureServiceImpl implements LectureService {
 //       1. 네이티브쿼리로 dsl로
 //       2. OneToMany부분 fetch 조인 set으로 바꾸기
 //       3. queryDsl쓰기...
-        return new DtoWrapper2(lectureDto, Optional.of(list));
+        DtoWrapper2 dtoWrapper = new DtoWrapper2(lectureDto, Optional.of(list));
+        dtoWrapper.setWishListCount(wishListCount);
+        return dtoWrapper;
     }
 
     @Override
@@ -504,6 +515,28 @@ public class LectureServiceImpl implements LectureService {
         log.info(findAllLecture.get().findFirst().get().getCategoryList().toString());
 
         return new DtoWrapper(lectureDtos);
+    }
+
+    @Autowired
+    private ReviewRepository reviewRepository;
+
+    @Override
+    public Boolean regStudentComment(ReviewDto reviewDto) {
+
+//        구매한사람인지 체크하는 메서드 ( 구입 테이블에서 로드하는 로직)
+        Lecture lecture = em.find(Lecture.class, reviewDto.getLectureId());
+
+        Review review = Review.builder()
+                .rating(reviewDto.getRating())
+                .content(reviewDto.getContent())
+                .writer(authentication())
+                .build();
+
+        review.setLecture(lecture);
+
+        reviewRepository.save(review);
+
+        return true;
     }
 
     @Override

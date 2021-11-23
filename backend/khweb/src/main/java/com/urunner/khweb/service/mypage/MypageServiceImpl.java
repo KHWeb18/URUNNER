@@ -1,6 +1,7 @@
 package com.urunner.khweb.service.mypage;
 
 
+import com.urunner.khweb.controller.dto.lecture.DtoWrapper3;
 import com.urunner.khweb.entity.lecture.Lecture;
 import com.urunner.khweb.entity.member.Member;
 import com.urunner.khweb.entity.mypage.Cart;
@@ -163,6 +164,57 @@ public class MypageServiceImpl implements MypageService{
         }
 
         return !exist;
+    }
+
+    @Override
+    public DtoWrapper3 addToWishInLecture(Long lectureId) throws AuthenticationException {
+
+        boolean exist = false;
+
+        Authentication authentication = getAuthentication();
+
+        if (authentication.getName().equals("anonymousUser")) {
+            log.info("로그인 되있지않은 사용자");
+            throw new AuthenticationException("로그인 되있지않은 사용자");
+        }
+
+        Member member = memberRepository.findByEmail(authentication.getName());
+
+        List<WishList> collect = new ArrayList<>(member.getMyPage().getWishLists());
+
+        for (WishList list : collect) {
+            if (Objects.equals(list.getLecture().getLecture_id(), lectureId)) {
+                member.getMyPage().getWishLists().removeIf(w -> w.getWishListId().equals(list.getWishListId()));
+                wishListRepository.deleteById(list.getWishListId());
+                log.info("이미 등록된 위시리스트" + lectureId.toString());
+                exist = true;
+            }
+        }
+
+        Lecture lecture = em.find(Lecture.class, lectureId);
+        if (!exist) {
+
+            WishList wishList = new WishList();
+
+            wishList.setLecture(lecture);
+            wishList.setMyPage(member.getMyPage());
+
+            wishListRepository.save(wishList);
+        }
+
+        String query3 = "select count(w.wishListId) from WishList w where w.lecture.lecture_id = :id";
+
+        Long wishListCount = em.createQuery(query3, Long.class)
+                .setParameter("id", lecture.getLecture_id())
+                .getSingleResult();
+
+        System.out.println("위시리스트 수" + wishListCount.toString());
+
+        DtoWrapper3 dtoWrapper = new DtoWrapper3();
+        dtoWrapper.setWishListCount(wishListCount);
+        dtoWrapper.setExist(!exist);
+
+        return dtoWrapper;
     }
 
     private Authentication getAuthentication() {
