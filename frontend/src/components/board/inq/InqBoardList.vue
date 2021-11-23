@@ -477,7 +477,7 @@ export default {
     justify-content: space-between;
     align-items: center;
     height: 40px;
-    padding: 0vw 2vw;
+    padding-left: 2vw;
 }
 .forLine0sButton {
     display: flex;
@@ -489,8 +489,7 @@ export default {
     height: 40px;
     border-top: 1px solid #BDBDBD;
     border-bottom: 1px solid #BDBDBD;
-    margin: 0vw 1vw;
-    padding: 0vw 1vw;
+    padding-left: 2vw;
     display: flex;
     justify-content: start;
     align-items: center;
@@ -509,8 +508,9 @@ export default {
     color: #424242;
 }
 .title_box {
-    margin-top: 100px;
+    margin-top: 30px;
     margin-bottom: 100px;
+    width: inherit;
 }
 .title_box2 {
     margin-top: 10px;
@@ -678,8 +678,8 @@ input:focus {
     flex-direction: column;    
     align-self: center;
     margin: 0px;
-    width: 57vw;
-    max-width: 750px;
+    width: 37vw;
+    max-width: 630px;
 }
 .item4 {
     display: flex;
@@ -689,7 +689,6 @@ input:focus {
     color: #2b2b2b;
     max-width: 55vw;
     min-width: 450px;
-    margin-top: 8px;
 
     overflow: hidden;
     text-overflow: ellipsis;
@@ -846,10 +845,5 @@ ul {
 }
 .v-btn--fixed {
     top:700px !important;
-}
-.mobile_email {
-    color: #424242;
-    font-size: 14px;
-    font-weight: bold;
 }
 </style>

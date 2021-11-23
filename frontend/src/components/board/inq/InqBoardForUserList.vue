@@ -7,11 +7,6 @@
                     <h2 class="page_title">
                         <span>1:1 문의 게시판 for user</span></h2>
                 </div>
-
-            <router-link :to="{ name: 'InqBoardListPage' }">
-                <v-btn>1:1문의 게시판(운영자)</v-btn>
-            </router-link>
-
             </div>
             <div class="mr-9 hidden-md-and-up">
                 <div class="title_box2">
@@ -514,6 +509,7 @@ export default {
 .title_box {
     margin-top: 30px;
     margin-bottom: 100px;
+    width: inherit;
 }
 .title_box2 {
     margin-top: 10px;
@@ -681,8 +677,8 @@ input:focus {
     flex-direction: column;    
     align-self: center;
     margin: 0px;
-    width: 57vw;
-    max-width: 750px;
+    width: 37vw;
+    max-width: 630px;
 }
 .item4 {
     display: flex;

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-container>
+        <v-container style="padding:10px !important;">
             <inq-board-read v-if="board" :board="board" @submit="onSubmit"/>
             <v-container class="middle_btn_box">
                 <router-link :to="{ name: 'InqBoardListPage' }">

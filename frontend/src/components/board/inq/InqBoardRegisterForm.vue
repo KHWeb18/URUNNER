@@ -41,16 +41,9 @@ export default {
             axios.post('http://localhost:7777/inqboard/register', { title, writer, content, nickname, complete, currentNum, views, comments, tags, notice } )
                     .then(res => {
                         this.$store.state.boardNo = res.data.boardNo.toString()
-
-                        if (this.$store.state.isAuth == 'true') {
                             this.$router.push({
-                                name: 'InqBoardListPage'
+                                path: '/inqforuser'
                             })
-                        } else {
-                            this.$router.push({
-                                name: 'InqBoardListForUserPage'
-                            })
-                        }
                     })
                     .catch(res => {
                         alert(res.response.data.message)
