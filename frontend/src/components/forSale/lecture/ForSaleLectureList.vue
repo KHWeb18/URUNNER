@@ -96,30 +96,22 @@
             <v-container class="lecture01 mr-9 hidden-sm-and-down">
                 <div v-show="!searchinOn">
                     <v-container class="lecture_box">
-                        <div v-for="mob in paginatedData2" :key="mob.id" class="item">
+                        <div v-for="(mob, index) in paginatedData2" :key="mob.id" class="item">
                             <div class="lecture_card">
                                 <div class="card_img" @click="goPage(mob.id)">
                                     <v-img :src="`http://localhost:7777/lecture/image/${mob.thumbPath}/${mob.writer}`" height="200px" width="300px"></v-img>
                                 </div>
-                                <!-- description
-                                <div class="cardhover">
-                                    {{ mob[6] }}
-                                </div> -->
-                                <!-- <div class="btn-plus"><span draggable="false"><v-icon color="white"  @click="toggleCartBtn(mob[6])">mdi-cart</v-icon></span></div> -->
-                                
-                                <div class="ma-2 align-right" >
-                                    <v-icon :color="wish ? 'red' : null" class="d-block pa-1" @click.prevent="toggleHeartBtn(mob.id)">
-                                    mdi-cards-heart
-                                    </v-icon>
-                                    <v-icon :color="cart ? 'primary' : null" class="d-block pa-1" @click.prevent="toggleCartBtn(mob.id)">
-                                    mdi-cart
-                                    </v-icon>
-                                </div>
-
                                 <div class="btn-plus2">
                                     <span draggable="false">
                                         <div style="font-size:13px;text-align:center">{{ mob.desc }} 대부분 LEFT OUTER JOIN을 많이 사용하지만 상황에 따라서 RIGHT OUTER JOIN을 사용할 수 있으니 개념을 꼭 이해하고 있어야 한다.</div>
-                                            
+                                        <div class="align-right" >
+                                            <v-icon :color="wish[index] ? 'red' : 'white'" class="d-block pa-1" @click.prevent="toggleHeartBtn(mob, index)">
+                                            mdi-cards-heart
+                                            </v-icon>
+                                            <v-icon :color="cart[index] ? 'blue' : 'white'" class="d-block pa-1" @click.prevent="toggleCartBtn(mob, index)">
+                                            mdi-cart
+                                            </v-icon>
+                                        </div>
                                     </span>
                                 </div>
                                 <b @click="goPage(mob.id)">    
@@ -207,7 +199,6 @@
                     </div>
                 </div>
             </v-container>
-
             <!-- 모바일 사이즈 때 나타나는 글쓰기 버튼 -->
             <v-row justify="center">
                 <v-dialog v-model="dialog" scrollable max-width="300px">
@@ -260,105 +251,11 @@ export default {
         }
     },
     data: () => ({
-        items: [
-            {
-            //     '개발 프로그래밍', '자바', '프론트엔드', '백엔드', 'Vue', 'React', 'Html Css', 'docker', 'JavaScript',
-            //  '게임 개발', 'Golang', '데이터 사이언스', 'Python', '
-            // 인공지능', '딥러닝', '데이터베이스', 'SQL', 'MongoDB', '보안', '모바일 앱 개발', 'Swift', '안드로이드', 'Kotlin', '코딩테스트', '기타'
-                items: [
-                    {
-                        title: '자바', value: 1
-                    }, {
-                        title: '개발 프로그래밍', value: 2
-                    }, {
-                        title: '프론트엔드', value: 3
-                    }, {
-                        title: '백엔드', value: 3
-                    }, {
-                        title: 'Vue', value: 4
-                    }, {
-                        title: 'React', value: 5
-                    }, {
-                        title: 'Html Css', value: 6
-                    }, {
-                        title: 'JavaScript', value: 9
-                    }, {
-                        title: '게임 개발', value: 10
-                    }, {
-                        title: 'Golang', value: 11
-                    }, {
-                        title: 'Python', value: 13
-                    }, {
-                        title: 'Golang', value: 11
-                    }, {
-                        title: 'Golang', value: 11
-                    }
-                ],
-                title: '프로그래밍'
-            }, {
-                items: [
-                    {
-                        title: '보안', value: 19
-                    }
-                ],
-                title: '보안'
-            }, {
-                items: [
-                    {
-                        title: '인공지능', value: 14
-                    }, {
-                        title: '딥러닝', value: 15
-                    }
-                ],
-                title: '머신러닝'
-            }, {
-                items: [
-                    {
-                        title: '데이터베이스', value: 16
-                    }, {
-                        title: 'SQL', value: 17
-                    }, {
-                        title: 'MongoDB', value: 18
-                    }
-                ],
-                title: '데이터베이스'
-            }, {
-                items: [
-                    {
-                        title: '모바일 앱 개발', value: 20
-                    }, {
-                        title: 'Swift', value: 21
-                    }, {
-                        title: '안드로이드', value: 22
-                    }, {
-                        title: 'Kotlin', value: 23
-                    }
-                ],
-                title: '모바일'
-            }, {
-                items: [
-                    {
-                        title: '코딩테스트', value: 24
-                    }, {
-                        title: '기타', value: 25
-                    }
-                ],
-                title: '기타'
-            }
-        ],
-        alert: true,
-        show: false,
         pageNum2: 1,                
         pageNumS: 1,
-        expanded: [],
-        singleExpand: false,
-        toggle_exclusive: [],
         searchingResult: [],
         searchinOn: false,
         word: '',
-        headers: [
-        ],
-        valueDeterminate: 15,
         rating: 5,
         path: '',
         difValue: null,
@@ -370,19 +267,24 @@ export default {
         temp01: 1,
         copiedList: [],
         refreshCheck: 1,
-        cart: null,
-        wish: null,
+        cart: [],
+        wish: [],
         dialog: false    
     }),
     created () {
-        this.temp000 = this.$store.state.tempCate
         setTimeout(() => {
             this.copiedList = this.callLecturelist
-            this.wish = this.callLecturelist.wishList
-            console.log('this.$store.state.tempCate : ' + this.$store.state.tempCate)
             if(this.$store.state.tempCate !== null) {
                 this.fetchCallLectureListWithCategory(this.$store.state.tempCate)
                 this.$store.state.tempCate = null
+            }
+            // 위시리스트 생성            
+            for (var i = 0; i < this.callLecturelist.length; i++) {
+                this.$set(this.wish, i, this.callLecturelist[i].wishList)
+            }
+            // 카트리스트 생성            
+            for (var j = 0; j < this.callLecturelist.length; j++) {
+                this.$set(this.cart, j, this.callLecturelist[j].cart)
             }
             }, 300)
     },
@@ -440,9 +342,6 @@ export default {
                 this.searchinOn = false
             }
         },
-        info() {
-            alert('강의 소개 페이지로 링크')
-        },
         selectCategory(data) {
             this.fetchCallLectureListWithCategory(data.title)
             .then(() => {
@@ -464,17 +363,18 @@ export default {
         goPage(data) {
             this.$router.push( { name: 'LectureDetailPage', params: { lectureId: data.toString() } } )
         },
-        toggleHeartBtn(lectureId) {
-        axios.get(`http://localhost:7777/manageLecture/addToWish/${lectureId}`)
+        toggleHeartBtn(data, index) {
+            const temp = data
+        axios.get(`http://localhost:7777/manageLecture/addToWish/${temp.id}`)
                 .then(({ data }) => {
-                    console.log(data)
-                this.wish = data
+                this.$set(this.wish, index, data)
                 })
         },
-        toggleCartBtn(lectureId) {
-        axios.get(`http://localhost:7777/manageLecture/addToCart/${lectureId}`)
+        toggleCartBtn(data, index) {            
+            const temp = data
+        axios.get(`http://localhost:7777/manageLecture/addToCart/${temp.id}`)
                 .then(({ data }) => {
-                this.cart = data
+                this.$set(this.cart, index, data)
                 })
         },
         sideBarFilter() {
@@ -557,6 +457,9 @@ export default {
         },
         paginatedData2() {
             return this.callLecturelist;
+        },
+        items() {
+            return this.$store.state.category2
         },
         ...mapState ({
         lists: state => state.lists
