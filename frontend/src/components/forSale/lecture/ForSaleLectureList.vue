@@ -103,7 +103,9 @@
                                 </div>
                                 <div class="btn-plus2">
                                     <span draggable="false">
-                                        <div style="font-size:13px;text-align:center">{{ mob.desc }} 대부분 LEFT OUTER JOIN을 많이 사용하지만 상황에 따라서 RIGHT OUTER JOIN을 사용할 수 있으니 개념을 꼭 이해하고 있어야 한다.</div>
+                                        <b @click="goPage(mob.id)"> 
+                                            <div style="font-size:13px;text-align:center">{{ mob.desc }} 대부분 LEFT OUTER JOIN을 많이 사용하지만 상황에 따라서 RIGHT OUTER JOIN을 사용할 수 있으니 개념을 꼭 이해하고 있어야 한다.</div>
+                                        </b>
                                         <div class="align-right" >
                                             <v-icon :color="wish[index] ? 'red' : 'white'" class="d-block pa-1" @click.prevent="toggleHeartBtn(mob, index)">
                                             mdi-cards-heart

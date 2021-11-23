@@ -184,10 +184,11 @@ export default {
                 })
     },
     // 내학습 게시판
-    fetchMyLectureList ({ commit }) {
-        return axios.get('http://localhost:7777/mypage/myLecturelist')
+    fetchMyLectureList ({ commit }, memberNo) {
+        return axios.get(`http://localhost:7777/myPage/myLecturelist/${memberNo}`)
                 .then((res) => {
                     commit(FETCH_LECTURE_LIST, res.data)
+                    console.log(res.data)
         }).catch(err=>{alert(err.response.data.message)})
     },
     fetchMemberList({ commit }) {
