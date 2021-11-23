@@ -224,9 +224,12 @@ export default {
         }).catch(err=>{alert(err.response.data.message)})
     },
     fetchCallLectureListWithFilter ({ commit }, word) {
-        return axios.get(`http://localhost:7777/callLecture/lists/search/${word}`)
+        let categoryName = new Object();
+        categoryName['category'] = null
+        return axios.post(`http://localhost:7777/manageLecture/mainSearch`, { page : 0, name: word, categoryName})
                 .then((res) => {
-                    commit(FETCH_LECTURE_LIST, res.data)
+                    commit(FETCH_LECTURE_LIST, res.data.data.content)
+                    console.log(res.data.data.content)
         }).catch(err=>{alert(err.response.data.message)})
     }
 }
