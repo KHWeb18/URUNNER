@@ -319,14 +319,6 @@ export default {
         prevPageS() {
             this.pageNumS -= 1;
         },
-        ImgRequest(boardNo) {
-        try {
-            return require(`../../../../../Mini/Images/lecture/${boardNo}.gif`
-            )
-        } catch (e) {
-            return require(`@/assets/temp.png`)
-            }
-        },
         searching () {
             var lists = this.callLecturelist
 

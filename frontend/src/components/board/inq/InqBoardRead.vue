@@ -52,14 +52,6 @@ export default {
         }
     },
     methods : {
-        ImgRequest() {
-            try {
-                return require(`../../../../../backend/khweb/images/qna/${this.board.writer}_${this.board.boardNo}.gif`
-                )
-            } catch (e) {
-                return require(`@/assets/logo.png`)
-            }
-        },
         endRecruit(data) {
             if(this.board.complete == 'true') {
                 this.board.complete = false

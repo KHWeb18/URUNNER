@@ -37,7 +37,7 @@
                 <v-btn depressed rounded text="text" @click="clickLogoutBtn">
                   Logout
                 </v-btn>
-                <v-btn v-if="this.$cookies.get('ROLES') !='ROLE_USER'" depressed rounded text="text" @click="clickManager">
+                <v-btn v-if="this.$cookies.get('ROLES') !='ROLE_USER'" depressed rounded text="text" @click="clickManager" style="margin-bottom:5px;">
                   Admin
                 </v-btn>
             </v-list-item-content>
