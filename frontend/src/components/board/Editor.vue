@@ -89,11 +89,30 @@
           <div class="checkBox">
             <v-checkbox v-model="notice" :label="`공지사항`" value ></v-checkbox>
           </div>
-          <div @click="$router.go(-1)">
-            <v-btn>
-                취소
-            </v-btn>
+          <v-btn @click="snackbar = true">
+              취소
+          </v-btn>
+          <!-- 게시물 삭제 클릭시 알림창 -->
+          <div class="text-center ">            
+              <v-snackbar v-model="snackbar"
+              :timeout="-1" centered height="60px">
+              게시물 작성을 취소하시겠습니까?
+                  <template v-slot:action="{ attrs }">
+                      <div @click="$router.go(-1)">
+                        <v-btn color="white" text v-bind="attrs">
+                        확인</v-btn>
+                      </div>                  
+                      <v-btn color="red" text v-bind="attrs" @click="snackbar = false">
+                      취소</v-btn>
+                  </template>
+              </v-snackbar>
           </div>
+
+
+
+
+
+
           <v-btn color="light-blue lighten-1 text center" @click="contentSubmit()" class="regist_btn">
               등록
           </v-btn>
@@ -131,6 +150,7 @@ export default {
     },
     data: () => ({
         content: '',
+        snackbar: false,
         notice: false,
       activator: null,
       attach: null,

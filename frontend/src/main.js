@@ -27,6 +27,8 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import locale from 'element-ui/lib/locale/lang/ko'
 
+window.Kakao.init('Javscript key')
+
 Vue.mixin(mixin)
 Vue.config.productionTip = false
 Vue.use(BootstrapVue)
