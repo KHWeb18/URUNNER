@@ -547,7 +547,7 @@ public class LectureServiceImpl implements LectureService {
         Lecture lecture = em.find(Lecture.class, reviewDto.getLectureId());
 
         Review review = Review.builder()
-                .rating(reviewDto.getRating())
+                .rating(reviewDto.getRating() * 2)
                 .content(reviewDto.getContent())
                 .writer(authentication())
                 .build();
