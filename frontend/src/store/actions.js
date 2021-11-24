@@ -219,6 +219,8 @@ export default {
         return axios.post('http://localhost:7777/manageLecture/mainSearch', { page : 0, name: state.searchName, categoryName})
         .then( (res) => {
             commit(FETCH_LECTURE_LIST, res.data.data.content)
+            state.reviewData = res.data.reviewData
+            console.log(state.reviewData)
             console.log(res.data.data.content)
         }).catch(err=>{alert(err.response.data.message)})
     },

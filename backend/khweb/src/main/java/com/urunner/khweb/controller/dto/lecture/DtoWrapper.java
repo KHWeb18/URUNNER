@@ -3,6 +3,7 @@ package com.urunner.khweb.controller.dto.lecture;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +14,7 @@ public class DtoWrapper<T> {
 
     private T data;
     private Optional<?> opData;
+    private T reviewData;
 
     public DtoWrapper(Optional<?> opData) {
         this.opData = opData;
@@ -20,5 +22,11 @@ public class DtoWrapper<T> {
 
     public DtoWrapper(T data) {
         this.data = data;
+    }
+
+    public DtoWrapper(T data, T reviewData) {
+        this.data = data;
+        this.reviewData = reviewData;
+
     }
 }

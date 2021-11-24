@@ -271,7 +271,8 @@ export default {
         refreshCheck: 1,
         cart: [],
         wish: [],
-        dialog: false    
+        dialog: false,
+        
     }),
     created () {
         setTimeout(() => {

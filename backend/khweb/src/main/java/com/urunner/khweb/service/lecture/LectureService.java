@@ -77,4 +77,6 @@ public interface LectureService {
     public DtoWrapper mainWishList(int page);
 
     public Boolean regStudentComment(ReviewDto reviewDto);
+
+    public List<GetReviewDto> reviewList(Page<LectureSearchDto> lectureSearchDtos);
 }

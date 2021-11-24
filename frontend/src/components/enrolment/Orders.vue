@@ -6,7 +6,7 @@
   <v-data-table
     dense
     :headers="headers"
-    :items="orders"
+    :items="this.$store.state.orders"
     item-key="name"
     class="mt-5"
     show-expand
@@ -26,29 +26,49 @@
 </template>
 
 <script>
-
+import { API_BASE_URL } from '@/constants/index'
+import axios from 'axios'
   export default {
+    methods: {
+      getPurchasedLecture() {
+        axios({
+          method: 'get',
+          url: API_BASE_URL + "/payment/getPurchasedLecture"
+        })
+        .then(res => {
+          console.log(res.data.data)
+          this.$store.state.orders = res.data.data
+        })
+        .catch(err => {
+          console.log(err)
+        })
+        
+      }
+    },
+    created() {
+      this.getPurchasedLecture()
+    },
     data: () => ({
         page: 1,
         pageCount: 0,
-      orders: [
-        {
-          orderNum: '1150294',
-          date: "2021-10-26",
-          status: "결제완료",
-          productName: "스프링 배치 - Spring Boot 기반 개발",
-          price: 69300,
-        },
-      ],
+      // orders: [
+      //   {
+      //     orderNum: '1150294',
+      //     date: "2021-10-26",
+      //     status: "결제완료",
+      //     productName: "스프링 배치 - Spring Boot 기반 개발",
+      //     price: 69300,
+      //   },
+      // ],
       headers: [
         {
           text: '주문번호',
           align: 'start',
-          value: 'orderNum',
+          value: 'id',
         },
-        { text: '주문날짜', value: 'date' },
+        { text: '주문날짜', value: 'orderDate' },
         { text: '상태', value: 'status' },
-        { text: '주문명', value: 'productName' },
+        { text: '주문명', value: 'title' },
         { text: '금액', value: 'price' },
       ],
     }),
