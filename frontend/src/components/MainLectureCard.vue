@@ -18,14 +18,14 @@
 
         <v-card-title class="pa-1 d-flex">
           <v-rating
-            :value="4"
+            :value="lecture.getReviewDto.avg"
             dense
             color="yellow"
             background-color="yellow"
             hover
             class="pa-0"
           ></v-rating>
-          <span class="primary--text text-subtitle-2 pb-0">(64)</span>
+          <span class="primary--text text-subtitle-2 pb-0">{{ lecture.getReviewDto.count - 1}}명</span>
         </v-card-title>
         <v-card-text class="ma-1 pa-1 text-center">
            <p class="text-h6 warning--text mb-1">{{ getCurrencyFormat(lecture.price) }} 원</p>

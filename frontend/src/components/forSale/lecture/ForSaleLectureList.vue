@@ -114,7 +114,7 @@
                                         <!-- rating -->
                                         <div class="card_text03">
                                             <v-rating
-                                            v-model="mob.rating"
+                                            v-model="reviewData[index].avg"
                                             background-color="orange lighten-3" small dense
                                             color="orange" large readonly></v-rating>
                                         </div>
@@ -133,7 +133,7 @@
                                     <div class="btn-plus2">
                                         <span draggable="false">
                                             <b @click="goPage(mob.id)"> 
-                                                <div style="font-size:13px;text-align:center">{{ mob.desc }} 대부분 LEFT OUTER JOIN을 많이 사용하지만 상황에 따라서 RIGHT OUTER JOIN을 사용할 수 있으니 개념을 꼭 이해하고 있어야 한다.</div>
+                                                <div class="desc_text">{{ mob.desc }}</div>
                                             </b>
                                             <div class="align-right" >
                                                 <v-icon :color="wish[index] ? 'red' : 'white'" class="d-block pa-1" @click.prevent="toggleHeartBtn(mob, index)">
@@ -271,7 +271,8 @@ export default {
         refreshCheck: 1,
         cart: [],
         wish: [],
-        dialog: false    
+        dialog: false,
+        reviewData: []       
     }),
     created () {
         setTimeout(() => {
@@ -288,6 +289,9 @@ export default {
             for (var j = 0; j < this.callLecturelist.length; j++) {
                 this.$set(this.cart, j, this.callLecturelist[j].cart)
             }
+            console.log('reviewData 불러오기 성공?')
+            console.log(this.$store.state.reviewData)
+            this.reviewData = this.$store.state.reviewData
             }, 300)
     },
     watch: {
@@ -302,7 +306,9 @@ export default {
             this.sideBarFilter()
         },
         priceValue() {
-            console.log('watchedStep:) this.priceValue : ' + this.priceValue)
+            this.sideBarFilter()
+        },
+        ratingValue() {
             this.sideBarFilter()
         }
     },
@@ -318,14 +324,6 @@ export default {
         },
         prevPageS() {
             this.pageNumS -= 1;
-        },
-        ImgRequest(boardNo) {
-        try {
-            return require(`../../../../../Mini/Images/lecture/${boardNo}.gif`
-            )
-        } catch (e) {
-            return require(`@/assets/temp.png`)
-            }
         },
         searching () {
             var lists = this.callLecturelist
@@ -351,6 +349,9 @@ export default {
                 })
             this.path = data.title
             this.dialog = false
+            this.ratingValue = null
+            this.difValue = null
+            this.priceValue = null
         },
         callAll() {
             this.$emit("callAll", {})
@@ -383,63 +384,58 @@ export default {
             console.log('변동감지')
             '일단 각 변수값 체크하고 굴리자 null이면 ㄴ 값이 있으면 ㄱ'
             // 초기화
-            var tempLists = this.copiedList            
+            var avgLists = this.reviewData
+            var tempLists = this.copiedList
             var searchingResult = []
-            var searchingResult2 = []
+            var searchingResult2 = []            
+            var searchingResult3 = []
 
-            if(this.difValue !== null) {
-                for(var i = 0; i < tempLists.length; i++){                    
-                    const regex = new RegExp(this.difValue, "gi");
-                    const comparison = regex.test(tempLists[i].grade)
-                    if(comparison){
-                        searchingResult.push(tempLists[i])
-                    }
-                }
-            } else if (this.difValue == null) {
-                console.log('this.difValue == null')
-                searchingResult = tempLists
-            }
-
-
-            if(this.priceValue !== null) {
-                console.log('searchingResult.length : ' + searchingResult.length)
-                for(var j = 0; j < searchingResult.length; j++){
-                    if(searchingResult[j].price < this.priceValue) {
-                        console.log('true')
-                        console.log('searchingResult[j][2] : ' + searchingResult[j].price)
-                        console.log(' <= ')
-                        console.log('this.priceValue : ' + this.priceValue)
-                        searchingResult2.push(searchingResult[j])
+            if(this.ratingValue !== null) {
+                console.log('this.ratingValue null 아니다! value 값은')
+                console.log(this.ratingValue)
+                for(var k = 0; k < tempLists.length; k++){
+                    if(avgLists[k].avg >= this.ratingValue) {
+                        searchingResult.push(tempLists[k])
                     }
                 }
             } else if (this.priceValue == null) {
                 console.log('this.priceValue == null')
+                searchingResult = tempLists
+            }
+
+
+            if(this.difValue !== null) {
+                for(var i = 0; i < searchingResult.length; i++){                    
+                    const regex = new RegExp(this.difValue, "gi");
+                    const comparison = regex.test(searchingResult[i].grade)
+                    if(comparison){
+                        searchingResult2.push(searchingResult[i])
+                    }
+                }
+            } else if (this.difValue == null) {
+                console.log('this.difValue == null')
                 searchingResult2 = searchingResult
             }
 
-            // if(this.priceValue == null && this.difValue == null) {
-            //     searchingResult2 = tempLists
-            // }
-            // if(this.priceValue !== null) {
-            //     for(var j = 0; j < tempLists.length; j++){                    
-            //         const regex = new RegExp(this.priceValue, "gi");
-            //         const comparison = regex.test(tempLists[j][1])
-            //         if(comparison){
-            //             searchingResult.push(tempLists[j])
-            //         }
-            //     }
-            // }
-            // if(this.ratingValue !== null) {
-            //     for(var k = 0; k < tempLists.length; k++){                    
-            //         const regex = new RegExp(this.ratingValue, "gi");
-            //         const comparison = regex.test(tempLists[k][7])
-            //         if(comparison){
-            //             searchingResult.push(tempLists[k])
-            //         }
-            //     }
-            // }
 
-            this.callLecturelist = searchingResult2
+            if(this.priceValue !== null) {
+                console.log('searchingResult.length : ' + searchingResult2.length)
+                for(var j = 0; j < searchingResult2.length; j++){
+                    if(searchingResult2[j].price < this.priceValue) {
+                        console.log('true')
+                        console.log('searchingResult[j][2] : ' + searchingResult2[j].price)
+                        console.log(' <= ')
+                        console.log('this.priceValue : ' + this.priceValue)
+                        searchingResult3.push(searchingResult2[j])
+                    }
+                }
+            } else if (this.priceValue == null) {
+                console.log('this.priceValue == null')
+                searchingResult3 = searchingResult2
+            }
+
+            
+            this.callLecturelist = searchingResult3
             console.log('태그 결과')
             console.log(this.callLecturelist)
             this.refreshCheck = 2
@@ -1013,13 +1009,13 @@ input:focus {
     align-items: flex-end;  
     /* hover시 사진 어둡게 */
     position: relative;
-    top:-328px;
+    top:-329px;
     background:rgba(0, 0, 0, 0.815);
     width:270px;
     height:200px;
     padding: 5px;
     text-align:center;
-    border-radius: 6px;
+    border-radius: 3px;
     opacity:0;
 }
 .btn-plus2 span {
@@ -1123,5 +1119,16 @@ a:hover { text-decoration:none !important }
   transform: scale(1.5);
   transition: transform 1s;
   filter: brightness(70%);
+}
+.desc_text {
+    font-size:13px;
+    text-align:center;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    line-height: 22px;
+    -webkit-line-clamp: 5; /* 표시하고자 하는 라인 수 */
+    -webkit-box-orient: vertical;
 }
 </style>

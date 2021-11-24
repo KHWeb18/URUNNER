@@ -32,4 +32,14 @@ public class MyLectureController {
 
         return new ResponseEntity<>(service.selectMyLectureList(memberNo), HttpStatus.OK);
     }
+
+    @GetMapping("/my-latest-lecture")
+    public ResponseEntity<Lecture> getMyLatestLecture(){
+        log.info("getMyLatestLecture()");
+
+        Lecture latestLecture = new Lecture();
+
+        return new ResponseEntity<>(latestLecture,HttpStatus.OK);
+
+    }
 }

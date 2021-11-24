@@ -35,7 +35,8 @@ public class Member {
     private String introduce;
     private String nickname;
 
-
+    @Column(name = "is_cert",columnDefinition = "boolean default false")
+    private boolean isCert;
 
     @CreationTimestamp
     private Date regDate;
@@ -54,6 +55,7 @@ public class Member {
         purchasedLecture.setMemberNo(this.memberNo);
         purchasedLectureList.add(purchasedLecture);
     }
+
 
     public Member(String email, String password, String name, String introduce,String nickname) {
 
@@ -104,4 +106,7 @@ public class Member {
         this.provider = provider;
     }
 
+    public void setCert(Boolean bool){
+        this.isCert = bool;
+    }
 }

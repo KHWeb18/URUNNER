@@ -63,14 +63,6 @@ export default {
             const { title, content, complete, currentNum, tags, fit, notice } = this
             this.$emit('submit', { title, content, complete, currentNum, tags, fit, notice })
         },
-        ImgRequest() {
-            try {
-                return require(`../../../../../backend/khweb/images/free/${this.board.writer}_${this.board.boardNo}.gif`
-                )
-            } catch (e) {
-                return require(`@/assets/logo.png`)
-            }
-        },
         classifyTag(data) {
             var arr = JSON.parse(data)
             console.log(arr)
@@ -127,18 +119,6 @@ export default {
     height: 150px;
     border-bottom: 1px solid #BDBDBD;
 }
-.content_img {
-    text-align: center;
-    width: 70vw;
-    max-width: 1000px;
-}
-.post_box {
-    margin: 10px 10px 20px 5px;
-    display: flex;
-    flex-direction: column;
-    height: 100px;
-    width: 500px;
-}
 .post_tag {
     display: flex;
     justify-content: start;
@@ -166,30 +146,10 @@ export default {
     color: #29B6F6;
     text-decoration: underline;
 }
-.post_content {
-    font-size: 15px;
-    color: #757575;
-    padding-bottom: 0px;
-    height: 500px;
-    width: 50vw;
-}
-.post_reg_date {
-    font-size: 13px;
-    color: #757575;
-}
-.btn_pagination {
-    background-color: transparent;
-    box-shadow: none;
-}
 .button_box {
     margin-top: 10px;
     display: flex;
     justify-content: flex-end;
-}
-.change-font {
-    font: 12pt;
-    color: white;
-    font-weight: 800;
 }
 .v-input__slot::before {
   border-style: none !important;
@@ -198,15 +158,6 @@ export default {
     font-size: 13px;
     letter-spacing: 0;
     color: #757575d0;    
-}
-.post_image {
-    margin: 50px;
-    width: 40vw;
-}
-.test {
-    width: 50vw;
-    max-width: 60vw;
-    margin: 80px 0 30px 0;
 }
 .v-application a {
     color: #757575 !important;

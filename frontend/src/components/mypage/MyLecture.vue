@@ -35,36 +35,38 @@
                 <div v-show="!searchinOn">
                     <v-container class="lecture_box">
                         <div v-for="mob in paginatedData2" :key="mob.boardNo" class="item">
-                            <v-card class="mx-auto">
-                                <v-img :src="`http://localhost:7777/lecture/image/${mob[3]}/${mob[4]}`" height="200px"></v-img>
-                                <div class="btn-plus"><span draggable="false"><v-icon color="white">mdi-arrow-right</v-icon></span></div>
-                                <div class="btn-plus2"><span draggable="false"></span></div>
-                                <div class="btn-plus3"><span draggable="false"><v-icon color="#E0E0E0" @click="info()">mdi-alert-circle-outline</v-icon></span></div>
-                                <div class="btn-plus4"><span draggable="false"><v-rating
-                                    v-model="rating"
-                                    background-color="orange lighten-3" small
-                                    color="orange" large readonly></v-rating></span></div>
-                                
-                                <v-card-title class="temp">
-                                    {{mob[0]}}
-                                </v-card-title>
-                                 <v-card-title class="temp2">
-                                    <v-progress-linear
-                                        v-model="valueDeterminate" color="indigo darken-2"></v-progress-linear>
-                                </v-card-title>
-                                <div class="card_text">
-                                    <div>
-                                        전체 진도율 : 15% |
+                            <b @click="goPage(mob[5])">
+                                <v-card class="mx-auto">
+                                    <v-img :src="`http://localhost:7777/lecture/image/${mob[3]}/${mob[4]}`" height="200px"></v-img>
+                                        <div class="btn-plus"><span draggable="false"><v-icon color="white">mdi-arrow-right</v-icon></span></div>
+                                    <div class="btn-plus2"><span draggable="false"></span></div>
+                                    <!-- <div class="btn-plus3"><span draggable="false"><v-icon color="#E0E0E0" @click="info()">mdi-alert-circle-outline</v-icon></span></div> -->
+                                    <!-- <div class="btn-plus4"><span draggable="false"><v-rating
+                                        v-model="rating"
+                                        background-color="orange lighten-3" small
+                                        color="orange" large readonly></v-rating></span></div>
+                                    -->
+                                    <v-card-title class="temp">
+                                        {{mob[0]}}
+                                    </v-card-title>
+                                    <v-card-title class="temp2">
+                                        <v-progress-linear
+                                            v-model="valueDeterminate" color="indigo darken-2"></v-progress-linear>
+                                    </v-card-title>
+                                    <div class="card_text">
+                                        <div>
+                                            전체 진도율 : 15% |
+                                        </div>
+                                        <div></div><div></div><div></div>
+                                        <div>
+                                            <!-- grade | writer -->
+                                            {{ mob[4] }} | {{ mob[2] }}
+                                        </div>
                                     </div>
-                                    <div></div><div></div><div></div>
-                                    <div>
-                                        <!-- grade | writer -->
-                                        {{ mob[4] }} | {{ mob[2] }}
-                                    </div>
-                                </div>
-                                <v-card-actions>
-                                </v-card-actions>
-                            </v-card>
+                                    <v-card-actions>
+                                    </v-card-actions>
+                                </v-card>
+                            </b>
                         </div>
                         <v-container style="margin-top:20px;">
                         <div class="text-center">
@@ -79,35 +81,37 @@
                 <div v-show="!searchinOn">
                     <v-container class="lecture_box">
                         <div v-for="mob in paginatedData2" :key="mob.boardNo" class="item_m">
-                            <v-card class="mx-auto">
-                                <v-img :src="`http://localhost:7777/lecture/image/${mob[3]}/${mob[4]}`" height="200px"></v-img>
-                                <div class="btn-plus_m"><span draggable="false"><v-icon color="white">mdi-arrow-right</v-icon></span></div>
-                                <div class="btn-plus2_m"><span draggable="false"></span></div>
-                                <div class="btn-plus3_m"><span draggable="false"><v-icon color="#E0E0E0" @click="info()">mdi-alert-circle-outline</v-icon></span></div>
-                                <div class="btn-plus4_m"><span draggable="false"><v-rating
-                                    v-model="rating"
-                                    background-color="orange lighten-3" small
-                                    color="orange" large readonly></v-rating></span></div>
-                                
-                                <v-card-title class="temp">
-                                    {{mob[0]}}
-                                </v-card-title>
-                                 <v-card-title class="temp2">
-                                    <v-progress-linear
-                                        v-model="valueDeterminate" color="indigo darken-2"></v-progress-linear>
-                                </v-card-title>
-                                <div class="card_text">
-                                    <div>
-                                        전체 진도율 : 15% |
+                            <b @click="goPage(mob[5])">
+                                <v-card class="mx-auto">
+                                    <v-img :src="`http://localhost:7777/lecture/image/${mob[3]}/${mob[4]}`" height="200px"></v-img>
+                                    <div class="btn-plus_m"><span draggable="false"><v-icon color="white">mdi-arrow-right</v-icon></span></div>
+                                    <div class="btn-plus2_m"><span draggable="false"></span></div>
+                                    <!-- <div class="btn-plus3_m"><span draggable="false"><v-icon color="#E0E0E0" @click="info()">mdi-alert-circle-outline</v-icon></span></div> -->
+                                    <!-- <div class="btn-plus4_m"><span draggable="false"><v-rating
+                                        v-model="rating"
+                                        background-color="orange lighten-3" small
+                                        color="orange" large readonly></v-rating></span></div>
+                                    -->
+                                    <v-card-title class="temp">
+                                        {{mob[0]}}
+                                    </v-card-title>
+                                    <v-card-title class="temp2">
+                                        <v-progress-linear
+                                            v-model="valueDeterminate" color="indigo darken-2"></v-progress-linear>
+                                    </v-card-title>
+                                    <div class="card_text">
+                                        <div>
+                                            전체 진도율 : 15% |
+                                        </div>
+                                        <div></div><div></div><div></div>
+                                        <div>
+                                            {{ mob[4] }} | {{ mob[2] }}
+                                        </div>
                                     </div>
-                                    <div></div><div></div><div></div>
-                                    <div>
-                                        {{ mob[4] }} | {{ mob[2] }}
-                                    </div>
-                                </div>
-                                <v-card-actions>
-                                </v-card-actions>
-                            </v-card>
+                                    <v-card-actions>
+                                    </v-card-actions>
+                                </v-card>
+                            </b>
                         </div>
                         <v-container style="margin-top:20px;">
                         <div class="text-center">
@@ -192,7 +196,10 @@
             },
             info() {
                 alert('강의 소개 페이지로 링크')
-            }
+            },
+            goPage(data) {
+                this.$router.push( { name: 'LectureDetailPage', params: { lectureId: data.toString() } } )
+            },
             
         },
         computed: {

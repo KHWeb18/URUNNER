@@ -63,6 +63,36 @@
                             <div class="profile_row_title">자기 소개</div>
                         <editor-for-profile placeholder="Write something …" :introduceForChild="introduceForChild" @fromEditor="contentRegist"/>
                         
+                        <div class="button_box" style="margin-bottom: 15px;">
+                            <v-btn @click="certEmail" color="transparent" class="item" style="color: #29B6F6;">
+                                이메일인증하기
+                            </v-btn>
+                            <v-dialog
+                            v-model="certOpen"
+                            width="400"
+                            height="300"
+                            >
+                                <v-card>
+                                    <v-card-title>
+                                        인증번호
+                                    </v-card-title>
+                                    <v-card-text>
+                                        <v-text-field
+                                        label="인증번호"
+                                        v-model="checkCode">
+                                        </v-text-field>
+                                        <v-btn
+                                        class="mb-3 "
+                                        @click="certCheck"
+                                        >
+                                            인증번호 확인
+                                        </v-btn>
+                                    </v-card-text>
+
+                                </v-card>
+                            </v-dialog>
+                        </div>
+                        
                         <div class="button_box" style="margin-bottom: 15px">
                             <v-btn v-show="onLoginBtn"
                             color="light-blue lighten-1 text center" @click="profileSubmit()" class="item" >
@@ -75,17 +105,20 @@
                                 변경
                             </v-btn>
                         </div>
-                        <div class="button_box" style="margin-top: 0px;">
+                        <div class="button_box" style="margin-bottom: 15px">
                             <router-link to="/">
                             <v-btn color="transparent" class="item" style="color: #29B6F6;">
                                 취소
                             </v-btn>
                             </router-link>
                         </div>
+                        
                     </fieldset>
                 </div>
             </v-container>
+
         </form>
+
     </v-container>
 </template>
 
@@ -144,7 +177,11 @@ export default {
 
             thumbnailImage: "",
             show: null,
-            refrechCheck: 1
+            refrechCheck: 1,
+
+            //이메일 인증부분
+            certOpen:false,
+            checkCode:'',
         }
     },
     watch: {
@@ -244,6 +281,7 @@ export default {
                 this.fetchMyIntroduce(this.userIdInToken)
                 this.$router.push('/memberProfile')
                 alert('프로필 사진 변경 완료')
+                this.$router.go(this.$router.currentRoute)
             })
             .catch(err => {
             alert(err);
@@ -267,6 +305,21 @@ export default {
             console.log('this,content')
             console.log(this.introduce)
 
+        },
+        certEmail(){
+            this.certOpen = !this.certOpen
+            axios.get('http://localhost:7777/my-page/mailcert')
+        },
+        certCheck(){
+            const {checkCode} = this
+            axios.post('http://localhost:7777/my-page/mailcert',{checkCode})
+            .then((res)=>{
+                if(res.data == "success"){
+                    alert("성공")
+                }else{
+                    alert("실패")
+                }
+            })
         },
         ...mapActions(['fetchMyIntroduce'])
     }

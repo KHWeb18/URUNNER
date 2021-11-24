@@ -1,41 +1,32 @@
 package com.urunner.khweb.service.lecture;
 
 import com.urunner.khweb.controller.dto.lecture.*;
-import com.urunner.khweb.entity.lecture.Lecture;
+import com.urunner.khweb.entity.lecture.*;
 //import com.urunner.khweb.entity.lecture.LectureImage;
-import com.urunner.khweb.entity.lecture.LectureList;
-import com.urunner.khweb.entity.lecture.LectureVideo;
-import com.urunner.khweb.entity.lecture.Review;
 import com.urunner.khweb.entity.member.Member;
 import com.urunner.khweb.entity.mypage.Cart;
 
+import com.urunner.khweb.entity.mypage.MyPage;
 import com.urunner.khweb.entity.mypage.WishList;
 import com.urunner.khweb.entity.sort.Category;
 import com.urunner.khweb.entity.sort.CategoryLecture;
 import com.urunner.khweb.repository.lecture.*;
 import com.urunner.khweb.repository.member.MemberRepository;
-import com.urunner.khweb.repository.mypage.WishListRepository;
+import com.urunner.khweb.repository.mypage.MyPageRepository;
 import com.urunner.khweb.utility.LectureUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.naming.AuthenticationException;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
-import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -61,9 +52,6 @@ public class LectureServiceImpl implements LectureService {
     @Autowired
     private MemberRepository memberRepository;
 
-//    @Autowired
-//    private LectureImageRepository LectureImageRepository;
-
     @Autowired
     private CategoryRepository categoryRepository;
 
@@ -72,6 +60,11 @@ public class LectureServiceImpl implements LectureService {
 
     @Autowired
     private LectureUtil lectureUtil;
+
+    @Autowired
+    private MyPageRepository myPageRepository;
+
+
 
 //    @Override
 //    public void lectureVideo(LectureVideo lectureVideo, EnrollLectureVideoDto enrollLectureVideoDto) {
@@ -140,7 +133,17 @@ public class LectureServiceImpl implements LectureService {
                 .grade(grade)
                 .build();
 
+        Review review = Review.builder()
+                .rating(0L)
+                .content(null)
+                .writer(null)
+                .build();
+
+        review.setLecture(lecture);
+
         lectureRepository.save(lecture);
+
+        reviewRepository.save(review);
 
         for (String s : category) {
             cateList.add(s);
@@ -297,6 +300,8 @@ public class LectureServiceImpl implements LectureService {
         String query = "select c from Category c join CategoryLecture cl on cl.category = c " +
                 "join Lecture l on l = cl.lecture where l.id = :lectureId";
 
+        //      점수 1~10으로 받고 반 나누기
+        String query4 = "select new com.urunner.khweb.service.lecture.GetReviewDto(avg(r.rating), count(r.rating)) from Review r where r.lecture.lecture_id in :id";
 
         Optional<LectureDto> lectureDto = lecture.stream().findAny().map(l ->
                 new LectureDto(l.getLecture_id(), l.getWriter(), l.getTitle(),
@@ -304,7 +309,10 @@ public class LectureServiceImpl implements LectureService {
                         l.isDiscounted(), l.getThumb_path(), l.getDetail_path(), l.getContent(), l.getGrade(),
                         em.createQuery(query, Category.class)
                                 .setParameter("lectureId", l.getLecture_id()).
-                                getResultList()
+                                getResultList(),
+                        em.createQuery(query4, GetReviewDto.class)
+                                .setParameter("id", l.getLecture_id())
+                                .getSingleResult()
                 ));
 
         List<LectureList> lectureLists = lectureListRepository.lectureList(lectureId);
@@ -358,13 +366,17 @@ public class LectureServiceImpl implements LectureService {
             }
         }
 
+//        nullpoint땜에 optional로 감싸놓음
+        Optional<List<Review>> reviewList = reviewRepository.getReviewId(lecture.get().getLecture_id());
+
+        reviewList.get().removeIf(re -> re.getWriter() == null);
 
 //      현재는 4방쿼리
 //        한방쿼리만드는법
 //       1. 네이티브쿼리로 dsl로
 //       2. OneToMany부분 fetch 조인 set으로 바꾸기
 //       3. queryDsl쓰기...
-        DtoWrapper2 dtoWrapper = new DtoWrapper2(lectureDto, Optional.of(list));
+        DtoWrapper2 dtoWrapper = new DtoWrapper2(lectureDto, Optional.of(list), reviewList);
         dtoWrapper.setWishListCount(wishListCount);
         return dtoWrapper;
     }
@@ -441,80 +453,85 @@ public class LectureServiceImpl implements LectureService {
                                 getResultList()
                 )).collect(Collectors.toList());
     }
+
+    @Override
+    public List<GetReviewDto> reviewList(Page<LectureSearchDto> lectureSearchDtos) {
+
+        String query = "select new com.urunner.khweb.service.lecture.GetReviewDto(avg(r.rating), count(r.rating)) from Review r where r.lecture.lecture_id in :id";
+
+        return lectureSearchDtos.stream().map(l ->
+                em.createQuery(query, GetReviewDto.class)
+                        .setParameter("id", l.getId())
+                        .getSingleResult()).collect(Collectors.toList());
+    }
+
     //  옳게 된 쿼리
     @Override
     public DtoWrapper lectureBanner(int page) {
+        try {
 
-        PageRequest pageRequest = PageRequest.of(page, 4);
+            PageRequest pageRequest = PageRequest.of(page, 4);
 
-        Page<Lecture> findAllLecture = lectureRepository.findByInProgressTrue(true, pageRequest);
+            Page<Lecture> findAllLecture = lectureRepository.findByInProgressTrue(true, pageRequest);
 
-        Page<LectureDto> lectureDtos = findAllLecture.map(l ->
-                new LectureDto(l.getLecture_id(), l.getWriter(), l.getTitle(),
-                        l.getDescription(), l.getPrice(), l.isInProgress(),
-                        l.isDiscounted(), l.getThumb_path(), l.getDetail_path(), l.getContent(), l.getGrade(),
-                        l.getCategoryList().stream().map(CategoryLecture::getCategory).collect(Collectors.toList())
-                ));
+//      4번 추가 쿼리 feth쓸거면 lecture등록시 review 하나 추가해주기..
+//      점수 1~10으로 받고 반 나누기
+            String query = "select new com.urunner.khweb.service.lecture.GetReviewDto(avg(r.rating), count(r.rating)) from Review r where r.lecture.lecture_id in :id";
 
-        String username = authentication();
-        if (username.equals("anonymousUser")) {
-            log.info("로그인 되있지않은 사용자");
-        } else {
-            Member member = memberRepository.findByEmail(username);
+//        System.out.println("Review 사이즈 : " +findAllLecture.getContent().get(0).getReviews().size());
+            Page<LectureDto> lectureDtos = findAllLecture.map(l ->
+                    new LectureDto(l.getLecture_id(), l.getWriter(), l.getTitle(),
+                            l.getDescription(), l.getPrice(), l.isInProgress(),
+                            l.isDiscounted(), l.getThumb_path(), l.getDetail_path(), l.getContent(), l.getGrade(),
+                            l.getCategoryList().stream().map(CategoryLecture::getCategory).collect(Collectors.toList()),
+                            em.createQuery(query, GetReviewDto.class)
+                                    .setParameter("id", l.getLecture_id())
+                                    .getSingleResult()
+                    ));
+
+            String username = authentication();
+            if (username.equals("anonymousUser")) {
+                log.info("로그인 되있지않은 사용자");
+            } else {
+                Member member = memberRepository.findByEmail(username);
 
 //            시간되면 fetch join으로 가져오기
-            List<Cart> carts = new ArrayList<>(member.getMyPage().getCartList());
+                List<Cart> carts = new ArrayList<>(member.getMyPage().getCartList());
 
-            List<WishList> wishLists = new ArrayList<>(member.getMyPage().getWishLists());
+                List<WishList> wishLists = new ArrayList<>(member.getMyPage().getWishLists());
 
-            if (wishLists.size() != 0) {
-                for (int i = 0; i < lectureDtos.getContent().size(); i++) {
-                    for (int j = 0; j < wishLists.size(); j++) {
-                        boolean exist = lectureDtos.getContent().get(i).getId().equals(wishLists.get(j).getLecture().getLecture_id());
-                        System.out.println("매칭 여부 확인 : " + exist);
-                        if (exist) {
-                            lectureDtos.getContent().get(i).setWishList(true);
+                if (wishLists.size() != 0) {
+                    for (int i = 0; i < lectureDtos.getContent().size(); i++) {
+                        for (int j = 0; j < wishLists.size(); j++) {
+                            boolean exist = lectureDtos.getContent().get(i).getId().equals(wishLists.get(j).getLecture().getLecture_id());
+                            System.out.println("매칭 여부 확인 : " + exist);
+                            if (exist) {
+                                lectureDtos.getContent().get(i).setWishList(true);
+                            }
                         }
                     }
                 }
-            }
 
-            if (carts.size() != 0) {
-                for (int i = 0; i < lectureDtos.getContent().size(); i++) {
-                    for (int j = 0; j < carts.size(); j++) {
-                        boolean exist = lectureDtos.getContent().get(i).getId().equals(carts.get(j).getLecture().getLecture_id());
-                        System.out.println("매칭 여부 확인 : " + exist);
-                        if (exist) {
-                            lectureDtos.getContent().get(i).setCart(true);
+                if (carts.size() != 0) {
+                    for (int i = 0; i < lectureDtos.getContent().size(); i++) {
+                        for (int j = 0; j < carts.size(); j++) {
+                            boolean exist = lectureDtos.getContent().get(i).getId().equals(carts.get(j).getLecture().getLecture_id());
+                            System.out.println("매칭 여부 확인 : " + exist);
+                            if (exist) {
+                                lectureDtos.getContent().get(i).setCart(true);
+                            }
                         }
                     }
                 }
+
+
             }
-
-//            for (int i = 0; i < lectureDtos.getSize(); i++) {
-//                System.out.println("강의 dto 사이즈 " +lectureDtos.getSize());
-//                for (int j = 0; j < carts.size(); j++) {
-//                    System.out.println("카트 사이즈" + carts.size());
-//                    int z = i;
-//                    System.out.println("임시 카운트 : " + z);
-//            for (int i = 0; i < lectureDtos.getSize(); i++) {
-//                int j = i;
-////                boolean b = carts.stream().anyMatch(cart -> cart.getLecture().getLecture_id().equals(lectureDtos.get.get(j).getId()));
-//                boolean b = lectureDtos.stream().anyMatch(lectureDto -> lectureDto.getId().equals(carts.get(j).getId()));
-//                System.out.println("매칭 여부 " + b);
-//            }
-//                }
-//            }
-
-
-
+            return new DtoWrapper(lectureDtos);
+        } catch (NoSuchElementException noSuchElementException) {
+            log.info("등록된 강의가 없습니다.");
+            return null;
         }
 
-
-
-        log.info(findAllLecture.get().findFirst().get().getCategoryList().toString());
-
-        return new DtoWrapper(lectureDtos);
     }
 
     @Autowired
@@ -524,10 +541,28 @@ public class LectureServiceImpl implements LectureService {
     public Boolean regStudentComment(ReviewDto reviewDto) {
 
 //        구매한사람인지 체크하는 메서드 ( 구입 테이블에서 로드하는 로직)
+        Member member = memberRepository.findByEmail(authentication());
+
+        Optional<MyPage> myPage = myPageRepository.findById(member.getMemberNo());
+
+        myPage.ifPresent(l -> {
+                    l.setPoint(500L);
+                    myPageRepository.save(l);
+                }
+        );
+
+
+//        try {
+//            member.getPurchasedLectureList().stream().filter(find -> find.getMemberNo().equals(member.getMemberNo()));
+//        } catch (Exception exception) {
+//            log.info("강의를 구매한 사용자가 아닙니다.");
+//            exception.getStackTrace();
+//        }
+
         Lecture lecture = em.find(Lecture.class, reviewDto.getLectureId());
 
         Review review = Review.builder()
-                .rating(reviewDto.getRating())
+                .rating(reviewDto.getRating() * 2)
                 .content(reviewDto.getContent())
                 .writer(authentication())
                 .build();
@@ -537,6 +572,18 @@ public class LectureServiceImpl implements LectureService {
         reviewRepository.save(review);
 
         return true;
+    }
+
+    @Override
+    public DtoWrapper getReview(Long id) {
+
+        Optional<Lecture> lecture = lectureRepository.findById(id);
+
+        Optional<List<Review>> reviewList = reviewRepository.getReviewId(lecture.get().getLecture_id());
+
+        reviewList.get().removeIf(re -> re.getWriter() == null);
+
+        return new DtoWrapper(reviewList);
     }
 
     @Override

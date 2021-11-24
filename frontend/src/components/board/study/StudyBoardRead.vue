@@ -69,7 +69,8 @@ export default {
             introduce: 'HELLO WORLD!',
             refresh: 1,
             members: this.$store.state.studyMembers,
-            complete: false
+            complete: false,
+            copiedBoard: null
         }
     },
     props: {
@@ -97,12 +98,9 @@ export default {
         },
         endRecruit(data) {
             console.log('endRecruit에서 날아온 data(boardNo)값은 : ' + data)
-            if(this.board.complete) {
-                this.board.complete = false
-            } else {
-                this.board.complete = true
-            }
-            const { title, content, fit, complete, currentNum, notice} = this.board
+            this.copiedBoard = this.board
+            this.copiedBoard.complete = !this.board.complete
+            const { title, content, fit, complete, currentNum, notice} = this.copiedBoard
             axios.put(`http://localhost:7777/studyboard/${data}`, { title, content, fit, complete, currentNum, notice })
                     .then(res => {
                         console.log(res)
