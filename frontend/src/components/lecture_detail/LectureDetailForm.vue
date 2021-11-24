@@ -7,7 +7,7 @@
           <div class="d-md-flex align-center">
             <div class="white--text">
               <p class="pa-2 mb-7 text-h5 text-md-h4 font-weight-bold">{{ lectureDetailInfo.title }}</p>
-              <span class="pa-1"><v-rating :value="4" dense color="yellow" small class="d-inline"/>(4.8) 24명의 수강평 | 30명의 수강생</span>
+              <span class="pa-1"><v-rating :value="lectureDetailInfo.getReviewDto.avg" dense color="yellow" small class="d-inline"/>평점 {{ lectureDetailInfo.getReviewDto.avg }} 점 {{ lectureDetailInfo.getReviewDto.count - 1 }}명의 수강평 | 30명의 수강생</span>
               <div class="mt-4">
                 <v-icon color="white">mdi-shield-account-outline</v-icon> <span>{{ lectureDetailInfo.writer }}</span>
               </div>
