@@ -18,6 +18,11 @@ public interface LectureRepository extends JpaRepository<Lecture, Long>, Lecture
 
 //    @Query("select l from Lecture l join fetch l.lectureLists where l.lecture_id =: id")
 //    public Optional<Lecture> letureAll(Long id);
+//  NoSuchElementException fetch 조인시 테이블에 값이 존재하지않는다면 rollback되고 취소됨 - 강의 등록시 리뷰쪽 테이블에 하나만 열을 추가하면 해결은 가능
+//   이경우 left조인으로는 가능하게 만들지만 영속성은 빠져있음 즉 N + 1 
+//    이럴바에는 new Operator가 훨 낫다.
+//  @Query(value = "select l from Lecture l join fetch l.categoryList c join fetch c.category cl left join l.reviews r where l.inProgress = :inProgress",
+//        countQuery = "select count(l) from Lecture l")
 
     @Query(value = "select l from Lecture l join fetch l.categoryList c join fetch c.category cl where l.inProgress = :inProgress",
             countQuery = "select count(l) from Lecture l")
