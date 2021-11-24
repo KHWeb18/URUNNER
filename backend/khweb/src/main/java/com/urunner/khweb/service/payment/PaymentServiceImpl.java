@@ -4,8 +4,10 @@ package com.urunner.khweb.service.payment;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.urunner.khweb.controller.dto.lecture.DtoWrapper;
 import com.urunner.khweb.controller.dto.payment.PaymentCancelDto;
 import com.urunner.khweb.controller.dto.payment.PaymentDto;
+import com.urunner.khweb.controller.dto.payment.PurchasedLectureDto;
 import com.urunner.khweb.entity.lecture.Lecture;
 import com.urunner.khweb.entity.lecture.PurchasedLecture;
 import com.urunner.khweb.entity.member.Member;
@@ -25,6 +27,7 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -148,6 +151,25 @@ public class PaymentServiceImpl implements PaymentService{
             log.info("결제취소 실패");
             return "fail";
         }
+    }
+
+    @Override
+    public DtoWrapper getPurchasedLecture() {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        Member member = memberRepository.findByEmail(authentication.getName());
+
+        List<PurchasedLecture> purchasedLectureList = purchasedLectureRepository.findByMemberNo(member.getMemberNo());
+
+        String status = "주문완료";
+        List<PurchasedLectureDto> purchasedLectureDtoList = purchasedLectureList.stream().map(
+                l -> new PurchasedLectureDto(l.getPurchasedLectureId(), l.getRegDate(), status,
+//                N + 1
+                l.getTitle(), lectureRepository.findById(l.getLecture_id()).get().getPrice()
+        )).collect(Collectors.toList());
+
+        return new DtoWrapper(purchasedLectureDtoList);
     }
 
 

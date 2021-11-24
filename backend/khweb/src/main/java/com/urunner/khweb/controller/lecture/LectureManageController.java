@@ -3,16 +3,19 @@ package com.urunner.khweb.controller.lecture;
 
 import com.urunner.khweb.controller.dto.lecture.*;
 import com.urunner.khweb.repository.lecture.LectureRepository;
+import com.urunner.khweb.service.lecture.GetReviewDto;
 import com.urunner.khweb.service.lecture.LectureService;
 import com.urunner.khweb.service.member.MemberService;
 import com.urunner.khweb.service.mypage.MypageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.naming.AuthenticationException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/manageLecture")
@@ -82,7 +85,12 @@ public class LectureManageController {
     @PostMapping("/mainSearch")
     public DtoWrapper mainSearch(@RequestBody SearchCondition searchCondition) {
 
-        return new DtoWrapper(lectureRepository.searchPage(searchCondition, searchCondition.getPage()));
+        Page<LectureSearchDto> lectureSearchDtos = lectureRepository.searchPage(searchCondition, searchCondition.getPage());
+
+        List<GetReviewDto> reviewDtos = lectureService.reviewList(lectureSearchDtos);
+
+
+        return new DtoWrapper(lectureSearchDtos, reviewDtos);
     }
 
     @PostMapping("/regStudentComment")

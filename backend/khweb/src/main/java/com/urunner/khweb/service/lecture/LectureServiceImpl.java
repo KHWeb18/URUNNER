@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @Transactional
@@ -442,6 +443,18 @@ public class LectureServiceImpl implements LectureService {
                                 getResultList()
                 )).collect(Collectors.toList());
     }
+
+    @Override
+    public List<GetReviewDto> reviewList(Page<LectureSearchDto> lectureSearchDtos) {
+
+        String query = "select new com.urunner.khweb.service.lecture.GetReviewDto(avg(r.rating), count(r.rating)) from Review r where r.lecture.lecture_id in :id";
+
+        return lectureSearchDtos.stream().map(l ->
+                em.createQuery(query, GetReviewDto.class)
+                        .setParameter("id", l.getId())
+                        .getSingleResult()).collect(Collectors.toList());
+    }
+
     //  옳게 된 쿼리
     @Override
     public DtoWrapper lectureBanner(int page) {

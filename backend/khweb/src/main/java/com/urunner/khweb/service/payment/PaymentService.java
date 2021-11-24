@@ -1,6 +1,7 @@
 package com.urunner.khweb.service.payment;
 
 
+import com.urunner.khweb.controller.dto.lecture.DtoWrapper;
 import com.urunner.khweb.controller.dto.payment.PaymentCancelDto;
 import com.urunner.khweb.controller.dto.payment.PaymentDto;
 
@@ -12,4 +13,5 @@ public interface PaymentService {
     public String paymentCancel(PaymentCancelDto paymentCancelDto) throws Exception;
 
 
+    public DtoWrapper getPurchasedLecture();
 }

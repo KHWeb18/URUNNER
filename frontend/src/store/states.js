@@ -68,6 +68,8 @@ export default {
   nickname: null,
   searchName: null,
   cateName: null,
+  orders: [],
+  reviewData: [],
 
   category: ['개발 프로그래밍', '자바', '프론트엔드', '백엔드', 'Vue', 'React', 'Html Css', 'docker', 'JavaScript', '게임 개발', 'Golang', '데이터 사이언스', 'Python', '인공지능', '딥러닝', '데이터베이스', 'SQL', 'MongoDB', '보안', '모바일 앱 개발', 'Swift', '안드로이드', 'Kotlin', '코딩테스트', '기타'],  
   category2:[{items: [{ title: '자바', value: 1 }, { title: '개발 프로그래밍', value: 2 }, { title: '프론트엔드', value: 3 }, { title: '백엔드', value: 3 }, { title: 'Vue', value: 4 }, { title: 'React', value: 5 }, { title: 'Html Css', value: 6 }, { title: 'JavaScript', value: 9 }, { title: '게임 개발', value: 10 }, { title: 'Golang', value: 11 }, { title: 'Python', value: 13 }, { title: 'Golang', value: 11 }, { title: 'Golang', value: 11 }], title: '프로그래밍' }, { items: [{ title: '보안', value: 19 }], title: '보안' }, { items: [{ title: '인공지능', value: 14 }, { title: '딥러닝', value: 15 }], title: '머신러닝' }, { items: [{ title: '데이터베이스', value: 16 }, { title: 'SQL', value: 17 }, { title: 'MongoDB', value: 18 }], title: '데이터베이스' }, { items: [{ title: '모바일 앱 개발', value: 20 }, { title: 'Swift', value: 21 }, { title: '안드로이드', value: 22 }, { title: 'Kotlin', value: 23 }], title: '모바일' }, { items: [{ title: '코딩테스트', value: 24 }, { title: '기타', value: 25 }], title: '기타' }]
