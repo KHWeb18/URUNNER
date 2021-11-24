@@ -59,7 +59,6 @@ import ManagerMemberList from '@/views/manager/ManagerMemberList'
 // 강의 판매 리스트
 import ForSaleLecturePage from '@/views/ForSale/ForSaleLecturePage.vue'
 
-
 Vue.use(VueRouter)
 
 export default new VueRouter({
@@ -161,7 +160,7 @@ export default new VueRouter({
             },
             {
               path: '/myLecture',
-              component: () => import("../components/mypage/MyLecture.vue")
+              component: () => import("../views/mypage/MyLecturePage.vue")
             },
             {
               path: '/myPostList',
@@ -449,7 +448,7 @@ export default new VueRouter({
         name: 'ForSaleLecturePage',
         components: {
           default: ForSaleLecturePage
-        }
+        },
       },
       {
         path: '/*',

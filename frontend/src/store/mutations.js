@@ -52,6 +52,8 @@ export default {
     // 판매중인 강의 리스트
     [FETCH_LECTURE_LIST] (state, callLecturelist) {
         state.callLecturelist = callLecturelist
+        state.searchName = null
+        state.cateName = null
     },
     // 커리큘럼 관리
     saveSectionList(state, data) {
