@@ -114,7 +114,7 @@
                                         <!-- rating -->
                                         <div class="card_text03">
                                             <v-rating
-                                            v-model="mob.rating"
+                                            v-model="reviewData[index].avg"
                                             background-color="orange lighten-3" small dense
                                             color="orange" large readonly></v-rating>
                                         </div>
@@ -272,7 +272,7 @@ export default {
         cart: [],
         wish: [],
         dialog: false,
-        
+        reviewData: []       
     }),
     created () {
         setTimeout(() => {
@@ -289,6 +289,9 @@ export default {
             for (var j = 0; j < this.callLecturelist.length; j++) {
                 this.$set(this.cart, j, this.callLecturelist[j].cart)
             }
+            console.log('reviewData 불러오기 성공?')
+            console.log(this.$store.state.reviewData)
+            this.reviewData = this.$store.state.reviewData
             }, 300)
     },
     watch: {
@@ -1006,13 +1009,13 @@ input:focus {
     align-items: flex-end;  
     /* hover시 사진 어둡게 */
     position: relative;
-    top:-328px;
+    top:-329px;
     background:rgba(0, 0, 0, 0.815);
     width:270px;
     height:200px;
     padding: 5px;
     text-align:center;
-    border-radius: 6px;
+    border-radius: 3px;
     opacity:0;
 }
 .btn-plus2 span {

@@ -46,7 +46,10 @@ export default {
     }
   },
     mounted () {
-        this.fetchMyIntroduce(Vue.$cookies.get("USER_NAME"))
+        this.fetchMyIntroduce(Vue.$cookies.get("USER_NAME"))        
+        setTimeout(() => {
+          this.fetchMyIntroduce(Vue.$cookies.get("USER_NAME"))
+        }, 1000)
   },
   methods: {
     clickLoginBtn() {

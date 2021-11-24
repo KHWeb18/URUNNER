@@ -360,13 +360,17 @@ public class LectureServiceImpl implements LectureService {
             }
         }
 
+//        nullpoint땜에 optional로 감싸놓음
+        Optional<List<Review>> reviewList = reviewRepository.getReviewId(lecture.get().getLecture_id());
+
+        reviewList.get().removeIf(re -> re.getWriter() == null);
 
 //      현재는 4방쿼리
 //        한방쿼리만드는법
 //       1. 네이티브쿼리로 dsl로
 //       2. OneToMany부분 fetch 조인 set으로 바꾸기
 //       3. queryDsl쓰기...
-        DtoWrapper2 dtoWrapper = new DtoWrapper2(lectureDto, Optional.of(list));
+        DtoWrapper2 dtoWrapper = new DtoWrapper2(lectureDto, Optional.of(list), reviewList);
         dtoWrapper.setWishListCount(wishListCount);
         return dtoWrapper;
     }

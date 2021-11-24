@@ -21,12 +21,14 @@
             <v-list-item
               v-for="(item, i) in items2"  :key="i">
               <router-link :to="{ path: item.path }" class="card_button">
-                <v-list-item-icon>
-                  <v-icon v-text="item.icon"></v-icon>
-                </v-list-item-icon>
-                <v-list-item-content>
-                  <v-list-item-title v-text="item.text"></v-list-item-title>
-                </v-list-item-content>
+                <div class="button_flex">
+                  <v-list-item-icon>
+                    <v-icon v-text="item.icon"></v-icon>
+                  </v-list-item-icon>
+                  <v-list-item-content>
+                    <v-list-item-title v-text="item.text"></v-list-item-title>
+                  </v-list-item-content>
+                </div>
               </router-link>
             </v-list-item>
           </v-list-item-group>
@@ -144,9 +146,14 @@ a:hover { text-decoration:none !important }
 .card_button {
   display:flex;
   justify-content:start;
+  flex-grow: 1;
   color: #424242 !important;
 }
 .v-list-item__icon {
   margin-right: 15px !important;
+}
+.button_flex {
+  display: flex;
+  justify-content: row;
 }
 </style>
