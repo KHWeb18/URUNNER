@@ -6,11 +6,13 @@ import com.urunner.khweb.entity.lecture.*;
 import com.urunner.khweb.entity.member.Member;
 import com.urunner.khweb.entity.mypage.Cart;
 
+import com.urunner.khweb.entity.mypage.MyPage;
 import com.urunner.khweb.entity.mypage.WishList;
 import com.urunner.khweb.entity.sort.Category;
 import com.urunner.khweb.entity.sort.CategoryLecture;
 import com.urunner.khweb.repository.lecture.*;
 import com.urunner.khweb.repository.member.MemberRepository;
+import com.urunner.khweb.repository.mypage.MyPageRepository;
 import com.urunner.khweb.utility.LectureUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +60,10 @@ public class LectureServiceImpl implements LectureService {
 
     @Autowired
     private LectureUtil lectureUtil;
+
+    @Autowired
+    private MyPageRepository myPageRepository;
+
 
 
 //    @Override
@@ -536,6 +542,15 @@ public class LectureServiceImpl implements LectureService {
 
 //        구매한사람인지 체크하는 메서드 ( 구입 테이블에서 로드하는 로직)
         Member member = memberRepository.findByEmail(authentication());
+
+        Optional<MyPage> myPage = myPageRepository.findById(member.getMemberNo());
+
+        myPage.ifPresent(l -> {
+                    l.setPoint(500L);
+                    myPageRepository.save(l);
+                }
+        );
+
 
 //        try {
 //            member.getPurchasedLectureList().stream().filter(find -> find.getMemberNo().equals(member.getMemberNo()));

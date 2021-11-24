@@ -11,9 +11,13 @@ import com.urunner.khweb.controller.dto.payment.PurchasedLectureDto;
 import com.urunner.khweb.entity.lecture.Lecture;
 import com.urunner.khweb.entity.lecture.PurchasedLecture;
 import com.urunner.khweb.entity.member.Member;
+import com.urunner.khweb.entity.mypage.Cart;
 import com.urunner.khweb.repository.lecture.LectureRepository;
 import com.urunner.khweb.repository.lecture.PurchasedLectureRepository;
 import com.urunner.khweb.repository.member.MemberRepository;
+import com.urunner.khweb.repository.mypage.CartRepository;
+import com.urunner.khweb.utility.LectureUtil;
+import com.urunner.khweb.utility.MyPageUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -23,10 +27,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -47,6 +50,15 @@ public class PaymentServiceImpl implements PaymentService{
 
     @Autowired
     MemberRepository memberRepository;
+
+    @Autowired
+    CartRepository cartRepository;
+
+    @PersistenceContext
+    EntityManager em;
+
+    @Autowired
+    private MyPageUtil myPageUtil;
 
 
 
@@ -101,6 +113,7 @@ public class PaymentServiceImpl implements PaymentService{
                     memberRepository.save(member);
                     //마이페이지 구매강의 접근시 purchasedLectureRepository.getTitle() 로 강의
                     // 이름 불러온후 lectureRepository에서find로강의 불러오기
+                    myPageUtil.deleteCart(member, lecture);
 
                 }
                 else{
