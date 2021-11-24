@@ -27,17 +27,7 @@
                             </div>
                             <div v-show="mob.writer == writer || writer=='admin01'" class="delete_box"><img src="@/assets/delete-empty.png" 
                                 @click="snackbar = true"></div>
-                        </div>
-                            <!-- 대댓글 입력창 -->
-                            <div class="adit_comment_area" v-show="temp && mob.layer==0 && mob.commentNo==commentNo">
-                                <tr>
-                                    <textarea class="adit_comment_register_box"
-                                    v-model="content2" placeholder="댓글을 입력해주세요"></textarea>
-                                </tr>
-                                <td class="comment_register_btn">
-                                    <v-btn color="blue-grey darken-1 white-text" @click="submit">댓글 등록</v-btn>
-                                </td>
-                            </div>    
+                        </div>  
                             <!-- 댓글 삭제 클릭시 알림창 -->
                             <div class="text-center">            
                                 <v-snackbar v-model="snackbar"
@@ -61,11 +51,7 @@
             </div>
             <!-- 댓글 입력창 -->
             <div class="comment_area" @click="temp = false, groupNo = 0, layer = 0, commentNo = 0">
-                <textarea class="comment_register_box"
-                v-model="content" placeholder="댓글을 입력해주세요"></textarea>
-                <div class="comment_register_btn">
-                    <v-btn color="blue-grey darken-1 white-text" @click="submit" style="margin-right:30px">댓글 등록</v-btn>
-                </div>
+                <editor-for-comment @fromEditor="submit"/>
             </div>
         </div>
         <!-- 하단 밑줄용 -->
@@ -77,8 +63,13 @@
 <script>
 import axios from 'axios'
 import Vue from 'vue'
+import EditorForComment from '../EditorForComment.vue'
 export default {
+  components: { EditorForComment },
     name: 'CommentList',
+    component: {
+        EditorForComment,
+    },
     data () {
         return {
             content: '',
@@ -124,11 +115,13 @@ export default {
         }
     },
     methods: {
-        submit () {
+        submit (data) {
             console.log('저장하는 순간 store boardNo 값 : ' + this.$store.state.boardNo)
             if(this.layer==1) {
                 this.content = this.content2
             }
+
+            this.content = data
             
             this.boardNo = this.$store.state.boardNo
             this.groupNo = this.commentNo
