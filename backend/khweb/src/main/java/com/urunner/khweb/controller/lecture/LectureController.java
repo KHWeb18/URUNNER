@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -105,13 +106,16 @@ public class LectureController {
     }
 
     @GetMapping("/image/{path}/{writer}")
-    public ResponseEntity<UrlResource> getThumnail(@PathVariable("path") String path, @PathVariable("writer") String writer) throws MalformedURLException {
-
-        UrlResource image = new UrlResource("classpath:" + imageLocation + "/" + writer + "/" + path);
-
-        return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
-                .contentType(MediaTypeFactory.getMediaType(image).orElse(MediaType.APPLICATION_OCTET_STREAM))
-                .body(image);
+    public ResponseEntity<UrlResource> getThumnail(@PathVariable("path") String path, @PathVariable("writer") String writer){
+        try {
+            UrlResource image = new UrlResource("classpath:" + imageLocation + "/" + writer + "/" + path);
+            return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
+                    .contentType(MediaTypeFactory.getMediaType(image).orElse(MediaType.APPLICATION_OCTET_STREAM))
+                    .body(image);
+        } catch (NoSuchElementException | MalformedURLException error ) {
+            error.getStackTrace();
+            return null;
+        }
     }
 
     @PostMapping("/newlecture")

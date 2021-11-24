@@ -445,114 +445,70 @@ public class LectureServiceImpl implements LectureService {
     //  옳게 된 쿼리
     @Override
     public DtoWrapper lectureBanner(int page) {
+        try {
 
-        PageRequest pageRequest = PageRequest.of(page, 4);
+            PageRequest pageRequest = PageRequest.of(page, 4);
 
-        Page<Lecture> findAllLecture = lectureRepository.findByInProgressTrue(true, pageRequest);
+            Page<Lecture> findAllLecture = lectureRepository.findByInProgressTrue(true, pageRequest);
 
 //      4번 추가 쿼리 feth쓸거면 lecture등록시 review 하나 추가해주기..
 //      점수 1~10으로 받고 반 나누기
-        String query = "select new com.urunner.khweb.service.lecture.GetReviewDto(avg(r.rating), count(r.rating)) from Review r where r.lecture.lecture_id in :id";
+            String query = "select new com.urunner.khweb.service.lecture.GetReviewDto(avg(r.rating), count(r.rating)) from Review r where r.lecture.lecture_id in :id";
 
 //        System.out.println("Review 사이즈 : " +findAllLecture.getContent().get(0).getReviews().size());
-        Page<LectureDto> lectureDtos = findAllLecture.map(l ->
-                new LectureDto(l.getLecture_id(), l.getWriter(), l.getTitle(),
-                        l.getDescription(), l.getPrice(), l.isInProgress(),
-                        l.isDiscounted(), l.getThumb_path(), l.getDetail_path(), l.getContent(), l.getGrade(),
-                        l.getCategoryList().stream().map(CategoryLecture::getCategory).collect(Collectors.toList()),
-                        em.createQuery(query, GetReviewDto.class)
-                                .setParameter("id", l.getLecture_id())
-                                .getSingleResult()
-                ));
-//        GetReviewDto id = em.createQuery(query, GetReviewDto.class)
-//                .setParameter("id", 1L)
-//                .getSingleResult();
-//        List<Long> getId = new ArrayList<>();
-//        for (LectureDto lectureDto : lectureDtos) {
-//            getId.add(lectureDto.getId());
-//        }
-//        GetReviewDto review = em.createQuery(query, GetReviewDto.class)
-//                .setParameter("id", 1L)
-//                .getSingleResult();
-//
-//                System.out.println("평균 : " +review.avg);
+            Page<LectureDto> lectureDtos = findAllLecture.map(l ->
+                    new LectureDto(l.getLecture_id(), l.getWriter(), l.getTitle(),
+                            l.getDescription(), l.getPrice(), l.isInProgress(),
+                            l.isDiscounted(), l.getThumb_path(), l.getDetail_path(), l.getContent(), l.getGrade(),
+                            l.getCategoryList().stream().map(CategoryLecture::getCategory).collect(Collectors.toList()),
+                            em.createQuery(query, GetReviewDto.class)
+                                    .setParameter("id", l.getLecture_id())
+                                    .getSingleResult()
+                    ));
 
-//      4번 추가 쿼리
-//        try {
-//            List<GetReviewDto> reviews = em.createQuery(query, GetReviewDto.class)
-//                    .setParameter("id", getId)
-//                    .getResultList();
-//
-//            for (GetReviewDto review : reviews) {
-//                System.out.println("평균 : " +review.avg);
-//            }
-//
-//
-//        } catch (Exception e) {
-//            e.getStackTrace();
-//        }
-
-
-
-        String username = authentication();
-        if (username.equals("anonymousUser")) {
-            log.info("로그인 되있지않은 사용자");
-        } else {
-            Member member = memberRepository.findByEmail(username);
+            String username = authentication();
+            if (username.equals("anonymousUser")) {
+                log.info("로그인 되있지않은 사용자");
+            } else {
+                Member member = memberRepository.findByEmail(username);
 
 //            시간되면 fetch join으로 가져오기
-            List<Cart> carts = new ArrayList<>(member.getMyPage().getCartList());
+                List<Cart> carts = new ArrayList<>(member.getMyPage().getCartList());
 
-            List<WishList> wishLists = new ArrayList<>(member.getMyPage().getWishLists());
+                List<WishList> wishLists = new ArrayList<>(member.getMyPage().getWishLists());
 
-            if (wishLists.size() != 0) {
-                for (int i = 0; i < lectureDtos.getContent().size(); i++) {
-                    for (int j = 0; j < wishLists.size(); j++) {
-                        boolean exist = lectureDtos.getContent().get(i).getId().equals(wishLists.get(j).getLecture().getLecture_id());
-                        System.out.println("매칭 여부 확인 : " + exist);
-                        if (exist) {
-                            lectureDtos.getContent().get(i).setWishList(true);
+                if (wishLists.size() != 0) {
+                    for (int i = 0; i < lectureDtos.getContent().size(); i++) {
+                        for (int j = 0; j < wishLists.size(); j++) {
+                            boolean exist = lectureDtos.getContent().get(i).getId().equals(wishLists.get(j).getLecture().getLecture_id());
+                            System.out.println("매칭 여부 확인 : " + exist);
+                            if (exist) {
+                                lectureDtos.getContent().get(i).setWishList(true);
+                            }
                         }
                     }
                 }
-            }
 
-            if (carts.size() != 0) {
-                for (int i = 0; i < lectureDtos.getContent().size(); i++) {
-                    for (int j = 0; j < carts.size(); j++) {
-                        boolean exist = lectureDtos.getContent().get(i).getId().equals(carts.get(j).getLecture().getLecture_id());
-                        System.out.println("매칭 여부 확인 : " + exist);
-                        if (exist) {
-                            lectureDtos.getContent().get(i).setCart(true);
+                if (carts.size() != 0) {
+                    for (int i = 0; i < lectureDtos.getContent().size(); i++) {
+                        for (int j = 0; j < carts.size(); j++) {
+                            boolean exist = lectureDtos.getContent().get(i).getId().equals(carts.get(j).getLecture().getLecture_id());
+                            System.out.println("매칭 여부 확인 : " + exist);
+                            if (exist) {
+                                lectureDtos.getContent().get(i).setCart(true);
+                            }
                         }
                     }
                 }
+
+
             }
-
-//            for (int i = 0; i < lectureDtos.getSize(); i++) {
-//                System.out.println("강의 dto 사이즈 " +lectureDtos.getSize());
-//                for (int j = 0; j < carts.size(); j++) {
-//                    System.out.println("카트 사이즈" + carts.size());
-//                    int z = i;
-//                    System.out.println("임시 카운트 : " + z);
-//            for (int i = 0; i < lectureDtos.getSize(); i++) {
-//                int j = i;
-////                boolean b = carts.stream().anyMatch(cart -> cart.getLecture().getLecture_id().equals(lectureDtos.get.get(j).getId()));
-//                boolean b = lectureDtos.stream().anyMatch(lectureDto -> lectureDto.getId().equals(carts.get(j).getId()));
-//                System.out.println("매칭 여부 " + b);
-//            }
-//                }
-//            }
-
-
-
+            return new DtoWrapper(lectureDtos);
+        } catch (NoSuchElementException noSuchElementException) {
+            log.info("등록된 강의가 없습니다.");
+            return null;
         }
 
-
-
-        log.info(findAllLecture.get().findFirst().get().getCategoryList().toString());
-
-        return new DtoWrapper(lectureDtos);
     }
 
     @Autowired
