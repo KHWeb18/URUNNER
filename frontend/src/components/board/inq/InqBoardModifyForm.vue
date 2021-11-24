@@ -61,14 +61,6 @@ export default {
             const { title, content, complete, currentNum, tags, notice } = this
             this.$emit('submit', { title, content, complete, currentNum, tags, notice })
         },
-        ImgRequest() {
-            try {
-                return require(`../../../../../backend/khweb/images/free/${this.board.writer}_${this.board.boardNo}.gif`
-                )
-            } catch (e) {
-                return require(`@/assets/logo.png`)
-            }
-        },
         classifyTag(data) {
             var arr = JSON.parse(data)
             console.log(arr)

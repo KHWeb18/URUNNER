@@ -180,16 +180,6 @@ export default {
         prevPage() {
             this.pageNum -= 1;
         },
-        ImgRequest(data) {
-            try {
-                var cutId = data.substring(0, data.length-4); // email 뒤 .com 삭제
-                console.log(cutId)
-                return require(`../../../../../backend/khweb/images/profiles/${cutId}.gif`)               
-            
-            } catch (e) {
-                return require(`@/assets/logo.png`)
-            }
-        },
         temp00(data) {
             this.commentNo = data.commentNo
             this.layer = 1
