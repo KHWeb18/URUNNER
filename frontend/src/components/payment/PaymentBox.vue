@@ -71,13 +71,16 @@ export default {
             this.open = !this.open
             this.lectureList = this.lectureInfo.lectureList
             this.amount = this.lectureInfo.totalPrice
-            alert(this.lectureList)
+            alert("렉쳐이름"+this.lectureList)
             if(this.lectureList.length>1){
                 this.orderName = this.lectureList[0] + " 외 "+(this.lectureList.length-1) +" 건"
             }
-            alert(this.orderName)
-            alert(this.customerName)
-            alert(this.amount)
+            else{
+                this.orderName = this.lectureList[0];
+            }
+            alert("주문이름"+this.orderName)
+            alert("손님이름"+this.customerName)
+            alert("가격"+this.amount)
         
         },
         onPaymentCard(){ 
@@ -85,10 +88,10 @@ export default {
             axios.post('http://localhost:7777/payment/pay-ready',{lectureList})
             const tossPayments = window.TossPayments(this.clientKey)
             tossPayments.requestPayment('카드', {
-                amount: amount,  //lectureInfo의 price
-                orderId: orderId,   //프론트에서 처리할 메소드 구현
-                orderName: orderName,    //lectureInfo의 title
-                customerName: customerName, //cookies의 userId ( 백엔드에서 토큰으로 처리)
+                amount: amount, 
+                orderId: orderId,   
+                orderName: orderName,    
+                customerName: customerName, 
                 successUrl: window.location.origin + '/payment/success/',
                 failUrl: window.location.origin + '/payment/fail',
             })
