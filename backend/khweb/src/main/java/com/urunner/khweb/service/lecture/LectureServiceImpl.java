@@ -6,11 +6,13 @@ import com.urunner.khweb.entity.lecture.*;
 import com.urunner.khweb.entity.member.Member;
 import com.urunner.khweb.entity.mypage.Cart;
 
+import com.urunner.khweb.entity.mypage.MyPage;
 import com.urunner.khweb.entity.mypage.WishList;
 import com.urunner.khweb.entity.sort.Category;
 import com.urunner.khweb.entity.sort.CategoryLecture;
 import com.urunner.khweb.repository.lecture.*;
 import com.urunner.khweb.repository.member.MemberRepository;
+import com.urunner.khweb.repository.mypage.MyPageRepository;
 import com.urunner.khweb.utility.LectureUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +60,13 @@ public class LectureServiceImpl implements LectureService {
 
     @Autowired
     private LectureUtil lectureUtil;
+
+    @Autowired
+    private MyPageRepository myPageRepository;
+
+    @Autowired
+    private PurchasedLectureRepository purchasedLectureRepository;
+
 
 
 //    @Override
@@ -327,7 +336,6 @@ public class LectureServiceImpl implements LectureService {
                 .getSingleResult();
 
 
-
         String username = authentication();
         if (username.equals("anonymousUser")) {
             log.info("로그인 되있지않은 사용자");
@@ -339,6 +347,9 @@ public class LectureServiceImpl implements LectureService {
 
             List<WishList> wishLists = new ArrayList<>(member.getMyPage().getWishLists());
 
+            List<PurchasedLecture> purchasedLectureList = purchasedLectureRepository.findByMemberNo(member.getMemberNo());
+
+
             if (wishLists.size() != 0) {
                 for (int j = 0; j < wishLists.size(); j++) {
                     boolean exist = lecture.get().getLecture_id().equals(wishLists.get(j).getLecture().getLecture_id());
@@ -348,6 +359,19 @@ public class LectureServiceImpl implements LectureService {
                     }
                 }
             }
+
+            if (purchasedLectureList.size() != 0) {
+                for (int i = 0; i < purchasedLectureList.size(); i++) {
+                    boolean exist = lecture.get().getLecture_id().equals(purchasedLectureList.get(i).getLecture_id());
+                    System.out.println("구매여부 확인 : " + exist);
+                    if (exist) {
+                        lectureDto.ifPresent(l -> l.setPurchased(true));
+                    }
+                }
+            }
+
+
+
 
             if (carts.size() != 0) {
                 for (int j = 0; j < carts.size(); j++) {
@@ -360,13 +384,17 @@ public class LectureServiceImpl implements LectureService {
             }
         }
 
+//        nullpoint땜에 optional로 감싸놓음
+        Optional<List<Review>> reviewList = reviewRepository.getReviewId(lecture.get().getLecture_id());
+
+        reviewList.get().removeIf(re -> re.getWriter() == null);
 
 //      현재는 4방쿼리
 //        한방쿼리만드는법
 //       1. 네이티브쿼리로 dsl로
 //       2. OneToMany부분 fetch 조인 set으로 바꾸기
 //       3. queryDsl쓰기...
-        DtoWrapper2 dtoWrapper = new DtoWrapper2(lectureDto, Optional.of(list));
+        DtoWrapper2 dtoWrapper = new DtoWrapper2(lectureDto, Optional.of(list), reviewList);
         dtoWrapper.setWishListCount(wishListCount);
         return dtoWrapper;
     }
@@ -531,10 +559,28 @@ public class LectureServiceImpl implements LectureService {
     public Boolean regStudentComment(ReviewDto reviewDto) {
 
 //        구매한사람인지 체크하는 메서드 ( 구입 테이블에서 로드하는 로직)
+        Member member = memberRepository.findByEmail(authentication());
+
+        Optional<MyPage> myPage = myPageRepository.findById(member.getMemberNo());
+
+        myPage.ifPresent(l -> {
+                    l.setPoint(500L);
+                    myPageRepository.save(l);
+                }
+        );
+
+
+//        try {
+//            member.getPurchasedLectureList().stream().filter(find -> find.getMemberNo().equals(member.getMemberNo()));
+//        } catch (Exception exception) {
+//            log.info("강의를 구매한 사용자가 아닙니다.");
+//            exception.getStackTrace();
+//        }
+
         Lecture lecture = em.find(Lecture.class, reviewDto.getLectureId());
 
         Review review = Review.builder()
-                .rating(reviewDto.getRating())
+                .rating(reviewDto.getRating() * 2)
                 .content(reviewDto.getContent())
                 .writer(authentication())
                 .build();
@@ -544,6 +590,18 @@ public class LectureServiceImpl implements LectureService {
         reviewRepository.save(review);
 
         return true;
+    }
+
+    @Override
+    public DtoWrapper getReview(Long id) {
+
+        Optional<Lecture> lecture = lectureRepository.findById(id);
+
+        Optional<List<Review>> reviewList = reviewRepository.getReviewId(lecture.get().getLecture_id());
+
+        reviewList.get().removeIf(re -> re.getWriter() == null);
+
+        return new DtoWrapper(reviewList);
     }
 
     @Override

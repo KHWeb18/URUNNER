@@ -1,5 +1,6 @@
 package com.urunner.khweb.entity.lecture;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,6 +27,7 @@ public class Review {
         this.writer = writer;
     }
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "lecture_id")
     Lecture lecture;
