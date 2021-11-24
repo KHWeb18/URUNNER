@@ -79,4 +79,6 @@ public interface LectureService {
     public Boolean regStudentComment(ReviewDto reviewDto);
 
     public List<GetReviewDto> reviewList(Page<LectureSearchDto> lectureSearchDtos);
+
+    public DtoWrapper getReview(Long id);
 }

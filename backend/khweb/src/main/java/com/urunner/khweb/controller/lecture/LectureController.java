@@ -423,6 +423,12 @@ public class LectureController {
         }
     }
 
+    @GetMapping("/getReview/{lectureId}")
+    public DtoWrapper getReview(@PathVariable("lectureId") Long id) {
+
+        return lectureService.getReview(id);
+    }
+
     public void mkdirFolder(File folder) {
 
         if (!folder.exists()) {

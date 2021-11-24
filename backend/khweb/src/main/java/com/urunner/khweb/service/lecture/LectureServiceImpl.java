@@ -535,6 +535,15 @@ public class LectureServiceImpl implements LectureService {
     public Boolean regStudentComment(ReviewDto reviewDto) {
 
 //        구매한사람인지 체크하는 메서드 ( 구입 테이블에서 로드하는 로직)
+        Member member = memberRepository.findByEmail(authentication());
+
+//        try {
+//            member.getPurchasedLectureList().stream().filter(find -> find.getMemberNo().equals(member.getMemberNo()));
+//        } catch (Exception exception) {
+//            log.info("강의를 구매한 사용자가 아닙니다.");
+//            exception.getStackTrace();
+//        }
+
         Lecture lecture = em.find(Lecture.class, reviewDto.getLectureId());
 
         Review review = Review.builder()
@@ -548,6 +557,18 @@ public class LectureServiceImpl implements LectureService {
         reviewRepository.save(review);
 
         return true;
+    }
+
+    @Override
+    public DtoWrapper getReview(Long id) {
+
+        Optional<Lecture> lecture = lectureRepository.findById(id);
+
+        Optional<List<Review>> reviewList = reviewRepository.getReviewId(lecture.get().getLecture_id());
+
+        reviewList.get().removeIf(re -> re.getWriter() == null);
+
+        return new DtoWrapper(reviewList);
     }
 
     @Override
