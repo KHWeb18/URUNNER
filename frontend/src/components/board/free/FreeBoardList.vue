@@ -315,10 +315,6 @@ export default {
                 return(calcD + ' 일 전')
             }
         },
-        // test() {
-        //     console.log(this.$store.state.nickname)
-        //     this.$store.state.nickname = '임시닉네임'
-        // },
         nextPage() {
             this.pageNum += 1;
         },
@@ -330,15 +326,6 @@ export default {
         },
         prevPageS() {
             this.pageNumS -= 1;
-        },
-        ImgRequest( a, b ) {
-            console.log(a + '_' + b)
-        try {
-            return require(`../../../../../backend/khweb/images/qna/${a}_${b}.gif`
-            )
-        } catch (e) {
-            return require(`@/assets/logo.png`)
-            }
         },
         searching () {
             var lists = this.boards

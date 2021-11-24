@@ -59,27 +59,14 @@
                 searchingResult.push(lists[i])
               }
             }
-            this.noNoticeBoards = searchingResult
+            this.noNoticeBoards = searchingResult.slice(0, 5)
         }, 500 )
     },
     methods: {
       replaceHtml(data) {
             var text = data.replace(/(<([^>]+)>)/ig,"");
             return text
-      },
-      deleteNotice() {
-            var lists = this.boards
-            var searchingResult = []
-            for(var i = 0; i < lists.length; i++){
-              const regex = new RegExp('false', "gi");
-              const comparison = regex.test(lists.complete)
-              if(comparison){
-                this.searchingResult.push(lists[i])
-              }
-            }
-            this.noNoticeBoards = searchingResult
-      }
-      
+      }      
     }
   }
 </script>

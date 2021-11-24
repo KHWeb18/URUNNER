@@ -324,15 +324,6 @@ export default {
         prevPageS() {
             this.pageNumS -= 1;
         },
-        ImgRequest( a, b ) {
-            console.log(a + '_' + b)
-        try {
-            return require(`../../../../../backend/khweb/images/qna/${a}_${b}.gif`
-            )
-        } catch (e) {
-            return require(`@/assets/logo.png`)
-            }
-        },
         searching () {
             var lists = this.boards
             this.searchingResult = []

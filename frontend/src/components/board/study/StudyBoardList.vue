@@ -85,7 +85,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div v-show="mob.complete == 'true' && mob.notice == 'false'" class="completeDisplay" @click="selectComplete('true')">모집종료</div>
+                                            <div v-show="mob.complete == 'true' && mob.notice == 'false'" class="completeDisplay2" @click="selectComplete('true')">모집종료</div>
                                         </div>
                                     </router-link>                                    
                                 </div>
@@ -189,7 +189,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div v-show="mob.complete == 'true' && mob.notice == 'false'" class="completeDisplay" @click="selectComplete('true')">모집종료</div>
+                                            <div v-show="mob.complete == 'true' && mob.notice == 'false'" class="completeDisplay2" @click="selectComplete('true')">모집종료</div>
                                         </div>
                                     </router-link>                                    
                                 </div>
@@ -342,15 +342,6 @@ export default {
         },
         prevPageS() {
             this.pageNumS -= 1;
-        },
-        ImgRequest( a, b ) {
-            console.log(a + '_' + b)
-        try {
-            return require(`../../../../../backend/khweb/images/qna/${a}_${b}.gif`
-            )
-        } catch (e) {
-            return require(`@/assets/logo.png`)
-            }
         },
         searching () {
             var lists = this.boards
@@ -819,6 +810,17 @@ ul {
 }
 .completeDisplay {
     background-color: #FFAB00;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 20px;
+    padding: 0 4px 0 4px;
+    font-size: 11px;
+    font-weight: bold;
+}
+.completeDisplay2 {
+    background-color: #C2185B;
     color: white;
     display: flex;
     justify-content: center;

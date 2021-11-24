@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto" max-width="500">
+  <v-card class="mx-auto" width="500">
     <v-list two-line>
       <v-list-item-group active-class="primary--text" multiple>
         <template v-for="notice in notices">

@@ -244,6 +244,7 @@ export default {
                 this.fetchMyIntroduce(this.userIdInToken)
                 this.$router.push('/memberProfile')
                 alert('프로필 사진 변경 완료')
+                this.$router.go(this.$router.currentRoute)
             })
             .catch(err => {
             alert(err);
