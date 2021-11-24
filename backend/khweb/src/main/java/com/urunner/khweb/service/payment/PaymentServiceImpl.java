@@ -92,6 +92,7 @@ public class PaymentServiceImpl implements PaymentService{
                     PurchasedLecture purchasedLecture = new PurchasedLecture();
                     purchasedLecture.setTitle(title);
                     purchasedLecture.setLecture_id(lecture_id);
+                    purchasedLecture.setOrederId(orderId);
                     member.addPurchasedLecture(purchasedLecture);
                     log.info("멤버 저장합니다");
                     memberRepository.save(member);
@@ -104,7 +105,7 @@ public class PaymentServiceImpl implements PaymentService{
                 }
 
             }
-            log.info(member.getPurchasedLectureList().get(1).getTitle());
+
             return "success";
         } else {
             JsonNode failNode = responseEntity.getBody();
