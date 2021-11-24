@@ -3,12 +3,14 @@ package com.urunner.khweb.service.mypage;
 
 import com.urunner.khweb.controller.dto.lecture.DtoWrapper3;
 import com.urunner.khweb.entity.lecture.Lecture;
+import com.urunner.khweb.entity.lecture.PurchasedLecture;
 import com.urunner.khweb.entity.member.Member;
 import com.urunner.khweb.entity.mypage.Cart;
 import com.urunner.khweb.entity.mypage.MyNote;
 import com.urunner.khweb.entity.mypage.TempLecture;
 import com.urunner.khweb.entity.mypage.WishList;
 import com.urunner.khweb.repository.lecture.LectureRepository;
+import com.urunner.khweb.repository.lecture.PurchasedLectureRepository;
 import com.urunner.khweb.repository.member.MemberRepository;
 import com.urunner.khweb.repository.mypage.*;
 import lombok.extern.slf4j.Slf4j;
@@ -52,6 +54,9 @@ public class MypageServiceImpl implements MypageService{
 
     @PersistenceContext
     private EntityManager em;
+
+    @Autowired
+    PurchasedLectureRepository purchasedLectureRepository;
 
 
     @Override
@@ -141,6 +146,17 @@ public class MypageServiceImpl implements MypageService{
 
         Member member = memberRepository.findByEmail(authentication.getName());
 
+        List<PurchasedLecture> PurchasedLectureList = purchasedLectureRepository.findByMemberNo(member.getMemberNo());
+        Lecture lecture1 = em.find(Lecture.class, lectureId);
+
+        for (PurchasedLecture purchasedLecture : PurchasedLectureList) {
+            if (purchasedLecture.getLecture_id().equals(lecture1.getLecture_id())) {
+                log.info("이미 구매한 강의입니다.");
+                return null;
+            }
+        }
+
+
         List<Cart> collect = new ArrayList<>(member.getMyPage().getCartList());
 
         for (Cart list : collect) {
@@ -153,7 +169,7 @@ public class MypageServiceImpl implements MypageService{
         }
 
         if (!exist) {
-            Lecture lecture = em.find(Lecture.class, lectureId);
+            Lecture lecture = lecture1;
 
             Cart cart = new Cart();
 

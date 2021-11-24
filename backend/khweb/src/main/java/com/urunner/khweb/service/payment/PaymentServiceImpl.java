@@ -113,6 +113,8 @@ public class PaymentServiceImpl implements PaymentService{
                     memberRepository.save(member);
                     //마이페이지 구매강의 접근시 purchasedLectureRepository.getTitle() 로 강의
                     // 이름 불러온후 lectureRepository에서find로강의 불러오기
+                    
+//                    카트 삭제 메서드
                     myPageUtil.deleteCart(member, lecture);
 
                 }
