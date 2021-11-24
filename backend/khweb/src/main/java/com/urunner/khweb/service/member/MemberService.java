@@ -12,7 +12,7 @@ public interface MemberService {
 
     public void leaveMember (String email) throws Exception;
 
-    public void sendMail(String email) throws Exception;
+    public void sendMail(String email,String certCode) throws Exception;
 
     // 비밀번호 찾기 및 이메일 보내기
     String findingUser(MemberRes memberRes) throws Exception;

@@ -24,11 +24,12 @@ public class PurchasedLecture {
 
     private Long lecture_id;
 
+    private String orederId;
+
     @Column(name = "member_no")
     private Long memberNo;
 
     @CreationTimestamp
     private Date regDate;
-
 
 }
