@@ -64,6 +64,9 @@ public class LectureServiceImpl implements LectureService {
     @Autowired
     private MyPageRepository myPageRepository;
 
+    @Autowired
+    private PurchasedLectureRepository purchasedLectureRepository;
+
 
 
 //    @Override
@@ -333,7 +336,6 @@ public class LectureServiceImpl implements LectureService {
                 .getSingleResult();
 
 
-
         String username = authentication();
         if (username.equals("anonymousUser")) {
             log.info("로그인 되있지않은 사용자");
@@ -345,6 +347,9 @@ public class LectureServiceImpl implements LectureService {
 
             List<WishList> wishLists = new ArrayList<>(member.getMyPage().getWishLists());
 
+            List<PurchasedLecture> purchasedLectureList = purchasedLectureRepository.findByMemberNo(member.getMemberNo());
+
+
             if (wishLists.size() != 0) {
                 for (int j = 0; j < wishLists.size(); j++) {
                     boolean exist = lecture.get().getLecture_id().equals(wishLists.get(j).getLecture().getLecture_id());
@@ -354,6 +359,19 @@ public class LectureServiceImpl implements LectureService {
                     }
                 }
             }
+
+            if (purchasedLectureList.size() != 0) {
+                for (int i = 0; i < purchasedLectureList.size(); i++) {
+                    boolean exist = lecture.get().getLecture_id().equals(purchasedLectureList.get(i).getLecture_id());
+                    System.out.println("구매여부 확인 : " + exist);
+                    if (exist) {
+                        lectureDto.ifPresent(l -> l.setPurchased(true));
+                    }
+                }
+            }
+
+
+
 
             if (carts.size() != 0) {
                 for (int j = 0; j < carts.size(); j++) {

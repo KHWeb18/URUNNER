@@ -107,6 +107,9 @@ public class LectureController {
 
     @GetMapping("/image/{path}/{writer}")
     public ResponseEntity<UrlResource> getThumnail(@PathVariable("path") String path, @PathVariable("writer") String writer){
+
+        if (findNull(path, writer)) return null;
+
         try {
             UrlResource image = new UrlResource("classpath:" + imageLocation + "/" + writer + "/" + path);
             return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
@@ -116,6 +119,15 @@ public class LectureController {
             error.getStackTrace();
             return null;
         }
+    }
+
+    private boolean findNull(String path, String writer) {
+        if (path == null || writer == null) {
+            System.out.println("paht : " + path);
+            System.out.println("writer : " + writer);
+            return true;
+        }
+        return false;
     }
 
     @PostMapping("/newlecture")
