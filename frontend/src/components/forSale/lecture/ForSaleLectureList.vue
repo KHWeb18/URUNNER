@@ -306,7 +306,9 @@ export default {
             this.sideBarFilter()
         },
         priceValue() {
-            console.log('watchedStep:) this.priceValue : ' + this.priceValue)
+            this.sideBarFilter()
+        },
+        ratingValue() {
             this.sideBarFilter()
         }
     },
@@ -347,6 +349,9 @@ export default {
                 })
             this.path = data.title
             this.dialog = false
+            this.ratingValue = null
+            this.difValue = null
+            this.priceValue = null
         },
         callAll() {
             this.$emit("callAll", {})
@@ -379,63 +384,58 @@ export default {
             console.log('변동감지')
             '일단 각 변수값 체크하고 굴리자 null이면 ㄴ 값이 있으면 ㄱ'
             // 초기화
-            var tempLists = this.copiedList            
+            var avgLists = this.reviewData
+            var tempLists = this.copiedList
             var searchingResult = []
-            var searchingResult2 = []
+            var searchingResult2 = []            
+            var searchingResult3 = []
 
-            if(this.difValue !== null) {
-                for(var i = 0; i < tempLists.length; i++){                    
-                    const regex = new RegExp(this.difValue, "gi");
-                    const comparison = regex.test(tempLists[i].grade)
-                    if(comparison){
-                        searchingResult.push(tempLists[i])
-                    }
-                }
-            } else if (this.difValue == null) {
-                console.log('this.difValue == null')
-                searchingResult = tempLists
-            }
-
-
-            if(this.priceValue !== null) {
-                console.log('searchingResult.length : ' + searchingResult.length)
-                for(var j = 0; j < searchingResult.length; j++){
-                    if(searchingResult[j].price < this.priceValue) {
-                        console.log('true')
-                        console.log('searchingResult[j][2] : ' + searchingResult[j].price)
-                        console.log(' <= ')
-                        console.log('this.priceValue : ' + this.priceValue)
-                        searchingResult2.push(searchingResult[j])
+            if(this.ratingValue !== null) {
+                console.log('this.ratingValue null 아니다! value 값은')
+                console.log(this.ratingValue)
+                for(var k = 0; k < tempLists.length; k++){
+                    if(avgLists[k].avg >= this.ratingValue) {
+                        searchingResult.push(tempLists[k])
                     }
                 }
             } else if (this.priceValue == null) {
                 console.log('this.priceValue == null')
+                searchingResult = tempLists
+            }
+
+
+            if(this.difValue !== null) {
+                for(var i = 0; i < searchingResult.length; i++){                    
+                    const regex = new RegExp(this.difValue, "gi");
+                    const comparison = regex.test(searchingResult[i].grade)
+                    if(comparison){
+                        searchingResult2.push(searchingResult[i])
+                    }
+                }
+            } else if (this.difValue == null) {
+                console.log('this.difValue == null')
                 searchingResult2 = searchingResult
             }
 
-            // if(this.priceValue == null && this.difValue == null) {
-            //     searchingResult2 = tempLists
-            // }
-            // if(this.priceValue !== null) {
-            //     for(var j = 0; j < tempLists.length; j++){                    
-            //         const regex = new RegExp(this.priceValue, "gi");
-            //         const comparison = regex.test(tempLists[j][1])
-            //         if(comparison){
-            //             searchingResult.push(tempLists[j])
-            //         }
-            //     }
-            // }
-            // if(this.ratingValue !== null) {
-            //     for(var k = 0; k < tempLists.length; k++){                    
-            //         const regex = new RegExp(this.ratingValue, "gi");
-            //         const comparison = regex.test(tempLists[k][7])
-            //         if(comparison){
-            //             searchingResult.push(tempLists[k])
-            //         }
-            //     }
-            // }
 
-            this.callLecturelist = searchingResult2
+            if(this.priceValue !== null) {
+                console.log('searchingResult.length : ' + searchingResult2.length)
+                for(var j = 0; j < searchingResult2.length; j++){
+                    if(searchingResult2[j].price < this.priceValue) {
+                        console.log('true')
+                        console.log('searchingResult[j][2] : ' + searchingResult2[j].price)
+                        console.log(' <= ')
+                        console.log('this.priceValue : ' + this.priceValue)
+                        searchingResult3.push(searchingResult2[j])
+                    }
+                }
+            } else if (this.priceValue == null) {
+                console.log('this.priceValue == null')
+                searchingResult3 = searchingResult2
+            }
+
+            
+            this.callLecturelist = searchingResult3
             console.log('태그 결과')
             console.log(this.callLecturelist)
             this.refreshCheck = 2
