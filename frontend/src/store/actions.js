@@ -187,7 +187,6 @@ export default {
         return axios.get(`http://localhost:7777/myPage/myLecturelist/${memberNo}`)
                 .then((res) => {
                     commit(FETCH_LECTURE_LIST, res.data)
-                    console.log(res.data)
         }).catch(err=>{alert(err.response.data.message)})
     },
     fetchMemberList({ commit }) {
@@ -209,19 +208,16 @@ export default {
         return axios.post('http://localhost:7777/manageLecture/mainSearch', { page : 0, name: null, categoryName})
         .then( (res) => {
             commit(FETCH_LECTURE_LIST, res.data.data.content)
-            console.log(res)
         }).catch(err=>{alert(err.response.data.message)})
     },
     fetchCallLectureListWithCategory({ commit, state }, cateName) {
         let categoryName = new Object();
         categoryName['category'] = cateName
-        console.log("cateName : " + cateName)
-        return axios.post('http://localhost:7777/manageLecture/mainSearch', { page : 0, name: state.searchName, categoryName})
+        return axios.post('http://localhost:7777/manageLecture/mainSearch', { page : state.pageNumber, name: state.searchName, categoryName})
         .then( (res) => {
             commit(FETCH_LECTURE_LIST, res.data.data.content)
             state.reviewData = res.data.reviewData
-            console.log(state.reviewData)
-            console.log(res.data.data.content)
+            state.pageData = res.data.data
         }).catch(err=>{alert(err.response.data.message)})
     },
     fetchCallLectureListWithFilter ({ commit }, word) {
@@ -230,7 +226,6 @@ export default {
         return axios.post(`http://localhost:7777/manageLecture/mainSearch`, { page : 0, name: word, categoryName})
                 .then((res) => {
                     commit(FETCH_LECTURE_LIST, res.data.data.content)
-                    console.log(res.data.data.content)
         }).catch(err=>{alert(err.response.data.message)})
     }
 }

@@ -20,7 +20,9 @@
               align="center"
              >
               <v-col>
-                <v-chip class="ml-5"
+                <v-chip class="ml-5 ma-2 font-weight-bold"
+                  dark
+                  color="primary"
                    v-for="tag in tags"
                    :key="tag"
                    @click="searchWithCategory(tag)"
