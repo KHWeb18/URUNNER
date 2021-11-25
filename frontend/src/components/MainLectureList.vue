@@ -5,7 +5,8 @@
     <swiper-slide v-for="lecture in allLectureList" :key="lecture.id" class="ma-2">
       <main-lecture-card :lecture="lecture"/>
     </swiper-slide>
-    <div class="swiper-pagination" slot="pagination"></div>
+    <div class="swiper-button-prev" slot="button-prev"></div>
+    <div class="swiper-button-next" slot="button-next" @click="fetchMore"></div>
   </swiper> 
   </div>
 </template>
@@ -14,6 +15,7 @@
   import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
   import 'swiper/css/swiper.css'
   import MainLectureCard from './MainLectureCard.vue'
+  import EventBus from '@/event'
 
   export default {
     name: 'swiper-example-responsive-breakpoints',
@@ -34,9 +36,9 @@
         swiperOption: {
           slidesPerView: 5,
           spaceBetween: 50,
-          pagination: {
-            el: '.swiper-pagination',
-            clickable: true
+           navigation: {
+            nextEl: '',
+            prevEl: '.swiper-button-prev'
           },
           breakpoints: {
             1024: {
@@ -57,6 +59,14 @@
             }
           }
         }
+      }
+    },
+    methods: {
+      fetchMore() {
+        this.$emit('fetchMore')
+        EventBus.$on('loadMore', ()=> {
+          this.swiperOption.nextEl = '.swiper-button-next'
+        })
       }
     }
   }

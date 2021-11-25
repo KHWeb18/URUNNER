@@ -39,12 +39,12 @@
                 <v-btn depressed rounded text="text" @click="clickLogoutBtn">
                   Logout
                 </v-btn>
-                <v-btn v-if="this.$cookies.get('ROLES') !='ROLE_USER'" depressed rounded text="text" @click="clickManager" style="margin-bottom:5px;">
+                <v-btn v-if="isInstructor !='ROLE_USER'" depressed rounded text="text" @click="clickManager" style="margin-bottom:5px;">
                   Admin
                 </v-btn>
             </v-list-item-content>
             <v-list-item-action>
-            <v-tooltip bottom v-if="this.role == 'ROLE_USER,ROLE_ADMIN'">
+            <v-tooltip bottom v-if="isInstructor == 'ROLE_ADMIN,ROLE_USER'">
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
                     color="warning"
@@ -94,7 +94,6 @@ export default {
       nickanme: Vue.$cookies.get("NICKNAME"),
       thumb_path: this.$store.state.profile.thumb_path,
       email: Vue.$cookies.get("USER_NAME"),
-      role: Vue.$cookies.get("ROLES")
     }
   },
   computed: {
@@ -113,7 +112,7 @@ export default {
       this.$router.push('/manager')
     },
     roleCheck() {
-      if(this.role == 'ROLE_USER,ROLE_ADMIN') {
+      if(this.isInstructor == 'ROLE_ADMIN,ROLE_USER') {
         var text = '지식공유자'
         return text
       } else {

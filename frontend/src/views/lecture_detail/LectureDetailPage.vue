@@ -3,6 +3,7 @@
   :lectureDetailInfo="lectureDetailInfo"
   :lectureVideoList="lectureVideoList"
   :wishListCount="wishListCount"
+  :studentCommentList="studentCommentList"
   :studentCount="studentCount"/>
 </template>
 
@@ -18,7 +19,8 @@ export default {
     return {
       lectureDetailInfo: {},
       lectureVideoList: [],
-      wishListCount: null
+      wishListCount: null,
+      studentCommentList: []
     }
   },
   created() {
@@ -34,6 +36,8 @@ export default {
               this.lectureDetailInfo = data.opData
               this.lectureVideoList = data.opData2
               this.wishListCount = data.wishListCount
+              this.studentCommentList = data.data
+
               this.studentCount = data.studentCount
             })
             .catch(err => { console.log(err); })
