@@ -64,6 +64,9 @@ public class LectureServiceImpl implements LectureService {
     @Autowired
     private MyPageRepository myPageRepository;
 
+    @Autowired
+    private PurchasedLectureRepository purchasedLectureRepository;
+
 
 
 //    @Override
@@ -332,6 +335,7 @@ public class LectureServiceImpl implements LectureService {
                 .setParameter("id", lecture.get().getLecture_id())
                 .getSingleResult();
 
+        Optional<Long> count = purchasedLectureRepository.getPurchasedLectureCount(lectureId);
 
 
         String username = authentication();
@@ -345,6 +349,9 @@ public class LectureServiceImpl implements LectureService {
 
             List<WishList> wishLists = new ArrayList<>(member.getMyPage().getWishLists());
 
+            List<PurchasedLecture> purchasedLectureList = purchasedLectureRepository.findByMemberNo(member.getMemberNo());
+
+
             if (wishLists.size() != 0) {
                 for (int j = 0; j < wishLists.size(); j++) {
                     boolean exist = lecture.get().getLecture_id().equals(wishLists.get(j).getLecture().getLecture_id());
@@ -354,6 +361,17 @@ public class LectureServiceImpl implements LectureService {
                     }
                 }
             }
+
+            if (purchasedLectureList.size() != 0) {
+                for (int i = 0; i < purchasedLectureList.size(); i++) {
+                    boolean exist = lecture.get().getLecture_id().equals(purchasedLectureList.get(i).getLecture_id());
+                    System.out.println("구매여부 확인 : " + exist);
+                    if (exist) {
+                        lectureDto.ifPresent(l -> l.setPurchased(true));
+                    }
+                }
+            }
+
 
             if (carts.size() != 0) {
                 for (int j = 0; j < carts.size(); j++) {
@@ -378,6 +396,7 @@ public class LectureServiceImpl implements LectureService {
 //       3. queryDsl쓰기...
         DtoWrapper2 dtoWrapper = new DtoWrapper2(lectureDto, Optional.of(list), reviewList);
         dtoWrapper.setWishListCount(wishListCount);
+        dtoWrapper.setStudentCount(count.get());
         return dtoWrapper;
     }
 

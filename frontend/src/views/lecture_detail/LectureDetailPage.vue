@@ -3,7 +3,8 @@
   :lectureDetailInfo="lectureDetailInfo"
   :lectureVideoList="lectureVideoList"
   :wishListCount="wishListCount"
-  :studentCommentList="studentCommentList"/>
+  :studentCommentList="studentCommentList"
+  :studentCount="studentCount"/>
 </template>
 
 <script>
@@ -37,6 +38,7 @@ export default {
               this.wishListCount = data.wishListCount
               this.studentCommentList = data.data
 
+              this.studentCount = data.studentCount
             })
             .catch(err => { console.log(err); })
     }

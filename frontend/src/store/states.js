@@ -47,6 +47,8 @@ export default {
   selectMenu: 1,
   selctedComp: 'BoardListPage',
   title: '자유 주제 게시판',
+  pageData: null,
+  pageNumber: 0,
   //공지사항
   notices: [],
   notice: null,

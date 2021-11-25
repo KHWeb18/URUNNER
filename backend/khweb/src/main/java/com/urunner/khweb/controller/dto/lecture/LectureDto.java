@@ -27,6 +27,7 @@ public class LectureDto {
     private String grade;
     private List<Category> category;
     private boolean cart;
+    private boolean purchased;
 
     private boolean wishList;
     private GetReviewDto getReviewDto;

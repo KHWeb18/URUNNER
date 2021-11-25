@@ -156,6 +156,10 @@ export default {
     wishListCount: {
       type: Number,
       require: true
+    },
+    studentCount: {
+      type: Number,
+      require: true
     }
   },
   computed: {
