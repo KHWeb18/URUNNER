@@ -2,7 +2,8 @@
  <lecture-detail-form
   :lectureDetailInfo="lectureDetailInfo"
   :lectureVideoList="lectureVideoList"
-  :wishListCount="wishListCount"/>
+  :wishListCount="wishListCount"
+  :studentCount="studentCount"/>
 </template>
 
 <script>
@@ -33,6 +34,7 @@ export default {
               this.lectureDetailInfo = data.opData
               this.lectureVideoList = data.opData2
               this.wishListCount = data.wishListCount
+              this.studentCount = data.studentCount
             })
             .catch(err => { console.log(err); })
     }
