@@ -413,6 +413,20 @@ public class LectureServiceImpl implements LectureService {
     }
 
     @Override
+    public Optional<LectureVideoInfo> getVideoInfo(Long lectureId, String name) {
+        lectureUtil.isPurchasedLecture(lectureId, name);
+        Optional<LectureVideo> videoInfo = lectureVideoRepository.findById(lectureId);
+
+        Optional<LectureVideoInfo> lectureVideoInfo = videoInfo.stream().findFirst().map(l ->
+                new LectureVideoInfo(l.getLectureList().getLecture().getWriter(), l.getVideoPath())
+        );
+
+        return lectureVideoInfo;
+    }
+
+
+
+    @Override
     public DtoWrapper getVideoInfoDetail(Long id) {
 
         Optional<LectureVideo> videoInfo = lectureVideoRepository.findById(id);

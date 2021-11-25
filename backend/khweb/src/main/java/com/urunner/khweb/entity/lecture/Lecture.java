@@ -26,6 +26,7 @@ public class Lecture {
 
     private String writer;
 
+    @Column(unique = true)
     private String title;
 
     @Column(columnDefinition = "TEXT", nullable = false)

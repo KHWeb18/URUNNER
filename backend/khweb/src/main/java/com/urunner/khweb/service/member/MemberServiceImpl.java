@@ -206,12 +206,12 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
             Member member = memberRepository.findByEmail(authentication.getName());
 
 
-            if (member.getRoles().stream().anyMatch(r -> r.getName().equals("ROLE_ADMIN"))) {
+            if (member.getRoles().stream().anyMatch(r -> r.getName().equals("ROLE_MANAGER"))) {
                 log.info("이미등록된강의자");
                 throw new DuplicateKeyException("이미 등록된 강의자");
             }
 
-            role.setName("ROLE_ADMIN");
+            role.setName("ROLE_MANAGER");
             role.setMember(member);
             instructor.setRole(role);
 

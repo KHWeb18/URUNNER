@@ -148,6 +148,7 @@
 <script>
 import axios from 'axios'
 import { API_BASE_URL } from '@/constants/index'
+import Vue from 'vue';
 export default {
   props: {
     lectureVideoList: {
@@ -173,6 +174,7 @@ export default {
       rating: 0,
       length: 5,
       content: '',
+      token: Vue.$cookies.get("ACCESS_TOKEN")
     };
   },
   components: {},
@@ -184,8 +186,7 @@ export default {
   },
   computed: {
     videoPath() {
-      return `http://www.localhost:7777/lecture/videos/${this.id}`
-    }
+      return `http://www.localhost:7777/lecture/videos/${this.id}/${this.token}`
   },
   methods: {
     videoTimeUpdated: function() {
@@ -227,7 +228,8 @@ export default {
       this.content = ''
     }
   }
-};
+  }
+}
 </script>
 
 <style>
