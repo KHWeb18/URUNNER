@@ -16,6 +16,7 @@ public class DtoWrapper2<T> {
     private Optional<?> opData2;
     private Long wishListCount;
     private T data;
+    private Long studentCount;
 
     public DtoWrapper2(Optional<?> opData, Optional<?> opData2 ) {
         this.opData = opData;
