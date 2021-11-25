@@ -52,14 +52,19 @@
   </v-row>
   <v-row justify="end" no-gutters class="mt-5">
       <v-col cols="3">
+        <p class="text-h5">보유 포인트 : 1000</p>
+      </v-col>
+  </v-row>
+  <v-row justify="end" no-gutters class="mt-5">
+      <v-col cols="3">
         <v-text-field
-        v-model="coupon"
-        label="보유한 쿠폰코드를 입력하세요"
-        color="black"
+          label="사용할 포인트"
+          color="black"
+          type="number"
       ></v-text-field>
       </v-col>
       <v-col class="mt-3 mr-10" cols="auto">
-          <v-btn color="teal accent-4" dark>쿠폰</v-btn>
+          <v-btn color="teal accent-4" dark>사용</v-btn>
       </v-col>
   </v-row>
   <div v-if="cartList.length  == 0">
@@ -88,15 +93,13 @@
             <v-card-title class="d-flex justify-space-between">
               <h2 class="secondary--text">총계</h2>
               <h2 class="secondary--text">
-                ₩ {{ getCurrencyFormat(lectureInfo.totalPrice) }}
+                ₩ {{ getCurrencyFormat(totalPrice) }}
               </h2>
             </v-card-title>
-              <div> 
-                <payment-box v-bind:lectureInfo="lectureInfo"></payment-box>
-              </div>
-              <!--<v-card-actions class="pa-3">
-              <v-btn class="primary font-weight-bold" x-large block>결제하기</v-btn>
-            </v-card-actions>-->
+              <payment-box :lectureList="lectureList" :amount="totalPrice" :open="open" @cancel="cancel"></payment-box>
+              <v-card-actions class="pa-3">
+              <v-btn class="primary font-weight-bold" x-large block @click="open = !open">결제하기</v-btn>
+            </v-card-actions>
           </v-card>
         </v-container>
       </v-col>
@@ -123,6 +126,7 @@
 import axios from 'axios'
 import { API_BASE_URL } from '@/constants/index'
 import PaymentBox from '../../components/payment/PaymentBox.vue'
+import EventBus from '@/event'
 export default {
   
     components:{
@@ -131,10 +135,9 @@ export default {
     data: () => ({
         lecture: null,
         cartList: [],
-        lectureInfo:{
-                lectureList:[],
-                totalPrice: 0,    
-            }
+        lectureList:[],
+        totalPrice: 0,    
+        open: false
     }),
     created() {
       this.getCartList()
@@ -151,17 +154,25 @@ export default {
       getCartList() {
         axios.get(`${API_BASE_URL}/manageLecture/getCartList`)
               .then(({data}) => {
+                console.log(data);
                 this.cartList = data.data
               }).then(() => {
                 this.cartList.filter(c => {
-                  this.lectureInfo.totalPrice += c.price
-                  this.lectureInfo.lectureList.push(c.title)
+                  this.totalPrice += c.price
+                  this.lectureList.push(c.title)
                 })
-              }) 
+              })
+              .then(() => {
+                EventBus.$emit('getData')
+              })
       },
-       getCurrencyFormat(value) {
-      return this.$currencyFormat(value);
-    },
+     getCurrencyFormat(value) {
+        return this.$currencyFormat(value);
+     },
+     cancel() {
+       this.open = !this.open
+     }
+
     },
 }
 </script>
