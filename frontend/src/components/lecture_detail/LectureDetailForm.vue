@@ -7,7 +7,9 @@
           <div class="d-md-flex align-center">
             <div class="white--text">
               <p class="pa-2 mb-7 text-h5 text-md-h4 font-weight-bold">{{ lectureDetailInfo.title }}</p>
-              <span class="pa-1"><v-rating :value="lectureDetailInfo.getReviewDto.avg" dense color="yellow" small class="d-inline"/>평점 {{ lectureDetailInfo.getReviewDto.avg }} 점 {{ lectureDetailInfo.getReviewDto.count - 1 }}명의 수강평 | 30명의 수강생</span>
+              <span class="pa-1">
+                <v-rating :value="lectureDetailInfo.getReviewDto.avg / 2"  dense color="yellow" readonly small class="d-inline" half-increments/>
+                  평점 {{ lectureDetailInfo.getReviewDto.avg }} 점 {{ lectureDetailInfo.getReviewDto.count - 1 }}명의 수강평 | 30명의 수강생</span>
               <div class="mt-4">
                 <v-icon color="white">mdi-shield-account-outline</v-icon> <span>{{ lectureDetailInfo.writer }}</span>
               </div>
@@ -40,6 +42,7 @@
             </v-card-title>
             <v-card-actions class="pa-3">
               <v-btn v-if="lectureDetailInfo.cart" class="primary" x-large block to="/cart">결제하기</v-btn>
+              <v-btn v-if="lectureDetailInfo.purchased" class="primary" x-large block>이미 학습중인 강의입니다:-)</v-btn>
               <v-btn v-else class="primary" x-large block @click="addToCart(lectureDetailInfo.id)">수강하기</v-btn>
             </v-card-actions>
             <v-card-subtitle>
@@ -110,7 +113,7 @@
 
                   <v-list-item
                     v-for="video in section.lectureVideoList"
-                    :key="video.id" link :to="`/lecture/${video.id}/${lectureDetailInfo.id}`"
+                    :key="video.id" link @click="goToLectureVideo(video.id, lectureDetailInfo.id)"
                   >
                     <v-list-item-icon>
                       <v-icon>mdi-play-circle-outline</v-icon>
@@ -215,6 +218,13 @@ export default {
             },
           ],
       })
+    },
+    goToLectureVideo(videoId, lectureId) {
+      if(this.lectureDetailInfo.purchased) {
+        this.$router.push(`/lecture/${videoId}/${lectureId}`)
+      } else {
+        alert('해당 강의를 먼저 구매해주세요!')
+      }
     }
   }
 

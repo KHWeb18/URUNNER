@@ -61,13 +61,14 @@ import { API_BASE_URL } from '@/constants/index'
         items: [
           '수강바구니', '위시리스트'
         ],
-        LectureLists: [
-        { title: '스스로 구축하는 AWS 클라우드 네트워크 - 기본편', price: '₩42,000', image: 'https://cdn.inflearn.com/public/courses/327724/cover/e6ee6969-4d60-4b64-8401-11c5ed0ad288/327724-eng.png' },
-        { title: '스스로 구축하는 AWS 클라우드 네트워크 - 기본편', price: '₩42,000', image: 'https://cdn.inflearn.com/public/courses/327724/cover/e6ee6969-4d60-4b64-8401-11c5ed0ad288/327724-eng.png' },
-        { title: '스스로 구축하는 AWS 클라우드 네트워크 - 기본편', price: '₩42,000', image: 'https://cdn.inflearn.com/public/courses/327724/cover/e6ee6969-4d60-4b64-8401-11c5ed0ad288/327724-eng.png' },
-      ],
-        cartList: [],
-        wishList: [],
+      }
+    },
+    computed: {
+      cartList() {
+        return this.$store.state.cartList
+      },
+      wishList() {
+        return this.$store.state.wishList
       }
     },
     created() {
@@ -79,7 +80,7 @@ import { API_BASE_URL } from '@/constants/index'
       mainCartList() {
         axios.get(`${API_BASE_URL}/manageLecture/mainCartList`)
               .then(({data}) => {
-                this.cartList = data.data
+                this.$store.state.cartList = data.data
 
               })
       },
@@ -87,7 +88,7 @@ import { API_BASE_URL } from '@/constants/index'
         axios.get(`${API_BASE_URL}/manageLecture/mainWishList`)
               .then(({data}) => {
                 console.log(data);
-                this.wishList = data.data
+                this.$store.state.wishList = data.data
               })
       }
     }
