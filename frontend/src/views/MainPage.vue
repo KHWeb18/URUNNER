@@ -53,7 +53,7 @@ export default {
         axios.get(`${API_BASE_URL}/lecture/getLectureBanner/${this.currentPage}`)
               .then(({ data }) => {
                 console.log(data)
-                this.allLectureList = this.allLectureList + data.data.content;
+                  this.allLectureList = [...this.allLectureList, ...data.data.content];
               })
               .then(() => {
                 EventBus.$emit('loadMore')

@@ -34,8 +34,9 @@
     data() {
       return {
         swiperOption: {
-          slidesPerView: 5,
+          slidesPerView: 4,
           spaceBetween: 50,
+          slidesPerGroup: 4,
            navigation: {
             nextEl: '',
             prevEl: '.swiper-button-prev'
