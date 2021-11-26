@@ -16,6 +16,8 @@ public class DtoWrapper<T> {
     private Optional<?> opData;
     private T reviewData;
     private T comment;
+    private Long saleCount;
+    private Long lectureCount;
 
     public DtoWrapper(Optional<?> opData) {
         this.opData = opData;

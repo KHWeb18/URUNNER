@@ -36,4 +36,7 @@ public interface LectureRepository extends JpaRepository<Lecture, Long>, Lecture
             countQuery = "select count(l) from Lecture l")
     Page<Lecture> getLectureOrderByReview(@Param("inProgress")boolean inProgress, Pageable pageable);
 
+    @Query(value = "select count(*) from Lecture l where l.inProgress = true")
+    public Long getLectureCount();
+
 }

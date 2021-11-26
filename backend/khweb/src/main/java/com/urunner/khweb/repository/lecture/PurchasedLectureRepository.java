@@ -15,4 +15,7 @@ public interface PurchasedLectureRepository extends JpaRepository<PurchasedLectu
 
     @Query("select count(*) from PurchasedLecture p where p.lecture_id = :id")
     public Optional<Long> getPurchasedLectureCount(@Param("id")Long id);
+
+    @Query("select count(*) from PurchasedLecture p")
+    public Long getPurchasedCount();
 }
