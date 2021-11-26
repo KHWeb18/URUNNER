@@ -7,6 +7,8 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.urunner.khweb.controller.dto.lecture.*;
+import com.urunner.khweb.entity.member.Member;
+import com.urunner.khweb.repository.member.MemberRepository;
 import com.urunner.khweb.filter.TokenUtil;
 import com.urunner.khweb.service.lecture.LectureService;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +44,9 @@ public class LectureController {
 
     @Value("${video.location}")
     private String videoLocation;
+
+    @Autowired
+    MemberRepository memberRepository;
 
     @Autowired
     private LectureService lectureService;
@@ -415,15 +420,25 @@ public class LectureController {
                                                    @RequestHeader HttpHeaders headers,
                                                    @PathVariable String token) throws IOException {
 
+
+        log.info("lectureId : "+ lectureId);
         String tokenParsing = token.substring("Bearer ".length());
 
         DecodedJWT decodedJWT = TokenUtil.validateToken(tokenParsing);
 
         String username = decodedJWT.getSubject();
 
+        log.info("현재 유저이름 : " +username);
+        Member member = memberRepository.findByEmail(username);
+        member.setLatestVideoId(lectureId);
+        memberRepository.save(member);
+        log.info("member videoId:" + member.getLatestVideoId());
         Optional<LectureVideoInfo> videoInfo = lectureService.getVideoInfo(lectureId, username);
 
+
+
         log.info("getVideo");
+
 
         UrlResource video = new UrlResource("classpath:" + videoLocation + "/" + videoInfo.get().getWriter() + "/" + videoInfo.get().getPath());
         ResourceRegion region = resourceRegion(video, headers);
