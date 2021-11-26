@@ -13,7 +13,7 @@ export default {
           { title: '문의하기', to: '/inqforuser'},
       ]},
       { title: '학습관리', items:[
-          { title: '최근학습', to: '/latest'},
+          { title: '최근 학습', to: '/latest'},
           { title: '내 학습', to: '/myLecture'},
           { title: '강의노트', to: '/'},
           { title: '멘토링', to: '/'},
