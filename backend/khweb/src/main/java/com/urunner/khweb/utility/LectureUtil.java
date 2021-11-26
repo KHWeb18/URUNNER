@@ -2,7 +2,9 @@ package com.urunner.khweb.utility;
 
 
 import com.urunner.khweb.entity.lecture.Lecture;
+import com.urunner.khweb.entity.member.Member;
 import com.urunner.khweb.repository.lecture.LectureRepository;
+import com.urunner.khweb.repository.member.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -35,6 +37,10 @@ public class LectureUtil {
 
     @Autowired
     LectureRepository lectureRepository;
+
+    @Autowired
+    MemberRepository memberRepository;
+
 
     @Transactional
     public void deleteUtil(String form, String delPath){
@@ -71,6 +77,21 @@ public class LectureUtil {
 
         } catch (Exception e) {
             System.out.println("삭제에러");
+        }
+
+    }
+
+    public void isPurchasedLecture(Long videoId, String name) {
+        try {
+            Optional<Lecture> lectureFromVideo = lectureRepository.getLectureFromVideo(videoId);
+            Member member = memberRepository.findByEmail(name);
+            Optional<Member> isPurchased = memberRepository.getIsPurchased(member.getMemberNo(), lectureFromVideo.get().getLecture_id());
+            boolean present = isPurchased.isPresent();
+            if (!present) {
+                throw new NoSuchElementException("수강생아닙니다.");
+            }
+        } catch (NoSuchElementException no) {
+            throw no;
         }
 
     }

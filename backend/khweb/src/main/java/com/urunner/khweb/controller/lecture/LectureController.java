@@ -1,8 +1,13 @@
 package com.urunner.khweb.controller.lecture;
 
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.urunner.khweb.controller.dto.lecture.*;
+import com.urunner.khweb.filter.TokenUtil;
 import com.urunner.khweb.service.lecture.LectureService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +16,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
@@ -130,6 +136,7 @@ public class LectureController {
         return false;
     }
 
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/newlecture")
     public String newLecture(@RequestBody LinkedHashMap test) throws JsonProcessingException {
 
@@ -403,11 +410,18 @@ public class LectureController {
         return lectureService.getVideoInfoDetail(videoId);
     }
 
-    @GetMapping("/videos/{lectureId}")
+    @GetMapping("/videos/{lectureId}/{token}")
     public ResponseEntity<ResourceRegion> getVideo(@PathVariable Long lectureId,
-                                                   @RequestHeader HttpHeaders headers) throws IOException {
+                                                   @RequestHeader HttpHeaders headers,
+                                                   @PathVariable String token) throws IOException {
 
-        Optional<LectureVideoInfo> videoInfo = lectureService.getVideoInfo(lectureId);
+        String tokenParsing = token.substring("Bearer ".length());
+
+        DecodedJWT decodedJWT = TokenUtil.validateToken(tokenParsing);
+
+        String username = decodedJWT.getSubject();
+
+        Optional<LectureVideoInfo> videoInfo = lectureService.getVideoInfo(lectureId, username);
 
         log.info("getVideo");
 
