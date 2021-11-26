@@ -14,6 +14,8 @@ import {
     FETCH_LECTURE_LIST,
     // 회원 관리
     FETCH_MEMBER_LIST,
+    //최근학습강의
+    FETCH_LATEST_LECTURE,
 
 } from './mutation-types'
 import axios from 'axios'
@@ -227,5 +229,13 @@ export default {
                 .then((res) => {
                     commit(FETCH_LECTURE_LIST, res.data.data.content)
         }).catch(err=>{alert(err.response.data.message)})
-    }
+    },
+    //최근학습중인강의
+    fetchMyLatestLectureList ({ commit }) {
+        return axios.get('http://localhost:7777/myPage/my-latest-lecture')
+                .then((res) => {
+                    commit(FETCH_LATEST_LECTURE, [res.data])
+                    console.log([res.data])
+        }).catch(err=>{alert(err.response.data.message)})
+    },
 }

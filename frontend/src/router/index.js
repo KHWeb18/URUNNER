@@ -61,6 +61,37 @@ import ForSaleLecturePage from '@/views/ForSale/ForSaleLecturePage.vue'
 
 Vue.use(VueRouter)
 
+// 로그인 권한 여부
+const isAuthenticated = (to, from, next) => {
+  let validate = Vue.$cookies.get("ROLES")
+  if (validate.includes("ROLE_USER")) {
+    next()
+  } else {
+    next('/');
+    alert('로그인이 필요합니다')
+  }
+};
+// 관리자 권한 여부
+const isAuthorized =  (to, from, next) => {
+  let validate = Vue.$cookies.get("ROLES")
+  if (validate.includes("ROLE_ADMIN")) {
+    next()
+  } else {
+    next('/');
+    alert('권한이 없습니다.')
+  }
+};
+// 지식공유자 권한 여부
+const isInstructor =  (to, from, next) => {
+  let validate = Vue.$cookies.get("ROLES")
+  if (validate.includes("ROLE_MANAGER")) {
+    next()
+  } else {
+    next('/');
+    alert('지식 공유자로 등록해주세요.')
+  }
+};
+
 export default new VueRouter({
   mode: 'history',
   routes: [
@@ -76,41 +107,49 @@ export default new VueRouter({
       {
        path: '/mypage/lecture/lectureList',
        name: 'lectureListPage',
-       component: () => import ('../views/lecture/LectureListPage.vue')
+       component: () => import ('../views/lecture/LectureListPage.vue'),
+       beforeEnter: ( to, from, next ) => isInstructor( to, from ,next )
      },
      {
          path: '/mypage/lecture/registerLecture',
          name: 'registerLecture',
-         component: () => import ('../views/lecture/RegisterLecturePage.vue')
+         component: () => import ('../views/lecture/RegisterLecturePage.vue'),
+         beforeEnter: ( to, from, next ) => isInstructor( to, from ,next )
      },
      {
          path: '/mypage/lecture/modifyLecture/:lectureId',
-         component: () => import ('../views/lecture/ModifyLecturePage.vue')
+         component: () => import ('../views/lecture/ModifyLecturePage.vue'),
+         beforeEnter: ( to, from, next ) => isInstructor( to, from ,next )
      },
      {
        path: '/mypage/lecture/registerLectureImage/:lectureId',
        name: 'registerLectureImage',
-       component: () => import ('../views/lecture/LectureImageRegisterPage.vue')
+       component: () => import ('../views/lecture/LectureImageRegisterPage.vue'),
+       beforeEnter: ( to, from, next ) => isInstructor( to, from ,next )
      },
      {
        path: '/mypage/lecture/modifyLectureImage/:lectureId',
-       component: () => import ('../views/lecture/LectureImageModifyPage.vue')
+       component: () => import ('../views/lecture/LectureImageModifyPage.vue'),
+       beforeEnter: ( to, from, next ) => isInstructor( to, from ,next )
      },
      {
        path: '/mypage/lecture/manageLecture/:lectureId',
        name: 'ManageLecturePage',
        component: () => import ('../views/lecture/ManageLecturePage.vue'),
+       beforeEnter: ( to, from, next ) => isInstructor( to, from ,next )
      },
      //강의 상세 페이지
      {
         path: '/course/:lectureId',
         name: 'LectureDetailPage',
         component: () => import ('../views/lecture_detail/LectureDetailPage.vue'),
+        beforeEnter: ( to, from, next ) => isAuthenticated( to, from ,next )
      },
      //강의 영상 재생 페이지
      {
        path: '/lecture/:videoId/:lectureId',
        component: () => import ('../views/lecture_detail/play/LectureVideoPlayPage.vue'),
+       beforeEnter: ( to, from, next ) => isAuthenticated( to, from ,next ),
        props: true
      },
       // 회원 탈퇴
@@ -120,6 +159,7 @@ export default new VueRouter({
           components: {
               default: LeaveMemberPage
           },
+          beforeEnter: ( to, from, next ) => isAuthenticated( to, from ,next ),
           props: {
               default: true
           }
@@ -131,6 +171,7 @@ export default new VueRouter({
           components: {
               default: MyPageStatus
           },
+          beforeEnter: ( to, from, next ) => isAuthenticated( to, from ,next ),
           props: {
               default: true
           }
@@ -138,6 +179,7 @@ export default new VueRouter({
       {
           path: '/mypage',
           component: () => import ("../views/mypage/Mypage.vue"),
+          beforeEnter: ( to, from, next ) => isAuthenticated( to, from ,next ),
           children: [
               {
                   path: '/wishlist',
@@ -173,16 +215,23 @@ export default new VueRouter({
             {
               path: '/inqforuser',
               component: () => import("../views/board/inq/InqBoardListForUserPage.vue")
-            }
+            },            
+            {
+              path: '/latest',
+              component: () => import("../views/mypage/MyLatestPage.vue")
+            },
+
           ]
       },
       {
           path: '/cart',
-          component: () => import ("../components/enrolment/Cart.vue")
+          component: () => import ("../components/enrolment/Cart.vue"),
+          beforeEnter: ( to, from, next ) => isAuthenticated( to, from ,next )
       },
       {
         path: '/orders',
-        component: () => import("../components/enrolment/Orders.vue")
+        component: () => import("../components/enrolment/Orders.vue"),
+        beforeEnter: ( to, from, next ) => isAuthenticated( to, from ,next )
       },
       {
         path: '/boardCol',
@@ -231,7 +280,8 @@ export default new VueRouter({
         name: 'NoticeRegisterPage',
         components: {
           default: NoticeRegisterPage
-        }
+        },
+        beforeEnter: ( to, from, next ) => isAuthorized( to, from ,next ),
       },
       {
         path: '/notice',
@@ -256,6 +306,7 @@ export default new VueRouter({
         components: {
           default: NoticeModifyPage
         },
+        beforeEnter: ( to, from, next ) => isAuthorized( to, from ,next ),
         props: {
           default: true
         }
@@ -266,7 +317,8 @@ export default new VueRouter({
         name: 'StudyBoardRegisterPage',
         components: {
           default: StudyBoardRegisterPage
-        }
+        },
+        beforeEnter: ( to, from, next ) => isAuthenticated( to, from ,next ),
       },
       {
         path: '/study',
@@ -291,6 +343,7 @@ export default new VueRouter({
         components: {
           default: StudyBoardModifyPage
         },
+        beforeEnter: ( to, from, next ) => isAuthenticated( to, from ,next ),
         props: {
           default: true
         }
@@ -303,6 +356,7 @@ export default new VueRouter({
         components: {
           default: PaymentPage
         },
+        beforeEnter: ( to, from, next ) => isAuthenticated( to, from ,next ),
         props:{
           default: true
         }
@@ -313,6 +367,7 @@ export default new VueRouter({
         components: {
           default: PaymentFail
         },
+        beforeEnter: ( to, from, next ) => isAuthenticated( to, from ,next ),
         props:{
           default: true
         }
@@ -323,6 +378,7 @@ export default new VueRouter({
         components: {
           default: PaymentSuccess
         },
+        beforeEnter: ( to, from, next ) => isAuthenticated( to, from ,next ),
         props:{
           default: true
         }
@@ -331,6 +387,7 @@ export default new VueRouter({
       {
         path: '/qna/create',
         name: 'QnABoardRegisterPage',
+        beforeEnter: ( to, from, next ) => isAuthenticated( to, from ,next ),
         components: {
           default: QnABoardRegisterPage
         }
@@ -340,7 +397,8 @@ export default new VueRouter({
         name: 'QnABoardListPage',
         components: {
           default: QnABoardListPage
-        }
+        },
+        beforeEnter: ( to, from, next ) => isAuthenticated( to, from ,next ),
       },
       {
         path: '/qna/:boardNo',
@@ -358,6 +416,7 @@ export default new VueRouter({
         components: {
           default: QnABoardModifyPage
         },
+        beforeEnter: ( to, from, next ) => isAuthenticated( to, from ,next ),
         props: {
           default: true
         }
@@ -368,14 +427,16 @@ export default new VueRouter({
         name: 'InqBoardRegisterPage',
         components: {
           default: InqBoardRegisterPage
-        }
+        },
+        beforeEnter: ( to, from, next ) => isAuthenticated( to, from ,next ),
       },
+      
       {
         path: '/inq',
         name: 'InqBoardListPage',
         components: {
           default: InqBoardListPage
-        }
+        },
       },
       {
         path: '/inq/:boardNo',
@@ -393,6 +454,7 @@ export default new VueRouter({
         components: {
           default: InqBoardModifyPage
         },
+        beforeEnter: ( to, from, next ) => isAuthorized( to, from ,next ),
         props: {
           default: true
         }
@@ -408,23 +470,27 @@ export default new VueRouter({
       {
         path: '/manager',
         name: 'ManagerPage',
+        
         components: {
           default: ManagerPage
-        }
+        },
+        beforeEnter: ( to, from, next ) => isAuthorized( to, from ,next ),
       },
       {
         path: '/ManagerNoticeListPage',
         name: 'ManagerNoticeListPage',
         components: {
           default: ManagerNoticeListPage
-        }
+        },
+        beforeEnter: ( to, from, next ) => isAuthorized( to, from ,next ),
       },
       {
         path: '/ManagerNoticeRegister',
         name: 'ManagerNoticeRegisterPage',
         components: {
           default: ManagerNoticeRegisterPage
-        }
+        },
+        beforeEnter: ( to, from, next ) => isAuthorized( to, from ,next ),
       },
       {
         path: '/manager/:noticeNo',
@@ -432,6 +498,7 @@ export default new VueRouter({
         components: {
           default: ManagerNoticeReadPage
         },
+        beforeEnter: ( to, from, next ) => isAuthorized( to, from ,next ),
         props: {
           default: true
         }
@@ -441,7 +508,8 @@ export default new VueRouter({
         name: 'ManagerMemberList',
         components: {
           default: ManagerMemberList
-        }
+        },
+        beforeEnter: ( to, from, next ) => isAuthorized( to, from ,next ),
       },
       {
         path: '/forSale/lectureList',

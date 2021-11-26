@@ -15,7 +15,9 @@ import {
     FETCH_LECTURE_LIST,
     // 회원 관리
     FETCH_MEMBER_LIST,
-
+    //최근학습중인강의
+    FETCH_LATEST_LECTURE,
+    
 } from './mutation-types'
 
 export default {
@@ -64,6 +66,10 @@ export default {
     },
     [FETCH_MEMBER_LIST] (state,memberLists) {
         state.memberLists = memberLists
+    },
+    //최근학습중인강의
+    [FETCH_LATEST_LECTURE] (state, callLatestLecture) {
+        state.callLatestLecture = callLatestLecture
     },
 
 }
