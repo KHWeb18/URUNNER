@@ -17,20 +17,19 @@
             <v-container class="lecture01 mr-9 hidden-sm-and-down">
                 <v-container class="lecture_box">
                     <div>
-                        <b @click="goPage(callLatestLecture.lecture_id)">
+                        <b @click="goPage(callLatestLecture[0].lecture_id)">
                             <v-card class="mx-auto"
                             >
-                                <v-img :src="`http://localhost:7777/lecture/image/${callLatestLecture.thumb_path}/${callLatestLecture.writer}`" max-height="200px" max-width="400"></v-img>
+                                <v-img :src="`http://localhost:7777/lecture/image/${callLatestLecture[0].thumb_path}/${callLatestLecture[0].writer}`" max-height="200px" max-width="400"></v-img>
                                     <div class="btn-plus"><span draggable="false"><v-icon color="white">mdi-arrow-right</v-icon></span></div>
                                 <div class="btn-plus2"><span draggable="false"></span></div>
                                 <v-card-title class="temp">
-                                    {{callLatestLecture.title}}
+                                    {{callLatestLecture[0].title}}
                                 </v-card-title>
                                 <div class="card_text">
                                     <div></div><div></div><div></div>
                                     <div>
-                                        <!-- grade | writer -->
-                                        {{ callLatestLecture.grade }} | {{ callLatestLecture.writer}}
+                                        {{ callLatestLecture[0].grade }} | {{ callLatestLecture[0].writer}}
                                     </div>
                                 </div>
                                 <v-card-actions>
@@ -49,11 +48,16 @@ export default {
     name:'MyLatestLecture',
     props: {
         callLatestLecture: {
-            type: Object
+            type: Array
         },
     },
+    // created() {
+    //     this.copiedList = this.callLatestLecture[0]
+    // },
     data(){
-
+        return {
+            copiedList: null
+        }
     },
     methods:{
         goPage(data){
