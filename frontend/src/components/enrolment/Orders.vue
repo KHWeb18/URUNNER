@@ -13,7 +13,12 @@
     items-per-page="5"
     expanded="orderitem.text"
     hide-default-footer
-  ></v-data-table>
+  >
+  <template v-slot:[`item.orderDate`]="{ item }">
+         {{ $moment(item.orderDate).add(-0, 'hours').format('YY-MM-DD HH:mm') }}
+  </template>
+  
+  </v-data-table>
    <div class="text-center pt-2">
       <v-pagination
         v-model="page"
