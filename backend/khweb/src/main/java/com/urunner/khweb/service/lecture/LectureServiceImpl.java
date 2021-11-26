@@ -405,6 +405,7 @@ public class LectureServiceImpl implements LectureService {
 
         Optional<LectureVideo> videoInfo = lectureVideoRepository.findById(lectureId);
 
+
         Optional<LectureVideoInfo> lectureVideoInfo = videoInfo.stream().findFirst().map(l ->
                 new LectureVideoInfo(l.getLectureList().getLecture().getWriter(), l.getVideoPath())
         );

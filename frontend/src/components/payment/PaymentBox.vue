@@ -72,6 +72,7 @@ export default {
     },
     methods:{
         openPayment(){
+            this.open = !this.open
             if(this.lectureList.length>1){
                 this.orderName = this.lectureList[0] + " 외 "+(this.lectureList.length-1) +" 건"
             }

@@ -2,6 +2,7 @@ package com.urunner.khweb.entity.member;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.urunner.khweb.controller.dto.MemberRes;
+import com.urunner.khweb.controller.dto.lecture.LectureVideoInfo;
 import com.urunner.khweb.entity.lecture.PurchasedLecture;
 import com.urunner.khweb.entity.mypage.MyPage;
 import lombok.AllArgsConstructor;
@@ -12,10 +13,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Builder
 @NoArgsConstructor
@@ -35,6 +33,10 @@ public class Member {
     private String introduce;
     private String nickname;
 
+
+    @Column(name="latest_vide_id")
+    private Long latestVideoId;
+
     @Column(name = "is_cert",columnDefinition = "boolean default false")
     private boolean isCert;
 
@@ -50,6 +52,7 @@ public class Member {
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinColumn(name = "member_no")
     private List<PurchasedLecture> purchasedLectureList = new ArrayList<>();
+
 
     public void addPurchasedLecture(PurchasedLecture purchasedLecture){
         purchasedLecture.setMemberNo(this.memberNo);
@@ -84,6 +87,9 @@ public class Member {
 
     public void setNickname(String nickname){this.nickname = nickname;}
 
+    public void setLatestVideoId(Long latestVideoId){
+        this.latestVideoId = latestVideoId;
+    }
 
     public void setPassword(String password) {
         this.password = password;
