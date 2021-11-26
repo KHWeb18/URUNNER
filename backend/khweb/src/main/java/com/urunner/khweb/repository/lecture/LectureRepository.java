@@ -31,4 +31,9 @@ public interface LectureRepository extends JpaRepository<Lecture, Long>, Lecture
     @Query(value = "select l from Lecture l join fetch l.lectureLists li join li.lectureVideos lv where lv.id = :id")
     public Optional<Lecture> getLectureFromVideo(@Param("id") Long id);
 
+    @Query(value = "select l from Lecture l join fetch l.categoryList c join fetch c.category cl join fetch l.reviews r where l.inProgress = :inProgress " +
+            "and r.rating > (select avg(rating) from Review)",
+            countQuery = "select count(l) from Lecture l")
+    Page<Lecture> getLectureOrderByReview(@Param("inProgress")boolean inProgress, Pageable pageable);
+
 }

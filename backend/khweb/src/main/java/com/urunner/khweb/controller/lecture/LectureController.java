@@ -71,7 +71,7 @@ public class LectureController {
         System.out.println(resource1.getURL().toString());
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println("sc 객체 : " + authentication.getName());
+        System.out.println("토큰존재여부 확인 용 : " + authentication.getName());
 
         try {
             Path path = Paths.get(resource1.getURI());

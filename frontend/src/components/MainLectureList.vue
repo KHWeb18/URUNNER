@@ -8,6 +8,14 @@
     <div class="swiper-button-prev" slot="button-prev"></div>
     <div class="swiper-button-next" slot="button-next" @click="fetchMore"></div>
   </swiper> 
+      <h2>평점이 높은강의를 만나보세요! 🙋🏻‍♀️ </h2>
+    <swiper class="swiper" :options="swiperOption">
+    <swiper-slide v-for="lecture in allReivewLectureList" :key="lecture.id" class="ma-2">
+      <main-lecture-card :lecture="lecture"/>
+    </swiper-slide>
+    <div class="swiper-button-prev" slot="button-prev"></div>
+    <div class="swiper-button-next" slot="button-next" @click="fetchMore"></div>
+  </swiper> 
   </div>
 </template>
 
@@ -27,6 +35,10 @@
     },
     props: {
       allLectureList: {
+        type: Array,
+        require: true,
+      },
+      allReivewLectureList: {
         type: Array,
         require: true,
       }

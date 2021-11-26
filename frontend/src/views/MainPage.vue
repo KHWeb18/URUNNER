@@ -2,7 +2,7 @@
   <div>
     <main-banner></main-banner>
     <main-search-box></main-search-box>
-    <main-lecture-list :allLectureList="allLectureList" @fetchMore="fetchMore"/>
+    <main-lecture-list :allLectureList="allLectureList" :allReivewLectureList="allReivewLectureList" @fetchMore="fetchMore"/>
     <main-study-list :boards="boards"/>
   </div>  
 </template>
@@ -26,6 +26,7 @@ export default {
   data() {
     return {
       allLectureList: [],
+      allReivewLectureList: [],
       wish: null,
       cart: null,
       currentPage: 0
@@ -45,6 +46,7 @@ export default {
       axios.get(`${API_BASE_URL}/lecture/getLectureBanner/${this.currentPage}`)
             .then(({ data }) => {
                console.log(data)
+               this.allReivewLectureList = data.reviewData.content;
                this.allLectureList = data.data.content;
             })
     },
@@ -54,6 +56,7 @@ export default {
               .then(({ data }) => {
                 console.log(data)
                   this.allLectureList = [...this.allLectureList, ...data.data.content];
+                  this.allReivewLectureList = [...this.allReivewLectureList, ...data.reviewData.content];
               })
               .then(() => {
                 EventBus.$emit('loadMore')
