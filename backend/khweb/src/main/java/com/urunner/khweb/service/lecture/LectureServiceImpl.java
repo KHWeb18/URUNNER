@@ -352,36 +352,11 @@ public class LectureServiceImpl implements LectureService {
             List<PurchasedLecture> purchasedLectureList = purchasedLectureRepository.findByMemberNo(member.getMemberNo());
 
 
-            if (wishLists.size() != 0) {
-                for (int j = 0; j < wishLists.size(); j++) {
-                    boolean exist = lecture.get().getLecture_id().equals(wishLists.get(j).getLecture().getLecture_id());
-                    System.out.println("매칭 여부 확인 : " + exist);
-                    if (exist) {
-                        lectureDto.ifPresent(l -> l.setWishList(true));
-                    }
-                }
-            }
+            lectureUtil.isWishList(lecture, lectureDto, wishLists);
 
-            if (purchasedLectureList.size() != 0) {
-                for (int i = 0; i < purchasedLectureList.size(); i++) {
-                    boolean exist = lecture.get().getLecture_id().equals(purchasedLectureList.get(i).getLecture_id());
-                    System.out.println("구매여부 확인 : " + exist);
-                    if (exist) {
-                        lectureDto.ifPresent(l -> l.setPurchased(true));
-                    }
-                }
-            }
+            lectureUtil.isPurchasedList(lecture, lectureDto, purchasedLectureList);
 
-
-            if (carts.size() != 0) {
-                for (int j = 0; j < carts.size(); j++) {
-                    boolean exist = lecture.get().getLecture_id().equals(carts.get(j).getLecture().getLecture_id());
-                    System.out.println("매칭 여부 확인 : " + exist);
-                    if (exist) {
-                        lectureDto.ifPresent(l -> l.setCart(true));
-                    }
-                }
-            }
+            lectureUtil.isCartList(lecture, lectureDto, carts);
         }
 
 //        nullpoint땜에 optional로 감싸놓음
@@ -399,6 +374,9 @@ public class LectureServiceImpl implements LectureService {
         dtoWrapper.setStudentCount(count.get());
         return dtoWrapper;
     }
+
+
+
 
     @Override
     public Optional<LectureVideoInfo> getVideoInfo(Long lectureId) {
@@ -506,6 +484,9 @@ public class LectureServiceImpl implements LectureService {
             PageRequest pageRequest = PageRequest.of(page, 4);
 
             Page<Lecture> findAllLecture = lectureRepository.findByInProgressTrue(true, pageRequest);
+            Page<Lecture> lectureOrderByReview = lectureRepository.getLectureOrderByReview(true, pageRequest);
+
+            System.out.println("리뷰로 값 정렬" + lectureOrderByReview.getContent().size());
 
 //      4번 추가 쿼리 feth쓸거면 lecture등록시 review 하나 추가해주기..
 //      점수 1~10으로 받고 반 나누기
@@ -514,6 +495,16 @@ public class LectureServiceImpl implements LectureService {
 //        System.out.println("Review 사이즈 : " +findAllLecture.getContent().get(0).getReviews().size());
             Page<LectureDto> lectureDtos = findAllLecture.map(l ->
                     new LectureDto(l.getLecture_id(), l.getWriter(), l.getTitle(),
+                            l.getDescription(), l.getPrice(), l.isInProgress(),
+                            l.isDiscounted(), l.getThumb_path(), l.getDetail_path(), l.getContent(), l.getGrade(),
+                            l.getCategoryList().stream().map(CategoryLecture::getCategory).collect(Collectors.toList()),
+                            em.createQuery(query, GetReviewDto.class)
+                                    .setParameter("id", l.getLecture_id())
+                                    .getSingleResult()
+                    ));
+
+            Page<LectureOrderByReviewDto> lectureOrderByReviews = lectureOrderByReview.map(l ->
+                    new LectureOrderByReviewDto(l.getLecture_id(), l.getWriter(), l.getTitle(),
                             l.getDescription(), l.getPrice(), l.isInProgress(),
                             l.isDiscounted(), l.getThumb_path(), l.getDetail_path(), l.getContent(), l.getGrade(),
                             l.getCategoryList().stream().map(CategoryLecture::getCategory).collect(Collectors.toList()),
@@ -533,39 +524,24 @@ public class LectureServiceImpl implements LectureService {
 
                 List<WishList> wishLists = new ArrayList<>(member.getMyPage().getWishLists());
 
-                if (wishLists.size() != 0) {
-                    for (int i = 0; i < lectureDtos.getContent().size(); i++) {
-                        for (int j = 0; j < wishLists.size(); j++) {
-                            boolean exist = lectureDtos.getContent().get(i).getId().equals(wishLists.get(j).getLecture().getLecture_id());
-                            System.out.println("매칭 여부 확인 : " + exist);
-                            if (exist) {
-                                lectureDtos.getContent().get(i).setWishList(true);
-                            }
-                        }
-                    }
-                }
+                lectureUtil.isWishList(lectureDtos, wishLists);
+                lectureUtil.isWishListReview(lectureOrderByReviews, wishLists);
 
-                if (carts.size() != 0) {
-                    for (int i = 0; i < lectureDtos.getContent().size(); i++) {
-                        for (int j = 0; j < carts.size(); j++) {
-                            boolean exist = lectureDtos.getContent().get(i).getId().equals(carts.get(j).getLecture().getLecture_id());
-                            System.out.println("매칭 여부 확인 : " + exist);
-                            if (exist) {
-                                lectureDtos.getContent().get(i).setCart(true);
-                            }
-                        }
-                    }
-                }
+                lectureUtil.isCartList(lectureDtos, carts);
+                lectureUtil.isCartListReview(lectureOrderByReviews, carts);
 
 
             }
-            return new DtoWrapper(lectureDtos);
+            return new DtoWrapper(lectureDtos, lectureOrderByReviews);
         } catch (NoSuchElementException noSuchElementException) {
             log.info("등록된 강의가 없습니다.");
             return null;
         }
 
     }
+
+
+
 
     @Autowired
     private ReviewRepository reviewRepository;
