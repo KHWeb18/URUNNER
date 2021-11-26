@@ -16,4 +16,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     @Query("select r from Review r where r.lecture.lecture_id = :id")
     public Optional<List<Review>> getReviewId(@Param("id") Long id);
 
+    @Query(value = "select * from review r where r.writer is not null order by rand() limit 10", nativeQuery = true)
+    public List<Review> getRandomReviews();
+
 }

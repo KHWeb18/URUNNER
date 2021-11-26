@@ -531,9 +531,11 @@ public class LectureServiceImpl implements LectureService {
                 lectureUtil.isCartList(lectureDtos, carts);
                 lectureUtil.isCartListReview(lectureOrderByReviews, carts);
 
-
             }
-            return new DtoWrapper(lectureDtos, lectureOrderByReviews);
+
+            List<Review> randomReviews = reviewRepository.getRandomReviews();
+
+            return new DtoWrapper(lectureDtos, lectureOrderByReviews, randomReviews);
         } catch (NoSuchElementException noSuchElementException) {
             log.info("등록된 강의가 없습니다.");
             return null;

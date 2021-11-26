@@ -15,6 +15,7 @@ public class DtoWrapper<T> {
     private T data;
     private Optional<?> opData;
     private T reviewData;
+    private T comment;
 
     public DtoWrapper(Optional<?> opData) {
         this.opData = opData;
@@ -27,6 +28,13 @@ public class DtoWrapper<T> {
     public DtoWrapper(T data, T reviewData) {
         this.data = data;
         this.reviewData = reviewData;
+
+    }
+
+    public DtoWrapper(T data, T reviewData, T comment) {
+        this.data = data;
+        this.reviewData = reviewData;
+        this.comment = comment;
 
     }
 }
