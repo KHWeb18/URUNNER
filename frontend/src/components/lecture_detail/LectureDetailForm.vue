@@ -136,7 +136,7 @@
             <v-col cols="12">
               <v-card v-for="comment in studentCommentList" :key="comment.content" height="200" class="mb-4">
                 <v-card-title>
-                   <v-rating :value="comment.rating"  dense color="yellow" readonly class="d-inline" half-increments/>
+                   <v-rating :value="comment.rating / 2"  dense color="yellow" readonly class="d-inline" half-increments/>
                    <p class="pa-0 ma-0 mt-1 ml-1">{{ comment.rating / 2 }}</p>
                 </v-card-title>
                 <v-card-subtitle>

@@ -44,7 +44,7 @@
      <h1>섹션을 추가하고 강의를 업로드하세요.</h1>
     </div>
     
-    <v-btn to="/mypage/lecture/lectureList">강의리스트로 가기</v-btn>
+    <v-btn absolute right bottom color="purple" dark to="/mypage/lecture/lectureList">강의리스트로 가기</v-btn>
 
     <v-dialog v-model="upload" width="600">
       <v-card>
