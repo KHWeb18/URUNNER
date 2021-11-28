@@ -304,7 +304,7 @@ public class LectureServiceImpl implements LectureService {
                 "join Lecture l on l = cl.lecture where l.id = :lectureId";
 
         //      점수 1~10으로 받고 반 나누기
-        String query4 = "select new com.urunner.khweb.service.lecture.GetReviewDto(avg(r.rating), count(r.rating)) from Review r where r.lecture.lecture_id in :id";
+        String query4 = "select new com.urunner.khweb.service.lecture.GetReviewDto(sum(r.rating), count(r.rating)) from Review r where r.lecture.lecture_id in :id";
 
         Optional<LectureDto> lectureDto = lecture.stream().findAny().map(l ->
                 new LectureDto(l.getLecture_id(), l.getWriter(), l.getTitle(),
@@ -469,7 +469,7 @@ public class LectureServiceImpl implements LectureService {
     @Override
     public List<GetReviewDto> reviewList(Page<LectureSearchDto> lectureSearchDtos) {
 
-        String query = "select new com.urunner.khweb.service.lecture.GetReviewDto(avg(r.rating), count(r.rating)) from Review r where r.lecture.lecture_id in :id";
+        String query = "select new com.urunner.khweb.service.lecture.GetReviewDto(sum(r.rating), count(r.rating)) from Review r where r.lecture.lecture_id in :id";
 
         return lectureSearchDtos.stream().map(l ->
                 em.createQuery(query, GetReviewDto.class)
@@ -491,7 +491,7 @@ public class LectureServiceImpl implements LectureService {
 
 //      4번 추가 쿼리 feth쓸거면 lecture등록시 review 하나 추가해주기..
 //      점수 1~10으로 받고 반 나누기
-            String query = "select new com.urunner.khweb.service.lecture.GetReviewDto(avg(r.rating), count(r.rating)) from Review r where r.lecture.lecture_id in :id";
+            String query = "select new com.urunner.khweb.service.lecture.GetReviewDto(sum(r.rating), count(r.rating)) from Review r where r.lecture.lecture_id in :id";
 
 //        System.out.println("Review 사이즈 : " +findAllLecture.getContent().get(0).getReviews().size());
             Page<LectureDto> lectureDtos = findAllLecture.map(l ->
