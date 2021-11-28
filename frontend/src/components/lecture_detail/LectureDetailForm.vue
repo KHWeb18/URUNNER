@@ -9,7 +9,7 @@
               <p class="pa-2 mb-7 text-h5 text-md-h4 font-weight-bold">{{ lectureDetailInfo.title }}</p>
               <span class="pa-1">
                 <v-rating :value="lectureDetailInfo.getReviewDto.avg"  dense color="yellow" readonly small class="d-inline" half-increments/>
-                  평점 {{ lectureDetailInfo.getReviewDto.avg }} 점 {{ lectureDetailInfo.getReviewDto.count - 1 }}명의 수강평 | 30명의 수강생</span>
+                  평점 {{ lectureDetailInfo.getReviewDto.avg }} 점 {{ lectureDetailInfo.getReviewDto.count - 1 }}명의 수강평 | {{ studentCount }}명의 수강생</span>
               <div class="mt-4">
                 <v-icon color="white">mdi-shield-account-outline</v-icon> <span>{{ lectureDetailInfo.writer }}</span>
               </div>
@@ -136,7 +136,7 @@
             <v-col cols="12">
               <v-card v-for="comment in studentCommentList" :key="comment.content" height="200" class="mb-4">
                 <v-card-title>
-                   <v-rating :value="comment.rating"  dense color="yellow" readonly class="d-inline" half-increments/>
+                   <v-rating :value="comment.rating / 2"  dense color="yellow" readonly class="d-inline" half-increments/>
                    <p class="pa-0 ma-0 mt-1 ml-1">{{ comment.rating / 2 }}</p>
                 </v-card-title>
                 <v-card-subtitle>

@@ -1,8 +1,15 @@
 package com.urunner.khweb.controller.lecture;
 
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.urunner.khweb.controller.dto.lecture.*;
+import com.urunner.khweb.entity.member.Member;
+import com.urunner.khweb.repository.member.MemberRepository;
+import com.urunner.khweb.filter.TokenUtil;
 import com.urunner.khweb.service.lecture.LectureService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +18,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +46,9 @@ public class LectureController {
     private String videoLocation;
 
     @Autowired
+    MemberRepository memberRepository;
+
+    @Autowired
     private LectureService lectureService;
 
     private String thum;
@@ -60,7 +71,7 @@ public class LectureController {
         System.out.println(resource1.getURL().toString());
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println("sc 객체 : " + authentication.getName());
+        System.out.println("토큰존재여부 확인 용 : " + authentication.getName());
 
         try {
             Path path = Paths.get(resource1.getURI());
@@ -130,6 +141,7 @@ public class LectureController {
         return false;
     }
 
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/newlecture")
     public String newLecture(@RequestBody LinkedHashMap test) throws JsonProcessingException {
 
@@ -403,13 +415,30 @@ public class LectureController {
         return lectureService.getVideoInfoDetail(videoId);
     }
 
-    @GetMapping("/videos/{lectureId}")
+    @GetMapping("/videos/{lectureId}/{token}")
     public ResponseEntity<ResourceRegion> getVideo(@PathVariable Long lectureId,
-                                                   @RequestHeader HttpHeaders headers) throws IOException {
+                                                   @RequestHeader HttpHeaders headers,
+                                                   @PathVariable String token) throws IOException {
 
-        Optional<LectureVideoInfo> videoInfo = lectureService.getVideoInfo(lectureId);
+
+        log.info("lectureId : "+ lectureId);
+        String tokenParsing = token.substring("Bearer ".length());
+
+        DecodedJWT decodedJWT = TokenUtil.validateToken(tokenParsing);
+
+        String username = decodedJWT.getSubject();
+
+        log.info("현재 유저이름 : " +username);
+        Member member = memberRepository.findByEmail(username);
+        member.setLatestVideoId(lectureId);
+        memberRepository.save(member);
+        log.info("member videoId:" + member.getLatestVideoId());
+        Optional<LectureVideoInfo> videoInfo = lectureService.getVideoInfo(lectureId, username);
+
+
 
         log.info("getVideo");
+
 
         UrlResource video = new UrlResource("classpath:" + videoLocation + "/" + videoInfo.get().getWriter() + "/" + videoInfo.get().getPath());
         ResourceRegion region = resourceRegion(video, headers);

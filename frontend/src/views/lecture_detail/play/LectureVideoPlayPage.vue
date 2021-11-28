@@ -4,7 +4,6 @@
         :lectureDetailInfo="lectureDetailInfo"
         :lectureVideoList="lectureVideoList"
         :videoInfo="videoInfo"
-        @getInfo="getInfo"
         />
   </div>
 </template>
@@ -21,7 +20,6 @@ export default {
     return {
       lectureDetailInfo: {},
       lectureVideoList: [],
-      videoInfo: {},
       videoId: this.$route.params.videoId,
       lectureId: this.$route.params.lectureId
     }
@@ -48,9 +46,6 @@ export default {
             })
             .catch(err => { console.log(err); })
     },
-    getInfo(videoId) {
-      this.fetchVideoInfo(videoId)
-    }
   },
 };
 </script>

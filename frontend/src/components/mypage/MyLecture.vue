@@ -11,13 +11,10 @@
             <!-- 검색창 + complete 분류 -->
             <v-spacer class="forLine0">
                 <div class="forLine0sButton">
-                    <div class="tag_button" :class="{ on2 : completeSelect1 }" @click="fetchQnABoardList(),
-                                        completeSelect1 = true, completeSelect2 = false, completeSelect3 = false, word = '' ">전체</div>&nbsp;&nbsp;&nbsp;
-                    <div class="tag_button" :class="{ on2 : completeSelect2 }"  @click="selectComplete('false'), word = ''">수강중</div>&nbsp;&nbsp;&nbsp;
-                    <div class="tag_button" :class="{ on2 : completeSelect3 }" @click="selectComplete('true'), word = ''">수강완료</div>&nbsp;&nbsp;&nbsp;
+                    <div class="tag_button" @click="copiedOrignList = callLecturelist, word = ''">전체</div>&nbsp;&nbsp;&nbsp;
                 </div>
                 <div class="searching_box_top">
-                    <div class="mr-9 hidden-sm-and-down">
+                    <div class="mr-9">
                         <div class="searching" >
                             <span>
                                 <input type="text" placeholder="검색어를 입력해주세요" v-model="word"
@@ -31,191 +28,126 @@
             <!-- 분류창 -->
             <v-spacer></v-spacer>
             <!-- 리스트 -->
-            <v-container class="lecture01 mr-9 hidden-sm-and-down">
-                <div v-show="!searchinOn">
-                    <v-container class="lecture_box">
-                        <div v-for="mob in paginatedData2" :key="mob.boardNo" class="item">
-                            <b @click="goPage(mob[5])">
-                                <v-card class="mx-auto">
-                                    <v-img :src="`http://localhost:7777/lecture/image/${mob[3]}/${mob[4]}`" height="200px"></v-img>
-                                        <div class="btn-plus"><span draggable="false"><v-icon color="white">mdi-arrow-right</v-icon></span></div>
-                                    <div class="btn-plus2"><span draggable="false"></span></div>
-                                    <!-- <div class="btn-plus3"><span draggable="false"><v-icon color="#E0E0E0" @click="info()">mdi-alert-circle-outline</v-icon></span></div> -->
-                                    <!-- <div class="btn-plus4"><span draggable="false"><v-rating
-                                        v-model="rating"
-                                        background-color="orange lighten-3" small
-                                        color="orange" large readonly></v-rating></span></div>
-                                    -->
-                                    <v-card-title class="temp">
-                                        {{mob[0]}}
-                                    </v-card-title>
-                                    <v-card-title class="temp2">
-                                        <v-progress-linear
-                                            v-model="valueDeterminate" color="indigo darken-2"></v-progress-linear>
-                                    </v-card-title>
-                                    <div class="card_text">
-                                        <div>
-                                            전체 진도율 : 15% |
-                                        </div>
-                                        <div></div><div></div><div></div>
-                                        <div>
-                                            <!-- grade | writer -->
-                                            {{ mob[4] }} | {{ mob[2] }}
-                                        </div>
+            <v-container class="lecture01">
+                <v-container class="lecture_box">                 
+                    <div v-for="mob in originList" :key="mob.boardNo" class="item_m">
+                        <b @click="goPage(mob[5])">
+                            <v-card class="mx-auto">
+                                <v-img :src="`http://localhost:7777/lecture/image/${mob[3]}/${mob[4]}`" height="200px"></v-img>
+                                <div class="btn-plus_m"><span draggable="false"><v-icon color="white">mdi-arrow-right</v-icon></span></div>
+                                <div class="btn-plus2_m"><span draggable="false"></span></div>
+                                <v-card-title class="temp">
+                                    {{mob[0]}}
+                                </v-card-title>
+                                <v-card-title class="temp2">
+                                    <v-progress-linear
+                                        v-model="valueDeterminate" color="indigo darken-2"></v-progress-linear>
+                                </v-card-title>
+                                <div class="card_text">
+                                    <div>
+                                        전체 진도율 : 15% |
                                     </div>
-                                    <v-card-actions>
-                                    </v-card-actions>
-                                </v-card>
-                            </b>
-                        </div>
-                        <v-container style="margin-top:20px;">
-                        <div class="text-center">
-                            <v-pagination class="btn_pagination" v-model="pageNum2" :length="pageCount2"></v-pagination>
-                        </div>
-                        </v-container>
-                    </v-container>
-                </div>
-            </v-container>
-            <!-- 모바일 리스트 -->
-            <v-container class="lecture01 mr-9 hidden-md-and-up">
-                <div v-show="!searchinOn">
-                    <v-container class="lecture_box">
-                        <div v-for="mob in paginatedData2" :key="mob.boardNo" class="item_m">
-                            <b @click="goPage(mob[5])">
-                                <v-card class="mx-auto">
-                                    <v-img :src="`http://localhost:7777/lecture/image/${mob[3]}/${mob[4]}`" height="200px"></v-img>
-                                    <div class="btn-plus_m"><span draggable="false"><v-icon color="white">mdi-arrow-right</v-icon></span></div>
-                                    <div class="btn-plus2_m"><span draggable="false"></span></div>
-                                    <!-- <div class="btn-plus3_m"><span draggable="false"><v-icon color="#E0E0E0" @click="info()">mdi-alert-circle-outline</v-icon></span></div> -->
-                                    <!-- <div class="btn-plus4_m"><span draggable="false"><v-rating
-                                        v-model="rating"
-                                        background-color="orange lighten-3" small
-                                        color="orange" large readonly></v-rating></span></div>
-                                    -->
-                                    <v-card-title class="temp">
-                                        {{mob[0]}}
-                                    </v-card-title>
-                                    <v-card-title class="temp2">
-                                        <v-progress-linear
-                                            v-model="valueDeterminate" color="indigo darken-2"></v-progress-linear>
-                                    </v-card-title>
-                                    <div class="card_text">
-                                        <div>
-                                            전체 진도율 : 15% |
-                                        </div>
-                                        <div></div><div></div><div></div>
-                                        <div>
-                                            {{ mob[4] }} | {{ mob[2] }}
-                                        </div>
+                                    <div></div><div></div><div></div>
+                                    <div>
+                                        {{ mob[4] }} | {{ mob[2] }}
                                     </div>
-                                    <v-card-actions>
-                                    </v-card-actions>
-                                </v-card>
-                            </b>
-                        </div>
-                        <v-container style="margin-top:20px;">
-                        <div class="text-center">
-                            <v-pagination class="btn_pagination" v-model="pageNum2" :length="pageCount2"></v-pagination>
-                        </div>
-                        </v-container>
+                                </div>
+                                <v-card-actions>
+                                </v-card-actions>
+                            </v-card>
+                        </b>
+                    </div>
+                    <v-container style="margin-top:20px;">
+                    <div class="text-center">
+                        <v-pagination class="btn_pagination" v-model="pageNum" :length="pageCount"></v-pagination>
+                    </div>
                     </v-container>
-                </div>
+                </v-container>
             </v-container>
         </div>
     </div>
 </template>
 
 <script>
-    export default {
-        name: 'MyLecture',
-        props: {
-            callLecturelist: {
-                type: Array
-            },
-            pageSize2: {
-                type: Number,
-                required: false,
-                default: 6
-            }
+export default {
+    name:'MyLatestLecture',
+    props: {
+        callLecturelist: {
+            type: Array
         },
-        data() {
-            return {
-                alert: true,
-                show: false,
-                pageNum2: 1,                
-                pageNumS: 1,
-                expanded: [],
-                singleExpand: false,
-                toggle_exclusive: [],
-                searchingResult: [],
-                searchinOn: false,
-                word: '',
-                headers: [
-                ],
-                valueDeterminate: 15
-            }
-        },
-        watch: {
-            word(newVal) {
-                if(newVal == '') {
-                    setTimeout(() => {
-                        this.searchinOn = false
-                        }, 200)
-                }
-            }
-        },
-        methods: {
-            nextPage2() {
-                this.pageNum2 += 1;
-            },
-            prevPage2() {
-                this.pageNum2 -= 1;
-            },
-            nextPageS() {
-                this.pageNumS += 1;
-            },
-            prevPageS() {
-                this.pageNumS -= 1;
-            },
-            searching () {
-                var lists = this.myLeccallLecturelistturelist
-
-                this.searchingResult = []
-                for(var i = 0; i < lists.length; i++){
-                    if(lists[i].name.includes(this.word)){
-                        this.searchingResult.push(lists[i])
-                    }
-                }
-                console.log('searching 결과 : ' + this.searchingResult)
-                console.log('0번 값은? : ' + this.searchingResult[0])
-                this.searchinOn = true
-                
-                if (this.word == '') {
-                    this.searchinOn = false
-                }
-            },
-            info() {
-                alert('강의 소개 페이지로 링크')
-            },
-            goPage(data) {
-                this.$router.push( { name: 'LectureDetailPage', params: { lectureId: data.toString() } } )
-            },
-            
-        },
-        computed: {
-            pageCount2() {
-                let listLength = this.$store.state.callLecturelist.length, // 길이
-                    listSize = this.pageSize2,
-                    page = Math.floor(listLength / listSize);
-                if (listLength % listSize > 0) 
-                    page += 1;
-                    return page;
-            },
-            paginatedData2() {
-                return this.$store.state.callLecturelist.slice(0, 10);
-            },
+        pageSize: {
+            type: Number,
+            required: false,
+            default: 6
         }
+    },
+    data(){
+        return {
+            pageNum: 1,
+            searchingResult: [],
+            word: '',
+            lectureList: this.callLecturelist,
+            valueDeterminate: 15,
+            originList: null,
+            test: 1,
+            test2: null
+        }
+    },
+    created() {
+        setTimeout(() => {
+            this.originList = this.copiedOrignList
+        },100)
+    },
+    computed: {
+        pageCount() {
+            let listLength = this.lectureList.length, // 길이
+                listSize = this.pageSize,
+                page = Math.floor(listLength / listSize);
+            if (listLength % listSize > 0) 
+                page += 1;
+                return page;
+        },
+        paginatedData() {
+            return this.lectureList.slice(0, 10);
+        },
+        copiedOrignList: {
+            get () {
+                console.log('get')
+                return this.callLecturelist
+            },   
+            set (data) {
+                console.log('set')
+                this.originList = data
+            }
+        }
+    },
+    watch: {
+        word(newVal) {
+            if(newVal == '') {
+                this.copiedOrignList = this.callLecturelist
+            }
+        }
+    },
+    methods:{
+        goPage(data){
+            this.$router.push( { name: 'LectureDetailPage', params: { lectureId: data.toString() } } )
+        },
+        searching () {
+            var lists = this.copiedOrignList // 가공용 리스트 새로 생성
+            this.searchingResult = [] // 검색결과 초기화
+
+            for(var i = 0; i < lists.length; i++){
+              const regex = new RegExp(this.word, "gi")
+              const comparison = regex.test(lists[i][0])
+              console.log(comparison)
+              if(comparison){
+                this.searchingResult.push(lists[i])
+              }
+            }
+            this.copiedOrignList = this.searchingResult
+        },
     }
+}
 </script>
 
 <style scoped="scoped" > 

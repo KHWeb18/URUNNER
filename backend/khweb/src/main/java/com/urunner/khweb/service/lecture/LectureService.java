@@ -64,6 +64,8 @@ public interface LectureService {
 
     public Optional<LectureVideoInfo> getVideoInfo(Long lectureId);
 
+    public Optional<LectureVideoInfo> getVideoInfo(Long lectureId, String name);
+
     public DtoWrapper lectureBanner(int page);
 
     public DtoWrapper getVideoInfoDetail(Long id);
