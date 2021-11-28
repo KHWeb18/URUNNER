@@ -47,7 +47,7 @@
             </v-list-item-content>
             <v-list-item-action>
               
-            <v-tooltip bottom v-if="isInstructor == 'ROLE_MANAGER,ROLE_USER'">
+            <v-tooltip bottom v-if="isInstructor == 'ROLE_USER,ROLE_MANAGER'">
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
                     color="warning"
@@ -116,7 +116,7 @@ export default {
       this.$router.push('/manager')
     },
     roleCheck() {
-      if(this.isInstructor == 'ROLE_MANAGER,ROLE_USER') {
+      if(this.isInstructor == 'ROLE_USER,ROLE_MANAGER') {
         var text = '지식공유자'
         return text
       } else {
