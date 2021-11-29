@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -25,7 +26,6 @@ import java.util.Optional;
 @Slf4j
 @Controller
 @RequestMapping("/myPage")
-@CrossOrigin(origins = "http://localhost:8080", allowedHeaders = "*")
 public class MyLectureController {
 
     @Autowired
@@ -34,6 +34,7 @@ public class MyLectureController {
     @Autowired
     private MemberRepository memberRepository;
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/myLecturelist/{memberNo}")
     public ResponseEntity<List<Object[]>> getMyLectureLists (@PathVariable("memberNo") Long memberNo) throws Exception {
         log.info("getMyLectureLists :  ");
@@ -41,6 +42,7 @@ public class MyLectureController {
         return new ResponseEntity<>(service.selectMyLectureList(memberNo), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/my-latest-lecture")
     public ResponseEntity<Lecture> getMyLatestLecture() throws Exception {
         log.info("getMyLatestLecture()");

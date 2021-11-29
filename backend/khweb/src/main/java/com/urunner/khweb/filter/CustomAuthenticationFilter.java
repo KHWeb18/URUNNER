@@ -49,9 +49,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 //        받은 정보로 인증시도
         try {
-
             UserDto userDto = objectMapper.readValue(request.getReader(), UserDto.class);
-
 
             if (StringUtils.isEmpty(userDto.getEmail()) || StringUtils.isEmpty(userDto.getPassword())) {
                 throw new IllegalArgumentException("username or Password is Empty");

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.naming.AuthenticationException;
@@ -34,6 +35,7 @@ public class LectureManageController {
     @Autowired
     private LectureRepository lectureRepository;
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/joinLecturer")
     public ResponseEntity<Boolean> joinLecturer(@RequestBody JoinInstructorDto joinInstructorDto) {
 
@@ -71,11 +73,14 @@ public class LectureManageController {
         return lectureService.getWishList();
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/mainCartList")
     public DtoWrapper mainCartList() {
 
         return lectureService.mainCartList(0);
     }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/mainWishList")
     public DtoWrapper mainWishList() {
 
@@ -93,6 +98,7 @@ public class LectureManageController {
         return new DtoWrapper(lectureSearchDtos, reviewDtos);
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/regStudentComment")
     public ResponseEntity<Boolean> regStudentComment(@RequestBody ReviewDto reviewDto) {
 

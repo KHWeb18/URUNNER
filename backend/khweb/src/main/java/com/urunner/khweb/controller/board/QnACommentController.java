@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,6 @@ import java.util.List;
 @Controller
 @ResponseBody
 @RequestMapping("/qnaboard")
-@CrossOrigin(origins = "http://localhost:8080", allowedHeaders = "*")
 public class QnACommentController {
 
     @Autowired
@@ -31,6 +31,7 @@ public class QnACommentController {
     @Autowired
     private MemberProfileService memberProfileService;
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/comment/register")
     public ResponseEntity<QnAComment> register(@Validated @RequestBody CommentRes commentRes) throws Exception {
         log.info("comment register request from vue");
@@ -56,6 +57,7 @@ public class QnACommentController {
         return new ResponseEntity<>(service.selectStudyComment(boardNo), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/comment/{boardNo}/{commentNo}")
     public ResponseEntity<Void> remove(@PathVariable("commentNo") Long commentNo,
                                        @PathVariable("boardNo") Long boardNo) throws Exception {

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -59,6 +60,7 @@ public class MemberController {
 
     // 회원 탈퇴
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @DeleteMapping("/leaveMember")
     public ResponseEntity<Void> leaveMember() throws Exception {
 
@@ -102,6 +104,7 @@ public class MemberController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
     // 회원 조회
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/memberList")
     public ResponseEntity<List<Member>> getMemberList () throws Exception {
 

@@ -33,20 +33,17 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
 //       인가처리부분
-        if (request.getServletPath().equals("/api/login") || request.getServletPath().equals("/api/token/refresh")) {
+        if (request.getServletPath().equals("/api/login")) {
             filterChain.doFilter(request, response);
         } else {
-            String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
+            String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
             System.out.println("getHeaderNames" + request.getRequestURL());
-            System.out.println("getHeaderNames" + request);
 
             if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
 
                 try {
-
                     String token = authorizationHeader.substring("Bearer ".length());
-
                     DecodedJWT decodedJWT = TokenUtil.validateToken(token);
 
                     String username = decodedJWT.getSubject();
@@ -65,7 +62,6 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                     String errorMessage = exception.getMessage();
                     log.info(errorMessage);
 
-                    log.error("Error loggin in: {} ", errorMessage);
                     response.setHeader("error", errorMessage);
                     response.setStatus(HttpStatus.FORBIDDEN.value());
 
