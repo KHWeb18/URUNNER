@@ -7,12 +7,12 @@
                 <router-link :to="{ name: 'BoardCollectionPage' }">
                         목록
                 </router-link>                
-                <b v-show="board.writer == email || role == 'ROLE_USER,ROLE_ADMIN'" @click="snackbar = true">                    
+                <b v-show="board.writer == email || role == 'ROLE_USER,ROLE_MANAGER'" @click="snackbar = true">                    
                     <router-link :to="{ name: 'FreeBoardModifyPage', params: { boardNo } }">
                         |수정
                     </router-link>
                 </b>                
-                <b v-show="board.writer == email || role == 'ROLE_USER,ROLE_ADMIN'" @click="snackbar = true" class="item">
+                <b v-show="board.writer == email || role == 'ROLE_USER,ROLE_MANAGER'" @click="snackbar = true" class="item">
                     |삭제
                 </b>
                  <!-- 게시물 삭제 클릭시 알림창 -->
