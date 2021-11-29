@@ -5,7 +5,7 @@
             <div class="mr-9 hidden-sm-and-down">
                 <div class="title_box">
                     <h2 class="page_title">
-                        <span>1:1 문의 게시판 for user</span></h2>
+                        <span>1:1 문의 게시판</span></h2>
                 </div>
             </div>
             <div class="mr-9 hidden-md-and-up">

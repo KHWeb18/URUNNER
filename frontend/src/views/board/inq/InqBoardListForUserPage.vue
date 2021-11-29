@@ -3,7 +3,7 @@
         <v-container v-show="role == 'ROLE_USER'" style="padding:0px;">
             <inq-board-for-user-list :boards="boards"/>
         </v-container>
-        <v-container v-show="role == 'ROLE_USER,ROLE_ADMIN'" style="padding:0px;">
+        <v-container v-show="role == 'ROLE_USER,ROLE_MANAGER'" style="padding:0px;">
             <inq-board-list :boards="boards"/>
         </v-container>
     </div>
@@ -31,9 +31,14 @@ export default {
         ...mapState(['boards'])
     },
     mounted () {
-        this.fetchInqBoardForUserList(Vue.$cookies.get("USER_NAME"))
+        if (this.role == 'ROLE_USER,ROLE_MANAGER') {
+            this.fetchInqBoardList()
+        } else {
+            this.fetchInqBoardForUserList(Vue.$cookies.get("USER_NAME"))
+        }
     },
     methods: {
+        ...mapActions(['fetchInqBoardList']),
         ...mapActions(['fetchInqBoardForUserList'])
         
     }

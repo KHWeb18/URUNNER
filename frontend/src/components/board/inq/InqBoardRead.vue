@@ -22,7 +22,7 @@
                     <div v-html="board.content">{{ board.content }}</div>
                 </div>
                 <div v-show="board.notice == 'false'" class="complete_btn_align">
-                    <v-btn v-show="role == 'ROLE_USER,ROLE_ADMIN'" @click="endRecruit(board.boardNo)">답변 완료</v-btn>
+                    <v-btn v-show="role == 'ROLE_USER,ROLE_MANAGER'" @click="endRecruit(board.boardNo)">답변 완료</v-btn>
                 </div>
             </div>
         </div>        
@@ -225,6 +225,7 @@ export default {
 .post_content {
     margin: 10vw 3vw 0vw 3vw;
     width: 60vw;
+    max-width: 900px;
     font-size: 15px;
     color: #757575;
     padding-bottom: 10px;
