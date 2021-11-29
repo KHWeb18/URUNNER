@@ -534,8 +534,14 @@ public class LectureServiceImpl implements LectureService {
             }
 
             List<Review> randomReviews = reviewRepository.getRandomReviews();
+            Long saleCounts = purchasedLectureRepository.getPurchasedCount();
+            Long lectureCount = lectureRepository.getLectureCount();
+            DtoWrapper result = new DtoWrapper(lectureDtos, lectureOrderByReviews, randomReviews);
 
-            return new DtoWrapper(lectureDtos, lectureOrderByReviews, randomReviews);
+            result.setSaleCount(saleCounts);
+            result.setLectureCount(lectureCount);
+
+            return result;
         } catch (NoSuchElementException noSuchElementException) {
             log.info("등록된 강의가 없습니다.");
             return null;

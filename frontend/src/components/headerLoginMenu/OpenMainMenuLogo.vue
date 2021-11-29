@@ -41,13 +41,13 @@
                 <v-btn depressed rounded text="text" @click="clickLogoutBtn">
                   Logout
                 </v-btn>
-                <v-btn v-if="isInstructor !='ROLE_USER'" depressed rounded text="text" @click="clickManager" style="margin-bottom:5px;">
+                <v-btn v-if="isAdmin" depressed rounded text="text" @click="clickManager" style="margin-bottom:5px;">
                   Admin
                 </v-btn>
             </v-list-item-content>
             <v-list-item-action>
               
-            <v-tooltip bottom v-if="isInstructor == 'ROLE_USER,ROLE_MANAGER'">
+            <v-tooltip bottom v-if="isInstructor">
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
                     color="warning"
@@ -102,7 +102,10 @@ export default {
   },
   computed: {
     isInstructor() {
-      return this.$cookies.get('ROLES')
+      return this.$cookies.get('ROLES').includes("ROLE_MANAGER")
+    },
+    isAdmin() {
+      return this.$cookies.get('ROLES').includes("ROLE_ADMIN")
     }
   },
   methods: {

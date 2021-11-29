@@ -143,8 +143,7 @@ export default new VueRouter({
         path: '/course/:lectureId',
         name: 'LectureDetailPage',
         component: () => import ('../views/lecture_detail/LectureDetailPage.vue'),
-        beforeEnter: ( to, from, next ) => isAuthenticated( to, from ,next )
-     },
+      },
      //강의 영상 재생 페이지
      {
        path: '/lecture/:videoId/:lectureId',

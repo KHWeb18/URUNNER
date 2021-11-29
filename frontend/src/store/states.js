@@ -23,7 +23,6 @@ export default {
       { title: '수강신청관리', items:[
           { title: '수강바구니', to: '/cart'},
           { title: '위시리스트', to: '/wishlist'},
-          { title: '쿠폰함', to: '/coupons'},
           { title: '포인트', to: '/my-points'},
           { title: '구매내역', to: '/orders'},
       ]},
