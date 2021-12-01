@@ -48,6 +48,7 @@
             <v-list-item-action>
               
             <v-tooltip bottom v-if="isInstructor">
+
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
                     color="warning"

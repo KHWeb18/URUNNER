@@ -100,10 +100,7 @@ public class PaymentServiceImpl implements PaymentService{
                 //lecture_id 할당부분 테이블직접연결시수정필요
                 Lecture lecture = lectureRepository.findByTitle(title);
                 Long lecture_id = lecture.getLecture_id();
-                //
 
-                log.info(title);
-                log.info("memberNo:"+member.getMemberNo());
                 if(lecture != null ){
                     PurchasedLecture purchasedLecture = new PurchasedLecture();
                     purchasedLecture.setTitle(title);
@@ -113,8 +110,6 @@ public class PaymentServiceImpl implements PaymentService{
                     member.getMyPage().setPoint(point);
                     log.info("멤버 저장합니다");
                     memberRepository.save(member);
-                    //마이페이지 구매강의 접근시 purchasedLectureRepository.getTitle() 로 강의
-                    // 이름 불러온후 lectureRepository에서find로강의 불러오기
                     
 //                    카트 삭제 메서드
                     myPageUtil.deleteCart(member, lecture);
@@ -162,6 +157,7 @@ public class PaymentServiceImpl implements PaymentService{
             log.info(successNode.toString());
             log.info("결제취소완료");
             return "success";
+
         } else {
             JsonNode failNode = responseEntity.getBody();
             log.info(failNode.get("message").asText());

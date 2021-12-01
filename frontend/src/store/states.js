@@ -28,7 +28,7 @@ export default {
       ]},
       { title: '설정', items:[
           { title: '프로필', to: '/memberProfile'},
-          { title: '알림설정', to: '/'},
+          { title: '회원탈퇴', to: '/leave-member'},
       ]},
   ],
   pwRules: [

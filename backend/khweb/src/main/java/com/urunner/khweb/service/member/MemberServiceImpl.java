@@ -3,11 +3,13 @@ package com.urunner.khweb.service.member;
 import com.urunner.khweb.controller.dto.MemberRes;
 import com.urunner.khweb.controller.dto.lecture.JoinInstructorDto;
 import com.urunner.khweb.entity.lecture.Instructor;
+import com.urunner.khweb.entity.lecture.Lecture;
 import com.urunner.khweb.entity.member.AuthProvider;
 import com.urunner.khweb.entity.member.Member;
 import com.urunner.khweb.entity.member.Role;
 import com.urunner.khweb.entity.mypage.MyPage;
 import com.urunner.khweb.repository.lecture.InstructorRepository;
+import com.urunner.khweb.repository.lecture.LectureRepository;
 import com.urunner.khweb.repository.member.MemberRepository;
 import com.urunner.khweb.repository.member.RoleRepository;
 import com.urunner.khweb.repository.mypage.MyPageRepository;
@@ -50,6 +52,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final MyPageRepository myPageRepository;
     private final InstructorRepository instructorRepository;
+    private final LectureRepository lectureRepository;
 
 
 
@@ -88,7 +91,11 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
 
     @Override
     public void leaveMember(String email) throws Exception {
+
+        lectureRepository.deleteAllByWriter(email);
         memberRepository.deleteByEmail(email);
+
+
     }
 
 

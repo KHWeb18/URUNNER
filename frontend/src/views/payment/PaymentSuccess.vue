@@ -1,7 +1,6 @@
 <template>
     <div>
-        <p>성공!</p>
-        <h2>{{amount}}</h2>
+        <p>결제 성공!</p>
     </div>
 </template>
 

@@ -2,13 +2,21 @@
   <div>
     <main-banner></main-banner>
     <main-search-box></main-search-box>
-    <main-lecture-list :allLectureList="allLectureList" :allReivewLectureList="allReivewLectureList" @fetchMore="fetchMore"/>
-    <main-study-list :boards="boards"/>
-    <main-review-list :commentList="commentList" :lectureCount="lectureCount"></main-review-list>
-  </div>  
+    <main-lecture-list
+      :allLectureList="allLectureList"
+      :allReivewLectureList="allReivewLectureList"
+      @fetchMore="fetchMore"
+    />
+    <main-study-list :boards="boards" />
+    <main-review-list
+      :commentList="commentList"
+      :lectureCount="lectureCount"
+    ></main-review-list>
+  </div>
 </template>
 
 <script>
+
 import MainBanner from '@/components/MainBanner.vue';
 import MainLectureList from '@/components/MainLectureList.vue'
 import MainSearchBox from '@/components/MainSearchBox.vue'
@@ -36,7 +44,6 @@ export default {
       cart: null,
       currentPage: 0,
       lectureCount: 0,
-
     }
   },
   computed: {
@@ -48,45 +55,38 @@ export default {
   },
   mounted () {
   },
+  mounted() {},
   methods: {
     fetchAllLecture() {
-      axios.get(`${API_BASE_URL}/lecture/getLectureBanner/${this.currentPage}`)
-            .then(({ data }) => {
-               console.log(data)
-               this.allReivewLectureList = data.reviewData.content;
-               this.allLectureList = data.data.content;
-               this.commentList = data.comment;
-               this.lectureCount = data.lectureCount
-            })
+      axios
+        .get(`${API_BASE_URL}/lecture/getLectureBanner/${this.currentPage}`)
+        .then(({ data }) => {
+          console.log(data);
+          this.allReivewLectureList = data.reviewData.content;
+          this.allLectureList = data.data.content;
+          this.commentList = data.comment;
+          this.lectureCount = data.lectureCount;
+        });
     },
     fetchMore() {
-      this.currentPage = this.currentPage + 1
-        axios.get(`${API_BASE_URL}/lecture/getLectureBanner/${this.currentPage}`)
-              .then(({ data }) => {
-                console.log(data)
-                  this.allLectureList = [...this.allLectureList, ...data.data.content];
-                  this.allReivewLectureList = [...this.allReivewLectureList, ...data.reviewData.content];
-              })
-              .then(() => {
-                EventBus.$emit('loadMore')
-              })
+      this.currentPage = this.currentPage + 1;
+      axios
+        .get(`${API_BASE_URL}/lecture/getLectureBanner/${this.currentPage}`)
+        .then(({ data }) => {
+          console.log(data);
+          this.allLectureList = [...this.allLectureList, ...data.data.content];
+          this.allReivewLectureList = [
+            ...this.allReivewLectureList,
+            ...data.reviewData.content,
+          ];
+        })
+        .then(() => {
+          EventBus.$emit("loadMore");
+        });
     },
-    fetchLatestLecture(){
-      axios.get(`${API_BASE_URL}/myPage/my-latest-lecture/`)
-      .then(({ data }) => {
-        console.log("현재최근강의"+ data)
-        this.latestLecture = data
-        console.log("최근강의")
-        console.log(data)
-      })
-    }
-    ,
-    ...mapActions(['fetchStudyBoardList']),
+    ...mapActions(["fetchStudyBoardList"]),
   },
-
-}
+};
 </script>
 
-<style>
-
-</style>
+<style></style>

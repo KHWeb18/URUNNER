@@ -55,9 +55,8 @@
                                 >
                                 탈퇴하기
                             </v-btn>
-
                             <router-link style="text-decoration: none; color:black"
-                            :to="{ name: '' }">
+                            :to="{ name: 'Mypage' }">
                                     <v-btn
                                     class="mb-3"
                                     fluid
@@ -78,7 +77,7 @@
 
 
 import axios from 'axios'
-//import { logout } from '@/util/APIUtil'
+import { logout } from '@/util/APIUtil'
 
 export default {
     name: 'LeaveMemberPage',
@@ -87,14 +86,10 @@ export default {
             var result = confirm('탈퇴 하시겠습니까?')
             if(result) {
                 axios.delete('http://localhost:7777/memberManagement/leaveMember') 
-
-
-
                         .then(() => {
                             alert('탈퇴 되었습니다.')
-                            // logout()
+                            logout()
                             this.$router.push({ name: 'MainPage' })
-                            
                         })
                         .catch(err => {
                             alert(err.response.data.message)
