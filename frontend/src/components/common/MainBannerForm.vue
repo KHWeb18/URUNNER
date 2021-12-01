@@ -3,7 +3,7 @@
     <v-row no-gutters class="align-center">
       <v-col cols="12" md="7">
         <div>
-          <v-img :src="bannerInfo.img" width="100%"></v-img>
+          <v-img :src="bannerInfo.img" width="760" height="330"></v-img>
         </div>
       </v-col>
       <v-col cols="12" md="5" class="order-md-first">
