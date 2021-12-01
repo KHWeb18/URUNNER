@@ -177,6 +177,7 @@ export default new VueRouter({
       }, 
       {
           path: '/mypage',
+          name: 'Mypage',
           component: () => import ("../views/mypage/Mypage.vue"),
           beforeEnter: ( to, from, next ) => isAuthenticated( to, from ,next ),
           children: [
