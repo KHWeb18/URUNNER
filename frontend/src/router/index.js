@@ -216,6 +216,7 @@ export default new VueRouter({
               component: () => import("../views/board/inq/InqBoardListForUserPage.vue")
             },            
             {
+              name:'MyLatestPage',
               path: '/latest',
               component: () => import("../views/mypage/MyLatestPage.vue")
             },

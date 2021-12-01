@@ -48,14 +48,20 @@ public class MyLectureController {
         log.info("getMyLatestLecture()");
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        log.info(authentication.getName());
-        Member member = memberRepository.findByEmail(authentication.getName());
-        Long latestVideoId = member.getLatestVideoId();
-        Lecture latestLecture= service.callLatestLecture(latestVideoId).get();
+        if(authentication.getName().equals("anonymousUser")){
+            log.info("getMyLatestLecture() : 로그인되어있지않은 사용자" );
+            return new ResponseEntity<>(null,HttpStatus.OK);
+        }else{
+            log.info("getMyLatestLecture() : 로그인되어있는 사용자 : "+ authentication.getName());
+            Member member = memberRepository.findByEmail(authentication.getName());
+            Long latestVideoId = member.getLatestVideoId();
+            Lecture latestLecture= service.callLatestLecture(latestVideoId).get();
 
-        log.info("latest Lecture: "+ latestLecture.getTitle());
+            log.info("latest Lecture: "+ latestLecture.getTitle());
 
-        return new ResponseEntity<>(latestLecture,HttpStatus.OK);
+            return new ResponseEntity<>(latestLecture,HttpStatus.OK);
+
+        }
 
     }
 }

@@ -234,8 +234,8 @@ export default {
     fetchMyLatestLectureList ({ commit }) {
         return axios.get('http://localhost:7777/myPage/my-latest-lecture')
                 .then((res) => {
-                    commit(FETCH_LATEST_LECTURE, [res.data])
-                    console.log([res.data])
+                    commit(FETCH_LATEST_LECTURE, res.data)
+                    console.log(res.data)
         }).catch(err=>{alert(err.response.data.message)})
     },
 }

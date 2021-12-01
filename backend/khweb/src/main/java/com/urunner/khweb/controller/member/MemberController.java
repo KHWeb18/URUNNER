@@ -25,8 +25,7 @@ import java.util.List;
 @RequestMapping("/memberManagement")
 public class MemberController {
 
-    //@Autowired
-    //private JavaMailSender javaMailSender;
+
 
     @Autowired
     MemberService memberService;
@@ -34,7 +33,6 @@ public class MemberController {
     @Autowired
     MemberRepository memberRepository;
 
-//    private HttpSession session;
 
     //회원가입
     @PostMapping("/register-member")
@@ -67,8 +65,6 @@ public class MemberController {
         log.info("leavemember()");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         log.info(authentication.getName());
-        //Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        //log.info(principal.toString());
 
         memberService.leaveMember(authentication.getName());
 

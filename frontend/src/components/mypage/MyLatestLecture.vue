@@ -17,19 +17,19 @@
             <v-container class="lecture01 mr-9 hidden-sm-and-down">
                 <v-container class="lecture_box">
                     <div>
-                        <b @click="goPage(callLatestLecture[0].lecture_id)">
+                        <b @click="goPage(callLatestLecture.lecture_id)">
                             <v-card class="mx-auto"
                             >
-                                <v-img :src="`http://localhost:7777/lecture/image/${callLatestLecture[0].thumb_path}/${callLatestLecture[0].writer}`" max-height="200px" max-width="400"></v-img>
+                                <v-img :src="`http://localhost:7777/lecture/image/${callLatestLecture.thumb_path}/${callLatestLecture.writer}`" max-height="200px" max-width="400"></v-img>
                                     <div class="btn-plus"><span draggable="false"><v-icon color="white">mdi-arrow-right</v-icon></span></div>
                                 <div class="btn-plus2"><span draggable="false"></span></div>
                                 <v-card-title class="temp">
-                                    {{callLatestLecture[0].title}}
+                                    {{callLatestLecture.title}}
                                 </v-card-title>
                                 <div class="card_text">
                                     <div></div><div></div><div></div>
                                     <div>
-                                        {{ callLatestLecture[0].grade }} | {{ callLatestLecture[0].writer}}
+                                        {{ callLatestLecture.grade }} | {{ callLatestLecture.writer}}
                                     </div>
                                 </div>
                                 <v-card-actions>
@@ -48,7 +48,7 @@ export default {
     name:'MyLatestLecture',
     props: {
         callLatestLecture: {
-            type: Array
+            type: Object
         },
     },
     // created() {
@@ -121,7 +121,6 @@ export default {
     font-weight: bold;
     color: #424242;
     padding: 5px 10px 5px 10px;
-
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
@@ -161,5 +160,4 @@ export default {
   opacity:1;
   transform:scale(1);
 }
-
 </style>
