@@ -42,12 +42,12 @@
             </v-spacer>            
             <v-spacer class="forLine2 hidden-md-and-up">
                 <p class="tag_button" @click="word = ''">ALL</p>&nbsp;&nbsp;&nbsp;
-                <p class="tag_button" :class="{ on : tagSelect1 }" @click="tagSelect1 = !tagSelect1, searchingTag('사이트 이용 문의')">사이트</p>&nbsp;&nbsp;&nbsp;
-                <p class="tag_button" :class="{ on : tagSelect2 }" @click="tagSelect2 = !tagSelect2, searchingTag('결제 문의')">결제</p>&nbsp;&nbsp;&nbsp;
-                <p class="tag_button" :class="{ on : tagSelect3 }" @click="tagSelect3 = !tagSelect3, searchingTag('수강 문의')">수강</p>&nbsp;&nbsp;&nbsp;
-                <p class="tag_button" :class="{ on : tagSelect3 }" @click="tagSelect3 = !tagSelect3, searchingTag('회원가입/탈퇴 문의')">회원가입/탈퇴</p>&nbsp;&nbsp;&nbsp;
-                <p class="tag_button" :class="{ on : tagSelect3 }" @click="tagSelect3 = !tagSelect3, searchingTag('이벤트 문의')">이벤트</p>&nbsp;&nbsp;&nbsp;
-                <p class="tag_button" :class="{ on : tagSelect3 }" @click="tagSelect3 = !tagSelect3, searchingTag('기타 문의')">기타</p>&nbsp;&nbsp;&nbsp;
+                <p class="tag_button" :class="{ on : tagSelect1 }" @click="tagSelect1 = !tagSelect1, searchingTag('사이트 이용 문의')">사이트</p>&nbsp;&nbsp;
+                <p class="tag_button" :class="{ on : tagSelect2 }" @click="tagSelect2 = !tagSelect2, searchingTag('결제 문의')">결제</p>&nbsp;&nbsp;
+                <p class="tag_button" :class="{ on : tagSelect3 }" @click="tagSelect3 = !tagSelect3, searchingTag('수강 문의')">수강</p>&nbsp;&nbsp;
+                <p class="tag_button" :class="{ on : tagSelect3 }" @click="tagSelect3 = !tagSelect3, searchingTag('회원가입/탈퇴 문의')">계정</p>&nbsp;&nbsp;
+                <p class="tag_button" :class="{ on : tagSelect3 }" @click="tagSelect3 = !tagSelect3, searchingTag('이벤트 문의')">이벤트</p>&nbsp;&nbsp;
+                <p class="tag_button" :class="{ on : tagSelect3 }" @click="tagSelect3 = !tagSelect3, searchingTag('기타 문의')">기타</p>&nbsp;
             </v-spacer>
             <!-- 게시글 리스트 -->
             <div class="forSearching" v-show="!searchinOn">
@@ -100,7 +100,7 @@
                                 </router-link>
                                 <div class="post_name_box">
                                     <div class="mr-9 hidden-sm-and-down"><div v-show="mob.notice =='false'" class="post_name">{{ mob.nickname }}</div>
-                                    <div v-show="mob.notice =='false'" class="post_name">{{ mob.writer }}</div>
+                                        <div v-show="mob.notice =='false'" class="post_name">{{ mob.writer }}</div>
                                     </div>
                                 </div>
                             </div>
@@ -224,13 +224,7 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <!-- 모바일 사이즈 때 나타나는 글쓰기 버튼 -->
-        <router-link :to="{ name: 'InqBoardRegisterPage' }">
-            <v-btn fab dark large color="primary" fixed right class="hidden-md-and-up">
-                <v-icon dark>mdi-plus</v-icon>
-            </v-btn>
-        </router-link>
+        </div>        
     </div>
 </template>
 
@@ -535,7 +529,7 @@ export default {
     display: flex;
     justify-content: space-between;
     height: 43px;
-    width: 350px;
+    width: 300px;
     min-width: 300px;
     padding-left: 10px;
     max-width: 955px;
@@ -545,7 +539,7 @@ export default {
     display: flex;
     justify-content: space-between;
     height: 43px; 
-    width: 350px;
+    width: 300px;
     padding-left: 10px;
     max-width: 955px;
     border: 1px solid rgb(155, 155, 155);
@@ -556,7 +550,7 @@ export default {
 }
 .searching span input {
     margin-top: 3px;
-    width: 280px;
+    width: 230px;
 }
 .searching_icon {
     padding: 11px 10px 10px 10px;
@@ -605,7 +599,7 @@ input:focus {
     margin: 0vw 1vw
 }
 .post_list {
-    min-width: 475px;
+    /* min-width: 475px; */
     max-width: 1500px;
     margin-right: 10px;
     margin-top: 30px;
@@ -641,7 +635,7 @@ input:focus {
     transition: all 0.1s ease;
 }
 .post_card a {
-    width: 1000px;
+    /* width: 1000px; */
 }
 .thumbnail {
     margin-right: 20px;
@@ -669,8 +663,8 @@ input:focus {
     flex-direction: column;    
     align-self: center;
     margin: 0px;
-    width: 37vw;
-    max-width: 630px;
+    width: 100vw;
+    max-width: 750px;
 }
 .item4 {
     display: flex;
@@ -678,8 +672,9 @@ input:focus {
     font-size: 15px !important;
     font-weight: bold !important;
     color: #2b2b2b;
-    max-width: 55vw;
-    min-width: 450px;
+    max-width: 90vw;
+    /* min-width: 450px; */
+    margin-top: 8px;
 
     overflow: hidden;
     text-overflow: ellipsis;

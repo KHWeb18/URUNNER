@@ -14,11 +14,19 @@
                 </div>
             </div>
             <!-- 게시판 분류 -->
-            <v-spacer class="forLine0 mr-9">
+            <v-spacer class="forLine0 mr-9 hidden-sm-and-down">
                 <div class="forLine0sButton">
                     <div class="tag_button" :class="{ on2 : selectMenu == 1 }" @click="changeComp('BoardListPage')">자유 게시판</div>&nbsp;&nbsp;&nbsp;
                     <div class="tag_button" :class="{ on2 : selectMenu == 2 }"  @click="changeComp('QnABoardListPage')">질문 게시판</div>&nbsp;&nbsp;&nbsp;
                     <div class="tag_button" :class="{ on2 : selectMenu == 3 }" @click="changeComp('StudyBoardListPage')">스터디 게시판</div>&nbsp;&nbsp;&nbsp;
+                </div>
+            </v-spacer>
+            <!-- 게시판 분류 for mobile-->
+            <v-spacer class="forLine0 mr-9 hidden-md-and-up">
+                <div class="forLine0sButton">
+                    <div class="tag_button" :class="{ on2 : selectMenu == 1 }" @click="changeComp('BoardListPage')">자유</div>&nbsp;&nbsp;&nbsp;
+                    <div class="tag_button" :class="{ on2 : selectMenu == 2 }"  @click="changeComp('QnABoardListPage')">질문</div>&nbsp;&nbsp;&nbsp;
+                    <div class="tag_button" :class="{ on2 : selectMenu == 3 }" @click="changeComp('StudyBoardListPage')">스터디</div>&nbsp;&nbsp;&nbsp;
                 </div>
             </v-spacer>
         </v-container>
@@ -27,6 +35,12 @@
         <div class="tab-item">
             <component v-bind:is="selctedComp" @boardNo="saveBoardNo"/>
         </div>
+        <!-- 모바일 사이즈 때 나타나는 글쓰기 버튼 -->
+        <router-link :to="{ name: selectRegister() }">
+            <v-btn fab dark color="primary" class="hidden-md-and-up" fixed right style="top:80vh;">
+                <v-icon dark>mdi-plus</v-icon>
+            </v-btn>
+        </router-link>
     </div>
 </template>
 
@@ -77,6 +91,26 @@ export default {
                     this.$store.state.title = '스터디 모집 게시판'                    
                     this.title = '스터디 모집 게시판'
                     break;
+                default:
+                    break;
+            }
+        },
+        selectRegister() {
+            var select = this.selctedComp
+
+            switch(select) {
+                case 'BoardListPage':
+                    this.selectMenu = 1;
+                    this.$store.state.selectMenu = 1;
+                    return 'FreeBoardRegisterPage'
+                case 'QnABoardListPage':
+                    this.selectMenu = 2;
+                    this.$store.state.selectMenu = 2;
+                    return 'QnABoardRegisterPage'
+                case 'StudyBoardListPage':
+                    this.selectMenu = 3;
+                    this.$store.state.selectMenu = 3;
+                    return 'StudyBoardRegisterPage'
                 default:
                     break;
             }

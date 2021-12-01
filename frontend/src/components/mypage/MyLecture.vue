@@ -14,7 +14,7 @@
                     <div class="tag_button" @click="copiedOrignList = callLecturelist, word = ''">전체</div>&nbsp;&nbsp;&nbsp;
                 </div>
                 <div class="searching_box_top">
-                    <div class="mr-9">
+                    <div>
                         <div class="searching" >
                             <span>
                                 <input type="text" placeholder="검색어를 입력해주세요" v-model="word"
@@ -28,9 +28,9 @@
             <!-- 분류창 -->
             <v-spacer></v-spacer>
             <!-- 리스트 -->
-            <v-container class="lecture01">
+            <v-container class="lecture01 hidden-sm-and-down">
                 <v-container class="lecture_box">                 
-                    <div v-for="mob in originList" :key="mob.boardNo" class="item_m">
+                    <div v-for="mob in originList" :key="mob.boardNo" class="item">
                         <b @click="goPage(mob[5])">
                             <v-card class="mx-auto">
                                 <v-img :src="`http://localhost:7777/lecture/image/${mob[3]}/${mob[4]}`" height="200px"></v-img>
@@ -44,9 +44,38 @@
                                         v-model="valueDeterminate" color="indigo darken-2"></v-progress-linear>
                                 </v-card-title>
                                 <div class="card_text">
+                                    <div></div><div></div><div></div>
                                     <div>
-                                        전체 진도율 : 15% |
+                                        {{ mob[4] }} | {{ mob[2] }}
                                     </div>
+                                </div>
+                                <v-card-actions>
+                                </v-card-actions>
+                            </v-card>
+                        </b>
+                    </div>
+                    <v-container style="margin-top:20px;">
+                    <div class="text-center">
+                        <v-pagination class="btn_pagination" v-model="pageNum" :length="pageCount"></v-pagination>
+                    </div>
+                    </v-container>
+                </v-container>
+            </v-container>
+            <!-- 모바일 리스트 -->
+            <v-container class="lecture01 hidden-md-and-up">
+                <v-container class="lecture_box">                 
+                    <div v-for="mob in originList" :key="mob.boardNo" class="item_m">
+                        <b @click="goPage(mob[5])">
+                            <v-card class="mx-auto">
+                                <v-img :src="`http://localhost:7777/lecture/image/${mob[3]}/${mob[4]}`" height="200px"></v-img>
+                                <v-card-title class="temp">
+                                    {{mob[0]}}
+                                </v-card-title>
+                                <v-card-title class="temp2">
+                                    <v-progress-linear
+                                        v-model="valueDeterminate" color="indigo darken-2"></v-progress-linear>
+                                </v-card-title>
+                                <div class="card_text">
                                     <div></div><div></div><div></div>
                                     <div>
                                         {{ mob[4] }} | {{ mob[2] }}
@@ -165,13 +194,13 @@ export default {
     margin: 0;
     padding: 0;
     width: 70vw;    
-    min-width: 1280px;
+    /* min-width: 1280px; */
     max-width: 1300px;
 }
 .lecture_box {
     margin: 5px;
     padding: 0;
-    width: 100vw;
+    width: 90vw;
     max-width: 900px;
     display: flex;
     flex-wrap: wrap;
@@ -219,7 +248,7 @@ p {
     display: flex;
     justify-content: space-between;
     height: 43px;
-    width: 350px;
+    width: 300px;
     min-width: 300px;
     padding-left: 10px;
     max-width: 955px;
@@ -323,9 +352,14 @@ p {
     width: 250px;
     cursor: pointer;
 }
-.item_m {
+.item {
     margin: 10px;
     width: 212px;
+    cursor: pointer;
+}
+.item_m {
+    margin: 10px;
+    width: 85vw;
     cursor: pointer;
 }
 .btn-plus {
@@ -459,7 +493,7 @@ p {
   /* hover시 사진 어둡게 */
   position:absolute;
   top:155px;
-  width:370px;
+  width:300px;
   height:400px;
   text-align:center;
   border-radius: 6px 6px 0px 0px;
@@ -515,6 +549,7 @@ p {
     height: 40px;
     padding-left: 2vw;
     border-bottom: 1px solid #BDBDBD;
+    padding-bottom: 10px;
 }
 .forLine0sButton {
     display: flex;
@@ -534,8 +569,8 @@ p {
     display: flex;
     justify-content: space-between;
     height: 43px;
-    width: 350px;
-    min-width: 300px;
+    width: 250px;
+    min-width: 250px;
     padding-left: 10px;
     max-width: 955px;
     border: 1px solid #BDBDBD;
@@ -544,7 +579,7 @@ p {
     display: flex;
     justify-content: space-between;
     height: 43px; 
-    width: 350px;
+    width: 250px;
     padding-left: 10px;
     max-width: 955px;
     border: 1px solid rgb(155, 155, 155);
@@ -555,7 +590,7 @@ p {
 }
 .searching span input {
     margin-top: 3px;
-    width: 280px;
+    width: 160px;
 }
 .searching_icon {
     padding: 11px 10px 10px 10px;
@@ -573,8 +608,7 @@ input:focus {
 .main_box {
     display: flex;
     justify-content: center;
-    flex-direction: column;
-    
+    flex-direction: column;    
     color: #424242;
 }
 .temp {

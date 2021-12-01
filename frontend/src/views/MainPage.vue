@@ -53,9 +53,6 @@ export default {
     this.fetchAllLecture();
     this.fetchStudyBoardList()
   },
-  mounted () {
-  },
-  mounted() {},
   methods: {
     fetchAllLecture() {
       axios

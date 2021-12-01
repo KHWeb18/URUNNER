@@ -6,6 +6,12 @@
         <v-container v-show="role == 'ROLE_USER,ROLE_MANAGER'" style="padding:0px;">
             <inq-board-list :boards="boards"/>
         </v-container>
+        <!-- 모바일 사이즈 때 나타나는 글쓰기 버튼 -->
+        <router-link :to="{ name: 'InqBoardRegisterPage' }">
+            <v-btn fab dark color="primary" fixed right class="hidden-md-and-up" style="top:80vh;">
+                <v-icon dark>mdi-plus</v-icon>
+            </v-btn>
+        </router-link>
     </div>
 </template>
 

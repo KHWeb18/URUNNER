@@ -1,4 +1,5 @@
 <template>
+<!--for user를 써서 이 페이지는 사용하지 않음 -->
     <v-container>
         <inq-board-list :boards="boards"/>
     </v-container>
