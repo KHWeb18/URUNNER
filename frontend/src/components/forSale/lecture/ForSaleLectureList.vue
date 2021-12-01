@@ -84,13 +84,12 @@
             <!-- 분류창 -->
             <v-spacer class="forLine">
                 <v-icon>mdi-animation-outline</v-icon>
-                <b class="tag_button hidden-sm-and-down" @click="callAll()">&nbsp;&nbsp;ALL</b>&nbsp;
+                <b class="tag_button hidden-sm-and-down" @click="callAll()">&nbsp;&nbsp;ALL</b>
                 <b class="tag_button hidden-md-and-up" @click="callAll()">&nbsp;&nbsp;전체 보기</b>&nbsp;
-                <!-- <b> ＞ </b>&nbsp;&nbsp;&nbsp; -->
                 <b class="tag_button" v-show="path !== ''">＞{{ path }}</b>
-                <b v-show="difValue !== null">&nbsp;＞&nbsp;{{ difValue }}</b>
-                <b v-show="priceValue !== null">&nbsp;＞&nbsp;{{ priceValue }}원 이하</b>
-                <b v-show="ratingValue !== null">&nbsp;＞&nbsp;별 {{ ratingValue }}개</b>
+                <b class="pathLine" :class="{ on : difValue !== null }">&nbsp;＞&nbsp;{{ difValue }}</b>
+                <b class="pathLine2" :class="{ on : priceValue !== null }">&nbsp;＞&nbsp;{{ priceValue }}원 이하</b>
+                <b class="pathLine3" :class="{ on : ratingValue !== null }">&nbsp;＞&nbsp;별 {{ ratingValue }}개 이상</b>
             </v-spacer>
             <!-- 리스트 -->
             <v-container class="lecture01 mr-9 hidden-sm-and-down">
@@ -529,6 +528,7 @@ export default {
     font-weight: bold;
     font-size: 12px;
     color: #01579B;
+    transition: all 1s ease;
 }
 .ratingLineText {
     padding-top: 2px;
@@ -550,15 +550,6 @@ export default {
     font-weight: 500;
     padding: 3px 1px;
     margin-left:2px;   
-}
-.priceLine:hover {
-    background-color: #f8f8f8 !important;
-}
-.priceLine.on {
-    background-color: #f8f8f8 !important;
-    font-weight: bold;
-    font-size: 13px;
-    color: #01579B;
 }
 
 
@@ -783,6 +774,37 @@ p {
     align-items: center;
     margin-top: 10px;
 }
+/* 분류창 */
+.pathLine {
+    transition: all 0.5s ease;
+    opacity: 0;
+    width:10px
+}
+.pathLine.on {
+    transition: all 0.5s ease;
+    opacity: 1;
+    width: inherit;    
+}
+.pathLine2 {
+    opacity: 0;
+    width:10px
+}
+.pathLine2.on {
+    transition: all 0.5s ease;
+    opacity: 1;
+    width: inherit;
+}
+.pathLine3 {
+    transition: all 0.5s ease;
+    opacity: 0;
+}
+.pathLine3.on {
+    transition: all 0.5s ease;
+    opacity: 1;
+    width: inherit;
+}
+
+
 .searching {
     display: flex;
     justify-content: space-between;

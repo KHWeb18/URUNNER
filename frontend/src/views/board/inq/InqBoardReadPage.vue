@@ -3,7 +3,7 @@
         <v-container style="padding:10px !important;">
             <inq-board-read v-if="board" :board="board" @submit="onSubmit"/>
             <v-container class="middle_btn_box">
-                <router-link :to="{ name: 'InqBoardListPage' }">
+                <router-link :to="{ path: '/inqforuser' }">
                         목록
                 </router-link>                
                 <b v-show="this.$store.state.isAuth">
@@ -11,7 +11,7 @@
                         |수정
                     </router-link>
                 </b>                
-                <b v-show="board.writer == email || role == 'ROLE_USER,ROLE_ADMIN'" @click="snackbar = true" class="item">
+                <b v-show="board.writer == email || role == 'ROLE_USER,ROLE_MANAGER'" @click="snackbar = true" class="item">
                     |삭제
                 </b>
                  <!-- 게시물 삭제 클릭시 알림창 -->

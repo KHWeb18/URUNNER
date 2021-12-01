@@ -57,6 +57,7 @@ public class LectureController {
 
     private Long lectureId;
 
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @PostMapping("/upload/image/thumbnail")
     public @ResponseBody
     ResponseEntity<UrlResource> LectureUpload(@RequestParam("thumbnailImage") List<MultipartFile> thumbnailImage,
@@ -141,7 +142,7 @@ public class LectureController {
         return false;
     }
 
-//    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @PostMapping("/newlecture")
     public String newLecture(@RequestBody LinkedHashMap test) throws JsonProcessingException {
 
@@ -167,6 +168,7 @@ public class LectureController {
         return null;
     }
 
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @PutMapping("/modifyLecture")
     public String modifyLecture(@RequestBody LinkedHashMap info) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -192,6 +194,7 @@ public class LectureController {
         return null;
     }
 
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @PostMapping("/upload/video/lecture")
     public @ResponseBody
     String videoUpload(@RequestParam("video") List<MultipartFile> video,
@@ -238,7 +241,7 @@ public class LectureController {
         return "upload success";
     }
 
-    //    나중에 쓰는부분 다붙이기
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @Transactional
     @PostMapping("/modify/video/lecture")
     public @ResponseBody
@@ -289,7 +292,7 @@ public class LectureController {
         return new DtoWrapper(lectureService.modifyVideo(title, description, dur, id, lectureName));
     }
 
-
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @GetMapping("/getLectureList")
     public List<LectureDto> getLectureList() {
 
@@ -298,6 +301,7 @@ public class LectureController {
         return lectureService.getLectureList(authentication.getName());
     }
 
+
     @GetMapping("/getBasicInfo/{lectureId}")
     public DtoWrapper getBasicInfo(@PathVariable("lectureId") Long lectureId) {
 
@@ -305,6 +309,7 @@ public class LectureController {
         return new DtoWrapper(basicInfo);
     }
 
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @DeleteMapping("/deleteThumbImg/{lectureId}")
     public ResponseEntity deleteThumbImg(@PathVariable("lectureId") Long lectureId) {
 
@@ -313,6 +318,7 @@ public class LectureController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @DeleteMapping("/deleteDetailImg/{lectureId}")
     public ResponseEntity deleteDetailImg(@PathVariable("lectureId") Long lectureId) {
 
@@ -321,6 +327,7 @@ public class LectureController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @DeleteMapping("/deleteLecture/{lectureId}")
     public ResponseEntity deleteLecture(@PathVariable("lectureId") Long lectureId) {
 
@@ -329,14 +336,6 @@ public class LectureController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-//    @PutMapping("/modifyLecture")
-//    public ResponseEntity modifyLecture(@RequestBody LectureDto lectureDto) {
-//
-//        lectureService.modifyLecture(lectureDto);
-//
-//        return new ResponseEntity(HttpStatus.OK);
-//    }
-
 
     @GetMapping("/getSectionTopic/{lectureId}")
     public DtoWrapper getSectionTopic(@PathVariable("lectureId") Long lectureId) {
@@ -344,6 +343,7 @@ public class LectureController {
         return lectureService.getSectionTopic(lectureId);
     }
 
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @DeleteMapping("/deleteSection/{lectureListId}")
     public ResponseEntity deleteSection(@PathVariable("lectureListId") Long lectureListId) {
 
@@ -352,6 +352,7 @@ public class LectureController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @PutMapping("/modifySectionTopic")
     public ResponseEntity modifySectionTopic(@RequestBody LectureListDto lectureListDto) {
 
@@ -366,6 +367,7 @@ public class LectureController {
         return lectureService.getLectureVideoInfo(videoId);
     }
 
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @DeleteMapping("/deleteLectureVideo/{videoId}")
     public ResponseEntity deleteLectureVideo(@PathVariable("videoId") Long videoId) {
 
@@ -374,6 +376,7 @@ public class LectureController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @PostMapping("/inProgressToFalse/{id}")
     public ResponseEntity inProgressToFalse(@PathVariable("id") Long id) {
 
@@ -382,6 +385,7 @@ public class LectureController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @PostMapping("/inProgressToTrue/{id}")
     public ResponseEntity inProgressToTrue(@PathVariable("id") Long id) {
 
@@ -428,17 +432,14 @@ public class LectureController {
 
         String username = decodedJWT.getSubject();
 
-        log.info("현재 유저이름 : " +username);
+        log.info("현재 유저이름 : " + username);
         Member member = memberRepository.findByEmail(username);
         member.setLatestVideoId(lectureId);
         memberRepository.save(member);
         log.info("member videoId:" + member.getLatestVideoId());
         Optional<LectureVideoInfo> videoInfo = lectureService.getVideoInfo(lectureId, username);
 
-
-
         log.info("getVideo");
-
 
         UrlResource video = new UrlResource("classpath:" + videoLocation + "/" + videoInfo.get().getWriter() + "/" + videoInfo.get().getPath());
         ResourceRegion region = resourceRegion(video, headers);

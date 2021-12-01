@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.MediaTypeFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.MalformedURLException;
@@ -29,6 +30,7 @@ public class LectureMyPageController {
     @Autowired
     private LectureService lectureService;
 
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @PostMapping("/lecture/saveLectureSection")
     public void saveLectureSection(@RequestBody LinkedHashMap test) {
 
@@ -48,7 +50,7 @@ public class LectureMyPageController {
 
         return lectureService.findAllLectureSection(lectureId);
     }
-
+//  삭제여부 확인
     @GetMapping("/videos/{name}/full")
     public ResponseEntity<UrlResource> getFullVideo(@PathVariable String name) throws MalformedURLException {
         UrlResource video = new UrlResource("file:${video.location}/${name}");

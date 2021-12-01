@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,6 @@ import java.util.List;
 @Controller
 @ResponseBody
 @RequestMapping("/studyboard")
-@CrossOrigin(origins = "http://localhost:8080", allowedHeaders = "*")
 public class StudyCommentController {
 
     @Autowired
@@ -32,6 +32,7 @@ public class StudyCommentController {
     @Autowired
     private MemberProfileService memberProfileService;
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/comment/register")
     public ResponseEntity<StudyComment> register(@Validated @RequestBody CommentRes commentRes) throws Exception {
         log.info("comment register request from vue");
@@ -57,6 +58,7 @@ public class StudyCommentController {
         return new ResponseEntity<>(service.selectStudyComment(boardNo), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @DeleteMapping("/comment/{commentNo}")
     public ResponseEntity<Void> remove(@PathVariable("commentNo") Long commentNo) throws Exception {
 

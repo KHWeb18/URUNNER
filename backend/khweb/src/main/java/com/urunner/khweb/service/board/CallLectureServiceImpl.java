@@ -47,10 +47,8 @@ public class CallLectureServiceImpl implements CallLectureService {
         //렉쳐비디오
         Optional<LectureVideo> latestLectureVideo = lectureVideoRepository.findById(videoId);
         //렉쳐반환
-        log.info("렉쳐리스트 탐색시작");
         LectureList tmpLectureList = latestLectureVideo.get().getLectureList();
-        log.info("렉쳐리스트는: "+ tmpLectureList.getLectureList_id());
-        log.info("렉쳐 탐색시작");
+        log.info("렉쳐리스트: "+ tmpLectureList.getLectureList_id());
         Optional<Lecture> lecture = lectureRepository.findById(tmpLectureList.getLectureList_id());
 
         return lecture;

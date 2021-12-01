@@ -1,6 +1,6 @@
 <template>
 <div>
-    댓글 <b style="color:#00897B">{{comments.length}}</b>
+    답변 <b style="color:#00897B">{{comments.length}}</b>
     <div class="comment_list">
         <div>
             <!-- 댓글 목록 -->
