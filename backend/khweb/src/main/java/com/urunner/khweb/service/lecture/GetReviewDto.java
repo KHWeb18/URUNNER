@@ -12,8 +12,8 @@ public class GetReviewDto {
 
     long count;
 
-    public GetReviewDto(double avg, long count) {
-        this.avg = avg;
+    public GetReviewDto(long avg, long count) {
+        this.avg = (double)avg/(count-1);
         this.count = count;
     }
 }

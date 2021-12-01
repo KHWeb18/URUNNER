@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -18,12 +19,12 @@ import java.util.Optional;
 @Slf4j
 @Controller
 @RequestMapping("/studyboard")
-@CrossOrigin(origins = "http://localhost:8080", allowedHeaders = "*")
 public class StudyBoardController {
 
     @Autowired
     private StudyBoardService service;
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/register")
     public ResponseEntity<Study> register(
             @Validated @RequestBody StudyRequest studyRequest) throws Exception {
@@ -64,6 +65,7 @@ public class StudyBoardController {
         return new ResponseEntity<>(member, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PutMapping("/apply/{boardNo}") // study에 지원한 member 등록
     public ResponseEntity<String> apply(@PathVariable("boardNo") Long boardNo,
                                         @Validated @RequestBody StudyMember studyMember) throws Exception {

@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -18,12 +19,12 @@ import java.util.Optional;
 @Slf4j
 @Controller
 @RequestMapping("/qnaboard")
-@CrossOrigin(origins = "http://localhost:8080", allowedHeaders = "*")
 public class QnABoardController {
 
     @Autowired
     private QnABoardService service;
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/register")
     public ResponseEntity<QnA> register(
             @Validated @RequestBody QnARequest qnARequest) throws Exception {
@@ -65,6 +66,7 @@ public class QnABoardController {
         return new ResponseEntity<>(member, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PutMapping("/apply/{boardNo}") // study에 지원한 member 등록
     public ResponseEntity<String> apply(@PathVariable("boardNo") Long boardNo,
                                         @Validated @RequestBody QnAMember qnAMember) throws Exception {

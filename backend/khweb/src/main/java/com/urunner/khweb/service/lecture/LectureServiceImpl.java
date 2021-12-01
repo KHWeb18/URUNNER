@@ -67,24 +67,8 @@ public class LectureServiceImpl implements LectureService {
     @Autowired
     private PurchasedLectureRepository purchasedLectureRepository;
 
-
-
-//    @Override
-//    public void lectureVideo(LectureVideo lectureVideo, EnrollLectureVideoDto enrollLectureVideoDto) {
-//
-//        LectureList lectureList = lectureListRepository.enrollLectureList(enrollLectureVideoDto.writer, enrollLectureVideoDto.topic);
-//
-//        LectureVideo saveVideo = LectureVideo.builder()
-//                .title(lectureVideo.getTitle())
-//                .description(lectureVideo.getDescription())
-//                .sequence(lectureVideo.getSequence())
-//                .duration(lectureVideo.getDuration())
-//                .build();
-//
-//        saveVideo.setLectureList(lectureList);
-//
-//        lectureVideoRepository.save(saveVideo);
-//    }
+    @Autowired
+    private ReviewRepository reviewRepository;
 
     @Override
     public void lectureEnroll(Lecture lecture) {
@@ -93,20 +77,11 @@ public class LectureServiceImpl implements LectureService {
     }
 
 
-
     @Override
     public void lectureAddImage(String thum, String detail, Long id) {
 
         Lecture lecture = em.find(Lecture.class, id);
 
-//        LectureImage lectureImage = LectureImage.builder()
-//                .thumb_path(thum)
-//                .detail_path(detail)
-//                .build();
-//
-//        lectureImage.setLecture(lecture);
-//
-//        System.out.println(lectureImage.getThumb_path());
         try {
             if (lecture.getThumb_path() != null && lecture.getDetail_path() != null) {
                 lectureUtil.deleteUtil("image", lecture.getThumb_path());
@@ -210,12 +185,6 @@ public class LectureServiceImpl implements LectureService {
 
             lecture.exist(lecture);
 
-//            중복 나중에 한번에 하기로..
-//            중복검증은 리스트 아이디, 토픽 두개를 가지로 체크 필요
-//            if (lectureListRepository.findByTopic(topic).isPresent()) {
-//                log.info("토픽이 중복이다..");
-//                throw new Exception("중복 토픽입니다.");
-//            }
 
             LectureList lectureList = LectureList.builder()
                     .topic(topic)
@@ -229,6 +198,7 @@ public class LectureServiceImpl implements LectureService {
         }
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Page<LectureListDto> findAllLectureSection(Long lectureId) {
 
@@ -304,7 +274,7 @@ public class LectureServiceImpl implements LectureService {
                 "join Lecture l on l = cl.lecture where l.id = :lectureId";
 
         //      점수 1~10으로 받고 반 나누기
-        String query4 = "select new com.urunner.khweb.service.lecture.GetReviewDto(avg(r.rating), count(r.rating)) from Review r where r.lecture.lecture_id in :id";
+        String query4 = "select new com.urunner.khweb.service.lecture.GetReviewDto(sum(r.rating), count(r.rating)) from Review r where r.lecture.lecture_id in :id";
 
         Optional<LectureDto> lectureDto = lecture.stream().findAny().map(l ->
                 new LectureDto(l.getLecture_id(), l.getWriter(), l.getTitle(),
@@ -378,6 +348,7 @@ public class LectureServiceImpl implements LectureService {
 
 
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<LectureVideoInfo> getVideoInfo(Long lectureId) {
 
@@ -391,6 +362,7 @@ public class LectureServiceImpl implements LectureService {
         return lectureVideoInfo;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<LectureVideoInfo> getVideoInfo(Long lectureId, String name) {
         lectureUtil.isPurchasedLecture(lectureId, name);
@@ -405,6 +377,7 @@ public class LectureServiceImpl implements LectureService {
 
 
 
+    @Transactional(readOnly = true)
     @Override
     public DtoWrapper getVideoInfoDetail(Long id) {
 
@@ -413,6 +386,7 @@ public class LectureServiceImpl implements LectureService {
         return new DtoWrapper(videoInfo.map(l -> new LectureVideoDto(l.getTitle(), l.getDescription(), l.getDuration())));
     }
 
+    @Transactional(readOnly = true)
     @Override
     public DtoWrapper mainCartList(int page) {
 
@@ -431,6 +405,7 @@ public class LectureServiceImpl implements LectureService {
         return new DtoWrapper(lectureDtos);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public DtoWrapper mainWishList(int page) {
 
@@ -449,6 +424,7 @@ public class LectureServiceImpl implements LectureService {
         return new DtoWrapper(lectureDtos);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<LectureDto> getAllLectureList() {
         List<Lecture> findAllLectureList = lectureRepository.findAll();
@@ -466,10 +442,11 @@ public class LectureServiceImpl implements LectureService {
                 )).collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<GetReviewDto> reviewList(Page<LectureSearchDto> lectureSearchDtos) {
 
-        String query = "select new com.urunner.khweb.service.lecture.GetReviewDto(avg(r.rating), count(r.rating)) from Review r where r.lecture.lecture_id in :id";
+        String query = "select new com.urunner.khweb.service.lecture.GetReviewDto(sum(r.rating), count(r.rating)) from Review r where r.lecture.lecture_id in :id";
 
         return lectureSearchDtos.stream().map(l ->
                 em.createQuery(query, GetReviewDto.class)
@@ -477,7 +454,7 @@ public class LectureServiceImpl implements LectureService {
                         .getSingleResult()).collect(Collectors.toList());
     }
 
-    //  옳게 된 쿼리
+    @Transactional(readOnly = true)
     @Override
     public DtoWrapper lectureBanner(int page) {
         try {
@@ -491,7 +468,7 @@ public class LectureServiceImpl implements LectureService {
 
 //      4번 추가 쿼리 feth쓸거면 lecture등록시 review 하나 추가해주기..
 //      점수 1~10으로 받고 반 나누기
-            String query = "select new com.urunner.khweb.service.lecture.GetReviewDto(avg(r.rating), count(r.rating)) from Review r where r.lecture.lecture_id in :id";
+            String query = "select new com.urunner.khweb.service.lecture.GetReviewDto(sum(r.rating), count(r.rating)) from Review r where r.lecture.lecture_id in :id";
 
 //        System.out.println("Review 사이즈 : " +findAllLecture.getContent().get(0).getReviews().size());
             Page<LectureDto> lectureDtos = findAllLecture.map(l ->
@@ -549,12 +526,6 @@ public class LectureServiceImpl implements LectureService {
 
     }
 
-
-
-
-    @Autowired
-    private ReviewRepository reviewRepository;
-
     @Override
     public Boolean regStudentComment(ReviewDto reviewDto) {
 
@@ -568,14 +539,6 @@ public class LectureServiceImpl implements LectureService {
                     myPageRepository.save(l);
                 }
         );
-
-
-//        try {
-//            member.getPurchasedLectureList().stream().filter(find -> find.getMemberNo().equals(member.getMemberNo()));
-//        } catch (Exception exception) {
-//            log.info("강의를 구매한 사용자가 아닙니다.");
-//            exception.getStackTrace();
-//        }
 
         Lecture lecture = em.find(Lecture.class, reviewDto.getLectureId());
 
@@ -592,6 +555,7 @@ public class LectureServiceImpl implements LectureService {
         return true;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public DtoWrapper getReview(Long id) {
 
@@ -604,6 +568,7 @@ public class LectureServiceImpl implements LectureService {
         return new DtoWrapper(reviewList);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public DtoWrapper getCartList() {
 
@@ -620,6 +585,7 @@ public class LectureServiceImpl implements LectureService {
         return new DtoWrapper(lectureDtos);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public DtoWrapper getWishList() {
         String query = "select l from Lecture l join l.wishList cl join cl.myPage mp join mp.member m " +
@@ -635,7 +601,7 @@ public class LectureServiceImpl implements LectureService {
         return new DtoWrapper(lectureDtos);
     }
 
-    //   심각하게 잘못된 쿼리
+
     @Transactional(readOnly = true)
     @Override
     public List<LectureDto> getLectureList(String writer) {
@@ -648,8 +614,6 @@ public class LectureServiceImpl implements LectureService {
 //        String query = "select c from Category c join fetch c.lectureList cl " +
 //                "join fetch cl.lecture l where l.id = :lectureId";
 
-//        fetch join을 위에서 사용해야됨
-
         return findAllLecture.stream().map(l ->
                 new LectureDto(l.getLecture_id(), l.getWriter(), l.getTitle(),
                         l.getDescription(), l.getPrice(), l.isInProgress(),
@@ -660,6 +624,7 @@ public class LectureServiceImpl implements LectureService {
                 )).collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<LectureVideoDto> findAllLectureVideo(Long lectureListId) {
 
@@ -672,6 +637,7 @@ public class LectureServiceImpl implements LectureService {
                         l.getVideoPath())).collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<LectureDto> getBasicInfo(Long lectureId) {
 
@@ -706,13 +672,6 @@ public class LectureServiceImpl implements LectureService {
                     l.setLectureThumb(null);
                     lectureRepository.save(l);
                 });
-//        테스트용 토큰없는경우(X)
-//        lecture.ifPresent(l -> {
-//                    l.setLectureThumb(null);
-//                    lectureRepository.save(l);
-//                });
-
-//        파일 삭제 아직 미구현
 
 
     }
@@ -735,7 +694,6 @@ public class LectureServiceImpl implements LectureService {
                     l.setLectureDetail(null);
                     lectureRepository.save(l);
                 });
-//        파일 삭제 아직 미구현
     }
 
     @Override
@@ -793,12 +751,12 @@ public class LectureServiceImpl implements LectureService {
                 });
     }
 
+    @Transactional(readOnly = true)
     @Override
     public DtoWrapper getSectionTopic(Long lectureListId) {
 
         Optional<LectureList> lectureList = lectureListRepository.findById(lectureListId);
 
-//        인증인가 처리는 get쪽에서  필요가 전혀 없을듯 수정,삭제만 인증 인가
         Optional<LectureListDto> lectureListDto = lectureList.stream().findAny().map(l -> new LectureListDto(l.getLectureList_id(), l.getTopic(), l.getSection()));
 
         return new DtoWrapper(lectureListDto);
@@ -827,6 +785,7 @@ public class LectureServiceImpl implements LectureService {
                 });
     }
 
+    @Transactional(readOnly = true)
     @Override
     public DtoWrapper getLectureVideoInfo(Long videoId) {
 
@@ -834,10 +793,6 @@ public class LectureServiceImpl implements LectureService {
 
         Optional<LectureVideoDto> lectureVideoDto = lectureVideo.stream().findAny().map(l ->
                 new LectureVideoDto(l.getId(), l.getTitle(), l.getDescription(), l.getSequence(), l.getDuration(), l.getVideoPath()));
-
-//        Stream<LectureVideoDto> lectureVideoDtoStream = lectureVideo.stream().map(l ->
-//                new LectureVideoDto(l.getId(), l.getTitle(), l.getDescription(), l.getSequence(), l.getDuration(), l.getVideoPath())
-//        );
 
         return new DtoWrapper(lectureVideoDto);
     }

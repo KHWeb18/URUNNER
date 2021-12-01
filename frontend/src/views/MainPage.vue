@@ -18,6 +18,7 @@ import axios from 'axios';
 import { API_BASE_URL } from '@/constants/index'
 import { mapState, mapActions } from 'vuex'
 import EventBus from '@/event'
+
 export default {
   components: {
     MainBanner,
@@ -34,15 +35,16 @@ export default {
       wish: null,
       cart: null,
       currentPage: 0,
-      lectureCount: 0
+      lectureCount: 0,
+
     }
   },
   computed: {
-      ...mapState(['boards'])
+      ...mapState(['boards']),
   },
   created() {
     this.fetchAllLecture();
-      this.fetchStudyBoardList()
+    this.fetchStudyBoardList()
   },
   mounted () {
   },
@@ -69,7 +71,17 @@ export default {
                 EventBus.$emit('loadMore')
               })
     },
-    ...mapActions(['fetchStudyBoardList'])
+    fetchLatestLecture(){
+      axios.get(`${API_BASE_URL}/myPage/my-latest-lecture/`)
+      .then(({ data }) => {
+        console.log("현재최근강의"+ data)
+        this.latestLecture = data
+        console.log("최근강의")
+        console.log(data)
+      })
+    }
+    ,
+    ...mapActions(['fetchStudyBoardList']),
   },
 
 }

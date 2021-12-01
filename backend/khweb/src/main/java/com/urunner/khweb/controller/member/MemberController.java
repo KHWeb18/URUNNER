@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -24,8 +25,7 @@ import java.util.List;
 @RequestMapping("/memberManagement")
 public class MemberController {
 
-    //@Autowired
-    //private JavaMailSender javaMailSender;
+
 
     @Autowired
     MemberService memberService;
@@ -33,7 +33,6 @@ public class MemberController {
     @Autowired
     MemberRepository memberRepository;
 
-//    private HttpSession session;
 
     //회원가입
     @PostMapping("/register-member")
@@ -59,14 +58,13 @@ public class MemberController {
 
     // 회원 탈퇴
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @DeleteMapping("/leaveMember")
     public ResponseEntity<Void> leaveMember() throws Exception {
 
         log.info("leavemember()");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         log.info(authentication.getName());
-        //Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        //log.info(principal.toString());
 
         memberService.leaveMember(authentication.getName());
 
@@ -102,6 +100,7 @@ public class MemberController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
     // 회원 조회
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/memberList")
     public ResponseEntity<List<Member>> getMemberList () throws Exception {
 

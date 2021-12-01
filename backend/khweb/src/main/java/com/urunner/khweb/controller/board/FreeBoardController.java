@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -17,12 +18,12 @@ import java.util.Optional;
 @Slf4j
 @Controller
 @RequestMapping("/freeboard")
-@CrossOrigin(origins = "http://localhost:8080", allowedHeaders = "*")
 public class FreeBoardController {
 
     @Autowired
     private FreeBoardService service;
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/register")
     public ResponseEntity<Free> register(
             @Validated @RequestBody FreeRequest freeRequest) throws Exception {
@@ -47,6 +48,7 @@ public class FreeBoardController {
         return new ResponseEntity<>(board, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PutMapping("/apply/{boardNo}") // study에 지원한 member 등록
     public ResponseEntity<String> apply(@PathVariable("boardNo") Long boardNo,
                                         @Validated @RequestBody QnAMember qnAMember) throws Exception {
@@ -70,6 +72,7 @@ public class FreeBoardController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PutMapping ("/{boardNo}")
     public ResponseEntity<Free> modify(@PathVariable("boardNo") Long boardNo,
                                       @Validated @RequestBody FreeRequest freeRequest) throws Exception {
@@ -82,6 +85,7 @@ public class FreeBoardController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @DeleteMapping("/{boardNo}")
     public ResponseEntity<Void> remove(@PathVariable("boardNo") Long boardNo) throws Exception {
         service.delete(boardNo);

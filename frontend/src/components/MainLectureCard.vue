@@ -18,7 +18,7 @@
 
         <v-card-title class="pa-1 d-flex">
           <v-rating
-            :value="lecture.getReviewDto.avg"
+            :value="lecture.getReviewDto.avg/2"
             dense
             color="yellow"
             background-color="yellow"

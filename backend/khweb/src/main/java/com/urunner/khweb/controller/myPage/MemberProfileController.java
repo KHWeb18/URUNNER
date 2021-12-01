@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.MediaTypeFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -34,7 +35,6 @@ import java.util.UUID;
 @Slf4j
 @Controller
 @RequestMapping("/profile")
-@CrossOrigin(origins = "http://localhost:8080", allowedHeaders = "*")
 public class MemberProfileController {
 
     @Autowired
@@ -50,6 +50,7 @@ public class MemberProfileController {
 
     private Long lectureId;
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @DeleteMapping("/upload/image/thumbnail/delete/{profile_no}")
     public ResponseEntity<Void> remove(@PathVariable("profile_no") Long profileNo) throws Exception {
         service.delete(profileNo);
@@ -57,7 +58,7 @@ public class MemberProfileController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/upload/image/thumbnail")
     public @ResponseBody
     ResponseEntity<UrlResource> LectureUpload(@RequestParam("thumbnailImage") List<MultipartFile> thumbnailImage,
@@ -130,6 +131,7 @@ public class MemberProfileController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/register")
     public ResponseEntity<Void> jpaRegister(@PathVariable("userId") String email,
                                                  @Validated @RequestBody MemberRes memberRes) throws Exception {
@@ -142,6 +144,8 @@ public class MemberProfileController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PutMapping("/{userId}")
     public ResponseEntity<MemberRes> profileUpdate(@PathVariable("userId") String email,
                                             @Validated @RequestBody MemberRes memberRes) throws Exception {
@@ -158,6 +162,7 @@ public class MemberProfileController {
         return new ResponseEntity<>(memberRes, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/introduce/{userId}")
     public ResponseEntity<ProfileRes> findMyIntroduce(@PathVariable("userId") String email) throws Exception {
 

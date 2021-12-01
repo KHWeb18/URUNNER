@@ -45,7 +45,7 @@
                         <v-icon>mdi-magnify</v-icon>
                     </div>
                      <div v-if="isLogin" class="d-flex">
-                      <v-btn color="primary" class="mr-5 hidden-md-and-down">최근강의 <v-icon>mdi-lead-pencil</v-icon></v-btn>
+                      <v-btn color="primary" @click="goLatestLecture" class="mr-5 hidden-md-and-down">최근강의 <v-icon>mdi-lead-pencil</v-icon></v-btn>
 
                         <v-menu offset-y open-on-hover>
                           <template v-slot:activator="{ on, attrs }">
@@ -148,6 +148,9 @@ import OpenMainMenuLogo from '../components/headerLoginMenu/OpenMainMenuLogo.vue
           this.$router.push('/forSale/lectureList').catch(()=>{
             
           });
+        },
+        goLatestLecture(){
+          this.$router.push({name:'MyLatestPage'})
         }
       }
     }

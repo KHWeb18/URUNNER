@@ -49,9 +49,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 //        받은 정보로 인증시도
         try {
-
             UserDto userDto = objectMapper.readValue(request.getReader(), UserDto.class);
-
 
             if (StringUtils.isEmpty(userDto.getEmail()) || StringUtils.isEmpty(userDto.getPassword())) {
                 throw new IllegalArgumentException("username or Password is Empty");
@@ -91,7 +89,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
         String refresh_token = JWT.create()
                 .withSubject(user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 120 * 10000)) // 10^-3 초
+                .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 100 * 10000)) // 10^-3 초
                 .withIssuer(request.getRequestURI().toString())
                 .withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .withClaim("name", memberInfo.getName())

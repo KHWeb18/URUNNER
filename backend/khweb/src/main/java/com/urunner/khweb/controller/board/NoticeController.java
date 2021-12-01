@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,7 @@ public class NoticeController {
     @Autowired
     NoticeRepository noticeRepository;
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/register")
     public ResponseEntity<Void> register(
             @Validated @RequestBody NoticeRequest noticeRequest) throws Exception {
@@ -53,6 +55,7 @@ public class NoticeController {
         return new ResponseEntity<Notice>(NoticeNum, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/modifyNotice/{noticeNo}")
     public  ResponseEntity<Void> modifyNotice(@PathVariable("noticeNo")Long noticeNo,
                                               @Validated @RequestBody Notice notice) throws  Exception {
@@ -65,6 +68,7 @@ public class NoticeController {
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("{noticeNo}")
     public ResponseEntity<Void> deleteNotice(@PathVariable Long noticeNo) throws Exception{
 

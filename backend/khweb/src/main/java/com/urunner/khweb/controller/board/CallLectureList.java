@@ -19,7 +19,6 @@ import java.util.Optional;
 @Slf4j
 @Controller
 @RequestMapping("/callLecture")
-@CrossOrigin(origins = "http://localhost:8080", allowedHeaders = "*")
 public class CallLectureList {
 
     @Autowired

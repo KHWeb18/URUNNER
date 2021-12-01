@@ -34,7 +34,7 @@ dependencies {
 	implementation 'org.json:json:20210307'
 	//querydsl 추가
 	implementation 'com.querydsl:querydsl-jpa'
-	//implementation 'org.springframework.boot:spring-boot-starter-mail'
+	//implementati    on 'org.springframework.boot:spring-boot-starter-mail'
 }
 test {
 	useJUnitPlatform()
@@ -60,15 +60,6 @@ compileQuerydsl {
 compileQuerydsl.doFirst {
 	if(file(querydslDir).exists() ) delete(file(querydslDir))
 }
-
-
-
-
-
-
-
-
-
 
 
 

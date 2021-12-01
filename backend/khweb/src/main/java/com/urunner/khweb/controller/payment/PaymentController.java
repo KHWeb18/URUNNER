@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,7 @@ public class PaymentController {
     @Autowired
     PaymentService paymentService;
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/pay-ready")
     public void payReady(@RequestBody PaymentLectureInfoDto lectureInfoDto) {
         log.info("pay-ready!");
@@ -38,6 +40,7 @@ public class PaymentController {
     }
 
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/success")
     public ResponseEntity<String> paymentSuccessCheck(@RequestBody PaymentDto paymentDto) throws Exception {
         log.info("paymentSuccessCheck()");
@@ -56,6 +59,7 @@ public class PaymentController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/getPurchasedLecture")
     public DtoWrapper getPurchasedLecture() {
 

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-row justify="center">
+        <v-row justify="center"><!--
           <v-col cols="3">
             <v-card
               color="#385F73"
@@ -31,8 +31,8 @@
               <v-card-text> {{latestNote}} </v-card-text>
   
               <v-card-actions>
-                <v-btn text>
-                    <!--페이지 완성 후 URL연결-->
+                <v-btn text> -->
+                    <!--페이지 완성 후 URL연결--><!--
                   내노트 전체보기
                 </v-btn>
               </v-card-actions>
@@ -55,7 +55,7 @@
                 </v-btn>
               </v-card-actions>
             </v-card>
-          </v-col>
+          </v-col>-->
           <v-col cols="3">
             <v-card
               color="#385F73"
@@ -84,25 +84,25 @@ export default {
     name:'MyPageBox',
     data(){
         return{
-            latestNote:'',
-            latestLecture:'',
+            // latestNote:'',
+            // latestLecture:'',
         }
     },
     mounted(){
-      alert('email '+this.$cookies.get('USER_NAME'))
-        axios.get('http://localhost:7777/my-page')
-        .then(res=>{
-            this.latestLecture = res.data.latestLecture
-            this.latestNote = res.data.latestNote
+      // alert('email '+this.$cookies.get('USER_NAME'))
+      //   axios.get('http://localhost:7777/my-page')
+      //   .then(res=>{
+      //       this.latestLecture = res.data.latestLecture
+      //       this.latestNote = res.data.latestNote
             
-        })
+      //   })
     },
     methods:{
-      certfiEmail(){
-        axios.get('http://localhost:7777/my-page/mailcert')
-        .then()
-        alert('이메일 보내기완료!')
-      },
+      // certfiEmail(){
+      //   axios.get('http://localhost:7777/my-page/mailcert')
+      //   .then()
+      //   alert('이메일 보내기완료!')
+      // },
       getManagerAuth(){
         this.email = this.$cookies.get('USER_NAME')
           //console.log(this.name)
