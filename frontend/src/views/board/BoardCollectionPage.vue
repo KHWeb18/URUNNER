@@ -121,7 +121,7 @@ export default {
             } else {
                 return true
             }
-        },
+        }
     }
 }
 </script>
