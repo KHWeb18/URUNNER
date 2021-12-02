@@ -110,7 +110,7 @@
                         <v-flex hidden-sm-and-down text-sm-right="text-sm-right">
                             <router-link :to="{ name: 'InqBoardRegisterPage' }">
                                 <v-btn
-                                    v-if="this.$store.state.isLogin"
+                                    v-if="isAdmin()"
                                     color="blue darken-3 text center"
                                     class="change-font">
                                     글쓰기
@@ -194,7 +194,7 @@
                         <v-flex hidden-sm-and-down text-sm-right="text-sm-right">
                             <router-link :to="{ name: 'InqBoardRegisterPage' }">
                                 <v-btn
-                                    v-if="this.$store.state.isLogin"
+                                    v-if="isAdmin()"
                                     color="blue darken-3 text center"
                                     class="change-font">
                                     글쓰기

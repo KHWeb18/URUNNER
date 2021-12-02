@@ -175,9 +175,6 @@
                                             {{ mob.writer }}
                                         </div>
                                         <div></div><div></div>
-                                        <div v-show="path != ''" class="category_txt">
-                                            {{ path }}
-                                        </div>
                                         <div class="grade_txt">
                                             <!-- grade -->
                                             {{ mob.grade }}
@@ -194,9 +191,9 @@
                         </div>
                     </v-container>
                     <div style="margin-top:20px;">
-                    <div class="text-center">
-                        <v-pagination class="btn_pagination" v-model="pageNum2" :length="pageCount2"></v-pagination>
-                    </div>
+                        <div class="text-center">
+                            <v-pagination class="btn_pagination" v-model="pageNumber" :length="totalPages"></v-pagination>
+                        </div>
                     </div>
                 </div>
             </v-container>

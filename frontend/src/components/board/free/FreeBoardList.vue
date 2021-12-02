@@ -103,7 +103,7 @@
                         <v-flex hidden-sm-and-down text-sm-right="text-sm-right">
                             <router-link :to="{ name: 'FreeBoardRegisterPage' }">
                                 <v-btn
-                                    v-if="this.$store.state.isLogin"
+                                    v-if="isAdmin()"
                                     color="blue darken-3 text center"
                                     class="change-font">
                                     글쓰기
@@ -204,7 +204,7 @@
                         <v-flex hidden-sm-and-down text-sm-right="text-sm-right">
                             <router-link :to="{ name: 'FreeBoardRegisterPage' }">
                                 <v-btn
-                                    v-if="this.$store.state.isLogin"
+                                    v-if="isAdmin()"
                                     color="blue darken-3 text center"
                                     class="change-font">
                                     글쓰기
@@ -391,6 +391,13 @@ export default {
                 this.completeSelect3 = false
             }
             this.fetchFreeBoardListWithFilter(data)
+        },
+        isAdmin() {
+            if(this.$cookies.get('ROLES') == null) {
+                return false
+            } else {
+                return true
+            }
         },
         ...mapActions(['fetchFreeBoardList']),
         ...mapActions(['fetchFreeBoardListWithFilter'])

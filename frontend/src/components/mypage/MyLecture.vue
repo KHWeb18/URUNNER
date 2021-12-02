@@ -5,7 +5,7 @@
             <div class="mr-9 hidden-sm-and-down">
                 <div class="title_box">
                     <h2 class="page_title">
-                        <span>최근학습</span></h2>
+                        <span>내 학습</span></h2>
                 </div>
             </div>
             <!-- 검색창 + complete 분류 -->
