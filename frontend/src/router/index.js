@@ -176,6 +176,11 @@ export default new VueRouter({
           }
       }, 
       {
+        path: '/forgot',
+        component: () => import ("../views/ForgotPasswordPage.vue")
+
+      },
+      {
           path: '/mypage',
           name: 'Mypage',
           component: () => import ("../views/mypage/Mypage.vue"),
@@ -184,10 +189,6 @@ export default new VueRouter({
               {
                   path: '/wishlist',
                   component: () => import ("../components/enrolment/WishList.vue")
-              }, {
-                path: '/forgot',
-                component: () => import ("../views/ForgotPasswordPage.vue")
-
               }, {
                 path: '/changepw',
                 component: () => import ("../components/ChangePasswordForm.vue")
@@ -530,15 +531,8 @@ export default new VueRouter({
 import axios from "axios";
 import { logout } from '../util/APIUtil'
 
-// axios.defaults.headers.common['Authorization'] = Vue.$cookies.get("ACCESS_TOKEN");
 
-// Add a request interceptor
-
-// 요청전 전처리
-// 주의할점 두번 요청할경우 문제발생
 axios.interceptors.request.use(function (config) {
-    // Do something before request is sent
-
     if(Vue.$cookies.get("ACCESS_TOKEN") == null) {
       logout
     }
@@ -547,21 +541,17 @@ axios.interceptors.request.use(function (config) {
 
     return config;
   }, function (error) {
-    // Do something with request error
 
     return Promise.reject(error);
   });
  
-// Add a response interceptor
 
-// 응답받기전 전처리
 axios.interceptors.response.use(function (response) {
     if(Vue.$cookies.get("ACCESS_TOKEN") == null) {
       logout
     }
 
 
-    // Do something with response data
     return response;
   }, function (error) {
 

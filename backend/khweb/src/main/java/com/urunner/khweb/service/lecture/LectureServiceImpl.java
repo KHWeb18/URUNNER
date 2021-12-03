@@ -464,13 +464,8 @@ public class LectureServiceImpl implements LectureService {
             Page<Lecture> findAllLecture = lectureRepository.findByInProgressTrue(true, pageRequest);
             Page<Lecture> lectureOrderByReview = lectureRepository.getLectureOrderByReview(true, pageRequest);
 
-            System.out.println("리뷰로 값 정렬" + lectureOrderByReview.getContent().size());
-
-//      4번 추가 쿼리 feth쓸거면 lecture등록시 review 하나 추가해주기..
-//      점수 1~10으로 받고 반 나누기
             String query = "select new com.urunner.khweb.service.lecture.GetReviewDto(sum(r.rating), count(r.rating)) from Review r where r.lecture.lecture_id in :id";
 
-//        System.out.println("Review 사이즈 : " +findAllLecture.getContent().get(0).getReviews().size());
             Page<LectureDto> lectureDtos = findAllLecture.map(l ->
                     new LectureDto(l.getLecture_id(), l.getWriter(), l.getTitle(),
                             l.getDescription(), l.getPrice(), l.isInProgress(),

@@ -61,13 +61,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .httpBasic().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-//        일단 열어두고 vuerouter가드등으로 1차 나중에 메서드 url단위로 2차
+
         http
                 .authorizeRequests().antMatchers("/**").permitAll()
                 .and()
                 .authorizeRequests().anyRequest().authenticated();
 
-//        oauth2 로그인
+
         http
                 .oauth2Login()
                 .authorizationEndpoint()

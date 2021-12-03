@@ -44,10 +44,8 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         this.memberRepository = memberRepository;
     }
 
-    //    인증하는 클래스
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-//        받은 정보로 인증시도
         try {
             UserDto userDto = objectMapper.readValue(request.getReader(), UserDto.class);
 
@@ -66,7 +64,6 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
             e.printStackTrace();
         }
 
-//       log.info("Username is: {}", username); log.info("Password is: {}", password);
         return null;
     }
 
