@@ -352,7 +352,7 @@ export default {
     word-break: break-all;
     letter-spacing: -.1px;
     clear: both;
-    width: 310px;
+    width: 270px;
 }
 .row {
     padding-left: 10.5px;
@@ -432,7 +432,7 @@ export default {
     font: 12pt;
     color: white;
     font-weight: 800;
-    width: 310px;
+    width: 300px;
 }
 .button_box {
     display: flex;

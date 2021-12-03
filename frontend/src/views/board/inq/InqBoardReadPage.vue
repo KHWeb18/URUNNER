@@ -6,12 +6,12 @@
                 <router-link :to="{ path: '/inqforuser' }">
                         목록
                 </router-link>                
-                <b v-show="this.$store.state.isAuth">
+                <b v-if="board.writer == email || isAdmin()">
                     <router-link :to="{ name: 'InqBoardModifyPage', params: { boardNo } }">
                         |수정
                     </router-link>
                 </b>                
-                <b v-show="board.writer == email || role == 'ROLE_USER,ROLE_MANAGER'" @click="snackbar = true" class="item">
+                <b v-if="board.writer == email || isAdmin()" @click="snackbar = true" class="item">
                     |삭제
                 </b>
                  <!-- 게시물 삭제 클릭시 알림창 -->
@@ -107,6 +107,9 @@ export default {
         onSubmit (payload) {
             const refresh = payload
             this.refreshCheck = refresh
+        },
+        isAdmin() {
+            return this.$cookies.get('ROLES').includes("ROLE_MANAGER")
         }
     }
 }

@@ -103,7 +103,7 @@
                         <v-flex hidden-sm-and-down text-sm-right="text-sm-right">
                             <router-link :to="{ name: 'FreeBoardRegisterPage' }">
                                 <v-btn
-                                    v-if="this.$store.state.isLogin"
+                                    v-if="isAdmin()"
                                     color="blue darken-3 text center"
                                     class="change-font">
                                     글쓰기
@@ -204,7 +204,7 @@
                         <v-flex hidden-sm-and-down text-sm-right="text-sm-right">
                             <router-link :to="{ name: 'FreeBoardRegisterPage' }">
                                 <v-btn
-                                    v-if="this.$store.state.isLogin"
+                                    v-if="isAdmin()"
                                     color="blue darken-3 text center"
                                     class="change-font">
                                     글쓰기
@@ -235,12 +235,6 @@
                 </div>
             </div>
         </div>
-        <!-- 모바일 사이즈 때 나타나는 글쓰기 버튼 -->
-        <router-link :to="{ name: 'FreeBoardRegisterPage' }">
-            <v-btn fab dark large color="primary" fixed right class="hidden-md-and-up">
-                <v-icon dark>mdi-plus</v-icon>
-            </v-btn>
-        </router-link>
     </div>
 </template>
 
@@ -398,6 +392,13 @@ export default {
             }
             this.fetchFreeBoardListWithFilter(data)
         },
+        isAdmin() {
+            if(this.$cookies.get('ROLES') == null) {
+                return false
+            } else {
+                return true
+            }
+        },
         ...mapActions(['fetchFreeBoardList']),
         ...mapActions(['fetchFreeBoardListWithFilter'])
     },
@@ -525,7 +526,7 @@ export default {
     display: flex;
     justify-content: space-between;
     height: 43px;
-    width: 350px;
+    width: 300px;
     min-width: 300px;
     padding-left: 10px;
     max-width: 955px;
@@ -534,8 +535,8 @@ export default {
 .searching:hover {
     display: flex;
     justify-content: space-between;
-    height: 43px;
-    width: 350px;
+    height: 43px; 
+    width: 300px;
     padding-left: 10px;
     max-width: 955px;
     border: 1px solid rgb(155, 155, 155);
@@ -546,7 +547,7 @@ export default {
 }
 .searching span input {
     margin-top: 3px;
-    width: 280px;
+    width: 230px;
 }
 .searching_icon {
     padding: 11px 10px 10px 10px;
@@ -607,13 +608,13 @@ input:hover::placeholder {
     margin: 0vw 1vw
 }
 .post_list {
-    min-width: 475px;
+    /* min-width: 475px; */
     max-width: 1500px;
     margin-right: 10px;
     margin-top: 30px;
 }
 .post_card_box {
-    min-width: 475px;
+    /* min-width: 475px; */
 }
 .post_card:hover {
     box-shadow: 10px 17px 40px 0 rgb(0 0 0 / 4%);
@@ -643,7 +644,7 @@ input:hover::placeholder {
     transition: all 0.1s ease;
 }
 .post_card a {
-    width: 1000px;
+    /* width: 1000px; */
 }
 .thumbnail {
     margin-right: 20px;
@@ -671,7 +672,7 @@ input:hover::placeholder {
     flex-direction: column;    
     align-self: center;
     margin: 0px;
-    width: 57vw;
+    width: 100vw;
     max-width: 750px;
 }
 .item4 {
@@ -680,8 +681,8 @@ input:hover::placeholder {
     font-size: 15px !important;
     font-weight: bold !important;
     color: #2b2b2b;
-    max-width: 55vw;
-    min-width: 450px;
+    max-width: 90vw;
+    /* min-width: 450px; */
     margin-top: 8px;
 
     overflow: hidden;
@@ -741,6 +742,7 @@ input:hover::placeholder {
 }
 .button_box {
     max-width: 1270px;
+    width: 90vw;
     margin-top: 10px;
     display: flex;
     justify-content: flex-end;

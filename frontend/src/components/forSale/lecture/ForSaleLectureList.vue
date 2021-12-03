@@ -158,11 +158,11 @@
             <!-- 모바일 리스트 -->
             <v-container class="lecture01 mr-9 hidden-md-and-up">
                 <div v-show="!searchinOn">
-                    <v-container class="lecture_box">
+                    <v-container class="lecture_box_mobile">
                         <div v-for="mob in paginatedData2" :key="mob.boardNo">
                             <div class="mx-auto2" @click="goPage(mob.id)">
                                 <div class="card_img" @click="goPage(mob.id)">
-                                    <v-img :src="`http://localhost:7777/lecture/image/${mob.thumbPath}/${mob.writer}`" height="150px" width="150px"></v-img>
+                                    <v-img :src="`http://localhost:7777/lecture/image/${mob.thumbPath}/${mob.writer}`" height="130px" width="130px"></v-img>
                                 </div>
                                 <div class="card_info">                                    
                                     <div style="height:66px;"><!-- title -->
@@ -175,9 +175,6 @@
                                             {{ mob.writer }}
                                         </div>
                                         <div></div><div></div>
-                                        <div v-show="path != ''" class="category_txt">
-                                            {{ path }}
-                                        </div>
                                         <div class="grade_txt">
                                             <!-- grade -->
                                             {{ mob.grade }}
@@ -194,9 +191,9 @@
                         </div>
                     </v-container>
                     <div style="margin-top:20px;">
-                    <div class="text-center">
-                        <v-pagination class="btn_pagination" v-model="pageNum2" :length="pageCount2"></v-pagination>
-                    </div>
+                        <div class="text-center">
+                            <v-pagination class="btn_pagination" v-model="pageNumber" :length="totalPages"></v-pagination>
+                        </div>
                     </div>
                 </div>
             </v-container>
@@ -204,7 +201,7 @@
             <v-row justify="center">
                 <v-dialog v-model="dialog" scrollable max-width="300px">
                 <template v-slot:activator="{ on, attrs }">
-                    <v-btn color="primary" fab dark v-bind="attrs" v-on="on" fixed right style="top:83vh;left:85vw;" class="hidden-md-and-up">
+                    <v-btn color="primary" fab dark v-bind="attrs" v-on="on" fixed right style="top:80vh;left:80vw;" class="hidden-md-and-up">
                         <v-icon dark>mdi-plus</v-icon>
                     </v-btn>
                 </template>
@@ -568,14 +565,22 @@ export default {
     display: inline-block;
     margin: 0;
     padding: 0;
-    width: 70vw;    
-    min-width: 440px;
+    width: 70vw;
+    /* min-width: 440px; */
     max-width: 1000px;
 }
 .lecture_box {
     margin: 15px;
     padding: 0;
-    width: 100vw;
+    /* width: 100vw; */
+    max-width: 900px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: start;
+}
+.lecture_box_mobile {
+    padding: 0;
+    /* width: 100vw; */
     max-width: 900px;
     display: flex;
     flex-wrap: wrap;
@@ -737,6 +742,7 @@ p {
     width: 200px;
     cursor: pointer;
 }
+
 .tag_button {
     color: black;
     cursor: pointer;
@@ -753,6 +759,7 @@ p {
     cursor: pointer;
     transition: all 0.f5s ease;
 }
+
 .forLine0 {
     display: flex;
     justify-content: space-between;
@@ -847,9 +854,9 @@ input:focus {
 }
 .main_box {
     justify-content: center;
-    flex-direction: column;
-    
+    flex-direction: column;    
     color: #424242;
+    width:100vw;
     max-width:900px;
 }
 .temp2 {
@@ -954,8 +961,7 @@ input:focus {
     display:flex;
     justify-content: start;
     flex-direction: row;
-
-    width: 90vw;
+    width: 95vw;
     margin: 10px 0px;
 }
 .card_info {

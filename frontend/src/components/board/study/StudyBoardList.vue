@@ -112,7 +112,7 @@
                         <v-flex hidden-sm-and-down text-sm-right="text-sm-right">
                             <router-link :to="{ name: 'StudyBoardRegisterPage' }">
                                 <v-btn
-                                    v-if="this.$store.state.isLogin"
+                                    v-if="isAdmin()"
                                     color="blue darken-3 text center"
                                     class="change-font">
                                     글쓰기
@@ -216,7 +216,7 @@
                         <v-flex hidden-sm-and-down text-sm-right="text-sm-right">
                             <router-link :to="{ name: 'StudyBoardRegisterPage' }">
                                 <v-btn
-                                    v-if="this.$store.state.isLogin"
+                                    v-if="isAdmin()"
                                     color="blue darken-3 text center"
                                     class="change-font">
                                     글쓰기
@@ -414,6 +414,13 @@ export default {
             }
             this.fetchStudyBoardListWithFilter(data)
         },
+        isAdmin() {
+            if(this.$cookies.get('ROLES') == null) {
+                return false
+            } else {
+                return true
+            }
+        },
         ...mapActions(['fetchStudyBoardList']),
         ...mapActions(['fetchStudyBoardListWithFilter'])
     },
@@ -536,7 +543,7 @@ export default {
     display: flex;
     justify-content: space-between;
     height: 43px;
-    width: 350px;
+    width: 300px;
     min-width: 300px;
     padding-left: 10px;
     max-width: 955px;
@@ -546,7 +553,7 @@ export default {
     display: flex;
     justify-content: space-between;
     height: 43px; 
-    width: 350px;
+    width: 300px;
     padding-left: 10px;
     max-width: 955px;
     border: 1px solid rgb(155, 155, 155);
@@ -557,7 +564,7 @@ export default {
 }
 .searching span input {
     margin-top: 3px;
-    width: 280px;
+    width: 230px;
 }
 .searching_icon {
     padding: 11px 10px 10px 10px;
@@ -606,13 +613,13 @@ input:focus {
     margin: 0vw 1vw
 }
 .post_list {
-    min-width: 475px;
+    /* min-width: 475px; */
     max-width: 1500px;
     margin-right: 10px;
     margin-top: 30px;
 }
 .post_card_box {
-    min-width: 475px;
+    /* min-width: 475px; */
 }
 .post_card:hover {
     box-shadow: 10px 17px 40px 0 rgb(0 0 0 / 4%);
@@ -642,7 +649,7 @@ input:focus {
     transition: all 0.1s ease;
 }
 .post_card a {
-    width: 1000px;
+    /* width: 1000px; */
 }
 .thumbnail {
     margin-right: 20px;
@@ -682,7 +689,7 @@ input:focus {
     flex-direction: column;    
     align-self: center;
     margin: 0px;
-    width: 57vw;
+    width: 100vw;
     max-width: 750px;
 }
 .item4 {
@@ -691,8 +698,8 @@ input:focus {
     font-size: 15px !important;
     font-weight: bold !important;
     color: #2b2b2b;
-    max-width: 55vw;
-    min-width: 450px;
+    max-width: 90vw;
+    /* min-width: 450px; */
     margin-top: 8px;
 
     overflow: hidden;

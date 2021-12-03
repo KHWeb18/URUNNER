@@ -87,7 +87,7 @@
             
         <div class="button_box2">
           <div class="checkBox">
-            <v-checkbox v-model="notice" :label="`공지사항`" value ></v-checkbox>
+            <v-checkbox v-if="isAdmin()" v-model="notice" :label="`공지사항`" value ></v-checkbox>
           </div>
           <v-btn @click="snackbar = true">
               취소
@@ -265,12 +265,15 @@ export default {
         
         if (this.tags.length > 400) {
           alert('태그가 너무 많습니다.')
-          } else {
-            const { content, tags, notice } = this
-            this.$emit("fromEditor", { content, tags, notice })
-            console.log('editor 단계의 notice 값 : ' + this.notice)
-          }
+        } else {
+          const { content, tags, notice } = this
+          this.$emit("fromEditor", { content, tags, notice })
+          console.log('editor 단계의 notice 값 : ' + this.notice)
         }
+      },
+      isAdmin() {
+        return this.$cookies.get('ROLES').includes("ROLE_ADMIN")
+      }
     },
   }
 </script>

@@ -15,6 +15,7 @@ public interface LectureRepository extends JpaRepository<Lecture, Long>, Lecture
 
     public List<Lecture> findByWriter(String writer);
     public Lecture findByTitle(String title);
+    public void deleteAllByWriter(String writer);
 
 //    @Query("select l from Lecture l join fetch l.lectureLists where l.lecture_id =: id")
 //    public Optional<Lecture> letureAll(Long id);
